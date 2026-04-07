@@ -21,3 +21,57 @@
   - 本地提交第一次整理提交
   - 确认 GitHub 远端仓库
   - 后续调试时继续同步 `*_server` / `*_local`
+
+- task: 调整 `heliolincrr` tracklet 构建逻辑并建立 20260220 单夜基准
+- files_changed: `heliolincrr_local/make_tracklet_linreproj.py`, `heliolincrr_server/make_tracklet_linreproj.py`, `heliolincrr_local/merge_tracklets_night.py`, `heliolincrr_server/merge_tracklets_night.py`, `heliolincrr_local/run_single_night.sh`, `heliolincrr_server/run_single_night.sh`, `heliolincrr_local/tracklet_completeness_purity.py`, `heliolincrr_server/tracklet_completeness_purity.py`, `known_asteroid_server/README.md`, `known_asteroid_server/{cron_visual.example,plot_known_asteroids.py,run_visual_daily.sh,update_all_matched_history.py}`
+- commands_run: 本地 `python3 -m py_compile ...`, `bash -n ...`; 服务器 `bash run_single_night.sh 20260220`, `merge_tracklets_night.py`, `run_rr_from_tracklets.py`, `tracklet_completeness_purity.py`
+- key_findings:
+  - `pair_two_exposures()` 已从最近邻匹配改为基于 `EXPSTA + 15s` 曝光间隔的全候选配对
+  - 曝光分组中心已改为优先使用 `CEN_RA/CEN_DEC`
+  - 已增加 `--skip-common-area/--no-skip-common-area`，默认跳过 common-area reproject/fallback
+  - `r-static` 默认值已固定为 `2.0`，`dmag-max` 维持 `1.0`
+  - `merge_tracklets_night.py` 原有临时文件扩展名问题会导致 `astropy` 写失败，已修复
+  - 服务器当前 `known_asteroid` 实际没有 `run_pipeline.sh` / `run_backfill.sh`，但已补回缺失的可视化相关脚本到 `known_asteroid_server`
+- validation:
+  - 本地语法检查通过
+  - 服务器 `20260220` 单夜重跑完成：nightly tracklets=`31925`，single-night RR links=`77965`
+  - 基准统计已写入 `/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_tracklet_completeness_purity.json`
+- remaining_issues:
+  - 当前 purity 仍偏低，`zero-known` tracklets 占比很高
+  - 后续还需要继续调 `vmin` / `vmax` / `min-repeat` 等参数
+- next_step:
+  - 用 `20260220` 固定样本继续调其他参数
+  - 对比 completeness、purity、tracklet 总数的变化趋势
+
+- task: 清理 `20260220` 旧测试目录并重跑纯 `make tracklet`
+- files_changed: `WORKLOG.md`, `PLAN.md`
+- commands_run: 服务器 `find ... ! -name mask_gaia -exec rm -rf {} +`, `make_tracklet_linreproj.py 20260220 --outdir /pipeline/xiaoyunao/data/heliolincrr/20260220/tracklets_linreproj_tracklet_only`, `merge_tracklets_night.py`, `tracklet_completeness_purity.py --tracklets .../tracklets_20260220_ALL.fits`
+- key_findings:
+  - `/pipeline/xiaoyunao/data/heliolincrr/20260220` 已清理为只保留 `mask_gaia`、新的 `analysis/` 和新的 `tracklets_linreproj_tracklet_only/`
+  - 本轮未再运行 RR 或轨道分析
+  - 新的纯 tracklet 输出目录为 `/pipeline/xiaoyunao/data/heliolincrr/20260220/tracklets_linreproj_tracklet_only`
+- validation:
+  - 分组合并文件数 `139`
+  - 两点 tracklet 总数 `31925`
+  - 统计结果已写入 `/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_tracklet_only_summary.json`
+- remaining_issues:
+  - 当前纯度仍偏低，需要继续围绕 `vmin` / `vmax` 等参数扫描
+- next_step:
+  - 后续调参都以 `tracklets_linreproj_tracklet_only` 这套纯 tracklet 流程继续
+
+- task: 在 `make tracklet` 中加入边缘壳层伪源过滤并做版本化记录
+- files_changed: `CHANGELOG.md`, `README.md`, `WORKLOG.md`, `PLAN.md`, `heliolincrr_local/make_tracklet_linreproj.py`, `heliolincrr_server/make_tracklet_linreproj.py`
+- commands_run: 本地 `python3 -m py_compile heliolincrr_local/make_tracklet_linreproj.py heliolincrr_server/make_tracklet_linreproj.py`; 服务器 `make_tracklet_linreproj.py 20260220 --outdir .../tracklets_linreproj_tracklet_only_edgeiso`, `merge_tracklets_night.py`, `tracklet_completeness_purity.py`
+- key_findings:
+  - `300 到 500` 像素边缘壳层内且 `Flag_ISO_Num > 0` 的 detection 会显著制造假 tracklet
+  - 新过滤加在静止源扣除之前，避免脏 detection 进入后续配对
+  - 这一步不是单纯参数调节，而是 `make tracklet` 流程层面的行为更新，已写入 `CHANGELOG.md`
+- validation:
+  - 新目录 `/pipeline/xiaoyunao/data/heliolincrr/20260220/tracklets_linreproj_tracklet_only_edgeiso` 重跑成功
+  - 两点 tracklet 总数 `31925 -> 17205`
+  - “两端点都是已知小行星”的纯度 `0.04448 -> 0.08184`
+  - 完备度仅小幅下降：按小行星个数 `0.8804 -> 0.8772`
+- remaining_issues:
+  - 下一步仍需继续调 `vmin` / `vmax` / `min-repeat`
+- next_step:
+  - 以 `tracklets_linreproj_tracklet_only_edgeiso` 为新基线继续调参

@@ -74,6 +74,10 @@ PYTHON_BIN=/path/to/heliolinc/bin/python bash heliolincrr_local/run_single_night
 - `heliolincrr_server` 的关键脚本已与服务器哈希核对一致
 - `known_asteroid_server` 已按 2026-04-07 服务器现版重建关键入口脚本
 
+## 版本记录
+
+- 仓库级更新说明见 `CHANGELOG.md`
+
 ## GitHub
 
 本地仓库会初始化为 git 仓库；推送到 GitHub 还需要一个明确的远端仓库目标。

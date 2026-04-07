@@ -1,0 +1,2 @@
+0 17 * * * cd /pipeline/xiaoyunao && /bin/bash /pipeline/xiaoyunao/known_asteroid/run_visual_daily.sh >> /pipeline/xiaoyunao/known_asteroid/runtime/logs/cron.log 2>&1
+0 18 * * * cd /pipeline/xiaoyunao && /bin/bash /pipeline/xiaoyunao/known_asteroid/run_visual_daily.sh >> /pipeline/xiaoyunao/known_asteroid/runtime/logs/cron.log 2>&1

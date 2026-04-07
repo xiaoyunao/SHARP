@@ -143,13 +143,14 @@ run_make_tracklets_step() {
     --vmin 0.5 \
     --vmax 80.0 \
     --dmag-max 1.0 \
-    --r-static 0.5 \
+    --r-static 2.0 \
     --min-repeat 2 \
     --erode-pix 30 \
     --fallback-margin 0.1 \
     --hdu 1 \
     --nproc 16 \
     --edge-pix 500 \
+    --skip-common-area \
     --log "${tracklet_dir}/make_tracklet.log"
 }
 

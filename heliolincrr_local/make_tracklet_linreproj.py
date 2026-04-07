@@ -6,6 +6,7 @@ import glob
 import argparse
 import numpy as np
 import warnings
+from pathlib import Path
 
 import astropy.units as u
 from astropy.table import Table, vstack
@@ -14,6 +15,7 @@ from astropy.wcs import WCS
 from astropy.coordinates import SkyCoord
 from astropy.wcs import FITSFixedWarning
 from astropy.io.fits.verify import VerifyWarning
+from astropy.time import Time
 
 warnings.simplefilter("ignore", FITSFixedWarning)
 warnings.simplefilter("ignore", VerifyWarning)
@@ -94,6 +96,13 @@ def read_l2_catalog(fn):
 
     keep = ["objID", "MJD", ra_col, dec_col]
 
+    if "X_Win" in tab.colnames:
+        keep.append("X_Win")
+    if "Y_Win" in tab.colnames:
+        keep.append("Y_Win")
+    if "Flag_ISO_Num" in tab.colnames:
+        keep.append("Flag_ISO_Num")
+
     # keep photometry/quality columns if present (NO filtering here)
     if "FWHM" in tab.colnames:
         keep.append("FWHM")
@@ -115,9 +124,65 @@ def read_l2_catalog(fn):
     m = np.isfinite(tab["RA"]) & np.isfinite(tab["DEC"])
     return tab[m]
 
+
+def filter_edge_shell_artifacts(tab, edge_shell_min=300.0, edge_shell_max=500.0):
+    """
+    Remove detections in the known bad shell just inside the catalog edge mask.
+
+    Only drop detections that satisfy both:
+      - nearest edge distance in [edge_shell_min, edge_shell_max)
+      - Flag_ISO_Num > 0
+    """
+    need = {"X_Win", "Y_Win", "Flag_ISO_Num"}
+    if len(tab) == 0 or not need.issubset(tab.colnames):
+        return tab
+
+    x = np.asarray(tab["X_Win"], dtype=float)
+    y = np.asarray(tab["Y_Win"], dtype=float)
+    flag_iso = np.asarray(tab["Flag_ISO_Num"], dtype=int)
+
+    nearest_edge = np.minimum.reduce([
+        x,
+        9216.0 - x,
+        y,
+        9232.0 - y,
+    ])
+    bad_shell = (
+        np.isfinite(nearest_edge)
+        & (nearest_edge >= float(edge_shell_min))
+        & (nearest_edge < float(edge_shell_max))
+        & (flag_iso > 0)
+    )
+    return tab[~bad_shell]
+
 # ============================================================
 # Image center and FoV radius (deg)
 # ============================================================
+
+def _header_mid_mjd(hdr):
+    expsta = hdr.get("EXPSTA")
+    if expsta:
+        try:
+            return float((Time(str(expsta), format="isot", scale="utc").mjd) + 15.0 / 86400.0)
+        except Exception:
+            pass
+
+    date_obs = hdr.get("DATE-OBS")
+    if date_obs:
+        try:
+            return float((Time(str(date_obs), format="isot", scale="utc").mjd) + 15.0 / 86400.0)
+        except Exception:
+            pass
+
+    mjd = hdr.get("MJD")
+    if mjd is not None:
+        try:
+            return float(mjd) + 15.0 / 86400.0
+        except Exception:
+            pass
+
+    return None
+
 
 def image_center_and_radius(fn):
     with fits.open(fn, memmap=False) as hdul:
@@ -132,7 +197,9 @@ def image_center_and_radius(fn):
             if nx is None or ny is None:
                 continue
 
-            ra0, dec0 = w.wcs_pix2world(nx / 2.0, ny / 2.0, 0)
+            ra0 = hdr.get("CEN_RA", hdr.get("CRVAL1"))
+            dec0 = hdr.get("CEN_DEC", hdr.get("CRVAL2"))
+            mid_mjd = _header_mid_mjd(hdr)
 
             # pixel scale (deg/pix)
             if w.wcs.cd is not None:
@@ -142,9 +209,9 @@ def image_center_and_radius(fn):
                 pixscale = np.mean(np.abs(w.wcs.cdelt))
 
             fov_r = 0.5 * np.sqrt(nx**2 + ny**2) * pixscale
-            return float(ra0), float(dec0), float(fov_r)
+            return float(ra0), float(dec0), float(fov_r), mid_mjd
 
-    return None, None, None
+    return None, None, None, None
 
 
 # ============================================================
@@ -158,30 +225,29 @@ def group_exposures(cat_files, max_sep_deg=0.5):
     """
     exps = []
     for fn in cat_files:
-        ra, dec, r = image_center_and_radius(fn)
+        ra, dec, r, mid_mjd = image_center_and_radius(fn)
         if ra is None:
             continue
-        exps.append((fn, ra, dec, r))
+        exps.append((fn, ra, dec, r, mid_mjd))
 
-    # Sort by time if available (optional). If no time, keep filename order.
-    # (You can add MJD sorting later; not required for the grouping fix.)
+    exps.sort(key=lambda x: (x[4] is None, np.inf if x[4] is None else x[4], x[0]))
     groups = []
 
-    for fn, ra, dec, r in exps:
+    for fn, ra, dec, r, mid_mjd in exps:
         c = SkyCoord(ra, dec, unit="deg")
         placed = False
 
         for g in groups:
             # use the FIRST exposure center as the group's anchor (prevents chain merge)
-            _, ra0, dec0, _ = g[0]
+            _, ra0, dec0, _, _ = g[0]
             c0 = SkyCoord(ra0, dec0, unit="deg")
             if c.separation(c0).deg < max_sep_deg:
-                g.append((fn, ra, dec, r))
+                g.append((fn, ra, dec, r, mid_mjd))
                 placed = True
                 break
 
         if not placed:
-            groups.append([(fn, ra, dec, r)])
+            groups.append([(fn, ra, dec, r, mid_mjd)])
 
     return groups
 
@@ -345,32 +411,41 @@ def remove_static_sources(tabs, r_arcsec=0.5, min_repeat=2):
 # Two-point tracklets (spherical)
 # ============================================================
 
-def pair_two_exposures(tab1, tab2, vmin, vmax, dmag_max=1.0, file1=None, file2=None):
+def pair_two_exposures(tab1, tab2, vmin, vmax, dmag_max=1.0, file1=None, file2=None, mjd1=None, mjd2=None):
     if len(tab1) == 0 or len(tab2) == 0:
         return None
 
     c1 = SkyCoord(tab1["RA"], tab1["DEC"], unit="deg")
     c2 = SkyCoord(tab2["RA"], tab2["DEC"], unit="deg")
 
-    mjd1 = float(np.median(tab1["MJD"]))
-    mjd2 = float(np.median(tab2["MJD"]))
+    if mjd1 is None:
+        mjd1 = float(np.median(tab1["MJD"]))
+    if mjd2 is None:
+        mjd2 = float(np.median(tab2["MJD"]))
     dt_hr = (mjd2 - mjd1) * 24.0
     if not np.isfinite(dt_hr) or dt_hr <= 0:
         return None
 
-    idx, sep, _ = c1.match_to_catalog_sky(c2)
-    v = sep.arcsec / dt_hr  # arcsec / hour
+    sep_min = float(vmin) * dt_hr
+    sep_max = float(vmax) * dt_hr
+    if not np.isfinite(sep_max) or sep_max <= 0:
+        return None
 
-    ok = (v > vmin) & (v < vmax)
+    idx1, idx2, sep, _ = c1.search_around_sky(c2, seplimit=sep_max * u.arcsec)
+    if len(idx1) == 0:
+        return None
+
+    v = sep.arcsec / dt_hr  # arcsec / hour
+    ok = (sep.arcsec >= sep_min) & (v <= vmax)
 
     # photometry (optional)
     has_mag = ("MAG_PSF" in tab1.colnames) and ("MAG_PSF" in tab2.colnames)
     if has_mag:
         m1 = np.array(tab1["MAG_PSF"], dtype=float)
         m2 = np.array(tab2["MAG_PSF"], dtype=float)
-        dmag = m2[idx] - m1
+        dmag = m2[idx1] - m1[idx2]
         if dmag_max is not None:
-            ok &= np.isfinite(dmag) & (np.abs(dmag) < float(dmag_max))
+            ok &= np.isfinite(dmag) & (np.abs(dmag) <= float(dmag_max))
     else:
         dmag = None  # do not output column if not available
 
@@ -388,22 +463,23 @@ def pair_two_exposures(tab1, tab2, vmin, vmax, dmag_max=1.0, file1=None, file2=N
 
     rows = []
     for i in sel:
-        j = idx[i]
+        j = int(idx1[i])
+        k = int(idx2[i])
         row = [
-            float(tab1["RA"][i]), float(tab1["DEC"][i]),
+            float(tab1["RA"][k]), float(tab1["DEC"][k]),
             float(tab2["RA"][j]), float(tab2["DEC"][j]),
             float(v[i]),
-            int(tab1["objID"][i]), int(tab2["objID"][j]),
+            int(tab1["objID"][k]), int(tab2["objID"][j]),
             mjd1, mjd2,
             file1, file2
         ]
 
         if has_fwhm:
-            row += [float(tab1["FWHM"][i]), float(tab2["FWHM"][j])]
+            row += [float(tab1["FWHM"][k]), float(tab2["FWHM"][j])]
         if has_mag:
-            row += [float(tab1["MAG_PSF"][i]), float(tab2["MAG_PSF"][j])]
+            row += [float(tab1["MAG_PSF"][k]), float(tab2["MAG_PSF"][j])]
         if has_merr:
-            row += [float(tab1["MAGERR_PSF"][i]), float(tab2["MAGERR_PSF"][j])]
+            row += [float(tab1["MAGERR_PSF"][k]), float(tab2["MAGERR_PSF"][j])]
         if dmag is not None:
             row += [float(dmag[i])]
 
@@ -433,10 +509,6 @@ def pair_two_exposures(tab1, tab2, vmin, vmax, dmag_max=1.0, file1=None, file2=N
     t["file2"] = np.array(t["file2"], dtype="U512")
 
     return t
-
-
-
-from scipy.ndimage import binary_erosion
 
 def filter_tracklets_near_mask_edge(
     trk,
@@ -508,37 +580,56 @@ def process_one_group(payload):
         fns = [x[0] for x in g]
         centers = [(x[1], x[2]) for x in g]
         radii = [x[3] for x in g]
+        mid_mjds = [x[4] for x in g]
 
         # --- read catalogs first ---
         raw_tabs = [read_l2_catalog(fn) for fn in fns]
 
-        # --- common-area selection: prefer reproject mask, fallback to spherical incircle ---
         used_fallback = False
         wcs_ref = None
         common = None
-
-        try:
-            wcs_ref, common = common_mask_from_group_reproject(
-                fns, hdu_index=ad["hdu"], erode_pix=ad["erode_pix"]
-            )
-            tabs = [apply_mask(tab, wcs_ref, common) for tab in raw_tabs]
-            log(f"[group {gi:03d}] common_area=reproject-lin erode_pix={ad['erode_pix']}")
-            log(f"[group {gi:03d}] common_mask True fraction={float(np.mean(common)):.6f}")
-        except Exception as e:
-            used_fallback = True
-            tabs = [mask_common_sky_incircle(tab, centers, radii, margin_deg=ad["fallback_margin"])
-                    for tab in raw_tabs]
-            log(f"[group {gi:03d}] common_area=fallback margin_deg={ad['fallback_margin']:.3f}  err={repr(e)}")
+        if ad["skip_common_area"]:
+            tabs = raw_tabs
+            log(f"[group {gi:03d}] common_area=skipped")
+        else:
+            try:
+                wcs_ref, common = common_mask_from_group_reproject(
+                    fns, hdu_index=ad["hdu"], erode_pix=ad["erode_pix"]
+                )
+                tabs = [apply_mask(tab, wcs_ref, common) for tab in raw_tabs]
+                log(f"[group {gi:03d}] common_area=reproject-lin erode_pix={ad['erode_pix']}")
+                log(f"[group {gi:03d}] common_mask True fraction={float(np.mean(common)):.6f}")
+            except Exception as e:
+                used_fallback = True
+                tabs = [mask_common_sky_incircle(tab, centers, radii, margin_deg=ad["fallback_margin"])
+                        for tab in raw_tabs]
+                log(f"[group {gi:03d}] common_area=fallback margin_deg={ad['fallback_margin']:.3f}  err={repr(e)}")
 
         raw_ns = [len(t) for t in raw_tabs]
         cut_ns = [len(t) for t in tabs]
+        common_mode = "skipped" if ad["skip_common_area"] else ("fallback" if used_fallback else "reproj-lin")
         log(f"[group {gi:03d}] raw Ns={raw_ns}")
-        log(f"[group {gi:03d}] after common-area Ns={cut_ns} ({'fallback' if used_fallback else 'reproj-lin'})")
+        log(f"[group {gi:03d}] after common-area Ns={cut_ns} ({common_mode})")
 
         if sum(len(t) > 0 for t in tabs) < 2:
             log(f"[group {gi:03d}] skip: fewer than 2 exposures with sources after common-area cut")
             return {"gi": gi, "status": "skip_after_common", "ntrk": 0,
                     "used_fallback": used_fallback, "log": "\n".join(log_lines)}
+
+        # --- remove edge-shell artifacts before static-source removal ---
+        pre_edge_ns = [len(t) for t in tabs]
+        tabs = [
+            filter_edge_shell_artifacts(
+                tab,
+                edge_shell_min=ad["edge_shell_min"],
+                edge_shell_max=ad["edge_shell_max"],
+            )
+            for tab in tabs
+        ]
+        post_edge_ns = [len(t) for t in tabs]
+        log(f"[group {gi:03d}] after edge-shell filter: {post_edge_ns} "
+            f"(edge_shell_min={ad['edge_shell_min']}, edge_shell_max={ad['edge_shell_max']}, "
+            f"removed={sum(pre - post for pre, post in zip(pre_edge_ns, post_edge_ns))})")
 
         # --- remove static sources ---
         tabs = remove_static_sources(tabs, r_arcsec=ad["r_static"], min_repeat=ad["min_repeat"])
@@ -559,6 +650,8 @@ def process_one_group(payload):
                     dmag_max=ad["dmag_max"],
                     file1=fns[i],
                     file2=fns[i + 1],
+                    mjd1=mid_mjds[i],
+                    mjd2=mid_mjds[i + 1],
                 )
             if t is not None:
                 t["group"] = gi
@@ -604,6 +697,9 @@ def process_one_group(payload):
         trk.meta["vmin_arcsec_hr"] = float(ad["vmin"])
         trk.meta["vmax_arcsec_hr"] = float(ad["vmax"])
         trk.meta["edge_pix"] = int(ad["edge_pix"])
+        trk.meta["skip_common_area"] = bool(ad["skip_common_area"])
+        trk.meta["edge_shell_min"] = float(ad["edge_shell_min"])
+        trk.meta["edge_shell_max"] = float(ad["edge_shell_max"])
         trk.write(out, overwrite=True)
 
         ra_med = float(np.median(trk["ra1"]))
@@ -635,7 +731,7 @@ def main():
     ap.add_argument("--vmax", type=float, default=80.0)
     ap.add_argument("--dmag-max", type=float, default=1.0)
 
-    ap.add_argument("--r-static", type=float, default=0.5, help="arcsec")
+    ap.add_argument("--r-static", type=float, default=2.0, help="arcsec")
     ap.add_argument("--min-repeat", type=int, default=2)
 
     ap.add_argument("--erode-pix", type=int, default=30,
@@ -649,6 +745,12 @@ def main():
     ap.add_argument("--nproc", type=int, default=6, help="number of processes for groups")
     ap.add_argument("--edge-pix", type=int, default=500, help="tracklet edge veto in pixels (reproject only)")
     ap.add_argument("--log", default=None, help="log file path (default: outdir/make_tracklet.log)")
+    ap.add_argument("--skip-common-area", action=argparse.BooleanOptionalAction, default=True,
+                    help="skip common-area masking after exposure grouping (default: enabled)")
+    ap.add_argument("--edge-shell-min", type=float, default=300.0,
+                    help="lower bound of the bad-shell edge distance filter in pixels")
+    ap.add_argument("--edge-shell-max", type=float, default=500.0,
+                    help="upper bound of the bad-shell edge distance filter in pixels")
 
     args = ap.parse_args()
 
@@ -677,6 +779,9 @@ def main():
         fallback_margin=float(args.fallback_margin),
         hdu=int(args.hdu),
         edge_pix=int(args.edge_pix),
+        skip_common_area=bool(args.skip_common_area),
+        edge_shell_min=float(args.edge_shell_min),
+        edge_shell_max=float(args.edge_shell_max),
     )
 
     tasks = [(gi, g, ad, outdir) for gi, g in enumerate(groups) if len(g) >= 2]
@@ -695,7 +800,9 @@ def main():
         f.write(f"outdir={outdir}\n")
         f.write(f"params: vmin={args.vmin} vmax={args.vmax} r_static={args.r_static} "
                 f"min_repeat={args.min_repeat} erode_pix={args.erode_pix} "
-                f"edge_pix={args.edge_pix} fallback_margin={args.fallback_margin} hdu={args.hdu}\n")
+                f"edge_pix={args.edge_pix} fallback_margin={args.fallback_margin} "
+                f"hdu={args.hdu} skip_common_area={args.skip_common_area} "
+                f"edge_shell_min={args.edge_shell_min} edge_shell_max={args.edge_shell_max}\n")
         f.write("=" * 80 + "\n")
 
         for gi in sorted(results.keys()):

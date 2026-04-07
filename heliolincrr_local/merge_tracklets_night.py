@@ -128,8 +128,8 @@ def main():
     merged.meta["n_inputs"] = int(len(fns))
     merged.meta["pattern"] = os.path.basename(pattern)
 
-    tmp_out = out + ".tmp"
-    merged.write(tmp_out, overwrite=True)
+    tmp_out = out + ".tmp.fits"
+    merged.write(tmp_out, format="fits", overwrite=True)
     shutil.move(tmp_out, out)
 
     if args.write_index:

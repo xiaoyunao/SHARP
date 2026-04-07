@@ -18,13 +18,15 @@ object submission workflow.
 - `match_single_night.py`: single-file or single-night known-object matching
 - `merge_night_parts.py`: merge per-file FITS parts into night-level FITS
 - `export_ades.py`: FITS-to-ADES exporter plus optional MPC submit
-- `run_pipeline.sh`: direct sequential runner
 - `run_daily.sh`: unattended daily trigger for the previous night
-- `run_backfill.sh`: sequential historical backfill runner
+- `plot_known_asteroids.py`: nightly known-object visualization
+- `run_visual_daily.sh`: unattended daily trigger for the visualization step
+- `update_all_matched_history.py`: accumulate matched-object history products
 - `slurm_match_one_file.sh`: one `*MP*` file per slurm task
 - `slurm_merge_submit.sh`: merge night-level outputs and optionally submit
 - `submit_pipeline_slurm.sh`: submit slurm jobs for one night or a date range
 - `cron.example`: daily 16:00 cron entry
+- `cron_visual.example`: daily visualization cron entry
 
 ## Default server layout
 
@@ -84,29 +86,6 @@ The funding source is intentionally truncated to the first sentence only.
   skipped
 - file-level reruns also skip any `*MP*` file whose part FITS already exist in
   `L4/known_asteroid_parts`
-
-## Direct runner
-
-Single night, extraction only:
-
-```bash
-cd /pipeline/xiaoyunao/known_asteroid
-./run_pipeline.sh --batch false --submit-mpc false 20260318
-```
-
-Date range, extraction only:
-
-```bash
-cd /pipeline/xiaoyunao/known_asteroid
-./run_pipeline.sh --batch true --submit-mpc false 20260318 20260320
-```
-
-Single night with MPC submission:
-
-```bash
-cd /pipeline/xiaoyunao/known_asteroid
-./run_pipeline.sh --batch false --submit-mpc true 20260318
-```
 
 ## Slurm runner
 
@@ -171,16 +150,9 @@ cd /pipeline/xiaoyunao/known_asteroid
 This script checks the previous night, verifies that `L2` exists and contains
 `*MP*` files, and only then submits the night to slurm.
 
-Historical backfill, one night at a time:
-
-```bash
-cd /pipeline/xiaoyunao/known_asteroid
-./run_backfill.sh 20251019 20260318
-```
-
-This runner waits for the current night's finalize job to finish before
-submitting the next night, so the behavior is strictly day-by-day:
-process one night, submit one night, then continue.
+The current server tree no longer keeps the older sequential helpers
+`run_pipeline.sh` / `run_backfill.sh`; those are retained only in
+`known_asteroid_local` for local debugging and comparison.
 
 ## Expected outputs
 
