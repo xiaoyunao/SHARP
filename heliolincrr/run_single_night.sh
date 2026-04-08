@@ -70,12 +70,6 @@ RR_W15_KCAP=200
 RR_W15_MAXV=200
 RR_W15_MININIT=0.02
 
-CACHE_PROP=0
-RR_CACHE_FLAG=""
-if [[ "${CACHE_PROP}" -eq 1 ]]; then
-  RR_CACHE_FLAG="--cache-prop"
-fi
-
 night_mask_dir() {
   local night="$1"
   echo "${ROOT_OUT}/${night}/mask_gaia"
@@ -275,8 +269,7 @@ mkdir -p "${RR_NIGHT_DIR}"
   --min-nights "${RR_NIGHT_MIN_NIGHTS}" \
   --k-neighbors-cap "${RR_NIGHT_KCAP}" \
   --max-v-kms "${RR_NIGHT_MAXV}" \
-  --min-init-earth-au "${RR_NIGHT_MININIT}" \
-  ${RR_CACHE_FLAG}
+  --min-init-earth-au "${RR_NIGHT_MININIT}"
 
 if [[ "${RUN_W15}" -ne 1 ]]; then
   echo "[info] RUN_W15=${RUN_W15}; skip W15 processing"
@@ -361,5 +354,4 @@ mkdir -p "${RR_W15_DIR}"
   --min-nights "${RR_W15_MIN_NIGHTS}" \
   --k-neighbors-cap "${RR_W15_KCAP}" \
   --max-v-kms "${RR_W15_MAXV}" \
-  --min-init-earth-au "${RR_W15_MININIT}" \
-  ${RR_CACHE_FLAG}
+  --min-init-earth-au "${RR_W15_MININIT}"

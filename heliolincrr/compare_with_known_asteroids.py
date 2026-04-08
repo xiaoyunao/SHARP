@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 from collections import defaultdict
 from pathlib import Path
 
@@ -24,6 +25,26 @@ def string_list_column(values_by_row, width: int = 2048) -> np.ndarray:
         [";".join(map(str, vals)) if vals else "" for vals in values_by_row],
         dtype=f"U{width}",
     )
+
+
+def summarize_int_array(arr: np.ndarray) -> dict[str, object]:
+    arr = np.asarray(arr, dtype=np.int64)
+    if arr.size == 0:
+        return {
+            "min": 0,
+            "median": 0.0,
+            "max": 0,
+            "p90": 0.0,
+            "counts": {},
+        }
+    vals, cnts = np.unique(arr, return_counts=True)
+    return {
+        "min": int(arr.min()),
+        "median": float(np.median(arr)),
+        "max": int(arr.max()),
+        "p90": float(np.percentile(arr, 90)),
+        "counts": {str(int(v)): int(c) for v, c in zip(vals, cnts)},
+    }
 
 
 def load_tracklet_detection_members(tracklets_path: Path):
@@ -104,6 +125,7 @@ def main():
     ap.add_argument("--rr-subdir", default="rr_links", help="rr subdir under <root-out>/<night>/")
     ap.add_argument("--tracklets", default=None, help="optional explicit tracklets ALL fits")
     ap.add_argument("--out", default=None)
+    ap.add_argument("--summary-out", default=None, help="optional JSON summary output path")
     args = ap.parse_args()
 
     night = str(args.night)
@@ -170,9 +192,9 @@ def main():
     out["is_good_any"] = np.asarray(is_good_any, dtype=bool)
 
     out.meta["night"] = night
-    out.meta["l4_path"] = str(l4_path)
-    out.meta["tracklets_path"] = str(tracklets_path)
-    out.meta["rr_dir"] = str(rr_dir)
+    out.meta["l4_file"] = l4_path.name
+    out.meta["track_file"] = tracklets_path.name
+    out.meta["rr_dir"] = rr_dir.name
 
     out_path = Path(args.out) if args.out else (out_root / night / "analysis" / f"{night}_known_asteroid_comparison.fits")
     out_path.parent.mkdir(parents=True, exist_ok=True)
@@ -183,9 +205,49 @@ def main():
     n_track = int(np.sum(np.asarray(out["in_tracklet"], dtype=bool)))
     n_rr = int(np.sum(np.asarray(out["in_rr_link"], dtype=bool)))
     n_good = int(np.sum(np.asarray(out["is_good_any"], dtype=bool)))
+    n_fit_ok = int(np.sum(np.asarray(out["fit_ok_any"], dtype=bool)))
+    hit_mask = np.asarray(out["in_rr_link"], dtype=bool)
+    n_rr_links_arr = np.asarray(out["n_rr_links"], dtype=np.int64)
+
+    summary = {
+        "night": night,
+        "paths": {
+            "l4_path": str(l4_path),
+            "tracklets_path": str(tracklets_path),
+            "rr_dir": str(rr_dir),
+            "mask_dir": str(mask_dir),
+            "comparison_fits": str(out_path),
+        },
+        "counts": {
+            "total": n_total,
+            "survives_mask_gaia": n_mask,
+            "in_tracklet": n_track,
+            "in_rr_link": n_rr,
+            "fit_ok_any": n_fit_ok,
+            "is_good_any": n_good,
+        },
+        "fractions": {
+            "tracklet_given_mask": float(n_track / n_mask) if n_mask else 0.0,
+            "rr_given_mask": float(n_rr / n_mask) if n_mask else 0.0,
+            "rr_given_tracklet": float(n_rr / n_track) if n_track else 0.0,
+            "fit_ok_given_rr": float(n_fit_ok / n_rr) if n_rr else 0.0,
+            "is_good_given_rr": float(n_good / n_rr) if n_rr else 0.0,
+        },
+        "n_rr_links_all": summarize_int_array(n_rr_links_arr),
+        "n_rr_links_hits_only": summarize_int_array(n_rr_links_arr[hit_mask]),
+    }
+    summary_path = Path(args.summary_out) if args.summary_out else (
+        out_root / night / "analysis" / f"{night}_known_asteroid_comparison_summary.json"
+    )
+    summary_path.parent.mkdir(parents=True, exist_ok=True)
+    summary_path.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
     print(f"[write] {out_path}")
-    print(f"[summary] total={n_total} survives_mask_gaia={n_mask} in_tracklet={n_track} in_rr_link={n_rr} is_good_any={n_good}")
+    print(f"[write] {summary_path}")
+    print(
+        f"[summary] total={n_total} survives_mask_gaia={n_mask} "
+        f"in_tracklet={n_track} in_rr_link={n_rr} fit_ok_any={n_fit_ok} is_good_any={n_good}"
+    )
 
 
 if __name__ == "__main__":

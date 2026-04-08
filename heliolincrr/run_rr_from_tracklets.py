@@ -4,8 +4,7 @@
 from __future__ import annotations
 
 import argparse
-import pickle
-import shutil
+import json
 import multiprocessing as mp
 import time
 from pathlib import Path
@@ -191,17 +190,12 @@ class HeliolincRR_Tracklets:
         return eq_cart, ec_cart
 
     @staticmethod
-    def geod2heliod(r_so, r_ob, d):
+    def geodist_from_heliodist(r_so, r_ob, d):
         a = np.sum(r_ob**2)
         b = 2 * np.sum(r_ob * r_so)
         c = -1 * (d**2 - np.sum(r_so**2))
         r = np.roots([a, b, c])
         return r[r > 0][0]
-
-    @staticmethod
-    def psave(var, fname):
-        with open(fname, "wb") as f:
-            pickle.dump(var, f, pickle.HIGHEST_PROTOCOL)
 
     def propagator(self, hypo, epochs_jd, max_v_kms, min_init_earth_au):
         r, rdot, rdotdot = hypo
@@ -226,8 +220,8 @@ class HeliolincRR_Tracklets:
             range_dt1 = r + rdot * self.dts[f1] + 0.5 * rdotdot * self.dts[f1] ** 2
 
             try:
-                alpha0 = self.geod2heliod(r_so0, r_ob0, range_dt0)
-                alpha1 = self.geod2heliod(r_so1, r_ob1, range_dt1)
+                alpha0 = self.geodist_from_heliodist(r_so0, r_ob0, range_dt0)
+                alpha1 = self.geodist_from_heliodist(r_so1, r_ob1, range_dt1)
             except Exception:
                 continue
 
@@ -265,10 +259,8 @@ class HeliolincRR_Tracklets:
 
         return np.asarray(prvs, dtype=np.float64), combs_used, hypo
 
-    def propagate_all(self, hypos, epochs_jd, cores, max_v_kms, min_init_earth_au, cache_dir: Path | None, logger: ProgressLogger | None = None):
+    def propagate_all(self, hypos, epochs_jd, cores, max_v_kms, min_init_earth_au, logger: ProgressLogger | None = None):
         hypos = list(hypos)
-        if cache_dir is not None:
-            cache_dir.mkdir(parents=True, exist_ok=True)
 
         results = []
         t0 = time.perf_counter()
@@ -277,12 +269,6 @@ class HeliolincRR_Tracklets:
             for i, hypo in enumerate(hypos, start=1):
                 prvs, combs_used, _ = self.propagator(hypo, epochs_jd, max_v_kms, min_init_earth_au)
                 results.append((prvs, combs_used, hypo))
-                if cache_dir is not None:
-                    tag = f"r{hypo[0]:.3f}_rd{hypo[1]:+.4f}_rdd{hypo[2]:+.6f}"
-                    fn = cache_dir / f"prop_{tag}.pkl"
-                    tmp = fn.with_suffix(fn.suffix + ".tmp")
-                    self.psave([prvs, combs_used, hypo], tmp)
-                    shutil.move(tmp, fn)
                 if logger is not None:
                     logger.log(
                         f"[propagate] {i}/{n_hypos} hypo={hypo} n_prvs={len(prvs)} elapsed={_fmt_elapsed(time.perf_counter() - t0)}"
@@ -314,7 +300,7 @@ class HeliolincRR_Tracklets:
 
     @staticmethod
     def _unique_links(links_obs):
-        return [list(l) for l in set(tuple(l) for l in links_obs)]
+        return [list(l) for l in sorted(set(tuple(l) for l in links_obs))]
 
     def cluster_one(self, prvs, combs_used, hypo, tol, min_len_obs, min_nights, k_neighbors_cap):
         if prvs.size == 0:
@@ -326,36 +312,64 @@ class HeliolincRR_Tracklets:
 
         tree = KDTree(drvs)
         num_tracklets = drvs.shape[0]
-
         k_query = min(int(k_neighbors_cap), num_tracklets)
         fnums = np.asarray(self.bbf[:, 3], dtype=np.int64)
 
-        links = []
+        comb_obs = [tuple(int(x) for x in comb) for comb in combs_used]
+        comb_fnums = [tuple(int(fnums[idx]) for idx in comb) for comb in combs_used]
+
+        edges = []
         for i, rv in enumerate(drvs):
             dist, kidx = tree.query(np.asarray([rv]), k=k_query)
-            dist = dist[0]
-            kidx = kidx[0]
-            kidx = kidx[dist <= tol]
-            if len(kidx) <= 1:
+            for d, j in zip(dist[0], kidx[0]):
+                j = int(j)
+                if j <= i or d > tol:
+                    continue
+                edges.append((float(d), i, j))
+        edges.sort(key=lambda x: (x[0], x[1], x[2]))
+
+        parent = list(range(num_tracklets))
+        rank = [0] * num_tracklets
+        comp_obs = [set(obs) for obs in comb_obs]
+        comp_fnums = [set(fs) for fs in comb_fnums]
+
+        def find(x):
+            while parent[x] != x:
+                parent[x] = parent[parent[x]]
+                x = parent[x]
+            return x
+
+        def union(a, b):
+            ra = find(a)
+            rb = find(b)
+            if ra == rb:
+                return
+            if comp_fnums[ra] & comp_fnums[rb]:
+                return
+            if rank[ra] < rank[rb]:
+                ra, rb = rb, ra
+            parent[rb] = ra
+            comp_obs[ra].update(comp_obs[rb])
+            comp_fnums[ra].update(comp_fnums[rb])
+            if rank[ra] == rank[rb]:
+                rank[ra] += 1
+
+        for _, i, j in edges:
+            union(i, j)
+
+        links = []
+        seen = set()
+        for i in range(num_tracklets):
+            root = find(i)
+            if root in seen:
                 continue
-
-            ccs = [combs_used[i]]
-            cfcombs = [[fnums[combs_used[i][0]], fnums[combs_used[i][1]]]]
-
-            for k in kidx:
-                new_ccs = ccs + [combs_used[k]]
-                new_cfcombs = cfcombs + [[fnums[combs_used[k][0]], fnums[combs_used[k][1]]]]
-                if len(set(chain.from_iterable(new_ccs))) == len(set(chain.from_iterable(new_cfcombs))):
-                    ccs = new_ccs
-                    cfcombs = new_cfcombs
-
-            link = sorted(set(chain.from_iterable(ccs)))
+            seen.add(root)
+            link = sorted(comp_obs[root])
             if len(link) >= min_len_obs:
                 links.append(link)
 
         links = self._min_nights_filter(links, self.bbf, self.utimes, min_nights)
-        links = self._unique_links(links)
-        return links
+        return self._unique_links(links)
 
     def cluster_all(self, results, tol, min_len_obs, min_nights, k_neighbors_cap, logger: ProgressLogger | None = None):
         all_links = []
@@ -389,6 +403,78 @@ def choose_reference_epochs(jd1, jd2, mode: str, ref_dt_days: float):
     else:
         raise ValueError(mode)
     return np.array([jd_ref0, jd_ref0 + float(ref_dt_days)], dtype=np.float64)
+
+
+def summarize_int_column(arr) -> dict[str, object]:
+    arr = np.asarray(arr, dtype=np.int64)
+    if arr.size == 0:
+        return {
+            "min": 0,
+            "median": 0.0,
+            "max": 0,
+            "counts": {},
+        }
+    vals, cnts = np.unique(arr, return_counts=True)
+    return {
+        "min": int(arr.min()),
+        "median": float(np.median(arr)),
+        "max": int(arr.max()),
+        "counts": {str(int(v)): int(c) for v, c in zip(vals, cnts)},
+    }
+
+
+def write_rr_summary_json(
+    outdir: Path,
+    infile: Path,
+    args,
+    hypos,
+    epochs,
+    results,
+    links_tab: Table,
+    members_tab: Table,
+    elapsed_propagation_s: float,
+    elapsed_clustering_s: float,
+):
+    summary = {
+        "infile": str(infile),
+        "outdir": str(outdir),
+        "params": {
+            "cores": int(args.cores),
+            "max_v_kms": float(args.max_v_kms),
+            "min_init_earth_au": float(args.min_init_earth_au),
+            "ref_epoch_mode": str(args.ref_epoch_mode),
+            "ref_dt_days": float(args.ref_dt_days),
+            "tol": float(args.tol),
+            "min_len_obs": int(args.min_len_obs),
+            "min_nights": int(args.min_nights),
+            "k_neighbors_cap": int(args.k_neighbors_cap),
+            "hypos_path": str(args.hypos) if args.hypos else None,
+        },
+        "reference_epochs_jd": [float(x) for x in epochs],
+        "n_hypos": int(len(hypos)),
+        "propagation_total_elapsed_s": float(elapsed_propagation_s),
+        "clustering_total_elapsed_s": float(elapsed_clustering_s),
+        "per_hypo": [
+            {
+                "hypo": {
+                    "r": float(hypo[0]),
+                    "rdot": float(hypo[1]),
+                    "rddot": float(hypo[2]),
+                },
+                "n_prvs": int(len(prvs)),
+            }
+            for prvs, _, hypo in results
+        ],
+        "outputs": {
+            "n_links": int(len(links_tab)),
+            "n_member_rows": int(len(members_tab)),
+            "n_tracklets_per_link": summarize_int_column(links_tab["n_tracklets"] if len(links_tab) else []),
+            "n_nights_per_link": summarize_int_column(links_tab["n_nights"] if len(links_tab) else []),
+        },
+    }
+    out_path = outdir / "rr_summary.json"
+    out_path.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    return out_path
 
 
 def write_links_fits_with_endpoints(
@@ -473,6 +559,26 @@ def write_links_fits_with_endpoints(
 
     print(f"[write] {out_links}  n_links={len(links_tab)}")
     print(f"[write] {out_members}  n_rows={len(members_tab)}")
+    return links_tab, members_tab
+
+
+def validate_args(args):
+    if args.cores < 1:
+        raise ValueError("--cores must be >= 1")
+    if args.max_v_kms <= 0:
+        raise ValueError("--max-v-kms must be > 0")
+    if args.min_init_earth_au <= 0:
+        raise ValueError("--min-init-earth-au must be > 0")
+    if args.ref_dt_days <= 0:
+        raise ValueError("--ref-dt-days must be > 0")
+    if args.tol <= 0:
+        raise ValueError("--tol must be > 0")
+    if args.min_len_obs < 2:
+        raise ValueError("--min-len-obs must be >= 2")
+    if args.min_nights < 1:
+        raise ValueError("--min-nights must be >= 1")
+    if args.k_neighbors_cap < 1:
+        raise ValueError("--k-neighbors-cap must be >= 1")
 
 
 def main():
@@ -492,10 +598,10 @@ def main():
     ap.add_argument("--min-nights", type=int, default=2)
     ap.add_argument("--k-neighbors-cap", type=int, default=200)
 
-    ap.add_argument("--cache-prop", action="store_true")
     ap.add_argument("--hypos", type=str, default=None)
 
     args = ap.parse_args()
+    validate_args(args)
 
     infile = Path(args.infile).expanduser()
     outdir = Path(args.outdir).expanduser()
@@ -545,7 +651,6 @@ def main():
         tracklet_ids=np.asarray(tab["tracklet_id"]).astype("U64"),
     )
 
-    cache_dir = (outdir / "prop_cache") if args.cache_prop else None
     t_prop0 = time.perf_counter()
     results = hl.propagate_all(
         hypos=hypos,
@@ -553,10 +658,10 @@ def main():
         cores=args.cores,
         max_v_kms=args.max_v_kms,
         min_init_earth_au=args.min_init_earth_au,
-        cache_dir=cache_dir,
         logger=logger,
     )
-    logger.log(f"[summary] propagation_total_elapsed={_fmt_elapsed(time.perf_counter() - t_prop0)}")
+    elapsed_propagation_s = time.perf_counter() - t_prop0
+    logger.log(f"[summary] propagation_total_elapsed={_fmt_elapsed(elapsed_propagation_s)}")
 
     t_cluster0 = time.perf_counter()
     links_obs = hl.cluster_all(
@@ -567,7 +672,8 @@ def main():
         k_neighbors_cap=args.k_neighbors_cap,
         logger=logger,
     )
-    logger.log(f"[summary] clustering_total_elapsed={_fmt_elapsed(time.perf_counter() - t_cluster0)}")
+    elapsed_clustering_s = time.perf_counter() - t_cluster0
+    logger.log(f"[summary] clustering_total_elapsed={_fmt_elapsed(elapsed_clustering_s)}")
     logger.log(f"[ok] n_links (obs-level) = {len(links_obs)}")
 
     # keep debug arrays (useful)
@@ -575,7 +681,20 @@ def main():
     np.save(outdir / "utimes.npy", hl.utimes)
 
     # FITS outputs + endpoints in links table
-    write_links_fits_with_endpoints(outdir, links_obs, hl.bbf, hl.utimes, tab)
+    links_tab, members_tab = write_links_fits_with_endpoints(outdir, links_obs, hl.bbf, hl.utimes, tab)
+    summary_path = write_rr_summary_json(
+        outdir=outdir,
+        infile=infile,
+        args=args,
+        hypos=hypos,
+        epochs=epochs,
+        results=results,
+        links_tab=links_tab,
+        members_tab=members_tab,
+        elapsed_propagation_s=elapsed_propagation_s,
+        elapsed_clustering_s=elapsed_clustering_s,
+    )
+    logger.log(f"[write] {summary_path}")
     logger.log(f"[done] outputs written to {outdir}")
 
 

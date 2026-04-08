@@ -2,6 +2,82 @@
 
 ## 2026-04-08
 
+- task: 用更新后的 `cluster_one()` 逻辑重跑 `20260220` 单夜 RR 基线
+- files_changed: `WORKLOG.md`, `PLAN.md`
+- commands_run: 服务器 `scp run_rr_from_tracklets.py compare_with_known_asteroids.py rr_link_stats.py ...:/pipeline/xiaoyunao/heliolincrr/`, 服务器 `python run_rr_from_tracklets.py --infile /pipeline/xiaoyunao/data/heliolincrr/20260220/tracklets_linreproj/tracklets_20260220_ALL.fits --outdir /pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links --cores 16 --ref-epoch-mode mid --ref-dt-days 0.05 --tol 0.02 --min-len-obs 3 --min-nights 1 --k-neighbors-cap 200 --max-v-kms 200 --min-init-earth-au 0.01`, 服务器 `python rr_link_stats.py 20260220 ...`, 服务器 `python compare_with_known_asteroids.py 20260220 ...`
+- key_findings:
+  - 新 `cluster_one()` 逻辑下，单夜 RR linkage 数从 `29643` 降到 `8393`
+  - linkage member rows 从 `108288` 降到 `22436`
+  - 已知检测进入 RR 的覆盖率从 `2287 / 2304 = 99.26%` 降到 `2082 / 2304 = 90.36%`
+  - 但 RR 歧义度显著下降：命中 RR 的 detection 上，`n_rr_links` 的中位数从 `4` 降到 `3`，`p90` 从 `49` 降到 `6`
+  - 新增的 `rr_summary.json` 已正常写出
+  - 修正后的 `compare_with_known_asteroids.py` 已成功写出 FITS 和 JSON summary；目前只剩 harmless 的 HIERARCH warning
+- validation:
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links/rr_summary.json`
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_link_stats.json`
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison.{fits,json}`
+- remaining_issues:
+  - 新逻辑明显降低歧义，但召回也有可见下降，后续还需要在“更干净”和“更高覆盖”之间继续找平衡
+- next_step:
+  - 先围绕 `tol`、`k-neighbors-cap`、`ref-dt-days` 扫参，看能否在保持低歧义的同时把已知覆盖率往回拉
+
+- task: 重构 RR 聚类与统计输出，准备下一轮 `rr link` 调参
+- files_changed: `heliolincrr/run_rr_from_tracklets.py`, `heliolincrr/run_single_night.sh`, `heliolincrr/compare_with_known_asteroids.py`, `heliolincrr/rr_link_stats.py`, `WORKLOG.md`, `PLAN.md`
+- commands_run: 本地 `python3 -m py_compile heliolincrr/run_rr_from_tracklets.py heliolincrr/compare_with_known_asteroids.py heliolincrr/rr_link_stats.py`, `rg -n "cache-prop|RR_CACHE_FLAG|prop_cache" heliolincrr`, 本地合成用例尝试 `python3 - <<PY ... cluster_one() ... PY`
+- key_findings:
+  - 重新确认后，`min-init-earth-au` 当前逻辑筛的是地距，参数名本身是对的；真正容易误解的是函数名 `geod2heliod()`
+  - `cluster_one()` 已从按 KDTree 返回顺序的局部贪心，改为按距离排序后的确定性全局合并
+  - RR 参数现在增加了入口校验：`cores`、`tol`、`ref-dt-days`、`k-neighbors-cap`、`min-len-obs`、`min-nights` 等都会先检查
+  - `--cache-prop` 与相关代码路径已全部移除
+  - RR 主程序现在会额外写 `rr_summary.json`
+  - 新增 `rr_link_stats.py`，可直接汇总 RR 输出和已知小行星覆盖率/歧义度
+  - `compare_with_known_asteroids.py` 已改为只在 FITS header 放短文件名，并额外输出 JSON summary，避免原先长 metadata 写 FITS 失败
+- validation:
+  - 本地 `py_compile` 通过
+  - `cache-prop` 相关字符串已清空
+  - 本地合成用例未实际运行成功，因为本机当前 Python 缺少 `poliastro`
+- remaining_issues:
+  - 还需要继续通过参数扫描评估新逻辑下的最优折中点
+- next_step:
+  - 基于新逻辑的 RR 基线开始扫 `tol`、`k-neighbors-cap`、`ref-dt-days`
+
+- task: 基于新的 `20260220` tracklet 基线首次运行单夜 `rr link`
+- files_changed: `WORKLOG.md`, `PLAN.md`
+- commands_run: 服务器 `python run_rr_from_tracklets.py --infile /pipeline/xiaoyunao/data/heliolincrr/20260220/tracklets_linreproj/tracklets_20260220_ALL.fits --outdir /pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links --cores 16 --ref-epoch-mode mid --ref-dt-days 0.05 --tol 0.02 --min-len-obs 3 --min-nights 1 --k-neighbors-cap 200 --max-v-kms 200 --min-init-earth-au 0.01`, 服务器只读统计 `links_tracklets.fits` / `linkage_members.fits`，服务器只读统计已知小行星在 RR 中的覆盖率
+- key_findings:
+  - 当前单夜 RR 默认参数下，`20260220` 生成 `29643` 条 linkage，成员行数 `108288`
+  - `n_tracklets` 分布为：`2:7210`、`3:8553`、`4:6878`、`5:3460`、`6:1958`、`7:1112`、`8:388`、`9:79`、`10:5`
+  - linkage 的 `n_tracklets` 中位数为 `3`，最大为 `10`
+  - 当前是单夜 RR，因此全部 linkage 的 `n_nights=1`
+  - 已知小行星检测中：`3307` 个 L4 matched detections 里，`3030` 个 survives mask，`2304` 个进入 tracklet，`2287` 个进入至少一个 RR linkage
+  - 对已经进入 tracklet 的已知检测，进入 RR 的覆盖率约 `99.26%`
+  - 但已知检测的 RR 歧义度不低：命中 RR 的 detection 上，`n_rr_links` 中位数 `4`，`p90=49`
+  - `compare_with_known_asteroids.py` 当前直接写 FITS 会因 `tracklets_path` metadata 太长而失败，这暴露了一个独立的输出问题，但不影响本次 RR 基线结果
+- validation:
+  - 服务器 RR 成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links/links_tracklets.fits`
+  - 服务器 RR 成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links/linkage_members.fits`
+- remaining_issues:
+  - 还未开始扫描 `ref-dt`、`tol`、`k-neighbors-cap` 等 RR 参数
+  - 需要定义 RR 阶段的评估指标，避免只盯 `n_links`
+- next_step:
+  - 以这次 RR 基线为起点，先做 `tol` / `k-neighbors-cap` / `ref-dt-days` 的单维扫描
+
+- task: 清空服务器 `20260220` 产物并用当前默认值重跑 `mask_gaia + make_tracklet`
+- files_changed: `WORKLOG.md`, `PLAN.md`
+- commands_run: 本地 `rg -n "vmin|vmax|dmag|max|r-static|min-repeat|skip-common-area" heliolincrr/run_single_night.sh heliolincrr/make_tracklet_linreproj.py CHANGELOG.md PLAN.md`; 服务器 `find /pipeline/xiaoyunao/data/heliolincrr/20260220 -mindepth 1 -maxdepth 1 -exec rm -rf {} +`, `python mask_gaia.py 20260220 ...`, `python make_tracklet_linreproj.py 20260220 ... --vmin 3.0 --vmax 63.0 --dmag-max 1.0 --r-static 2.0 --min-repeat 2 --skip-common-area`, `python merge_tracklets_night.py 20260220 ...`, `python tracklet_completeness_purity.py 20260220 ...`
+- key_findings:
+  - 当前正式默认参数已落在代码和单夜脚本中：`vmin=3.0`、`vmax=63.0`、`dmag-max=1.0`、`r-static=2.0`、`min-repeat=2`、默认 `--skip-common-area`
+  - 服务器 `/pipeline/xiaoyunao/data/heliolincrr/20260220` 已清空并从零重跑 `mask_gaia`
+  - `mask_gaia` 重跑后产出 `462` 个 masked L2 catalog
+  - `make_tracklet` 重跑并 merge 后得到 `139` 个 group 文件、`10555` 条 nightly tracklet
+  - 以新默认值重跑得到的统计与此前调参记录一致：`purity_both_known_same_object_fraction=0.13254`，`completeness_object_fraction=0.87391`
+- validation:
+  - 服务器重跑成功，统计文件已写入 `/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_tracklet_only_edgeiso_vmax63_vmin3p0_summary.json`
+- remaining_issues:
+  - 下一步还未开始新的 `rr link` 参数优化
+- next_step:
+  - 以这次 clean rerun 的 `mask_gaia` / `tracklets_linreproj` / summary 作为 `rr link` 调参输入基线
+
 - task: 将 `survey` 和 `known_asteroid` 的自动任务统一调整到上午 `09:00`
 - files_changed: `survey/README.md`, `survey/cron.example`, `known_asteroid/README.md`, `known_asteroid/cron.example`, `WORKLOG.md`, `PLAN.md`
 - commands_run: 本地 `rg -n "16:00|0 16|09:00|0 9|cron" README.md known_asteroid survey WORKLOG.md PLAN.md`; 服务器待执行 `crontab -l`, `crontab <newfile>`
