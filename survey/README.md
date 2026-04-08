@@ -4,7 +4,7 @@
 
 ## 行为
 
-- 每天下午 `16:00` 运行一次。
+- 每天上午 `09:00` 运行一次。
 - 当天运行日期记为当夜日期，例如 `2026-02-20`。
 - footprint 默认路径：`/pipeline/xiaoyunao/survey/footprints/equatorial_footprints.fits`
 - 历史曝光文件默认保存在 `workspace/history/exposure_history.fits`
@@ -59,7 +59,7 @@ python -m survey.run_daily \
 参考 `survey/cron.example`：
 
 ```cron
-0 16 * * * cd /pipeline/xiaoyunao && /bin/bash /pipeline/xiaoyunao/survey/run_daily.sh
+0 9 * * * cd /pipeline/xiaoyunao && /bin/bash /pipeline/xiaoyunao/survey/run_daily.sh
 ```
 
 ## 部署说明

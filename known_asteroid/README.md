@@ -25,7 +25,7 @@ object submission workflow.
 - `slurm_match_one_file.sh`: one `*MP*` file per slurm task
 - `slurm_merge_submit.sh`: merge night-level outputs and optionally submit
 - `submit_pipeline_slurm.sh`: submit slurm jobs for one night or a date range
-- `cron.example`: daily 16:00 cron entry
+- `cron.example`: daily 09:00 cron entry
 - `cron_visual.example`: daily visualization cron entry
 
 ## Default server layout
@@ -140,7 +140,7 @@ MATCH_MEM=8G FINALIZE_MEM=8G ./submit_pipeline_slurm.sh --batch false --submit-m
 
 ## Unattended operation
 
-Daily trigger at 16:00:
+Daily trigger at 09:00:
 
 ```bash
 cd /pipeline/xiaoyunao/known_asteroid

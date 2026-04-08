@@ -2,6 +2,38 @@
 
 ## 2026-04-08
 
+- task: 将 `survey` 和 `known_asteroid` 的自动任务统一调整到上午 `09:00`
+- files_changed: `survey/README.md`, `survey/cron.example`, `known_asteroid/README.md`, `known_asteroid/cron.example`, `WORKLOG.md`, `PLAN.md`
+- commands_run: 本地 `rg -n "16:00|0 16|09:00|0 9|cron" README.md known_asteroid survey WORKLOG.md PLAN.md`; 服务器待执行 `crontab -l`, `crontab <newfile>`
+- key_findings:
+  - 当前仓库内 `survey` 和 `known_asteroid` 的 cron 文档默认仍写成 `16:00`
+  - 需要同步修改服务器真实 `crontab`，否则仓库文档和服务器行为会再次分叉
+- validation:
+  - 本地文档与 cron 示例已更新为 `09:00`
+- remaining_issues:
+  - 还需要把服务器真实 `crontab` 改到 `09:00` 并推送 git
+- next_step:
+  - 更新服务器 `survey` / `known_asteroid` crontab
+  - 提交并推送本地修改
+
+- task: 恢复 `known_asteroid` finalize 后自动出图链路并补跑 `20260407`
+- files_changed: `known_asteroid/slurm_merge_submit.sh`, `WORKLOG.md`, `PLAN.md`
+- commands_run: 本地 `git show 119b94b5afb0037839ffa1a1e326b49d58c5aaa5:known_asteroid_server/slurm_{match_one_file,merge_submit}.sh`, `git show --patch 3bd9bef -- known_asteroid/slurm_match_one_file.sh known_asteroid/slurm_merge_submit.sh`, `bash -n known_asteroid/slurm_merge_submit.sh known_asteroid/slurm_match_one_file.sh known_asteroid/run_visual_daily.sh`; 服务器 `crontab -l`, `tail /pipeline/xiaoyunao/known_asteroid/runtime/logs/cron.log`, `stat /pipeline/xiaoyunao/known_asteroid/slurm_merge_submit.sh /pipeline/xiaoyunao/known_asteroid/run_visual_daily.sh`, `scp known_asteroid/slurm_merge_submit.sh ...:/pipeline/xiaoyunao/known_asteroid/slurm_merge_submit.sh`, `TARGET_NIGHT=20260407 /pipeline/xiaoyunao/known_asteroid/run_visual_daily.sh`
+- key_findings:
+  - 服务器真实 `crontab` 只有 `run_daily.sh`，没有单独的出图 cron；自动出图本来依赖 finalize 阶段内部 hook
+  - `2026-04-08 13:28` 服务器上的 `slurm_merge_submit.sh` 和 `slurm_match_one_file.sh` 被用仓库版覆盖；这次提交本意只是把 Slurm stdout/stderr 改到 `/dev/null`
+  - `slurm_match_one_file.sh` 本次只有日志输出位置变化，没有逻辑变化
+  - `slurm_merge_submit.sh` 本次显式 diff 也只有日志输出位置变化，但服务器之前已有“finalize 结束后调用 run_visual_daily.sh”的热修，仓库当时未包含该 hook，因此被覆盖后导致当天下午只上报不出图
+  - 当前还顺手修正了另一个行为问题：`matched_asteroids.fits` 缺失时，finalize 不应 `exit 2` 误报失败，而应安静跳过 submit/visualization
+- validation:
+  - 本地 shell 语法检查通过
+  - 服务器 `20260407` 已手动补跑历史更新和出图，生成 `plots/20260407/` 下 5 张 PNG 和 5 个 GIF
+  - 服务器当前 `slurm_merge_submit.sh` 末尾已恢复 `run_visual_after_finalize`
+- remaining_issues:
+  - 这次恢复的是仓库版 hook；后续若服务器再热修，需先同步回仓库再覆盖服务器，避免再次丢失链路
+- next_step:
+  - 观察明天 `20260408` 夜次在 09:00 提交后的自动出图是否恢复正常
+  - 若还需要更稳的可追踪性，可给 visualize hook 增加独立日志输出
 - task: 固定 `make tracklet` 默认参数为 `vmin=3.0, vmax=63` 并清理本轮调参产物
 - files_changed: `heliolincrr/make_tracklet_linreproj.py`, `heliolincrr/run_single_night.sh`, `PLAN.md`, `WORKLOG.md`, `CHANGELOG.md`
 - commands_run: 服务器 `make_tracklet_linreproj.py` 多轮试跑 `vmax=60/63/65` 与 `vmin=0/1/2/3/5`，`merge_tracklets_night.py`，`tracklet_completeness_purity.py`； 服务器删除参数扫描输出目录和 summary 文件

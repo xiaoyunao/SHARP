@@ -27,6 +27,8 @@
 - `known_asteroid/astorb.dat` 和 `known_asteroid/de432s.bsp` 不应进入 git
 - 后续代码修改要持续与服务器目录保持一致
 - 需要基于 `20260220_known_motion_summary.json` 缩小 `vmin` / `vmax` 扫描范围
+- `known_asteroid` 的 finalize 自动出图链路刚恢复，需要确认明天自动任务是否正常衔接
+- 服务器热修如果未先回写仓库，后续同步可能再次覆盖运行期修复
 
 ## Validation criteria
 
@@ -34,10 +36,12 @@
 - 每次调参后都能产出 completeness / purity / tracklet 总数
 - baseline 结果已记录，可和后续参数组合直接比较
 - 已知小行星速度分布已整理成可直接参考的 summary / plot
+- `known_asteroid` 每日 09:00 提交后，finalize 成功结束时能自动触发历史更新和出图
 
 ## Next recommended steps
 
 1. 固定 `20260220` 为对比样本，将默认值更新为 `vmin=3.0, vmax=63`
 2. 以 `tracklets_linreproj_tracklet_only_edgeiso_vmax63_vmin3p0` 的统计结果作为当前参数基线
 3. 后续若继续调参，优先在 `vmin>3` 或其他独立维度上评估 completeness 是否开始下降
-4. 若服务器端目录有变更，优先同步到仓库正式目录而不是另建副本
+4. 核对 `survey` 和 `known_asteroid` 的 09:00 自动任务是否按新时间运行
+5. 若服务器端目录有变更，优先同步到仓库正式目录而不是另建副本

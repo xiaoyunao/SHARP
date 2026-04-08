@@ -59,23 +59,29 @@ REPLY_TXT="${L4_DIR}/${NIGHT}_mpc_reply.txt"
 
 mkdir -p "${L4_DIR}" "${PARTS_DIR}"
 
+run_visual_after_finalize() {
+  TARGET_NIGHT="${NIGHT}" "${SCRIPT_DIR}/run_visual_daily.sh"
+}
+
 if [[ ! -s "${ALL_FITS}" || ! -s "${MATCHED_FITS}" ]]; then
   "${PYTHON}" "${SCRIPT_DIR}/merge_night_parts.py" "${NIGHT}" --parts-dir "${PARTS_DIR}" --outdir "${L4_DIR}"
 fi
 
 if [[ "${SUBMIT_MPC}" != "true" ]]; then
   echo "[DONE] ${NIGHT} extraction finished (submit disabled)"
+  run_visual_after_finalize
   exit 0
 fi
 
 if [[ -s "${OUT_PSV}" && -s "${REPLY_TXT}" ]]; then
   echo "[SKIP] ${NIGHT} report products already exist"
+  run_visual_after_finalize
   exit 0
 fi
 
 if [[ ! -s "${MATCHED_FITS}" ]]; then
-  echo "[FATAL] missing matched FITS: ${MATCHED_FITS}" >&2
-  exit 2
+  echo "[SKIP] ${NIGHT} missing matched FITS; skip submit and visualization"
+  exit 0
 fi
 
 CMD=(
@@ -120,3 +126,4 @@ if [[ "${INCLUDE_LOGSNR}" == "1" ]]; then
 fi
 
 "${CMD[@]}"
+run_visual_after_finalize
