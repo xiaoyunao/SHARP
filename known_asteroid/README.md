@@ -151,8 +151,8 @@ This script checks the previous night, verifies that `L2` exists and contains
 `*MP*` files, and only then submits the night to slurm.
 
 The current server tree no longer keeps the older sequential helpers
-`run_pipeline.sh` / `run_backfill.sh`; those are retained only in
-`known_asteroid_local` for local debugging and comparison.
+`run_pipeline.sh` / `run_backfill.sh`; the repository now follows that same
+server-only layout.
 
 ## Expected outputs
 

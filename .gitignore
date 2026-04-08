@@ -5,20 +5,14 @@
 **/__pycache__/
 **/*.pyc
 
-local_data/
-resources/known_asteroid/astorb.dat
-resources/known_asteroid/de432s.bsp
+known_asteroid/astorb.dat
+known_asteroid/de432s.bsp
 
-survey_local/logs/
-survey_local/plots/
-survey_local/runtime/
-survey_server/logs/
-survey_server/plots/
-survey_server/runtime/
+survey/logs/
+survey/plots/
+survey/runtime/
 
-known_asteroid_local/runtime/
-known_asteroid_local/products/
-known_asteroid_server/runtime/
+known_asteroid/runtime/
+known_asteroid/products/
 
-heliolincrr_local/*.log
-heliolincrr_server/*.log
+heliolincrr/*.log

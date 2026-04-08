@@ -1,11 +1,10 @@
 # known_asteroid resources
 
-本目录用于放本地运行 `known_asteroid_local` 所需的大依赖文件。
+本目录用于放 `known_asteroid` 相关的补充参考文件。
 
 约定文件名：
 
-- `astorb.dat`
-- `de432s.bsp`
 - `submit.xsd`
 
-其中 `astorb.dat` 和 `de432s.bsp` 默认不提交到 git。
+当前运行所需的大依赖文件以服务器布局放在 `known_asteroid/` 目录下，
+不再放在这里。

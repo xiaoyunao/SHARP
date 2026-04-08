@@ -5,6 +5,20 @@
 
 ## 2026-04-08
 
+### 仓库结构改造
+
+- 删除 `survey_local`、`known_asteroid_local`、`heliolincrr_local`
+- 将 `survey_server`、`known_asteroid_server`、`heliolincrr_server`
+  分别重命名为：
+  - `survey`
+  - `known_asteroid`
+  - `heliolincrr`
+- 仓库从“双版本并存”切换为“只保留服务器对齐版本”
+- 更新根目录 `README.md`、`AGENTS.md`、`.gitignore`
+  - 默认工作流改为服务器运行
+  - `known_asteroid` 大依赖文件改为按服务器布局忽略
+  - 删除对本地运行目录的说明
+
 ### heliolincrr make tracklet 改进
 
 - `pair_two_exposures()` 不再只保留第二帧中的最近邻，改为：
@@ -49,5 +63,5 @@
   - `run_visual_daily.sh`
   - `update_all_matched_history.py`
   - `cron_visual.example`
-- 更新 `known_asteroid_server/README.md`
+- 更新 `known_asteroid/README.md`
   - 纠正当前服务器目录与历史顺序脚本不一致的描述

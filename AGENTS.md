@@ -2,17 +2,17 @@
 
 ## Scope
 
-本文件只约束当前项目目录 `/Users/island/Desktop/smt_asteroid`。
+本文件只约束当前项目目录 `/Users/yunaoxiao/Desktop/smt_asteroid`。
 
 ## Source of truth
 
-- 后续调试默认以服务器代码为准，不以本地副本为准。
+- 本仓库只保留服务器对齐版本，不再维护 `*_local` / `*_server` 双目录。
 - 服务器基线路径固定为：
   - `/pipeline/xiaoyunao/survey`
   - `/pipeline/xiaoyunao/known_asteroid`
   - `/pipeline/xiaoyunao/heliolincrr`
-- 本地仓库内的 `*_server` 目录用于保存服务器版本备份。
-- 本地仓库内的 `*_local` 目录用于保留本地可运行版本。
+- 仓库中的 `survey/`、`known_asteroid/`、`heliolincrr/` 默认分别对应上述服务器目录。
+- 后续调试、重构和参数调整，都应优先保持与服务器行为一致。
 
 ## Environment rules
 
@@ -28,22 +28,21 @@
 
 ## Layout rules
 
-- 项目内始终保持两套目录：
-  - `survey_local` / `survey_server`
-  - `known_asteroid_local` / `known_asteroid_server`
-  - `heliolincrr_local` / `heliolincrr_server`
-- 不再新增 `v1`、`v2`、`server_v2` 之类平行目录。
-- 新改动若来自服务器，应先更新 `*_server`，再决定是否同步到 `*_local`。
+- 项目内只保留三套正式目录：
+  - `survey`
+  - `known_asteroid`
+  - `heliolincrr`
+- 不再新增 `*_local`、`*_server`、`v1`、`v2`、`server_v2` 之类平行目录。
+- 如果服务器代码有变化，应直接同步到对应正式目录，而不是再建备份副本。
 
 ## Dependency rules
 
-- `known_asteroid` 的本地依赖文件路径和服务器不同，必须明确区分。
-- 本地依赖统一约定放在：
-  - `resources/known_asteroid/astorb.dat`
-  - `resources/known_asteroid/de432s.bsp`
-  - `resources/known_asteroid/submit.xsd`
-- 服务器版本脚本保留服务器原始路径假设，不要为了本地运行去改坏 `*_server`。
-- 本地版本脚本要显式改成仓库内路径，不能继续默认写 `/processed1` 或 `/pipeline/xiaoyunao/...`，除非该参数就是给服务器用的覆盖项。
+- `known_asteroid` 的大依赖文件按服务器布局放在：
+  - `known_asteroid/astorb.dat`
+  - `known_asteroid/de432s.bsp`
+- `resources/known_asteroid/submit.xsd` 仅作为补充参考文件保留。
+- 不要为了本地运行去改坏服务器绝对路径假设。
+- 如果确实需要临时覆盖路径，优先通过命令行参数或环境变量覆盖，不要改默认服务器路径。
 
 ## Debugging rules
 
@@ -53,9 +52,8 @@
   - `heliolincrr`
 - 如果问题涉及真实行为、线上数据、定时任务、Slurm、运行环境或绝对路径：
   - 先检查服务器版本
-  - 再决定本地副本是否需要同步
-- 如果修改了服务器基线逻辑，本地 `*_server` 必须同步。
-- 如果修改只为本地便捷运行，可只改 `*_local`，但要在 `WORKLOG.md` 记清楚。
+  - 再把修复同步到本仓库
+- 不要为了在本机上“更方便跑通”而引入偏离服务器行为的修改。
 
 ## Documentation rules
 
@@ -68,15 +66,15 @@
 
 ## Git rules
 
-- 初始化后按正常 git 仓库管理。
+- 按正常 git 仓库管理，提交粒度保持在有意义的里程碑级别。
 - 不提交大依赖文件：
-  - `resources/known_asteroid/astorb.dat`
-  - `resources/known_asteroid/de432s.bsp`
-- 不提交运行产物和本地测试数据目录。
-- 提交前确认没有把旧版本目录、缓存目录、运行输出误提交。
+  - `known_asteroid/astorb.dat`
+  - `known_asteroid/de432s.bsp`
+- 不提交运行产物、日志、缓存目录。
+- 提交前确认没有把测试输出、旧目录或服务器临时文件误提交。
 
 ## Safety rules
 
-- 删除旧目录前，必须确认对应内容已经迁移到新的 `*_local` / `*_server`。
-- 不要把 `*_server` 改成“看起来更好用但不再像服务器”的版本。
-- 不要混用本地路径和服务器路径。
+- 不要把当前目录改成“便于本地运行但不再像服务器”的版本。
+- 不要混用仓库相对路径和服务器绝对路径。
+- 删除或重命名目录前，先确认引用已经同步更新。
