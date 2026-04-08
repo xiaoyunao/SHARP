@@ -4,8 +4,8 @@
 #SBATCH -n 1
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=10G
-#SBATCH --output=%x_%j.out
-#SBATCH --error=%x_%j.err
+#SBATCH --output=/dev/null
+#SBATCH --error=/dev/null
 
 set -euo pipefail
 

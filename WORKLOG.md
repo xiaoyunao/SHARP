@@ -2,6 +2,24 @@
 
 ## 2026-04-08
 
+- task: 统计已知小行星速度分布并清理 `known_asteroid` Slurm 垃圾日志
+- files_changed: `heliolincrr/known_motion_stats.py`, `known_asteroid/slurm_match_one_file.sh`, `known_asteroid/slurm_merge_submit.sh`, `WORKLOG.md`, `PLAN.md`
+- commands_run: 本地 `python3 -m py_compile heliolincrr/known_motion_stats.py`, `bash -n known_asteroid/slurm_match_one_file.sh known_asteroid/slurm_merge_submit.sh`; 服务器 `known_motion_stats.py 20260220`, `find /pipeline/xiaoyunao -maxdepth 1 \\( -name "ka_match*.out" -o -name "ka_match*.err" -o -name "ka_merge*.out" -o -name "ka_merge*.err" \\) -delete`
+- key_findings:
+  - `known_asteroid` 每夜可直接使用 `/processed1/YYYYMMDD/L4/YYYYMMDD_matched_asteroids.fits` 作为已知小行星速度统计输入
+  - `20260220` 已知小行星相邻探测对的速度分布为：`p50=29.66`、`p90=37.02`、`p95=40.13`、`p99=62.91` arcsec/hr，最大值 `106.24`
+  - 当前 `vmax=80` 会保留 `1699 / 1710` 个已知小行星相邻探测对，约覆盖 `99.36%`
+  - 极低速端很少：`<=0.5` 只有 `1` 对，`<=1.0` 也只有 `1` 对，`<=2.0` 只有 `2` 对
+  - `ka_match*.out/.err` 和 `ka_merge*.out/.err` 来自 Slurm 默认 stdout/stderr，现已改为输出到 `/dev/null`
+- validation:
+  - 本地语法检查和 shell 语法检查通过
+  - 服务器已生成 `/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_known_motion_summary.{json,csv,png}`
+  - 服务器 `/pipeline/xiaoyunao` 目录下现存 `ka_match*.out/.err`、`ka_merge*.out/.err` 已清空为 `0`
+- remaining_issues:
+  - 还未开始基于该分布的 `vmin` / `vmax` 系统扫描
+- next_step:
+  - 以 `20260220` 为样本，优先扫描 `vmax`，再细扫 `vmin`
+
 - task: 重构仓库为单一服务器版本布局
 - files_changed: `README.md`, `AGENTS.md`, `CHANGELOG.md`, `PLAN.md`, `WORKLOG.md`, `.gitignore`, `survey/`, `known_asteroid/`, `heliolincrr/`, `resources/known_asteroid/README.md`
 - commands_run: `mv survey_server survey`, `mv known_asteroid_server known_asteroid`, `mv heliolincrr_server heliolincrr`, `rm -rf survey_local known_asteroid_local heliolincrr_local`, `python3 -m py_compile survey/*.py known_asteroid/*.py heliolincrr/*.py`, `bash -n survey/run_daily.sh known_asteroid/run_daily.sh known_asteroid/run_visual_daily.sh known_asteroid/submit_pipeline_slurm.sh known_asteroid/slurm_match_one_file.sh known_asteroid/slurm_merge_submit.sh heliolincrr/run_single_night.sh heliolincrr/run_15days_via_single_night.sh`
