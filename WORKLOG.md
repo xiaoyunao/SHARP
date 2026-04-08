@@ -2,6 +2,23 @@
 
 ## 2026-04-08
 
+- task: 试探性优化 RR 聚类策略后决定回退到 `422a2dd` 稳定版并转入参数扫描
+- files_changed: `WORKLOG.md`, `PLAN.md`
+- commands_run: 服务器多轮重跑 `run_rr_from_tracklets.py 20260220 ...`; 尝试 `mutual-neighbor + union-find`; 尝试 `compactness gate + union-find`; 尝试 `candidate generation + scoring/pruning`; 服务器 `rr_link_stats.py 20260220 ...`; 本地/服务器最终 `git checkout 422a2dd -- heliolincrr/run_rr_from_tracklets.py` 与 `scp ...:/pipeline/xiaoyunao/heliolincrr/`
+- key_findings:
+  - `mutual-neighbor + union-find` 结果为：`n_links=8334`、`rr_given_tracklet=2058/2304=89.32%`、`p90=6`，比 `8393` 基线更差
+  - `compactness gate + union-find` 结果为：`n_links=8342`、`rr_given_tracklet=2057/2304=89.28%`、`p90=6`，同样没有把召回拉回去
+  - 说明只要维持“强互斥 partition”思路，召回损失问题就很难靠小修补解决
+  - 尝试把 pruning 放到 `cluster_all()` 后做全局筛重，思想上不与后续轨道拟合冲突，但当前朴素实现运行时间明显超出可接受范围，不能作为现阶段可用方案
+  - 因此本轮算法优化先暂停，回退到已验证的 `422a2dd` 稳定版，即单夜 `20260220` 结果为：`n_links=8393`、`rr_given_tracklet=2082/2304=90.36%`、`p90=6`
+- validation:
+  - 本地和服务器的 `run_rr_from_tracklets.py` 已恢复到 `422a2dd`
+  - 当前仓库工作树干净，服务器 RR 主脚本与仓库一致
+- remaining_issues:
+  - 若后续还要继续做算法层优化，需要重新设计更高效的 candidate / prune 架构，而不是继续在当前 `cluster_one()` 上打补丁
+- next_step:
+  - 先基于 `422a2dd` 稳定版进入 RR 参数扫描，优先扫 `tol`、`k-neighbors-cap`、`ref-dt-days`
+
 - task: 用更新后的 `cluster_one()` 逻辑重跑 `20260220` 单夜 RR 基线
 - files_changed: `WORKLOG.md`, `PLAN.md`
 - commands_run: 服务器 `scp run_rr_from_tracklets.py compare_with_known_asteroids.py rr_link_stats.py ...:/pipeline/xiaoyunao/heliolincrr/`, 服务器 `python run_rr_from_tracklets.py --infile /pipeline/xiaoyunao/data/heliolincrr/20260220/tracklets_linreproj/tracklets_20260220_ALL.fits --outdir /pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links --cores 16 --ref-epoch-mode mid --ref-dt-days 0.05 --tol 0.02 --min-len-obs 3 --min-nights 1 --k-neighbors-cap 200 --max-v-kms 200 --min-init-earth-au 0.01`, 服务器 `python rr_link_stats.py 20260220 ...`, 服务器 `python compare_with_known_asteroids.py 20260220 ...`
