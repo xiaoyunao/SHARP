@@ -1,5 +1,23 @@
 # WORKLOG
 
+## 2026-04-08
+
+- task: 重构仓库为单一服务器版本布局
+- files_changed: `README.md`, `AGENTS.md`, `CHANGELOG.md`, `PLAN.md`, `WORKLOG.md`, `.gitignore`, `survey/`, `known_asteroid/`, `heliolincrr/`, `resources/known_asteroid/README.md`
+- commands_run: `mv survey_server survey`, `mv known_asteroid_server known_asteroid`, `mv heliolincrr_server heliolincrr`, `rm -rf survey_local known_asteroid_local heliolincrr_local`, `python3 -m py_compile survey/*.py known_asteroid/*.py heliolincrr/*.py`, `bash -n survey/run_daily.sh known_asteroid/run_daily.sh known_asteroid/run_visual_daily.sh known_asteroid/submit_pipeline_slurm.sh known_asteroid/slurm_match_one_file.sh known_asteroid/slurm_merge_submit.sh heliolincrr/run_single_night.sh heliolincrr/run_15days_via_single_night.sh`
+- key_findings:
+  - 仓库已从 `*_local` / `*_server` 双目录切换为只保留服务器对齐版本
+  - `survey` 的 Python 包名和 `run_daily.sh` 已天然兼容目录重命名
+  - `.gitignore` 原先仍按本地资源路径忽略 `known_asteroid` 大文件，已改为按服务器布局忽略
+  - `heliolincrr/run_local_single_night.sh` 属于本地调试脚本，应随本地版本一起移除
+- validation:
+  - 目录重命名完成，根目录 git 状态可正常识别
+  - 语法检查和 shell 语法检查通过
+- remaining_issues:
+  - 代码行为层面尚未开始新的参数扫描
+- next_step:
+  - 在新目录结构下继续 `heliolincrr` 的 `20260220` 单夜调参
+
 ## 2026-04-07
 
 - task: 初始化项目整理，建立本地/服务器双目录结构
@@ -75,19 +93,3 @@
   - 下一步仍需继续调 `vmin` / `vmax` / `min-repeat`
 - next_step:
   - 以 `tracklets_linreproj_tracklet_only_edgeiso` 为新基线继续调参
-
-- task: 重构仓库为单一服务器版本布局
-- files_changed: `README.md`, `AGENTS.md`, `CHANGELOG.md`, `PLAN.md`, `WORKLOG.md`, `.gitignore`, `survey/`, `known_asteroid/`, `heliolincrr/`, `resources/known_asteroid/README.md`
-- commands_run: `mv survey_server survey`, `mv known_asteroid_server known_asteroid`, `mv heliolincrr_server heliolincrr`, `rm -rf survey_local known_asteroid_local heliolincrr_local`, `python3 -m py_compile survey/*.py known_asteroid/*.py heliolincrr/*.py`, `bash -n survey/run_daily.sh known_asteroid/run_daily.sh known_asteroid/run_visual_daily.sh known_asteroid/submit_pipeline_slurm.sh known_asteroid/slurm_match_one_file.sh known_asteroid/slurm_merge_submit.sh heliolincrr/run_single_night.sh heliolincrr/run_15days_via_single_night.sh`
-- key_findings:
-  - 仓库已从 `*_local` / `*_server` 双目录切换为只保留服务器对齐版本
-  - `survey` 的 Python 包名和 `run_daily.sh` 已天然兼容目录重命名
-  - `.gitignore` 原先仍按本地资源路径忽略 `known_asteroid` 大文件，已改为按服务器布局忽略
-  - `heliolincrr/run_local_single_night.sh` 属于本地调试脚本，应随本地版本一起移除
-- validation:
-  - 目录重命名完成，根目录 git 状态可正常识别
-  - 语法检查和 shell 语法检查通过
-- remaining_issues:
-  - 代码行为层面尚未开始新的参数扫描
-- next_step:
-  - 在新目录结构下继续 `heliolincrr` 的 `20260220` 单夜调参

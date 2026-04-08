@@ -19,6 +19,16 @@
   - `known_asteroid` 大依赖文件改为按服务器布局忽略
   - 删除对本地运行目录的说明
 
+## 2026-04-07
+
+### 项目初始整理
+
+- 建立 `survey_local` / `survey_server`
+- 建立 `known_asteroid_local` / `known_asteroid_server`
+- 建立 `heliolincrr_local` / `heliolincrr_server`
+- 明确本地调试版本和服务器备份版本的分工
+- 补充项目级 `README.md`、`AGENTS.md`、`WORKLOG.md`、`PLAN.md`
+
 ### heliolincrr make tracklet 改进
 
 - `pair_two_exposures()` 不再只保留第二帧中的最近邻，改为：
