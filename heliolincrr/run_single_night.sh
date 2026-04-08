@@ -140,8 +140,8 @@ run_make_tracklets_step() {
     --input-subdir "mask_gaia" \
     --outdir "${tracklet_dir}" \
     --mag-max 0 \
-    --vmin 0.5 \
-    --vmax 80.0 \
+    --vmin 3.0 \
+    --vmax 63.0 \
     --dmag-max 1.0 \
     --r-static 2.0 \
     --min-repeat 2 \

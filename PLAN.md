@@ -37,8 +37,7 @@
 
 ## Next recommended steps
 
-1. 固定 `20260220` 为对比样本，先扫 `vmax`
-2. 可优先测试 `vmax=40, 50, 60, 80`
-3. 在确定 `vmax` 后，再扫 `vmin=0.0, 0.3, 0.5, 1.0`
-4. 以 `tracklets_linreproj_tracklet_only_edgeiso` 作为当前比较基线
-5. 若服务器端目录有变更，优先同步到仓库正式目录而不是另建副本
+1. 固定 `20260220` 为对比样本，将默认值更新为 `vmin=3.0, vmax=63`
+2. 以 `tracklets_linreproj_tracklet_only_edgeiso_vmax63_vmin3p0` 的统计结果作为当前参数基线
+3. 后续若继续调参，优先在 `vmin>3` 或其他独立维度上评估 completeness 是否开始下降
+4. 若服务器端目录有变更，优先同步到仓库正式目录而不是另建副本

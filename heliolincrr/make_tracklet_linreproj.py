@@ -727,8 +727,8 @@ def main():
     ap.add_argument("--outdir", default=None)
     ap.add_argument("--mag-max", type=float, default=None)
 
-    ap.add_argument("--vmin", type=float, default=0.5)
-    ap.add_argument("--vmax", type=float, default=80.0)
+    ap.add_argument("--vmin", type=float, default=3.0)
+    ap.add_argument("--vmax", type=float, default=63.0)
     ap.add_argument("--dmag-max", type=float, default=1.0)
 
     ap.add_argument("--r-static", type=float, default=2.0, help="arcsec")

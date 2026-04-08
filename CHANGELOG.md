@@ -5,6 +5,18 @@
 
 ## 2026-04-08
 
+### heliolincrr 默认参数更新
+
+- 在边缘壳层过滤基线下，围绕 `20260220` 完成 `vmax` / `vmin` 单夜扫描
+- 将 `make_tracklet` 默认值更新为：
+  - `vmax = 63.0`
+  - `vmin = 3.0`
+- 选择依据：
+  - `vmax=63` 相比旧默认 `80`，显著提高 purity，同时只小幅降低 completeness
+  - 在固定 `vmax=63` 时，`vmin` 从 `0.0` 提高到 `3.0` 的过程中，`completeness_object_fraction` 保持 `0.87391` 不变
+  - 当 `vmin=5.0` 时，`completeness_object_fraction` 开始下降到 `0.86957`
+- 因此 `vmin=3.0, vmax=63.0` 被认定为当前更优的默认参数组合
+
 ### 仓库结构改造
 
 - 删除 `survey_local`、`known_asteroid_local`、`heliolincrr_local`

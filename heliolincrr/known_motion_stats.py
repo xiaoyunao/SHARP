@@ -23,6 +23,26 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--processed-root", default="/processed1")
     parser.add_argument("--matched-path", default=None, help="Override nightly matched_asteroids.fits path")
     parser.add_argument(
+        "--all-matched-path",
+        default="/pipeline/xiaoyunao/known_asteroid/runtime/history/all_matched_asteroids.fits",
+        help="Path to the cumulative all_matched_asteroids.fits history table",
+    )
+    parser.add_argument(
+        "--use-all-matched",
+        action="store_true",
+        help="Use the cumulative all_matched_asteroids.fits table instead of one nightly matched file",
+    )
+    parser.add_argument(
+        "--start-night",
+        default=None,
+        help="When using --use-all-matched, keep only rows with source_night >= this YYYYMMDD",
+    )
+    parser.add_argument(
+        "--end-night",
+        default=None,
+        help="When using --use-all-matched, keep only rows with source_night <= this YYYYMMDD",
+    )
+    parser.add_argument(
         "--outdir",
         default=None,
         help="Output directory for stats products (default: /pipeline/xiaoyunao/data/heliolincrr/<night>/analysis)",
@@ -90,6 +110,19 @@ def compute_pair_rates(tbl: Table, min_detections: int) -> pd.DataFrame:
             columns=["name", "mjd1", "mjd2", "dt_hr", "sep_arcsec", "rate_arcsec_hr", "rate_arcsec_min"]
         )
     return pd.DataFrame.from_records(rows)
+
+
+def filter_by_source_night(tbl: Table, start_night: str | None, end_night: str | None) -> Table:
+    if "source_night" not in tbl.colnames or (start_night is None and end_night is None):
+        return tbl
+
+    nights = np.asarray([clean_text(x) for x in tbl["source_night"]]).astype("U8")
+    keep = np.ones(len(tbl), dtype=bool)
+    if start_night is not None:
+        keep &= nights >= str(start_night)
+    if end_night is not None:
+        keep &= nights <= str(end_night)
+    return tbl[keep]
 
 
 def finite_stats(values: np.ndarray) -> dict[str, float | int | None]:
@@ -172,11 +205,14 @@ def plot_rate_histogram(pair_df: pd.DataFrame, out_path: Path, night: str) -> No
 def main() -> None:
     args = parse_args()
 
-    matched_path = (
-        Path(args.matched_path)
-        if args.matched_path is not None
-        else Path(args.processed_root) / args.night / "L4" / f"{args.night}_matched_asteroids.fits"
-    )
+    if args.use_all_matched:
+        matched_path = Path(args.all_matched_path)
+    else:
+        matched_path = (
+            Path(args.matched_path)
+            if args.matched_path is not None
+            else Path(args.processed_root) / args.night / "L4" / f"{args.night}_matched_asteroids.fits"
+        )
     outdir = (
         Path(args.outdir)
         if args.outdir is not None
@@ -188,6 +224,8 @@ def main() -> None:
         raise FileNotFoundError(f"matched FITS not found: {matched_path}")
 
     tbl = Table.read(matched_path)
+    if args.use_all_matched:
+        tbl = filter_by_source_night(tbl, args.start_night, args.end_night)
     pair_df = compute_pair_rates(tbl, min_detections=args.min_detections)
 
     rate_stats = finite_stats(pair_df["rate_arcsec_hr"].to_numpy(dtype=float))
@@ -196,6 +234,9 @@ def main() -> None:
     summary = {
         "night": args.night,
         "matched_path": str(matched_path),
+        "use_all_matched": bool(args.use_all_matched),
+        "start_night": args.start_night,
+        "end_night": args.end_night,
         "n_matched_rows": int(len(tbl)),
         "n_unique_asteroids": int(len({clean_text(x) for x in tbl["name"]})),
         "n_rate_pairs": int(len(pair_df)),

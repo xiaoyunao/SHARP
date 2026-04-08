@@ -2,6 +2,40 @@
 
 ## 2026-04-08
 
+- task: 固定 `make tracklet` 默认参数为 `vmin=3.0, vmax=63` 并清理本轮调参产物
+- files_changed: `heliolincrr/make_tracklet_linreproj.py`, `heliolincrr/run_single_night.sh`, `PLAN.md`, `WORKLOG.md`, `CHANGELOG.md`
+- commands_run: 服务器 `make_tracklet_linreproj.py` 多轮试跑 `vmax=60/63/65` 与 `vmin=0/1/2/3/5`，`merge_tracklets_night.py`，`tracklet_completeness_purity.py`； 服务器删除参数扫描输出目录和 summary 文件
+- key_findings:
+  - `vmax=63` 相比旧默认 `80`，将 purity 从 `0.08184` 提升到 `0.09893`，同时 completeness_object_fraction 仅从 `0.8772` 降到 `0.87391`
+  - 在固定 `vmax=63` 时，`vmin=0.0/0.5/1.0/2.0/3.0` 的 completeness_object_fraction 都保持 `0.87391`
+  - `vmin=3.0` 时结果为：tracklets=`10555`，purity=`0.13264`，completeness_object_fraction=`0.87391`
+  - `vmin=5.0` 时 purity 升到 `0.14078`，但 completeness_object_fraction 降到 `0.86957`
+  - 因此把 `vmin=3.0, vmax=63` 作为新的默认参数组合
+- validation:
+  - 本地 `python3 -m py_compile heliolincrr/make_tracklet_linreproj.py heliolincrr/known_motion_stats.py` 通过
+  - 本地 `bash -n heliolincrr/run_single_night.sh` 通过
+  - 服务器调参结果已核对完成
+- remaining_issues:
+  - 若后续还要继续提纯，需要接受 completeness 开始下降的代价
+- next_step:
+  - 以后以 `vmin=3.0, vmax=63` 为正式默认参数继续评估其他维度
+
+- task: 固定 `vmin=0.5`，将 `vmax` 从 `80` 缩到 `63` 做单夜试跑
+- files_changed: `WORKLOG.md`
+- commands_run: 服务器 `make_tracklet_linreproj.py 20260220 --outdir /pipeline/xiaoyunao/data/heliolincrr/20260220/tracklets_linreproj_tracklet_only_edgeiso_vmax63 --vmin 0.5 --vmax 63.0 --dmag-max 1.0 --r-static 2.0 --min-repeat 2 --skip-common-area`, `merge_tracklets_night.py`, `tracklet_completeness_purity.py --tracklets .../tracklets_20260220_ALL.fits --out /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_tracklet_only_edgeiso_vmax63_summary.json`
+- key_findings:
+  - 在当前 edge-shell 基线下，仅将 `vmax` 从 `80` 缩到 `63` 后，两点 tracklet 总数从 `17205` 下降到 `14151`
+  - purity 提升为 `0.09893`，高于当前基线 `0.08184`
+  - completeness_object_fraction 为 `0.87391`，略低于当前基线 `0.8772`
+  - completeness_detection_fraction 为 `0.89582`
+- validation:
+  - 服务器已生成 `/pipeline/xiaoyunao/data/heliolincrr/20260220/tracklets_linreproj_tracklet_only_edgeiso_vmax63/tracklets_20260220_ALL.fits`
+  - 服务器已生成 `/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_tracklet_only_edgeiso_vmax63_summary.json`
+- remaining_issues:
+  - 还需要继续判断 `vmax=63` 的提升是否值得对应的 tracklet 数下降
+- next_step:
+  - 继续比较 `vmax=50`、`60`、`63`、`80`
+
 - task: 统计已知小行星速度分布并清理 `known_asteroid` Slurm 垃圾日志
 - files_changed: `heliolincrr/known_motion_stats.py`, `known_asteroid/slurm_match_one_file.sh`, `known_asteroid/slurm_merge_submit.sh`, `WORKLOG.md`, `PLAN.md`
 - commands_run: 本地 `python3 -m py_compile heliolincrr/known_motion_stats.py`, `bash -n known_asteroid/slurm_match_one_file.sh known_asteroid/slurm_merge_submit.sh`; 服务器 `known_motion_stats.py 20260220`, `find /pipeline/xiaoyunao -maxdepth 1 \\( -name "ka_match*.out" -o -name "ka_match*.err" -o -name "ka_merge*.out" -o -name "ka_merge*.err" \\) -delete`
