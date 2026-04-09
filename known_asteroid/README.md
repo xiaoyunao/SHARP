@@ -16,8 +16,10 @@ object submission workflow.
 ## Files
 
 - `match_single_night.py`: single-file or single-night known-object matching
+- `build_file_manifest.py`: rebuild a night manifest from FITS header times
 - `merge_night_parts.py`: merge per-file FITS parts into night-level FITS
 - `export_ades.py`: FITS-to-ADES exporter plus optional MPC submit
+- `audit_duplicate_causes.py`: inspect historical duplicate ADES submissions
 - `run_daily.sh`: unattended daily trigger for the previous night
 - `plot_known_asteroids.py`: nightly known-object visualization
 - `run_visual_daily.sh`: unattended daily trigger for the visualization step
@@ -113,6 +115,8 @@ cd /pipeline/xiaoyunao/known_asteroid
 The slurm flow is:
 
 1. create a manifest of unprocessed `L2/*MP*` files for the night
+   using FITS `OBS_DATE` / `DATE-OBS` and local observing-night reassignment
+   (`Asia/Shanghai`, before `12:00` counts toward the previous night)
 2. submit an array job with one task per file
 3. submit a dependent finalize job to merge night-level FITS
 4. optionally export ADES and submit to MPC

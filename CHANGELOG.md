@@ -5,6 +5,24 @@
 
 ## 2026-04-09
 
+### known_asteroid 上报去重保护
+
+- `submit_pipeline_slurm.sh` 不再无条件吞掉整个 `L2/` 目录
+- 新增 `known_asteroid/build_file_manifest.py`
+  - 读取每个 `L2/*MP*` 文件头里的 `OBS_DATE` / `DATE-OBS`
+  - 按 `Asia/Shanghai` 本地时间、`12:00` 换夜规则重判 observing night
+  - 只有真正属于目标夜次的文件才进入 manifest
+- `export_ades.py` 新增两层提交前去重：
+  - 同一批导出内按 `(object, obsTime)` 保留一条最优观测
+  - 对照 `/processed1/*/L4/*_matched_asteroids_ades.psv` 过滤已提交过的观测
+- `slurm_merge_submit.sh` 现在默认把 `ROOT_DIR` 和当前 `NIGHT` 传给导出器，启用历史去重
+- 背景：
+  - 服务器历史提交中存在跨相邻夜次的重复上报
+  - 已确认 `20251225` 与 `20251226` 两夜含大量相同 `(object, obsTime)` 观测
+  - 源头原因是 `20251226/L2` 混入了 `166` 个实际属于 `20251225` observing night 的文件
+  - 最近 `20260331` 到 `20260407` 的提交未发现同类重复
+  - 该保护用于在上游夜目录再次重叠时，阻止重复观测继续送到 MPC
+
 ### heliolincrr RR 默认参数更新
 
 - 将单夜 RR 的默认 `tol` 从 `0.02` 调整为 `0.03`

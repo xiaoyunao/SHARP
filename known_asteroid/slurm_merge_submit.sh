@@ -115,6 +115,8 @@ CMD=(
   --ack "${ACK_PREFIX}"
   --obj-type "${OBJ_TYPE}"
   --response-out "${REPLY_TXT}"
+  --dedup-history-root "${ROOT_DIR}"
+  --current-night "${NIGHT}"
   --submit
 )
 

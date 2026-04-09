@@ -40,6 +40,12 @@ set -- "${POSITIONAL[@]}"
 
 ROOT_DIR="${ROOT_DIR:-/processed1}"
 SCRIPT_DIR="${SCRIPT_DIR:-/pipeline/xiaoyunao/known_asteroid}"
+PYTHON="${PYTHON:-/home/smtpipeline/Softwares/miniconda3/bin/python}"
+FILE_REGEX="${FILE_REGEX:-.*MP.*\\.(fits|fits\\.gz)$}"
+HDU="${HDU:-1}"
+OBS_DATE_KEY="${OBS_DATE_KEY:-OBS_DATE}"
+OBS_TIMEZONE="${OBS_TIMEZONE:-Asia/Shanghai}"
+NIGHT_ROLLOVER_HOUR="${NIGHT_ROLLOVER_HOUR:-12}"
 
 if [[ ! "${MAX_PARALLEL}" =~ ^[1-9][0-9]*$ ]]; then
   echo "[FATAL] --max-parallel must be a positive integer" >&2
@@ -87,9 +93,19 @@ for NIGHT in "${NIGHTS[@]}"; do
   if [[ -s "${ALL_FITS}" && -s "${MATCHED_FITS}" ]]; then
     echo "[SKIP] ${NIGHT} extraction already complete"
   else
-    : > "${MANIFEST}"
-    while IFS= read -r FILE_PATH; do
-      FILE="$(basename "${FILE_PATH}")"
+    "${PYTHON}" "${SCRIPT_DIR}/build_file_manifest.py" "${NIGHT}" \
+      --l2-dir "${L2_DIR}" \
+      --out "${MANIFEST}" \
+      --file-regex "${FILE_REGEX}" \
+      --hdu "${HDU}" \
+      --obs-date-key "${OBS_DATE_KEY}" \
+      --timezone "${OBS_TIMEZONE}" \
+      --night-rollover-hour "${NIGHT_ROLLOVER_HOUR}"
+
+    FILTERED_MANIFEST="${MANIFEST}.filtered"
+    : > "${FILTERED_MANIFEST}"
+    while IFS= read -r FILE; do
+      [[ -n "${FILE}" ]] || continue
       STEM="${FILE%.fits.gz}"
       STEM="${STEM%.fits}"
       PART_ALL="${PARTS_DIR}/${STEM}_all_asteroids.fits"
@@ -97,8 +113,9 @@ for NIGHT in "${NIGHTS[@]}"; do
       if [[ -s "${PART_ALL}" || -s "${PART_MATCHED}" ]]; then
         continue
       fi
-      echo "${FILE}" >> "${MANIFEST}"
-    done < <(find "${L2_DIR}" -maxdepth 1 -type f | grep -E '.*MP.*\.(fits|fits\.gz)$' | sort)
+      echo "${FILE}" >> "${FILTERED_MANIFEST}"
+    done < "${MANIFEST}"
+    mv "${FILTERED_MANIFEST}" "${MANIFEST}"
 
     if [[ -s "${MANIFEST}" ]]; then
       NFILES=$(wc -l < "${MANIFEST}")

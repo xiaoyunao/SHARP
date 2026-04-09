@@ -156,6 +156,67 @@ def compute_logsnr(table: Table) -> np.ndarray | None:
     return out
 
 
+def row_quality(rms_ra: np.ndarray, rms_dec: np.ndarray, rms_mag: np.ndarray) -> np.ndarray:
+    return (
+        np.square(rms_ra, dtype=float)
+        + np.square(rms_dec, dtype=float)
+        + np.square(rms_mag, dtype=float)
+    )
+
+
+def dedup_current_rows(
+    idx: np.ndarray,
+    obj_key: np.ndarray,
+    obs_time: np.ndarray,
+    quality: np.ndarray,
+) -> tuple[np.ndarray, int]:
+    best_for_key: dict[tuple[str, str], tuple[float, int]] = {}
+    duplicate_rows = 0
+    for i in idx:
+        key = (str(obj_key[i]), str(obs_time[i]))
+        score = float(quality[i])
+        prev = best_for_key.get(key)
+        if prev is None or score < prev[0]:
+            if prev is not None:
+                duplicate_rows += 1
+            best_for_key[key] = (score, int(i))
+        else:
+            duplicate_rows += 1
+    dedup_idx = np.array(sorted(item[1] for item in best_for_key.values()), dtype=int)
+    return dedup_idx, duplicate_rows
+
+
+def load_submitted_history_keys(processed_root: str, current_night: str, current_out: str) -> set[tuple[str, str]]:
+    if not processed_root:
+        return set()
+    root = Path(processed_root)
+    current_out_path = Path(current_out).resolve() if current_out else None
+    submitted: set[tuple[str, str]] = set()
+    for path in sorted(root.glob("20*/L4/*_matched_asteroids_ades.psv")):
+        if current_out_path is not None and path.resolve() == current_out_path:
+            continue
+        night = path.name.split("_", 1)[0]
+        if current_night and night == current_night:
+            continue
+        try:
+            with path.open("r", encoding="utf-8", errors="ignore") as fh:
+                for line in fh:
+                    if not line.strip() or line.startswith("#") or line.startswith("!"):
+                        continue
+                    if "permID" in line and "obsTime" in line:
+                        continue
+                    parts = [p.strip() for p in line.rstrip("\n").split("|")]
+                    if len(parts) < 6:
+                        continue
+                    obj = parts[0] or parts[1]
+                    obs_time = parts[4]
+                    if obj and obs_time:
+                        submitted.add((obj, obs_time))
+        except Exception:
+            continue
+    return submitted
+
+
 def export_psv(args: argparse.Namespace) -> int:
     table = Table.read(args.fits)
 
@@ -214,6 +275,24 @@ def export_psv(args: argparse.Namespace) -> int:
     ok &= per_object_count >= int(args.min_observations)
 
     idx = np.where(ok)[0]
+    quality = row_quality(rms_ra, rms_dec, rms_mag)
+    idx, duplicate_rows = dedup_current_rows(idx, obj_key, obs_time, quality)
+
+    history_removed = 0
+    if args.dedup_history_root:
+        history_keys = load_submitted_history_keys(
+            processed_root=args.dedup_history_root,
+            current_night=args.current_night,
+            current_out=args.out,
+        )
+        if history_keys:
+            keep_mask = np.array(
+                [(str(obj_key[i]), str(obs_time[i])) not in history_keys for i in idx],
+                dtype=bool,
+            )
+            history_removed = int(np.count_nonzero(~keep_mask))
+            idx = idx[keep_mask]
+
     header = build_header(args)
 
     include_prog = bool(args.prog)
@@ -286,6 +365,10 @@ def export_psv(args: argparse.Namespace) -> int:
     print(
         f"[INFO] Rows: input={len(table)}, exported={len(idx)}, dropped={len(table) - len(idx)}"
     )
+    if duplicate_rows:
+        print(f"[INFO] Dedup within current export: dropped_duplicate_rows={duplicate_rows}")
+    if history_removed:
+        print(f"[INFO] Dedup against submitted history: dropped_already_submitted_rows={history_removed}")
     print(
         f"[INFO] Objects: exported={exported_objects}, dropped_below_min_obs={dropped_singletons}, min_obs={args.min_observations}"
     )
@@ -370,6 +453,8 @@ def build_argparser() -> argparse.ArgumentParser:
     ap.add_argument("--response-out", default="")
     ap.add_argument("--validate", action="store_true")
     ap.add_argument("--submit", action="store_true")
+    ap.add_argument("--dedup-history-root", default="", help="Optional processed root used to filter rows already present in prior ADES files")
+    ap.add_argument("--current-night", default="", help="Optional YYYYMMDD used to exclude the current night from history dedup")
     return ap
 
 

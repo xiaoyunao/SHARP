@@ -2,6 +2,33 @@
 
 ## 2026-04-09
 
+- task: 排查 `known_asteroid` 向 MPC 重复上报的问题，并补提交前历史去重保护
+- files_changed: `known_asteroid/build_file_manifest.py`, `known_asteroid/submit_pipeline_slurm.sh`, `known_asteroid/export_ades.py`, `known_asteroid/slurm_merge_submit.sh`, `known_asteroid/audit_duplicate_causes.py`, `known_asteroid/README.md`, `CHANGELOG.md`, `WORKLOG.md`, `PLAN.md`
+- commands_run: 本地 `rg -n "submit|MPC|duplicate|dedup|match|merge|mpc" known_asteroid`, `sed -n '1,220p' known_asteroid/{README.md,merge_night_parts.py,slurm_merge_submit.sh,run_daily.sh,update_all_matched_history.py}`, `sed -n '1,520p' known_asteroid/export_ades.py`, `sed -n '220,380p' known_asteroid/match_single_night.py`, `python3 -m py_compile known_asteroid/export_ades.py`, `bash -n known_asteroid/slurm_merge_submit.sh`; 服务器 `ls -1dt /processed1/20* | head`, `stat -c "%y %n" /processed1/*/L4/*_mpc_reply.txt`, 扫描 `/processed1/20*/L4/*_matched_asteroids_ades.psv` 的跨文件 `(object, obsTime)` 重复键，读取 `20251225/20251226` manifest / matched FITS / L2 FITS header`
+- key_findings:
+  - 最近提交 `20260331`、`20260401`、`20260403` 到 `20260407` 的单个 ADES 文件内部没有 `(object, obsTime)` 重复，且这些最近提交之间也未发现跨文件重复
+  - 历史提交存在明确的跨夜次重复上报：全量扫描 `102` 个 ADES 文件发现 `2082` 个重复键；最典型的是 `20251225` 与 `20251226`
+  - 对于重复键，`20251225` 与 `20251226` 的 ADES 行具有相同 `object + obsTime`，但 RA/Dec/mag 有细小差别，形态与 MPC 邮件一致
+  - 重复键在两夜的 `matched_asteroids.fits` 中都能追到同名 `source_file`，例如 `OBJ_MP_0169_0250_cat.fits.gz` 与 `OBJ_MP_0042_0245_cat.fits.gz`
+  - 这些同名 L2 文件在两夜目录里的 `DATE-OBS` 完全一致，说明同一 UTC 观测被同时落进了相邻夜次目录；问题根源在上游夜目录重叠，而原导出流程没有“已提交历史去重”保护
+  - `2025-12-25T17:24:07Z`、`2025-12-25T17:30:31Z`、`2025-12-25T20:56:05Z` 这类重复文件对应本地时间分别是 `2025-12-26 01:24`、`01:30`、`04:56`，按 observing-night 约定都应归到 `20251225`
+  - 已新增 `build_file_manifest.py` 并接入 `submit_pipeline_slurm.sh`；新规则按 `Asia/Shanghai` 本地时间与 `12:00` 换夜重建 manifest
+  - 在服务器 dry-run 中，`20251225` 新 manifest 仍保留全部 `328` 个文件；`20251226` 则从 `627` 个文件中剔除 `166` 个 `wrong_night` 文件，而且这 `166` 个恰好就是原先与 `20251225` 重叠的全部文件
+  - 另外仍保留了 `export_ades.py` 的两层保险：先对当前导出批次按 `(object, obsTime)` 去重，再对照历史 `*_matched_asteroids_ades.psv` 过滤已提交观测；`slurm_merge_submit.sh` 默认启用该保护
+- validation:
+  - 本地 `python3 -m py_compile known_asteroid/export_ades.py` 通过
+  - 本地 `python3 -m py_compile known_asteroid/build_file_manifest.py` 通过
+  - 本地 `python3 -m py_compile known_asteroid/audit_duplicate_causes.py` 通过
+  - 本地 `bash -n known_asteroid/submit_pipeline_slurm.sh` 通过
+  - 本地 `bash -n known_asteroid/slurm_merge_submit.sh` 通过
+  - 服务器只读检查确认：`20251225` / `20251226` 存在跨文件重复；`20260331` 到 `20260407` 未发现跨文件重复
+  - 服务器 dry-run 确认：`build_file_manifest.py` 对 `20251226` 会剔除 `166` 个不属于该夜次的文件，且剔除集合与 `20251225`/`20251226` 的原 manifest 重叠集合完全一致
+- remaining_issues:
+  - 服务器已同步 manifest 源头修复，但还未用修复后的正式流程对历史夜次完整 rerun 一遍
+  - 上游 `/processed1/YYYYMMDD/L2` 为什么会在相邻夜次保留同一 UTC 观测，仍需进一步追到产出这些目录的流程
+- next_step:
+  - 用修复后的正式流程对 `20251226` 这类历史夜次做不提交 rerun，确认不会再把前一夜文件匹配进来
+  - 继续追查上游夜目录切分规则，避免同一曝光继续同时进入相邻夜次
 - task: 将 `k-neighbors-cap` 默认值固定为 `300`
 - files_changed: `heliolincrr/run_rr_from_tracklets.py`, `heliolincrr/run_single_night.sh`, `CHANGELOG.md`, `WORKLOG.md`, `PLAN.md`
 - commands_run: 本地 `python3 -m py_compile heliolincrr/run_rr_from_tracklets.py`, `bash -n heliolincrr/run_single_night.sh`; 服务器 `run_rr_from_tracklets.py --infile /pipeline/xiaoyunao/data/heliolincrr/20260220/tracklets_linreproj/tracklets_20260220_ALL.fits --outdir /pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links_tol0p03_kcap300 --cores 16 --ref-epoch-mode mid --ref-dt-days 0.05 --tol 0.03 --min-len-obs 3 --min-nights 1 --k-neighbors-cap 300 --max-v-kms 200 --min-init-earth-au 0.01`; 服务器 `rr_link_stats.py 20260220 --rr-subdir rr_links_tol0p03_kcap300 --out /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_link_stats_tol0p03_kcap300.json`; 服务器 `compare_with_known_asteroids.py 20260220 --rr-subdir rr_links_tol0p03_kcap300 --out /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison_tol0p03_kcap300.fits --summary-out /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison_tol0p03_kcap300.json`
