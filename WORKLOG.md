@@ -1,5 +1,97 @@
 # WORKLOG
 
+## 2026-04-09
+
+- task: 将 `k-neighbors-cap` 默认值固定为 `300`
+- files_changed: `heliolincrr/run_rr_from_tracklets.py`, `heliolincrr/run_single_night.sh`, `CHANGELOG.md`, `WORKLOG.md`, `PLAN.md`
+- commands_run: 本地 `python3 -m py_compile heliolincrr/run_rr_from_tracklets.py`, `bash -n heliolincrr/run_single_night.sh`; 服务器 `run_rr_from_tracklets.py --infile /pipeline/xiaoyunao/data/heliolincrr/20260220/tracklets_linreproj/tracklets_20260220_ALL.fits --outdir /pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links_tol0p03_kcap300 --cores 16 --ref-epoch-mode mid --ref-dt-days 0.05 --tol 0.03 --min-len-obs 3 --min-nights 1 --k-neighbors-cap 300 --max-v-kms 200 --min-init-earth-au 0.01`; 服务器 `rr_link_stats.py 20260220 --rr-subdir rr_links_tol0p03_kcap300 --out /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_link_stats_tol0p03_kcap300.json`; 服务器 `compare_with_known_asteroids.py 20260220 --rr-subdir rr_links_tol0p03_kcap300 --out /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison_tol0p03_kcap300.fits --summary-out /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison_tol0p03_kcap300.json`
+- key_findings:
+  - 在 `tol=0.03` 下，`kcap=300` 相对 `kcap=200` 将 `n_links` 从 `12064` 提到 `12274`，`n_member_rows` 从 `35790` 提到 `39806`
+  - 已知检测进入 RR 的覆盖率从 `2219/2304=96.31%` 提高到 `2247/2304=97.53%`
+  - hits-only 歧义度的 `median` 保持 `4` 不变，但 `p90` 从 `8` 升到 `9`
+  - 对当前“优先保召回，把噪声留给下一步轨道拟合”的目标，`kcap=300` 比 `200` 更符合方向，因此将其固定为默认值
+- validation:
+  - 本地 `py_compile` 通过
+  - 本地 `bash -n` 通过
+- remaining_issues:
+  - 更高的 `kcap` 继续增加候选规模，后续需要在轨道拟合阶段实际验证能否把这些额外候选有效筛掉
+- next_step:
+  - 以后默认以 `ref-dt-days=0.05, tol=0.03, k-neighbors-cap=300` 继续后续 RR / 轨道拟合调试
+
+- task: 将 `tol` 默认值固定为 `0.03`，并试跑 `k-neighbors-cap=100`
+- files_changed: `heliolincrr/run_rr_from_tracklets.py`, `heliolincrr/run_single_night.sh`, `WORKLOG.md`, `PLAN.md`
+- commands_run: 本地 `python3 -m py_compile heliolincrr/run_rr_from_tracklets.py`, `bash -n heliolincrr/run_single_night.sh`; `scp heliolincrr/run_rr_from_tracklets.py ...:/pipeline/xiaoyunao/heliolincrr/run_rr_from_tracklets.py`; `scp heliolincrr/run_single_night.sh ...:/pipeline/xiaoyunao/heliolincrr/run_single_night.sh`; 服务器 `run_rr_from_tracklets.py --infile /pipeline/xiaoyunao/data/heliolincrr/20260220/tracklets_linreproj/tracklets_20260220_ALL.fits --outdir /pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links_tol0p03_kcap100 --cores 16 --ref-epoch-mode mid --ref-dt-days 0.05 --tol 0.03 --min-len-obs 3 --min-nights 1 --k-neighbors-cap 100 --max-v-kms 200 --min-init-earth-au 0.01`; 服务器 `rr_link_stats.py 20260220 --rr-subdir rr_links_tol0p03_kcap100 --out /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_link_stats_tol0p03_kcap100.json`; 服务器 `compare_with_known_asteroids.py 20260220 --rr-subdir rr_links_tol0p03_kcap100 --out /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison_tol0p03_kcap100.fits --summary-out /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison_tol0p03_kcap100.json`
+- key_findings:
+  - 本地 CLI 默认 `tol` 已改为 `0.03`，单夜脚本默认 `RR_NIGHT_TOL` 也已改为 `0.03`，并同步到服务器
+  - `k-neighbors-cap` 控制每条 tracklet 在 KDTree 中最多取多少个最近邻进入“距离小于 `tol` 的候选边”检查；减小它主要会砍候选边规模，而不是改几何阈值
+  - 以 `tol=0.03, kcap=200` 为基线时，结果为：`n_links=12064`、`n_member_rows=35790`、`in_rr_link=2219`、`rr_given_tracklet=96.31%`、命中 RR 的 `median=4`、`p90=8`
+  - 改成 `kcap=100` 后，结果变为：`n_links=10147`、`n_member_rows=27062`、`in_rr_link=1939`、`rr_given_tracklet=84.16%`、命中 RR 的 `median=3`、`p90=7`
+  - 相对 `kcap=200`，`kcap=100` 虽然减少了 `1917` 条 linkage 和 `8728` 条 member rows，也把 hits-only 歧义度压低了 `median -1 / p90 -1`，但已知检测命中 RR 少了 `280` 个，召回损失太大
+- validation:
+  - 本地 `py_compile` 通过
+  - 本地 `bash -n` 通过
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links_tol0p03_kcap100/{links_tracklets.fits,linkage_members.fits,rr_summary.json}`
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_link_stats_tol0p03_kcap100.json`
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison_tol0p03_kcap100.{fits,json}`
+- remaining_issues:
+  - `kcap=100` 对当前“优先高召回”目标来说太激进
+- next_step:
+  - 继续保留 `tol=0.03`
+  - 若继续扫 `k-neighbors-cap`，应试比 `100` 更温和的值，例如 `150`
+
+- task: 将服务器 RR 主程序恢复到 `422a2dd`，删除临时脚本，并试跑 `ref-dt-days=0.03`
+- files_changed: `WORKLOG.md`
+- commands_run: `scp heliolincrr/run_rr_from_tracklets.py ...:/pipeline/xiaoyunao/heliolincrr/run_rr_from_tracklets.py`; 服务器 `rm -f /tmp/run_rr_from_tracklets_422a2dd.py`; 服务器 `shasum -a 256 /pipeline/xiaoyunao/heliolincrr/run_rr_from_tracklets.py`; 服务器 `run_rr_from_tracklets.py --infile /pipeline/xiaoyunao/data/heliolincrr/20260220/tracklets_linreproj/tracklets_20260220_ALL.fits --outdir /pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links_refdt0p03 --cores 16 --ref-epoch-mode mid --ref-dt-days 0.03 --tol 0.02 --min-len-obs 3 --min-nights 1 --k-neighbors-cap 200 --max-v-kms 200 --min-init-earth-au 0.01`; 服务器 `rr_link_stats.py 20260220 --rr-subdir rr_links_refdt0p03 --out /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_link_stats_refdt0p03.json`; 服务器 `compare_with_known_asteroids.py 20260220 --rr-subdir rr_links_refdt0p03 --out /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison_refdt0p03.fits --summary-out /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison_refdt0p03.json`
+- key_findings:
+  - 服务器正式脚本已恢复为 `422a2dd`，校验和重新回到 `14b376ea624fc7f796146af5fafa2ae6b817b4f4d648c10da3f543667c8dc926`
+  - `/tmp/run_rr_from_tracklets_422a2dd.py` 已删除
+  - `ref-dt-days=0.03` 与干净 `0.05` 基线相比非常接近，但没有改进：`n_links=8437`、`n_member_rows=22685`、`in_rr_link=2081`、`rr_given_tracklet=2081/2304=90.32%`、命中 RR 的 `n_rr_links` 中位数 `3`、`p90=6`
+  - 相对 `0.05` 基线 `8393 / 22436 / 2082 / 90.36% / median=3 / p90=6`，`0.03` 多了 `44` 条 linkage、`249` 条 member rows，但少了 `1` 个已知 detection 命中 RR，歧义度没有改善
+- validation:
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links_refdt0p03/{links_tracklets.fits,linkage_members.fits,rr_summary.json}`
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_link_stats_refdt0p03.json`
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison_refdt0p03.{fits,json}`
+- remaining_issues:
+  - `ref-dt-days` 往 `0.03` 收紧没有带来更低歧义，继续在这个维度细扫的收益看起来不高
+- next_step:
+  - 保持 `ref-dt-days=0.05` 作为正式基线，优先改扫 `tol` 或 `k-neighbors-cap`
+
+- task: 核对 RR 脚本版本并用确认过的 `422a2dd` 版本重跑 `ref-dt-days=0.05`
+- files_changed: `WORKLOG.md`
+- commands_run: 本地 `git log --oneline -- heliolincrr/run_rr_from_tracklets.py`, `git diff --stat -- heliolincrr/run_rr_from_tracklets.py`, `shasum -a 256 heliolincrr/run_rr_from_tracklets.py`, `git show 422a2dd:heliolincrr/run_rr_from_tracklets.py | shasum -a 256`; 服务器 `shasum -a 256 /pipeline/xiaoyunao/heliolincrr/run_rr_from_tracklets.py`; `scp heliolincrr/run_rr_from_tracklets.py ...:/tmp/run_rr_from_tracklets_422a2dd.py`; 服务器 `/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python /tmp/run_rr_from_tracklets_422a2dd.py --infile /pipeline/xiaoyunao/data/heliolincrr/20260220/tracklets_linreproj/tracklets_20260220_ALL.fits --outdir /pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links_refdt0p05_rerun --cores 16 --ref-epoch-mode mid --ref-dt-days 0.05 --tol 0.02 --min-len-obs 3 --min-nights 1 --k-neighbors-cap 200 --max-v-kms 200 --min-init-earth-au 0.01`; 服务器 `rr_link_stats.py 20260220 --rr-subdir rr_links_refdt0p05_rerun --out /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_link_stats_refdt0p05_rerun.json`; 服务器 `compare_with_known_asteroids.py 20260220 --rr-subdir rr_links_refdt0p05_rerun --out /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison_refdt0p05_rerun.fits --summary-out /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison_refdt0p05_rerun.json`
+- key_findings:
+  - 本地 `heliolincrr/run_rr_from_tracklets.py` 当前无未提交修改，且 SHA256 与 `422a2dd` 中的文件完全一致
+  - 服务器正式脚本 `/pipeline/xiaoyunao/heliolincrr/run_rr_from_tracklets.py` 的 SHA256 与本地不同，证明服务器上的程序后来又被改过
+  - 为避免覆盖正式脚本，本轮把本地确认过的 `422a2dd` 版本上传到 `/tmp/run_rr_from_tracklets_422a2dd.py` 后单独重跑
+  - 用这个确认版本重跑 `ref-dt-days=0.05` 后，完整复现稳定基线：`n_links=8393`、`n_member_rows=22436`、`in_rr_link=2082`、`rr_given_tracklet=2082/2304=90.36%`、命中 RR 的 `n_rr_links` 中位数 `3`、`p90=6`
+  - 因此前面看到的 `8342 / 2057 / p90=6` 确实不是 `422a2dd` 稳定版，而是服务器正式脚本被后续修改后的另一版结果
+- validation:
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links_refdt0p05_rerun/{links_tracklets.fits,linkage_members.fits,rr_summary.json}`
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_link_stats_refdt0p05_rerun.json`
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison_refdt0p05_rerun.{fits,json}`
+- remaining_issues:
+  - 服务器正式脚本与仓库 `422a2dd` 稳定版不一致；后续扫参前需要先决定是否把服务器正式脚本回退/同步到稳定版，避免再混入不同程序版本的结果
+- next_step:
+  - 后续扫参统一基于这次 `rr_links_refdt0p05_rerun` 的干净 `422a2dd` 基线继续比较
+
+- task: 扫描 `ref-dt-days`，将单夜 RR 参数从 `0.05` 提到 `0.1`
+- files_changed: `WORKLOG.md`, `PLAN.md`
+- commands_run: 本地 `rg -n "ref-dt-days|20260220|run_rr_from_tracklets|rr_link_stats|compare_with_known_asteroids" heliolincrr WORKLOG.md PLAN.md`; 服务器 `run_rr_from_tracklets.py --infile /pipeline/xiaoyunao/data/heliolincrr/20260220/tracklets_linreproj/tracklets_20260220_ALL.fits --outdir /pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links_refdt0p1 --cores 16 --ref-epoch-mode mid --ref-dt-days 0.1 --tol 0.02 --min-len-obs 3 --min-nights 1 --k-neighbors-cap 200 --max-v-kms 200 --min-init-earth-au 0.01`; 服务器 `rr_link_stats.py 20260220 --rr-subdir rr_links_refdt0p1 --out /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_link_stats_refdt0p1.json`; 服务器 `compare_with_known_asteroids.py 20260220 --rr-subdir rr_links_refdt0p1 --out /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison_refdt0p1.fits --summary-out /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison_refdt0p1.json`
+- key_findings:
+  - `ref-dt-days=0.1` 的传播和聚类阶段很快结束，但 `cluster done` 后仍持续高 CPU 跑了数分钟，说明后处理成本明显上升
+  - 新结果为：`n_links=29554`、`n_member_rows=107534`、`rr_given_tracklet=2287/2304=99.26%`、命中 RR 的 `n_rr_links` 中位数 `5`、`p90=48`
+  - 这基本回到了早先“高召回但高歧义”的状态，明显差于当前低歧义方向
+  - 服务器当前默认 `rr_links` 目录里的 `20260220_rr_link_stats.json` 显示的是 `n_links=8342`、`rr_given_tracklet=2057/2304=89.28%`、`p90=6`，与工作日志里记录的 `422a2dd` 稳定基线 `8393 / 2082 / p90=6` 不一致；说明默认输出目录后来被一次实验结果覆盖了
+- validation:
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links_refdt0p1/{links_tracklets.fits,linkage_members.fits,rr_summary.json}`
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_link_stats_refdt0p1.json`
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison_refdt0p1.{fits,json}`
+- remaining_issues:
+  - 需要先确定后续扫参是统一以当前服务器 `rr_links` 的 `8342` 基线为参照，还是先重新生成一次真正的 `422a2dd` 稳定版 `8393` 基线
+- next_step:
+  - 先保留 `ref-dt-days=0.05`，不要切到 `0.1`
+  - 继续扫更可能压歧义的参数，例如 `tol` 或 `k-neighbors-cap`
+
 ## 2026-04-08
 
 - task: 试探性优化 RR 聚类策略后决定回退到 `422a2dd` 稳定版并转入参数扫描

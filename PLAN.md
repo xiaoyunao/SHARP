@@ -2,12 +2,12 @@
 
 ## Current objective
 
-在单一服务器版本目录结构下，围绕 `heliolincrr` 的 `make tracklet`
-环节做单夜调参，并用 `20260220` 持续跟踪：
+在单一服务器版本目录结构下，围绕 `heliolincrr` 的单夜 `rr link`
+参数做扫描，并用 `20260220` 持续跟踪：
 
-- 已知小行星 completeness
-- tracklet purity
-- tracklet 总数
+- 已知检测进入 RR 的覆盖率
+- 每个 detection 对应的 RR 歧义度
+- RR linkage 总数与成员规模
 
 ## Milestones
 
@@ -26,6 +26,11 @@
 - RR 单夜基线已跑出，但当前已知检测对应的 RR 歧义度仍高，需要压低每个 detection 对应的候选 linkage 数
 - RR 新逻辑已在服务器上复跑验证，当前问题变成“歧义显著下降，但已知检测召回也有明显回落”
 - 本轮算法微调尝试（mutual-neighbor、compactness gate、全局 prune）都未优于 `422a2dd` 稳定版，现阶段先停止算法层修改
+- `ref-dt-days=0.1` 已试跑，结果退回到高召回高歧义状态：`n_links=29554`、`rr_given_tracklet=2287/2304=99.26%`、`p90=48`
+- 当前服务器默认 `rr_links` 目录中的 `0.05` 统计文件对应 `8342 / 2057 / p90=6`，与工作日志里记录的 `422a2dd` 稳定基线 `8393 / 2082 / p90=6` 不一致，需要避免后续比较时混淆基线
+- 当前单夜 RR 参数方向已经切为“优先高召回，让下一步轨道拟合压噪声”，因此 `tol=0.03` 比 `0.02` 更符合当前目标
+- 在 `tol=0.03` 下，`k-neighbors-cap=100` 会把 `rr_given_tracklet` 从 `96.31%` 压到 `84.16%`，说明这个值对当前目标过小
+- 在 `tol=0.03` 下，`k-neighbors-cap=300` 会把 `rr_given_tracklet` 从 `96.31%` 提高到 `97.53%`，代价是 `p90` 从 `8` 升到 `9`
 - 需要判断是否补充更细的 group / exposure-pair 级诊断
 - `known_asteroid/astorb.dat` 和 `known_asteroid/de432s.bsp` 不应进入 git
 - 后续代码修改要持续与服务器目录保持一致
@@ -44,7 +49,7 @@
 
 ## Next recommended steps
 
-1. 以稳定版 `422a2dd` 的 RR 基线结果 `n_links=8393`、`rr_given_tracklet=2082/2304=90.36%`、`p90(n_rr_links_hits_only)=6` 作为参数扫描起点
-2. 围绕 `tol`、`k-neighbors-cap`、`ref-dt-days` 做单维扫描，优先观察是否能降低歧义度而不明显损失已知检测覆盖率
-3. 若参数扫描后仍不满意，再重新设计更高效的 candidate / prune 架构，而不是继续在当前 `cluster_one()` 上打补丁
-4. 核对 `survey` 和 `known_asteroid` 的 09:00 自动任务是否按新时间运行
+1. 继续保留 `ref-dt-days=0.05`
+2. 单夜 RR 当前工作基线切到 `tol=0.03, k-neighbors-cap=300`，对应 `n_links=12274`、`rr_given_tracklet=2247/2304=97.53%`、`median=4`、`p90=9`
+3. 后续默认以 `ref-dt-days=0.05, tol=0.03, k-neighbors-cap=300` 继续 RR / 轨道拟合调试
+4. 下一步重点转到轨道拟合阶段，验证更高召回带来的额外候选能否被有效筛掉

@@ -591,12 +591,12 @@ def main():
     ap.add_argument("--min-init-earth-au", type=float, default=0.02)
 
     ap.add_argument("--ref-epoch-mode", choices=["mid", "start"], default="mid")
-    ap.add_argument("--ref-dt-days", type=float, default=0.5)
+    ap.add_argument("--ref-dt-days", type=float, default=0.05)
 
-    ap.add_argument("--tol", type=float, default=0.02)
+    ap.add_argument("--tol", type=float, default=0.03)
     ap.add_argument("--min-len-obs", type=int, default=4)
     ap.add_argument("--min-nights", type=int, default=2)
-    ap.add_argument("--k-neighbors-cap", type=int, default=200)
+    ap.add_argument("--k-neighbors-cap", type=int, default=300)
 
     ap.add_argument("--hypos", type=str, default=None)
 
