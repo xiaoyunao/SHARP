@@ -2,8 +2,8 @@
 
 ## Current objective
 
-恢复 `heliolincrr` 的 RR link 调参，并以已经确认的单夜高召回基线继续往下做
-参数扫描和后续轨道拟合衔接。
+将 `heliolincrr` 的 RR 单夜基线固定为唯一版本，并继续衔接后续轨道拟合
+验证。
 
 ## Milestones
 
@@ -19,20 +19,30 @@
 ## Outstanding issues
 
 - `known_asteroid` 重复上报问题已经定位并完成程序侧保护，当前不再作为主线阻塞
-- `20260220` 的 RR 单夜新基线已切到 `max-v-kms=30`，当前默认参数结果是 `8697 / 27204 / 2259/2304 / p90=8`
-- `max-v-kms=30` 相比 `200` 已明显改善规模和高歧义尾部，下一轮主线改为扫描 `min-init-earth-au`
-- `min-init-earth-au=0.02` 与当前 `0.01` 基线结果完全一致，当前默认值统一保持 `0.01`
+- `20260220` 的 RR 单夜基线已重新清空旧结果并重跑，唯一默认结果固定为 `8697 / 27204 / 2259/2304 / p90=8`
+- 当前服务器 `run_rr_from_tracklets.py` 已同步到仓库版本，新的 `rr_links` 基线不再混入旧脚本结果
+- 当前 RR 单夜参数固定为 `ref-dt-days=0.05`、`tol=0.03`、`k-neighbors-cap=300`、`max-v-kms=30`、`min-init-earth-au=0.02`
+- 当前单夜默认 hypo 已固定为只扫 `r=[1.3, 1.7, 2.1, 2.5, 2.9, 3.3, 3.7, 4.1]`，并固定 `rdot=0.0`、`rddot=0.0`
+- `run_rr_from_tracklets.py` 已分离出两组 profile 默认值：`single-night` 与 `w15`
+- 当前单夜 orbit fitting 基准已生成：`fit_ok=146/8697`、`is_good=97/8697`
+- 已知小行星在当前单夜 orbit fitting 基准上的命中统计为：`fit_ok_any=314`、`is_good_any=242`
+- 当前单夜 orbit fitting 默认物理参数已统一到 RR 单夜默认：`min-init-earth-au=0.02`、`max-v-kms=30`、`hypos=r=[1.3..4.1], rdot=0, rddot=0`
+- 用统一后的单夜 orbit fitting 默认值重跑后，新的基准更新为：`fit_ok=137/8697`、`is_good=96/8697`
+- 对应的已知小行星命中统计更新为：`fit_ok_any=312`、`is_good_any=242`
+- 新增 `orbit_fit_stats.py`，当前单夜最终结果统计已写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_orbit_fit_stats.json`
+- 服务器正式路径 `/pipeline/xiaoyunao/heliolincrr/run_rr_from_tracklets.py` 只允许放“已入仓库、已提交”的版本
+- 任何 RR 试验改动都不再直接修改服务器正式脚本；临时实验统一使用副本，例如 `/tmp/run_rr_from_tracklets_<tag>.py`
+- 每次正式重跑基线前，先比较仓库版和服务器正式脚本的 SHA；若不一致，先同步仓库，再跑正式基线
+- 若服务器热修被证明有效，必须先回写仓库并提交，再允许覆盖服务器正式脚本
 - RR 新逻辑已在服务器上复跑验证，当前问题变成“歧义显著下降，但已知检测召回也有明显回落”
 - 本轮算法微调尝试（mutual-neighbor、compactness gate、全局 prune）都未优于 `422a2dd` 稳定版，现阶段先停止算法层修改
 - `ref-dt-days=0.1` 已试跑，结果退回到高召回高歧义状态：`n_links=29554`、`rr_given_tracklet=2287/2304=99.26%`、`p90=48`
-- 当前服务器默认 `rr_links` 目录中的 `0.05` 统计文件对应 `8342 / 2057 / p90=6`，与工作日志里记录的 `422a2dd` 稳定基线 `8393 / 2082 / p90=6` 不一致，需要避免后续比较时混淆基线
 - 当前单夜 RR 参数方向已经切为“优先高召回，让下一步轨道拟合压噪声”，因此 `tol=0.03` 比 `0.02` 更符合当前目标
 - 在 `tol=0.03` 下，`k-neighbors-cap=100` 会把 `rr_given_tracklet` 从 `96.31%` 压到 `84.16%`，说明这个值对当前目标过小
 - 在 `tol=0.03` 下，`k-neighbors-cap=300` 会把 `rr_given_tracklet` 从 `96.31%` 提高到 `97.53%`，代价是 `p90` 从 `8` 升到 `9`
-- 需要重新确认后续服务器实验是否统一基于仓库当前 `run_rr_from_tracklets.py`，避免再混入别的脚本版本
-- 当前服务器 `run_rr_from_tracklets.py` 已重新同步到仓库版本，当前默认单夜 `max-v-kms` 已定为 `30`
-- `min-init-earth-au` 的当前有效边界还没找到；`0.01 -> 0.02` 没有产生任何变化，后续若继续扫应直接跳更大的值
+- 当前单夜 RR 参数已经固定，不再继续做这组参数扫描
 - 需要判断是否补充更细的 group / exposure-pair 级诊断
+- 后续若继续调参，应把单夜与 15 夜完全分开记录和比较，避免默认值再次混淆
 - `known_asteroid/astorb.dat` 和 `known_asteroid/de432s.bsp` 不应进入 git
 - 后续代码修改要持续与服务器目录保持一致
 - 服务器热修如果未先回写仓库，后续同步可能再次覆盖运行期修复
@@ -56,7 +66,8 @@
 
 ## Next recommended steps
 
-1. 以新的 `/pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links` `max-v-kms=30` 结果作为唯一单夜基线
-2. 若继续扫描 `min-init-earth-au`，直接从比 `0.02` 更大的点开始
-3. 对每个 `min-init-earth-au` 结果统一比较 `n_links`、`n_member_rows`、`rr_given_tracklet`、命中 RR 的 `n_rr_links median/p90`、总运行时间
-4. 若 `min-init-earth-au` 没有进一步收益，再决定是否继续进轨道拟合验证
+1. 以新的 `/pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links` 结果作为唯一 RR 单夜基线
+2. 以当前 `rr_links/orbit_confirm` 结果作为单夜 orbit fitting 当前基准，开始系统整理其参数含义、默认值和优先调参顺序
+3. 若后续继续处理 15 夜 RR，统一基于 `w15` profile 单独维护参数与实验记录，不再借用单夜默认值
+4. 若继续测试 RR `hypo` 网格，保持正式脚本不动，统一通过 `--hypos <tmpfile>` 或 `/tmp/run_rr_from_tracklets_<tag>.py` 做隔离实验
+5. 以 `20260220_orbit_fit_stats.json` 为基础，优先找出最影响 `fit_ok/is_good` 的分桶和 residual 指标，再决定首轮 orbit fitting 调参顺序

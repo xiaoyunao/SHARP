@@ -55,7 +55,7 @@ RR_NIGHT_MIN_LEN_OBS=3
 RR_NIGHT_MIN_NIGHTS=1
 RR_NIGHT_KCAP=300
 RR_NIGHT_MAXV=30
-RR_NIGHT_MININIT=0.01
+RR_NIGHT_MININIT=0.02
 
 # =============================
 # RR parameters — 15 nights
@@ -261,6 +261,7 @@ mkdir -p "${RR_NIGHT_DIR}"
 "${PYTHON_BIN}" run_rr_from_tracklets.py \
   --infile "${NIGHTLY_ALL}" \
   --outdir "${RR_NIGHT_DIR}" \
+  --profile single-night \
   --cores "${RR_NIGHT_CORES}" \
   --ref-epoch-mode "${RR_NIGHT_REF_MODE}" \
   --ref-dt-days "${RR_NIGHT_REF_DT}" \
@@ -346,6 +347,7 @@ mkdir -p "${RR_W15_DIR}"
 "${PYTHON_BIN}" run_rr_from_tracklets.py \
   --infile "${W15_FILE}" \
   --outdir "${RR_W15_DIR}" \
+  --profile w15 \
   --cores "${RR_W15_CORES}" \
   --ref-epoch-mode "${RR_W15_REF_MODE}" \
   --ref-dt-days "${RR_W15_REF_DT}" \

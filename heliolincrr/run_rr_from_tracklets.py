@@ -43,6 +43,31 @@ MPC327_LON_DEG = 117.5750
 MPC327_LAT_DEG = 40.394239
 MPC327_ALT_M = 868.221
 
+PROFILE_DEFAULTS = {
+    "single-night": {
+        "cores": 16,
+        "max_v_kms": 30.0,
+        "min_init_earth_au": 0.02,
+        "ref_epoch_mode": "mid",
+        "ref_dt_days": 0.05,
+        "tol": 0.03,
+        "min_len_obs": 3,
+        "min_nights": 1,
+        "k_neighbors_cap": 300,
+    },
+    "w15": {
+        "cores": 20,
+        "max_v_kms": 200.0,
+        "min_init_earth_au": 0.02,
+        "ref_epoch_mode": "mid",
+        "ref_dt_days": 0.50,
+        "tol": 0.02,
+        "min_len_obs": 4,
+        "min_nights": 2,
+        "k_neighbors_cap": 200,
+    },
+}
+
 
 def earth_location_mpc327() -> EarthLocation:
     return EarthLocation.from_geodetic(
@@ -388,10 +413,19 @@ class HeliolincRR_Tracklets:
 
 
 def build_hypos_default():
+    # (r, rdot, rddot) are heliocentric range hypotheses in AU, AU/day, AU/day^2.
     rs = np.array([1.3, 1.7, 2.1, 2.5, 2.9, 3.3, 3.7, 4.1], dtype=np.float64)
-    rdots = np.array([-0.02, 0.0, +0.02], dtype=np.float64)
+    rdots = np.array([0.0], dtype=np.float64)
     rdd = np.array([0.0], dtype=np.float64)
     return [(float(r), float(rd), float(rdd0)) for r in rs for rd in rdots for rdd0 in rdd]
+
+
+def apply_profile_defaults(args):
+    defaults = PROFILE_DEFAULTS[args.profile]
+    for key, value in defaults.items():
+        if getattr(args, key) is None:
+            setattr(args, key, value)
+    return args
 
 
 def choose_reference_epochs(jd1, jd2, mode: str, ref_dt_days: float):
@@ -585,22 +619,24 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--infile", required=True)
     ap.add_argument("--outdir", required=True)
+    ap.add_argument("--profile", choices=sorted(PROFILE_DEFAULTS.keys()), default="single-night")
 
-    ap.add_argument("--cores", type=int, default=1)
-    ap.add_argument("--max-v-kms", type=float, default=30.0)
-    ap.add_argument("--min-init-earth-au", type=float, default=0.01)
+    ap.add_argument("--cores", type=int, default=None)
+    ap.add_argument("--max-v-kms", type=float, default=None)
+    ap.add_argument("--min-init-earth-au", type=float, default=None)
 
-    ap.add_argument("--ref-epoch-mode", choices=["mid", "start"], default="mid")
-    ap.add_argument("--ref-dt-days", type=float, default=0.05)
+    ap.add_argument("--ref-epoch-mode", choices=["mid", "start"], default=None)
+    ap.add_argument("--ref-dt-days", type=float, default=None)
 
-    ap.add_argument("--tol", type=float, default=0.03)
-    ap.add_argument("--min-len-obs", type=int, default=4)
-    ap.add_argument("--min-nights", type=int, default=2)
-    ap.add_argument("--k-neighbors-cap", type=int, default=300)
+    ap.add_argument("--tol", type=float, default=None)
+    ap.add_argument("--min-len-obs", type=int, default=None)
+    ap.add_argument("--min-nights", type=int, default=None)
+    ap.add_argument("--k-neighbors-cap", type=int, default=None)
 
     ap.add_argument("--hypos", type=str, default=None)
 
     args = ap.parse_args()
+    args = apply_profile_defaults(args)
     validate_args(args)
 
     infile = Path(args.infile).expanduser()

@@ -58,6 +58,53 @@ MPC327_LON_DEG = 117.5750
 MPC327_LAT_DEG = 40.394239
 MPC327_ALT_M = 868.221
 
+PROFILE_DEFAULTS = {
+    "single-night": {
+        "min_init_earth_au": 0.02,
+        "max_v_kms": 30.0,
+        "hypos": [
+            (1.3, 0.0, 0.0),
+            (1.7, 0.0, 0.0),
+            (2.1, 0.0, 0.0),
+            (2.5, 0.0, 0.0),
+            (2.9, 0.0, 0.0),
+            (3.3, 0.0, 0.0),
+            (3.7, 0.0, 0.0),
+            (4.1, 0.0, 0.0),
+        ],
+    },
+    "w15": {
+        "min_init_earth_au": 0.02,
+        "max_v_kms": 200.0,
+        "hypos": [
+            (1.3, -0.02, 0.0),
+            (1.3, 0.0, 0.0),
+            (1.3, 0.02, 0.0),
+            (1.7, -0.02, 0.0),
+            (1.7, 0.0, 0.0),
+            (1.7, 0.02, 0.0),
+            (2.1, -0.02, 0.0),
+            (2.1, 0.0, 0.0),
+            (2.1, 0.02, 0.0),
+            (2.5, -0.02, 0.0),
+            (2.5, 0.0, 0.0),
+            (2.5, 0.02, 0.0),
+            (2.9, -0.02, 0.0),
+            (2.9, 0.0, 0.0),
+            (2.9, 0.02, 0.0),
+            (3.3, -0.02, 0.0),
+            (3.3, 0.0, 0.0),
+            (3.3, 0.02, 0.0),
+            (3.7, -0.02, 0.0),
+            (3.7, 0.0, 0.0),
+            (3.7, 0.02, 0.0),
+            (4.1, -0.02, 0.0),
+            (4.1, 0.0, 0.0),
+            (4.1, 0.02, 0.0),
+        ],
+    },
+}
+
 
 def earth_location_mpc327() -> EarthLocation:
     return EarthLocation.from_geodetic(
@@ -141,18 +188,19 @@ def geod2heliod(r_so: np.ndarray, r_ob_unit: np.ndarray, d: float) -> float:
     return float(np.min(roots))
 
 
-def build_hypos_default_single() -> List[Tuple[float, float, float]]:
-    rs = np.array([0.8, 1.0, 1.3, 1.7, 2.1, 2.5, 2.9, 3.3, 3.7, 4.1, 5.0, 6.0], dtype=float)
-    rdots = np.array([-0.06, -0.03, -0.015, 0.0, +0.015, +0.03, +0.06], dtype=float)
-    rdd = np.array([0.0], dtype=float)
-    return [(float(r), float(rd), float(rdd0)) for r in rs for rd in rdots for rdd0 in rdd]
+def resolve_profile(rr_dir: Path, explicit_profile: str | None) -> str:
+    if explicit_profile:
+        return explicit_profile
+    mode = detect_mode_from_rr_dir(rr_dir)
+    if mode == "night":
+        return "single-night"
+    if mode == "w15":
+        return "w15"
+    return "single-night"
 
 
-def build_hypos_default_multi() -> List[Tuple[float, float, float]]:
-    rs = np.array([1.3, 1.7, 2.1, 2.5, 2.9, 3.3, 3.7, 4.1], dtype=float)
-    rdots = np.array([-0.02, 0.0, +0.02], dtype=float)
-    rdd = np.array([0.0], dtype=float)
-    return [(float(r), float(rd), float(rdd0)) for r in rs for rd in rdots for rdd0 in rdd]
+def build_hypos_default(profile: str) -> List[Tuple[float, float, float]]:
+    return [tuple(map(float, hypo)) for hypo in PROFILE_DEFAULTS[profile]["hypos"]]
 
 
 def detect_mode_from_rr_dir(rr_dir: Path) -> str:
@@ -669,12 +717,13 @@ def _choose_chunksize(n_links: int, cores: int) -> int:
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--rr-dir", required=True)
+    ap.add_argument("--profile", choices=sorted(PROFILE_DEFAULTS.keys()), default=None)
     ap.add_argument("--root", default="/pipeline/xiaoyunao/data/heliolincrr")
     ap.add_argument("--tracklets", default=None)
     ap.add_argument("--outdir", default=None)
 
     ap.add_argument("--min-init-earth-au", type=float, default=None)
-    ap.add_argument("--max-v-kms", type=float, default=200.0)
+    ap.add_argument("--max-v-kms", type=float, default=None)
     ap.add_argument("--hypos", type=str, default=None)
 
     ap.add_argument("--single-rms-arcsec", type=float, default=5.0)
@@ -706,6 +755,7 @@ def main():
         os.environ.setdefault("NUMEXPR_NUM_THREADS", "1")
 
     rr_dir = Path(args.rr_dir).expanduser()
+    profile = resolve_profile(rr_dir, args.profile)
     root = Path(args.root).expanduser()
     outdir = Path(args.outdir).expanduser() if args.outdir else (rr_dir / "orbit_confirm")
     outdir.mkdir(parents=True, exist_ok=True)
@@ -741,12 +791,14 @@ def main():
                 r, rd, rdd = [float(x) for x in s.split()[:3]]
                 hypos.append((r, rd, rdd))
     else:
-        hypos = build_hypos_default_single() if mode == "night" else build_hypos_default_multi()
+        hypos = build_hypos_default(profile)
 
     if args.min_init_earth_au is None:
-        min_init = 0.01 if mode == "night" else 0.02
+        min_init = float(PROFILE_DEFAULTS[profile]["min_init_earth_au"])
     else:
         min_init = float(args.min_init_earth_au)
+
+    max_v_kms = float(PROFILE_DEFAULTS[profile]["max_v_kms"]) if args.max_v_kms is None else float(args.max_v_kms)
 
     outlier_clip = None if args.outlier_clip_arcsec <= 0 else float(args.outlier_clip_arcsec)
 
@@ -777,7 +829,7 @@ def main():
             loc=loc,
             hypos=hypos,
             min_init=min_init,
-            max_v=float(args.max_v_kms),
+            max_v=max_v_kms,
             outlier_clip=outlier_clip,
             single_thr=float(args.single_rms_arcsec),
             multi_thr=float(args.multi_rms_arcsec),
@@ -812,7 +864,7 @@ def main():
                 loc,
                 hypos,
                 float(min_init),
-                float(args.max_v_kms),
+                max_v_kms,
                 outlier_clip,
                 float(args.single_rms_arcsec),
                 float(args.multi_rms_arcsec),
@@ -871,10 +923,11 @@ def main():
     summary.meta["rr_dir"] = rr_dir.name
     summary.meta["tracklets"] = tracklets_path.name
     summary.meta["mode"] = mode
+    summary.meta["profile"] = profile
     summary.meta["night"] = night
     summary.meta["n_hypos"] = int(len(hypos))
     summary.meta["min_init_earth_au"] = float(min_init)
-    summary.meta["max_v_kms"] = float(args.max_v_kms)
+    summary.meta["max_v_kms"] = float(max_v_kms)
     summary.meta["single_rms_arcsec"] = float(args.single_rms_arcsec)
     summary.meta["multi_rms_arcsec"] = float(args.multi_rms_arcsec)
     summary.meta["pred_days"] = float(args.pred_days)

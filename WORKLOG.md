@@ -2,6 +2,125 @@
 
 ## 2026-04-10
 
+- task: 新增 orbit fitting 最终结果统计脚本，输出分桶占比、残差分布和 known-asteroid 逐阶段统计
+- files_changed: `heliolincrr/orbit_fit_stats.py`, `WORKLOG.md`, `PLAN.md`
+- commands_run: 本地 `sed -n '1,260p' heliolincrr/compare_with_known_asteroids.py`, `sed -n '1,220p' heliolincrr/dump_link_detections_from_L2.py`, `sed -n '830,920p' heliolincrr/orbit_confirm_links.py`, `python3 -m py_compile heliolincrr/orbit_fit_stats.py`, `nl -ba heliolincrr/orbit_fit_stats.py | sed -n '1,260p'`, `rg -n "comparison_fits =|known_asteroid_comparison" heliolincrr/orbit_fit_stats.py`; 服务器 `scp heliolincrr/orbit_fit_stats.py smtpipeline@www.xinglong-naoc.cn:/pipeline/xiaoyunao/heliolincrr/orbit_fit_stats.py`, `/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python /pipeline/xiaoyunao/heliolincrr/orbit_fit_stats.py --rr-dir /pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links`, `ls -l /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison.fits`, `/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python - <<'PY' ... read 20260220_orbit_fit_stats.json ... PY`
+- key_findings:
+  - 新增 `heliolincrr/orbit_fit_stats.py`，只围绕最终 orbit fitting 产物做统计，不再重复 RR link 级统计
+  - 脚本会读取 `orbit_links.fits`、`orbit_obs_residuals.fits` 和 `20260220_rr_known_asteroid_comparison.fits`
+  - 输出内容包括：整体 `fit_ok/is_good` 占比、按 `n_tracklets/n_obs/n_nights` 分桶的 `fit_ok/is_good` 占比、各类 residual / orbit metric 分布、已知小行星逐阶段命中率、以及“命中过已知小行星的 links”在 orbit fitting 阶段的占比
+  - 初版 comparison FITS 默认路径少了 `rr_` 前缀，已修正为 `*_rr_known_asteroid_comparison.fits`
+  - 当前单夜基准统计写入后，顶层关键结果为：`fit_ok=137/8697`、`is_good=96/8697`、`fit_ok_any=312`、`is_good_any=242`
+  - 当前已知小行星阶段占比为：`fit_ok_given_rr=13.81%`、`is_good_given_rr=10.71%`、`is_good_given_fit_ok=77.56%`
+- validation:
+  - `python3 -m py_compile heliolincrr/orbit_fit_stats.py`
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_orbit_fit_stats.json`
+- remaining_issues:
+  - 当前统计脚本只输出 JSON summary，还没有生成更便于人工筛查的分桶表格或 plots
+- next_step:
+  - 基于 `20260220_orbit_fit_stats.json` 挑选 orbit fitting 的首轮主参数，优先看哪些分桶或 residual 指标最能解释 `fit_ok -> is_good` 的损失
+
+- task: 将 orbit fitting 改成 profile 风格，并把单夜默认 `min-init-earth-au`、`max-v-kms`、`hypos` 统一到 RR 单夜默认后重跑基准
+- files_changed: `heliolincrr/orbit_confirm_links.py`, `WORKLOG.md`, `PLAN.md`
+- commands_run: 本地 `sed -n '1,220p' heliolincrr/orbit_confirm_links.py`, `rg -n "build_hypos_default_single|build_hypos_default_multi|mode == \"night\"|min_init_earth_au|max-v-kms|PROFILE_DEFAULTS|add_argument\\(" heliolincrr/orbit_confirm_links.py`, `python3 -m py_compile heliolincrr/orbit_confirm_links.py`, `nl -ba heliolincrr/orbit_confirm_links.py | sed -n '40,95p'`, `nl -ba heliolincrr/orbit_confirm_links.py | sed -n '705,770p'`; 服务器 `scp heliolincrr/orbit_confirm_links.py smtpipeline@www.xinglong-naoc.cn:/pipeline/xiaoyunao/heliolincrr/orbit_confirm_links.py`, `rm -rf /pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links/orbit_confirm`, `/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python orbit_confirm_links.py --rr-dir /pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links --cores 16 --log-every 500`, `/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python compare_with_known_asteroids.py 20260220 --rr-subdir rr_links --out /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison.fits --summary-out /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison_summary.json`
+- key_findings:
+  - `orbit_confirm_links.py` 现已加入 `PROFILE_DEFAULTS`，并按 `rr_dir` 自动区分 `single-night` / `w15`；单夜与多夜默认值不再混用
+  - 单夜 orbit fitting 默认 `min-init-earth-au` 已统一到 `0.02`
+  - 单夜 orbit fitting 默认 `max-v-kms` 已统一到 `30`
+  - 单夜 orbit fitting 默认 hypo 已统一到 RR 单夜默认，只扫 `r=[1.3, 1.7, 2.1, 2.5, 2.9, 3.3, 3.7, 4.1]`、`rdot=0.0`、`rddot=0.0`
+  - 残差与判定阈值本轮未改；只替换了单夜 profile 下的物理假设默认值
+  - 用新的单夜默认值重跑 orbit fitting 后，结果变为：`fit_ok=137/8697`、`is_good=96/8697`
+  - 刷新最终 known-asteroid 对比后，当前单夜基准命中为：`fit_ok_any=312`、`is_good_any=242`
+- validation:
+  - `python3 -m py_compile heliolincrr/orbit_confirm_links.py`
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links/orbit_confirm/{orbit_links.fits,orbit_obs_residuals.fits,provenance.txt}`
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison.{fits,summary.json}`
+- remaining_issues:
+  - orbit fitting 的残差阈值、outlier clipping 和单夜 quality gate 还没有开始系统调参
+  - 目前还缺少面向 orbit fitting 最终结果的更细统计脚本，例如 `fit_ok/is_good` 分层占比、已知小行星在各筛选阶段的占比等
+- next_step:
+  - 以当前 `fit_ok=137/8697`、`is_good=96/8697` 的基准为起点，优先补 orbit fitting 结果统计与更细的 known-asteroid 对比，再决定先扫哪组阈值
+
+- task: 清理单夜 RR 测试产物，重建最终 `rr_links` 基线，并跑当前 orbit fitting 基准
+- files_changed: `WORKLOG.md`, `PLAN.md`
+- commands_run: 本地 `rg -n "orbit|fit_ok|is_good|rr_links|orbfit|fit_orbit|orbit fitting|linkage" heliolincrr -g '!*.fits'`, `sed -n '640,760p' heliolincrr/orbit_confirm_links.py`, `sed -n '760,930p' heliolincrr/orbit_confirm_links.py`, `sed -n '140,220p' heliolincrr/orbit_confirm_links.py`, `sed -n '548,608p' heliolincrr/orbit_confirm_links.py`, `python3 -m py_compile heliolincrr/orbit_confirm_links.py`, `shasum -a 256 heliolincrr/run_rr_from_tracklets.py heliolincrr/orbit_confirm_links.py`; 服务器 `shasum -a 256 /pipeline/xiaoyunao/heliolincrr/run_rr_from_tracklets.py /pipeline/xiaoyunao/heliolincrr/orbit_confirm_links.py`, `find /pipeline/xiaoyunao/data/heliolincrr/20260220 -maxdepth 1 \\( -type d -name "rr_links*" -o -type f -path "/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_*" -o -type f -path "/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison*" \\) | sort`, `scp heliolincrr/run_rr_from_tracklets.py smtpipeline@www.xinglong-naoc.cn:/pipeline/xiaoyunao/heliolincrr/run_rr_from_tracklets.py`, `rm -rf /pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links*`, `rm -rf /pipeline/xiaoyunao/data/heliolincrr/20260220/orbit_confirm*`, `rm -rf /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_* /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison*`, `/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python run_rr_from_tracklets.py --profile single-night --infile /pipeline/xiaoyunao/data/heliolincrr/20260220/tracklets_linreproj/tracklets_20260220_ALL.fits --outdir /pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links`, `/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python rr_link_stats.py 20260220 --rr-subdir rr_links --out /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_link_stats.json`, `/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python compare_with_known_asteroids.py 20260220 --rr-subdir rr_links --out /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison.fits --summary-out /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison_summary.json`, `/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python orbit_confirm_links.py --rr-dir /pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links --cores 16 --log-every 500`, `/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python compare_with_known_asteroids.py 20260220 --rr-subdir rr_links --out /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison.fits --summary-out /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison_summary.json`
+- key_findings:
+  - 已删除 `20260220` 下所有单夜 RR 测试目录、旧 RR 分析摘要以及旧 orbit fitting 结果，只保留重建后的正式基线
+  - 用最终 `single-night` 默认配置重跑后，RR 基线保持为：`n_links=8697`、`n_member_rows=27204`、`in_rr_link=2259/2304`、`rr_given_tracklet=98.05%`、hits-only `median=4`、`p90=8`
+  - 新的正式单夜 RR 运行确认只使用 `8` 个 hypo，即 `r` 壳层乘上 `rdot=0`、`rddot=0`
+  - orbit fitting 用当前默认阈值跑出基准结果：`fit_ok=146/8697`、`is_good=97/8697`
+  - 已知小行星在当前 orbit fitting 基准上的命中统计为：`fit_ok_any=314`、`is_good_any=242`
+- validation:
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links/{links_tracklets.fits,linkage_members.fits,rr_summary.json}`
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_link_stats.json`
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison.{fits,summary.json}`
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links/orbit_confirm/{orbit_links.fits,orbit_obs_residuals.fits,provenance.txt}`
+- remaining_issues:
+  - orbit fitting 目前仍使用脚本内建的单夜 hypo 默认网格和残差阈值，后续是否需要调这些参数仍未开始
+- next_step:
+  - 以当前 `rr_links/orbit_confirm` 结果作为单夜 orbit fitting 初始基准，开始整理 orbit fitting 参数的物理意义并决定优先扫描方向
+
+- task: 固化单夜 RR 默认参数与 hypo，并为单夜 / 15 夜分离两组 profile 默认值
+- files_changed: `heliolincrr/run_rr_from_tracklets.py`, `heliolincrr/run_single_night.sh`, `WORKLOG.md`, `PLAN.md`
+- commands_run: 本地 `sed -n '340,362p' heliolincrr/run_single_night.sh`, `sed -n '586,610p' heliolincrr/run_rr_from_tracklets.py`, `python3 -m py_compile heliolincrr/run_rr_from_tracklets.py`, `bash -n heliolincrr/run_single_night.sh`
+- key_findings:
+  - 当前 `run_single_night.sh` 的 15 夜流程本来就是显式传 `RR_W15_*` 参数，所以此前把 CLI 默认值调成单夜值并不会直接改坏 15 夜结果
+  - 但为了避免后续裸跑或别的调用方式混淆，现已在 `run_rr_from_tracklets.py` 中加入 `profile` 机制：`single-night` 与 `w15` 各自维护独立默认参数
+  - 现在若不显式传参，脚本默认走 `single-night` profile；若传 `--profile w15`，则会自动套用 15 夜默认参数
+  - 单夜默认 hypo 已简化为只扫 `r=[1.3, 1.7, 2.1, 2.5, 2.9, 3.3, 3.7, 4.1]`、`rdot=[0.0]`、`rddot=[0.0]`
+  - `run_single_night.sh` 的单夜与 15 夜调用都已显式加上 `--profile`，避免后续阅读和维护时误解
+- validation:
+  - `python3 -m py_compile heliolincrr/run_rr_from_tracklets.py`
+  - `bash -n heliolincrr/run_single_night.sh`
+- remaining_issues:
+  - 单夜 RR 默认参数和 hypo 已基本定型；后续主线应转向 orbit fitting 衔接或 15 夜参数确认
+- next_step:
+  - 在保持单夜 profile 不变的前提下，单独确认 `w15` profile 是否还需要继续调参或补充默认 hypo 说明
+
+- task: 固化服务器正式脚本同步约束，并继续测试 `rdot=[-0.01, 0, +0.01]` 的临时 hypo 网格
+- files_changed: `PLAN.md`, `WORKLOG.md`
+- commands_run: 本地 `cat > /tmp/rr_hypos_rdot0p01.txt`, `scp -P 20093 /tmp/rr_hypos_rdot0p01.txt smtpipeline@www.xinglong-naoc.cn:/tmp/rr_hypos_rdot0p01.txt`; 服务器 `/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python run_rr_from_tracklets.py --infile /pipeline/xiaoyunao/data/heliolincrr/20260220/tracklets_linreproj/tracklets_20260220_ALL.fits --outdir /pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links_hypo_rdot0p01 --cores 16 --ref-epoch-mode mid --ref-dt-days 0.05 --tol 0.03 --min-len-obs 3 --min-nights 1 --k-neighbors-cap 300 --max-v-kms 30 --min-init-earth-au 0.02 --hypos /tmp/rr_hypos_rdot0p01.txt`
+- key_findings:
+  - 明确固定后续服务器工作流：正式路径只放已入仓并提交的版本；试验改动一律走 `/tmp` 副本或 `--hypos` 临时文件，不再直接热改正式脚本
+  - 每次正式基线重跑前都要先比 SHA；服务器热修若有效，必须先回写仓库并提交后才能升格为正式脚本
+  - `rdot=[-0.01, 0, +0.01]` 在 `max-v-kms=30` 下并未被完全压死；所有 `r` 壳层都还能产生 `n_prvs>0`
+  - 但该网格的最终结果仍明显劣于当前正式基准：`n_links=15759`、`n_member_rows=50379`、`in_rr_link=2267/2304`、`rr_given_tracklet=98.39%`
+  - 相比正式基准 `8697 / 27204 / 2259/2304 / hits-only median=4 / p90=8`，这轮只多命中 `8` 个 detection，却把 hits-only 歧义度抬到 `median=7`、`p90=16`
+  - 相比上一轮 `rdot=[-0.005, 0, +0.005]`，`±0.01` 的规模略小、召回略低，但 hits-only `median/p90` 仍同样停在 `7 / 16`
+  - `rdot=[-0.002, 0, +0.002]` 在传播阶段几乎和 `rdot=0` 一样“全活”，最终结果为：`n_links=14295`、`n_member_rows=50353`、`in_rr_link=2269/2304`、`rr_given_tracklet=98.48%`
+  - 相比正式基准，`±0.002` 同样只多命中 `10` 个 detection，但 hits-only 歧义度仍升到 `median=7`、`p90=15`
+  - 在当前已试的非零 `rdot` 网格里，`±0.002` 的 `n_links` 最低，但 `n_member_rows` 仍接近 `±0.005 / ±0.01`，整体仍明显劣于正式基准
+- validation:
+  - 临时 hypo 文件 `/tmp/rr_hypos_rdot0p01.txt` 已上传服务器
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links_hypo_rdot0p01/{links_tracklets.fits,linkage_members.fits,rr_summary.json}`
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_link_stats_hypo_rdot0p01.json`
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison_hypo_rdot0p01.{fits,json}`
+  - 临时 hypo 文件 `/tmp/rr_hypos_rdot0p002.txt` 已上传服务器
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links_hypo_rdot0p002/{links_tracklets.fits,linkage_members.fits,rr_summary.json}`
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_link_stats_hypo_rdot0p002.json`
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison_hypo_rdot0p002.{fits,json}`
+- remaining_issues:
+  - 非零 `rdot` 网格在当前 `max-v-kms=30` 下会明显抬高 linkage 规模和歧义，但召回增益有限；是否继续缩小到更小的 `rdot` 仍待判断
+- next_step:
+  - 若继续调 `hypo`，优先尝试比 `±0.01` 和 `±0.005` 更小的 `rdot`，否则保持当前正式网格不变
+
+- task: 清空 `20260220` 历史 RR 调参产物，并用固定参数重建唯一单夜基线
+- files_changed: `WORKLOG.md`, `PLAN.md`
+- commands_run: 本地 `git status --short --branch`, `git branch --show-current`, `git fetch --all --prune`, `git rev-list --left-right --count origin/main...HEAD`, `sed -n '1,220p' WORKLOG.md`, `sed -n '1,220p' PLAN.md`, `shasum -a 256 heliolincrr/run_rr_from_tracklets.py heliolincrr/rr_link_stats.py heliolincrr/compare_with_known_asteroids.py`, `python3 -m py_compile heliolincrr/run_rr_from_tracklets.py heliolincrr/rr_link_stats.py heliolincrr/compare_with_known_asteroids.py`; 服务器 `find /pipeline/xiaoyunao/data/heliolincrr/20260220 -maxdepth 1 \\( -type d -name "rr_links*" -o -type f -path "/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_*" -o -type f -path "/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison*" \\) | sort`, `shasum -a 256 /pipeline/xiaoyunao/heliolincrr/run_rr_from_tracklets.py /pipeline/xiaoyunao/heliolincrr/rr_link_stats.py /pipeline/xiaoyunao/heliolincrr/compare_with_known_asteroids.py`, `scp heliolincrr/run_rr_from_tracklets.py smtpipeline@www.xinglong-naoc.cn:/pipeline/xiaoyunao/heliolincrr/run_rr_from_tracklets.py`, `rm -rf /pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links*`, `rm -f /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_* /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison*`, `/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python run_rr_from_tracklets.py --infile /pipeline/xiaoyunao/data/heliolincrr/20260220/tracklets_linreproj/tracklets_20260220_ALL.fits --outdir /pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links --cores 16 --ref-epoch-mode mid --ref-dt-days 0.05 --tol 0.03 --min-len-obs 3 --min-nights 1 --k-neighbors-cap 300 --max-v-kms 30 --min-init-earth-au 0.02`, `/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python rr_link_stats.py 20260220 --rr-subdir rr_links --out /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_link_stats.json`, `/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python compare_with_known_asteroids.py 20260220 --rr-subdir rr_links --out /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison.fits --summary-out /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison_summary.json`
+- key_findings:
+  - 服务器上的 `run_rr_from_tracklets.py` 与仓库不一致，重建基线前已先同步到仓库当前版本；`rr_link_stats.py` 和 `compare_with_known_asteroids.py` 原本已一致
+  - 已删除 `20260220` 下所有旧 `rr_links*` 目录和对应 RR 分析产物，避免后续比较继续混入旧实验结果
+  - 以固定参数 `ref-dt-days=0.05, tol=0.03, k-neighbors-cap=300, max-v-kms=30, min-init-earth-au=0.02` 重跑后，新唯一基线为：`n_links=8697`、`n_member_rows=27204`、`in_rr_link=2259/2304`、`rr_given_tracklet=98.05%`
+  - hits-only 歧义度为：`median=4`、`p90=8`、`max=16`
+- validation:
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links/{links_tracklets.fits,linkage_members.fits,rr_summary.json}`
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_link_stats.json`
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison.{fits,summary.json}`
+- remaining_issues:
+  - 当前单夜 RR 参数已固定；后续若继续推进，应直接转入轨道拟合衔接或补充更细的诊断，而不是继续扫描这组参数
+- next_step:
+  - 以新的 `/pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links` 结果作为唯一 RR 单夜基准，继续后续轨道拟合验证
+
 - task: 统一 `min-init-earth-au` 默认值为 `0.01`，并确认 `0.02` 不改变当前单夜 RR 基线
 - files_changed: `heliolincrr/run_rr_from_tracklets.py`, `CHANGELOG.md`, `WORKLOG.md`, `PLAN.md`
 - commands_run: 本地 `sed -n '584,604p' heliolincrr/run_rr_from_tracklets.py`, `git branch --show-current`, `git status --short`; 服务器 `run_rr_from_tracklets.py --infile /pipeline/xiaoyunao/data/heliolincrr/20260220/tracklets_linreproj/tracklets_20260220_ALL.fits --outdir /pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links_mininit0p02 --cores 16 --ref-epoch-mode mid --ref-dt-days 0.05 --tol 0.03 --min-len-obs 3 --min-nights 1 --k-neighbors-cap 300 --max-v-kms 30 --min-init-earth-au 0.02`, `rr_link_stats.py 20260220 --rr-subdir rr_links_mininit0p02 --out /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_link_stats_mininit0p02.json`, `compare_with_known_asteroids.py 20260220 --rr-subdir rr_links_mininit0p02 --out /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison_mininit0p02.fits --summary-out /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison_mininit0p02.json`
