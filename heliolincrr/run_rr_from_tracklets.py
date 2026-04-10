@@ -587,8 +587,8 @@ def main():
     ap.add_argument("--outdir", required=True)
 
     ap.add_argument("--cores", type=int, default=1)
-    ap.add_argument("--max-v-kms", type=float, default=200.0)
-    ap.add_argument("--min-init-earth-au", type=float, default=0.02)
+    ap.add_argument("--max-v-kms", type=float, default=30.0)
+    ap.add_argument("--min-init-earth-au", type=float, default=0.01)
 
     ap.add_argument("--ref-epoch-mode", choices=["mid", "start"], default="mid")
     ap.add_argument("--ref-dt-days", type=float, default=0.05)

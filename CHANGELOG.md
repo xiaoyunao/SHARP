@@ -28,12 +28,22 @@
 - 将单夜 RR 的默认 `tol` 从 `0.02` 调整为 `0.03`
 - 将 RR 主程序 CLI 默认 `k-neighbors-cap` 调整为 `300`
 - 将单夜脚本 `run_single_night.sh` 中的 `RR_NIGHT_KCAP` 调整为 `300`
+- 将单夜 RR 的默认 `max-v-kms` 从 `200` 调整为 `30`
+- 将 RR 主程序 CLI 默认 `min-init-earth-au` 从 `0.02` 调整为 `0.01`
 - 选择依据：
   - 当前目标从“优先压歧义”切换为“优先保召回，把噪声留给下一步轨道拟合”
   - 在 `ref-dt-days=0.05, tol=0.03` 下，`kcap=300` 相比 `kcap=200` 将
     `rr_given_tracklet` 从 `96.31%` 提升到 `97.53%`
   - 代价是 linkage 和成员规模继续增加，且 hits-only 歧义度 `p90` 从 `8`
     升到 `9`
+  - 在继续固定 `ref-dt-days=0.05, tol=0.03, k-neighbors-cap=300` 后，
+    `max-v-kms=30` 相比旧基线 `200` 将
+    `n_links` 从 `12274` 降到 `8697`，`n_member_rows` 从 `39806` 降到 `27204`
+  - 同时 `rr_given_tracklet` 从 `2247/2304=97.53%` 提升到
+    `2259/2304=98.05%`，hits-only `p90` 从 `9` 降到 `8`
+  - 在固定 `max-v-kms=30` 后，`min-init-earth-au=0.02` 与 `0.01`
+    在 `20260220` 上结果完全一致，因此将 CLI 默认值也统一到
+    单夜脚本当前使用的 `0.01`
 
 ## 2026-04-08
 

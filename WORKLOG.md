@@ -1,5 +1,74 @@
 # WORKLOG
 
+## 2026-04-10
+
+- task: 统一 `min-init-earth-au` 默认值为 `0.01`，并确认 `0.02` 不改变当前单夜 RR 基线
+- files_changed: `heliolincrr/run_rr_from_tracklets.py`, `CHANGELOG.md`, `WORKLOG.md`, `PLAN.md`
+- commands_run: 本地 `sed -n '584,604p' heliolincrr/run_rr_from_tracklets.py`, `git branch --show-current`, `git status --short`; 服务器 `run_rr_from_tracklets.py --infile /pipeline/xiaoyunao/data/heliolincrr/20260220/tracklets_linreproj/tracklets_20260220_ALL.fits --outdir /pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links_mininit0p02 --cores 16 --ref-epoch-mode mid --ref-dt-days 0.05 --tol 0.03 --min-len-obs 3 --min-nights 1 --k-neighbors-cap 300 --max-v-kms 30 --min-init-earth-au 0.02`, `rr_link_stats.py 20260220 --rr-subdir rr_links_mininit0p02 --out /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_link_stats_mininit0p02.json`, `compare_with_known_asteroids.py 20260220 --rr-subdir rr_links_mininit0p02 --out /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison_mininit0p02.fits --summary-out /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison_mininit0p02.json`
+- key_findings:
+  - 当前单夜正式流程一直使用 `RR_NIGHT_MININIT=0.01`；此前只有 RR 主程序 CLI 默认还停在 `0.02`
+  - `min-init-earth-au=0.02` 相比当前 `0.01` 基线，在 `20260220` 上 `n_prvs`、`n_links`、`n_member_rows`、`in_rr_link`、`rr_given_tracklet`、hits-only `median/p90` 全部完全一致
+  - 因此目前将 CLI 默认值统一固定为 `0.01`
+- validation:
+  - `min-init-earth-au=0.02` 结果与当前 `0.01` 默认基线完全一致
+- remaining_issues:
+  - 还没有找到 `min-init-earth-au` 真正开始产生影响的阈值
+- next_step:
+  - 若继续扫描 `min-init-earth-au`，直接跳到更大的测试点
+
+- task: 将单夜 RR 默认 `max-v-kms` 固定为 `30`，并把该结果切为新的 `20260220` 默认基线
+- files_changed: `heliolincrr/run_rr_from_tracklets.py`, `heliolincrr/run_single_night.sh`, `CHANGELOG.md`, `WORKLOG.md`, `PLAN.md`
+- commands_run: 本地 `sed -n '560,620p' heliolincrr/run_rr_from_tracklets.py`, `sed -n '40,80p' heliolincrr/run_single_night.sh`, `rg -n "max-v-kms|RR_NIGHT_MAXV|Current objective|Next recommended steps|heliolincrr RR 默认参数更新" CHANGELOG.md PLAN.md WORKLOG.md heliolincrr/run_rr_from_tracklets.py heliolincrr/run_single_night.sh`
+- key_findings:
+  - 在已固定 `ref-dt-days=0.05, tol=0.03, k-neighbors-cap=300` 后，`max-v-kms=30` 是当前最优候选
+  - 相比旧默认 `200`，`30` 将 `n_links` 从 `12274` 压到 `8697`，`n_member_rows` 从 `39806` 压到 `27204`
+  - 同时 `in_rr_link` 从 `2247` 提到 `2259`，`rr_given_tracklet` 从 `97.53%` 提到 `98.05%`
+  - `35` 虽然也优于 `200`，但不如 `30`；`40` 明显放回过多候选，`20` 则过度损伤召回
+- validation:
+  - 本步先完成本地代码和文档更新；服务器基线重跑与同步放在下一步执行
+- remaining_issues:
+  - 服务器默认 `rr_links` 目录还需要改写为 `max-v-kms=30` 基线
+  - 下一轮参数扫描尚未开始，`min-init-earth-au` 还没有基于新默认值做任何实验
+- next_step:
+  - 同步 `run_rr_from_tracklets.py` / `run_single_night.sh` 到服务器，并用 `max-v-kms=30` 重写 `rr_links` 默认基线
+  - 然后开始扫描 `min-init-earth-au`
+
+- task: 清理 `20260220` 历史 RR 调参产物并重跑当前默认单夜基线，准备开始扫描 `max-v-kms`
+- files_changed: `WORKLOG.md`, `PLAN.md`
+- commands_run: 本地 `rg -n "max-v-kms|RR_NIGHT_MAXV|RR_W15_MAXV|ap.add_argument\\(\\\"--max-v-kms\\\"|propagate_all\\(" heliolincrr/run_rr_from_tracklets.py heliolincrr/run_single_night.sh`, `sed -n '1,140p' heliolincrr/run_single_night.sh`, `sed -n '120,320p' heliolincrr/run_rr_from_tracklets.py`, `shasum -a 256 heliolincrr/run_rr_from_tracklets.py heliolincrr/rr_link_stats.py heliolincrr/compare_with_known_asteroids.py`; 服务器 `find /pipeline/xiaoyunao/data/heliolincrr/20260220 -maxdepth 1 -type d -name "rr_links*"`, `scp heliolincrr/run_rr_from_tracklets.py ...:/pipeline/xiaoyunao/heliolincrr/run_rr_from_tracklets.py`, `rm -rf /pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links*`, `rm -f /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_* /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison*`, `run_rr_from_tracklets.py --infile /pipeline/xiaoyunao/data/heliolincrr/20260220/tracklets_linreproj/tracklets_20260220_ALL.fits --outdir /pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links --cores 16 --ref-epoch-mode mid --ref-dt-days 0.05 --tol 0.03 --min-len-obs 3 --min-nights 1 --k-neighbors-cap 300 --max-v-kms 200 --min-init-earth-au 0.01`, `rr_link_stats.py 20260220 --rr-subdir rr_links --out /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_link_stats.json`, `compare_with_known_asteroids.py 20260220 --rr-subdir rr_links --out /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison.fits --summary-out /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison_summary.json`
+- key_findings:
+  - 当前单夜 RR 默认值已再次确认：`ref-dt-days=0.05`、`tol=0.03`、`k-neighbors-cap=300`、`max-v-kms=200`
+  - `max-v-kms` 位于传播阶段，作用是丢弃 Lambert 解末端速度 `>= max_v_kms` 的候选；它会先改传播保留下来的 `n_prvs`，再间接影响后续聚类规模与召回/歧义
+  - 服务器 `run_rr_from_tracklets.py` 与仓库版本原先不一致，已先同步仓库现版后再重跑，避免基线混入不同程序版本
+  - 已删除 `20260220` 旧的 `rr_links_refdt*`、`rr_links_tol*`、`rr_links_tol0p03_kcap*` 以及对应 `analysis` 摘要文件，只保留新生成的 `rr_links` 基线
+  - 新的干净默认基线结果为：`n_links=12274`、`n_member_rows=39806`、`in_rr_link=2247/2304`、`rr_given_tracklet=97.53%`、命中 RR 的 `n_rr_links` 中位数 `4`、`p90=9`
+- validation:
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links/{links_tracklets.fits,linkage_members.fits,rr_summary.json}`
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_link_stats.json`
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison.{fits,summary.json}`
+- remaining_issues:
+  - 还未开始 `max-v-kms` 参数扫描，不清楚比 `200` 更紧或更松的速度上限会如何改变召回与歧义
+  - 轨道拟合阶段还未接上，当前仍只能用 RR 覆盖率与歧义度做代理指标
+- next_step:
+  - 以新的 `rr_links` 干净基线为参照，继续扫描 `max-v-kms`
+
+- task: 确认 `known_asteroid` 重复上报问题已定位并将主线切回 `heliolincrr` RR link 调参
+- files_changed: `PLAN.md`, `WORKLOG.md`
+- commands_run: 本地 `git status --short --branch`, `git fetch --all --prune`, `git rev-list --left-right --count origin/main...HEAD`, `git log --oneline --decorate --graph -n 15 --all`, `sed -n '1,220p' {WORKLOG.md,PLAN.md,README.md,CHANGELOG.md}`, `sed -n '1,220p' heliolincrr/README.md`, `rg -n "tol|k-neighbors-cap|ref-dt|RR_NIGHT|cluster_one|rr_summary|argparse" heliolincrr`, `git log --oneline --decorate -n 10 -- heliolincrr`, `sed -n '300,760p' heliolincrr/run_rr_from_tracklets.py`, `sed -n '1,240p' heliolincrr/rr_link_stats.py`, `sed -n '1,260p' heliolincrr/compare_with_known_asteroids.py`, `sed -n '230,380p' heliolincrr/run_single_night.sh`
+- key_findings:
+  - `known_asteroid` 重复上报问题已确认找到根因并补上 manifest 源头修复与提交前去重保护，当前可退出主线优先级
+  - `heliolincrr` 当前仓库默认 RR 单夜参数仍是 `ref-dt-days=0.05`、`tol=0.03`、`k-neighbors-cap=300`
+  - RR 主程序、单夜脚本和统计脚本都已具备继续扫参所需的 summary/coverage 输出
+  - 下一轮调参应继续沿用独立输出目录，避免把默认 `rr_links` 基线再次混杂覆盖
+- validation:
+  - `git fetch --all --prune` 后确认本地 `main` 与 `origin/main` 一致，ahead/behind=`0/0`
+  - 本次只做上下文恢复与文档切换，未运行新的 RR 计算
+- remaining_issues:
+  - 服务器实际运行的 RR 脚本版本仍需在下一轮实验前再次确认
+  - 还未开始新的参数扫描，也还未进入 orbit-confirm 阶段验证
+- next_step:
+  - 先在服务器确认 RR 运行脚本与仓库版本一致，再继续 `20260220` 的 RR 参数扫描
+
 ## 2026-04-09
 
 - task: 排查 `known_asteroid` 向 MPC 重复上报的问题，并补提交前历史去重保护

@@ -2,8 +2,8 @@
 
 ## Current objective
 
-优先处理 `known_asteroid` 的 MPC 重复上报问题，先堵住重复提交，再回到
-`heliolincrr` 的 RR 扫描。
+恢复 `heliolincrr` 的 RR link 调参，并以已经确认的单夜高召回基线继续往下做
+参数扫描和后续轨道拟合衔接。
 
 ## Milestones
 
@@ -18,14 +18,10 @@
 
 ## Outstanding issues
 
-- 历史提交中确认存在跨夜次重复上报；`20251225` 与 `20251226` 至少共享大量相同 `(object, obsTime)` 观测
-- 最近提交 `20260331` 到 `20260407` 未发现同类重复
-- 已定位更上游根因：`submit_pipeline_slurm.sh` 旧逻辑按目录全量吞 `L2/*MP*`，不检查 FITS 实际观测时间；`20251226/L2` 中有 `166` 个文件经本地 observing-night 重判后应归 `20251225`
-- manifest 源头修复已经写入并同步到服务器，但还需要用完整流程 rerun 验证对历史夜次的实际输出
-- `export_ades.py` 的历史去重现在只是最后一道保险，不应替代源头夜次切分修复
-- 需要继续追查上游 `/processed1/YYYYMMDD/L2` 的夜次切分或落盘规则，解释为什么会出现同名文件和相同 `DATE-OBS` 同时进入相邻夜目录
-- `mask_gaia + make tracklet` 的 clean rerun 已完成，后续优化重点应转到 `rr link`
-- RR 单夜基线已跑出，但当前已知检测对应的 RR 歧义度仍高，需要压低每个 detection 对应的候选 linkage 数
+- `known_asteroid` 重复上报问题已经定位并完成程序侧保护，当前不再作为主线阻塞
+- `20260220` 的 RR 单夜新基线已切到 `max-v-kms=30`，当前默认参数结果是 `8697 / 27204 / 2259/2304 / p90=8`
+- `max-v-kms=30` 相比 `200` 已明显改善规模和高歧义尾部，下一轮主线改为扫描 `min-init-earth-au`
+- `min-init-earth-au=0.02` 与当前 `0.01` 基线结果完全一致，当前默认值统一保持 `0.01`
 - RR 新逻辑已在服务器上复跑验证，当前问题变成“歧义显著下降，但已知检测召回也有明显回落”
 - 本轮算法微调尝试（mutual-neighbor、compactness gate、全局 prune）都未优于 `422a2dd` 稳定版，现阶段先停止算法层修改
 - `ref-dt-days=0.1` 已试跑，结果退回到高召回高歧义状态：`n_links=29554`、`rr_given_tracklet=2287/2304=99.26%`、`p90=48`
@@ -33,10 +29,12 @@
 - 当前单夜 RR 参数方向已经切为“优先高召回，让下一步轨道拟合压噪声”，因此 `tol=0.03` 比 `0.02` 更符合当前目标
 - 在 `tol=0.03` 下，`k-neighbors-cap=100` 会把 `rr_given_tracklet` 从 `96.31%` 压到 `84.16%`，说明这个值对当前目标过小
 - 在 `tol=0.03` 下，`k-neighbors-cap=300` 会把 `rr_given_tracklet` 从 `96.31%` 提高到 `97.53%`，代价是 `p90` 从 `8` 升到 `9`
+- 需要重新确认后续服务器实验是否统一基于仓库当前 `run_rr_from_tracklets.py`，避免再混入别的脚本版本
+- 当前服务器 `run_rr_from_tracklets.py` 已重新同步到仓库版本，当前默认单夜 `max-v-kms` 已定为 `30`
+- `min-init-earth-au` 的当前有效边界还没找到；`0.01 -> 0.02` 没有产生任何变化，后续若继续扫应直接跳更大的值
 - 需要判断是否补充更细的 group / exposure-pair 级诊断
 - `known_asteroid/astorb.dat` 和 `known_asteroid/de432s.bsp` 不应进入 git
 - 后续代码修改要持续与服务器目录保持一致
-- `known_asteroid` 的 finalize 自动出图链路刚恢复，需要确认明天自动任务是否正常衔接
 - 服务器热修如果未先回写仓库，后续同步可能再次覆盖运行期修复
 
 ## Validation criteria
@@ -58,7 +56,7 @@
 
 ## Next recommended steps
 
-1. 用已同步到服务器的 manifest 源头修复，对 `20251226` 做完整但不提交的 rerun
-2. 核查 rerun 后的 `matched_asteroids.fits` / `ades.psv` 是否不再包含 `20251225` 夜的重复观测
-3. 继续排查 `/processed1` 上游夜次目录的切分/落盘规则，解释相邻夜目录为何共享同名文件
-4. `known_asteroid` 重复上报风险解除后，再恢复 `heliolincrr` 的 RR / 轨道拟合调试
+1. 以新的 `/pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links` `max-v-kms=30` 结果作为唯一单夜基线
+2. 若继续扫描 `min-init-earth-au`，直接从比 `0.02` 更大的点开始
+3. 对每个 `min-init-earth-au` 结果统一比较 `n_links`、`n_member_rows`、`rr_given_tracklet`、命中 RR 的 `n_rr_links median/p90`、总运行时间
+4. 若 `min-init-earth-au` 没有进一步收益，再决定是否继续进轨道拟合验证
