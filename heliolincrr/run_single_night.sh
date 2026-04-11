@@ -45,17 +45,10 @@ RR_NIGHT_DIR="${ROOT_OUT}/${NIGHT}/rr_links"
 RR_W15_DIR="${ROOT_OUT}/${NIGHT}/rr_links_15"
 
 # =============================
-# RR parameters — single night
+# Linear-link parameters — single night
 # =============================
-RR_NIGHT_CORES=16
-RR_NIGHT_REF_MODE="mid"
-RR_NIGHT_REF_DT=0.05
-RR_NIGHT_TOL=0.03
-RR_NIGHT_MIN_LEN_OBS=3
-RR_NIGHT_MIN_NIGHTS=1
-RR_NIGHT_KCAP=300
-RR_NIGHT_MAXV=30
-RR_NIGHT_MININIT=0.02
+LINEAR_NIGHT_SPEED=5
+LINEAR_NIGHT_DIRECTION=10
 
 # =============================
 # RR parameters — 15 nights
@@ -254,23 +247,16 @@ if [[ "${N_TRK_NIGHT}" -le 0 ]]; then
 fi
 
 # =============================
-# Step 4a: RR — single night (ALWAYS run if Step3 passed)
+# Step 4a: linear linking — single night (ALWAYS run if Step3 passed)
 # =============================
 mkdir -p "${RR_NIGHT_DIR}"
 
-"${PYTHON_BIN}" run_rr_from_tracklets.py \
+"${PYTHON_BIN}" run_linear_links_from_tracklets.py \
   --infile "${NIGHTLY_ALL}" \
   --outdir "${RR_NIGHT_DIR}" \
-  --profile single-night \
-  --cores "${RR_NIGHT_CORES}" \
-  --ref-epoch-mode "${RR_NIGHT_REF_MODE}" \
-  --ref-dt-days "${RR_NIGHT_REF_DT}" \
-  --tol "${RR_NIGHT_TOL}" \
-  --min-len-obs "${RR_NIGHT_MIN_LEN_OBS}" \
-  --min-nights "${RR_NIGHT_MIN_NIGHTS}" \
-  --k-neighbors-cap "${RR_NIGHT_KCAP}" \
-  --max-v-kms "${RR_NIGHT_MAXV}" \
-  --min-init-earth-au "${RR_NIGHT_MININIT}"
+  --speed-thresh-arcsec-per-hour "${LINEAR_NIGHT_SPEED}" \
+  --direction-thresh-deg "${LINEAR_NIGHT_DIRECTION}" \
+  --require-shared-endpoint
 
 if [[ "${RUN_W15}" -ne 1 ]]; then
   echo "[info] RUN_W15=${RUN_W15}; skip W15 processing"

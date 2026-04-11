@@ -2,8 +2,9 @@
 
 ## Current objective
 
-将 `rr_links_compactcore_softsky` 固化为唯一正式单夜 RR 基线，并继续提升单夜
-`orbit_confirm_links.py` 对污染 links 的鲁棒轨道拟合能力。
+将单夜正式 linking 流程切换为 `run_linear_links_from_tracklets.py`
+（`speed=5 arcsec/h`, `direction=10 deg`, `require_shared_endpoint=True`），并将
+`run_rr_from_tracklets.py` 收口为 15 夜专用工具。
 
 ## Milestones
 
@@ -68,6 +69,10 @@
 - 首轮 `5 arcsec/h + 5 deg` 实验得到 `546` 条 links，其中 `539/546` 都 `is_good`，说明 purity 非常高
 - 但它只覆盖了 `1555/2304` 个已知检测，`rr_given_tracklet=67.49%`，召回明显偏低
 - 因此这条新路线值得继续，但要靠阈值扫描找 recall/purity 折中，而不是把当前 `5/5` 直接当正式基线
+- 将 `direction` 放宽到 `10 deg` 后，单夜直线 linking 更新为：`582` 条 links、`1590/2304` 个已知检测进入 link，且 `565/582` 都 `is_good`
+- 进一步统计显示：`2端点同一小行星` 的 `1399` 条 tracklet 中，有 `291` 条来自“整晚只有 1 条 tracklet 的对象”，先天不可能进入 link；剩余理论可连的 `1108` 条里，已有 `1051` 条进入 link
+- 因此当前 `speed=5`, `direction=10`, `require_shared_endpoint=True` 已可作为单夜正式基线
+- 关闭 `require_shared_endpoint` 后，候选边数会直接膨胀到 `721,479`，path 枚举难以收敛，说明共享端点是这条新单夜路线的必要结构约束
 - 新增 `orbit_fit_stats.py`，当前单夜最终结果统计已写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_orbit_fit_stats.json`
 - 服务器正式路径 `/pipeline/xiaoyunao/heliolincrr/run_rr_from_tracklets.py` 只允许放“已入仓库、已提交”的版本
 - 任何 RR 试验改动都不再直接修改服务器正式脚本；临时实验统一使用副本，例如 `/tmp/run_rr_from_tracklets_<tag>.py`
@@ -105,11 +110,8 @@
 
 ## Next recommended steps
 
-1. 以当前 `/pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links` 作为唯一正式单夜 RR 基线，不再回切其它 RR 试验目录
-2. 直接回到 `rr_links` 侧，优先诊断并拆解 `partial_known_single` 与 `all_known_mixed` 两类污染 link 的成团原因
-3. 重点检查共享端点链里的桥接歧义：不是“是否共享端点”，而是“同一共享端点附近是否存在多个可串接候选”
-4. 平行保留新的单夜直线 linking 路线，优先扫描 `speed/direction` 阈值，寻找高 purity 下更可接受的 recall
-5. 暂不把“继续放宽 seed/final `max_v_kms`”作为主线；orbit fitting 只保留为辅助诊断与最终 purity 过滤
-6. RR 侧优先考虑补上更接近公开成熟流程的 purity 控制，例如共享端点唯一性约束、对象级拆分、以及 link 去重/净化
-7. 若后续继续处理 15 夜 RR，统一基于 `w15` profile 单独维护参数与实验记录，不再借用单夜默认值
-8. 若继续测试 RR `hypo` 网格，保持正式脚本不动，统一通过 `--hypos <tmpfile>` 或 `/tmp/run_rr_from_tracklets_<tag>.py` 做隔离实验
+1. 将单夜正式流程切换到 `run_linear_links_from_tracklets.py`，默认参数固定为 `speed=5`, `direction=10`, `require_shared_endpoint=True`
+2. 将 `run_rr_from_tracklets.py` 收口为 15 夜工具，不再维护单夜 profile 和单夜默认参数
+3. orbit fitting 在单夜链路中仅保留为后验验证，不再作为主导找回污染 links 的主要手段
+4. 若后续继续提升单夜召回，优先围绕线性 linking 的边规则做小范围扫描，不回到单夜 RR 轨道传播聚类
+5. 若后续继续处理 15 夜 RR，统一基于 `w15` profile 单独维护参数与实验记录

@@ -141,6 +141,7 @@ def build_edges(
     rows,
     speed_thresh_arcsec_per_hour: float,
     direction_thresh_deg: float,
+    require_shared_endpoint: bool,
 ):
     by_start = defaultdict(list)
     for idx, row in enumerate(rows):
@@ -150,11 +151,17 @@ def build_edges(
     incoming = defaultdict(list)
     edge_rows = []
     for i, row in enumerate(rows):
-        candidates = by_start.get(row["end_key"], [])
+        if require_shared_endpoint:
+            candidates = by_start.get(row["end_key"], [])
+        else:
+            candidates = range(len(rows))
         for j in candidates:
             if i == j:
                 continue
             other = rows[j]
+            shared_key = row["end_key"] if row["end_key"] == other["start_key"] else ""
+            if require_shared_endpoint and not shared_key:
+                continue
             if other["end_mjd"] <= row["end_mjd"]:
                 continue
             speed_diff = abs(row["speed_arcsec_per_hour"] - other["speed_arcsec_per_hour"])
@@ -169,7 +176,7 @@ def build_edges(
                 (
                     rows[i]["tracklet_id"],
                     rows[j]["tracklet_id"],
-                    row["end_key"],
+                    shared_key,
                     float(speed_diff),
                     float(dir_diff),
                 )
@@ -299,7 +306,9 @@ def main():
     ap.add_argument("--infile", required=True)
     ap.add_argument("--outdir", required=True)
     ap.add_argument("--speed-thresh-arcsec-per-hour", type=float, default=5.0)
-    ap.add_argument("--direction-thresh-deg", type=float, default=5.0)
+    ap.add_argument("--direction-thresh-deg", type=float, default=10.0)
+    ap.add_argument("--require-shared-endpoint", action="store_true", default=True)
+    ap.add_argument("--no-require-shared-endpoint", dest="require_shared_endpoint", action="store_false")
     args = ap.parse_args()
 
     infile = Path(args.infile).expanduser()
@@ -317,6 +326,7 @@ def main():
         rows=rows,
         speed_thresh_arcsec_per_hour=float(args.speed_thresh_arcsec_per_hour),
         direction_thresh_deg=float(args.direction_thresh_deg),
+        require_shared_endpoint=bool(args.require_shared_endpoint),
     )
     logger.log(
         f"[edges] n_src_with_outgoing={sum(1 for k in outgoing if outgoing[k])} n_edges={len(edge_rows)} elapsed={_fmt_elapsed(time.perf_counter() - t0)}"

@@ -53,6 +53,14 @@ cd /pipeline/xiaoyunao/heliolincrr
 PYTHON_BIN=/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python bash run_single_night.sh 20260406
 ```
 
+当前单夜流程已改为：
+
+- `mask_gaia -> make_tracklet -> merge_tracklets_night`
+- `run_linear_links_from_tracklets.py` 生成 `/pipeline/xiaoyunao/data/heliolincrr/<night>/rr_links`
+- 默认单夜参数固定为 `speed=5 arcsec/h`、`direction=10 deg`、`require_shared_endpoint=True`
+
+当前 15 夜流程仍使用 `run_rr_from_tracklets.py --profile w15`。
+
 ## 依赖与路径
 
 - 代码中的服务器绝对路径保持不变，例如 `/processed1`、`/pipeline/xiaoyunao/...`

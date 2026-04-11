@@ -2,6 +2,25 @@
 
 ## 2026-04-11
 
+- task: 将单夜正式流程切换为线性 linking，并把 `run_rr_from_tracklets.py` 收口为 15 夜专用
+- files_changed: `heliolincrr/run_linear_links_from_tracklets.py`, `heliolincrr/run_single_night.sh`, `heliolincrr/run_rr_from_tracklets.py`, `README.md`, `WORKLOG.md`, `PLAN.md`
+- commands_run: 本地 `sed -n '240,380p' heliolincrr/run_single_night.sh`, `rg -n "run_rr_from_tracklets|single-night|linear_links|rr_links" -S heliolincrr README.md PLAN.md WORKLOG.md`, `python3 -m py_compile heliolincrr/run_linear_links_from_tracklets.py heliolincrr/run_rr_from_tracklets.py`, `bash -n heliolincrr/run_single_night.sh`
+- key_findings:
+  - 单夜正式 linking 已确定采用 `run_linear_links_from_tracklets.py`
+  - 正式单夜参数固定为：`speed=5 arcsec/h`、`direction=10 deg`、`require_shared_endpoint=True`
+  - `run_single_night.sh` 的单夜步骤已改为直接调用线性 linking 脚本，但仍将结果写到既有 `rr_links` 目录，以保持后续 `compare_with_known_asteroids.py` / `orbit_confirm_links.py` 等脚本兼容
+  - `run_rr_from_tracklets.py` 已移除 `single-night` profile 和相关单夜参数逻辑，收口为 15 夜 `w15` 专用工具
+  - README 和计划文件已同步更新为“单夜线性 linking / 15 夜 RR”新结构
+- validation:
+  - `python3 -m py_compile heliolincrr/run_linear_links_from_tracklets.py heliolincrr/run_rr_from_tracklets.py`
+  - `bash -n heliolincrr/run_single_night.sh`
+- remaining_issues:
+  - 还未把这次正式切换后的 `run_single_night.sh` 整体重新在服务器全流程跑一遍
+  - 服务器正式单夜目录 `rr_links` 仍需要在下次正式夜次重跑时由新线性 linking 重新生成
+- next_step:
+  - 同步服务器脚本并在后续单夜正式运行中使用线性 linking 取代旧 RR 单夜流程
+  - 若需要继续优化单夜召回，只在新线性 linking 路线上做小范围阈值扫描
+
 - task: 新开单夜“直线 linking”脚本，按共享端点 + 速度差 + 方向差直接连 tracklet，并在服务器跑首轮试验
 - files_changed: `heliolincrr/run_linear_links_from_tracklets.py`, `WORKLOG.md`, `PLAN.md`
 - commands_run: 本地 `python3 -m py_compile heliolincrr/run_linear_links_from_tracklets.py`; 服务器 `scp -P 20093 -o BatchMode=yes -o StrictHostKeyChecking=no heliolincrr/run_linear_links_from_tracklets.py smtpipeline@www.xinglong-naoc.cn:/pipeline/xiaoyunao/heliolincrr/run_linear_links_from_tracklets.py`, `ssh -p 20093 -o BatchMode=yes -o StrictHostKeyChecking=no smtpipeline@www.xinglong-naoc.cn 'set -e; base=/pipeline/xiaoyunao/data/heliolincrr/20260220; out=$base/linear_links_sd5_dd5; rm -rf \"$out\"; /home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python /pipeline/xiaoyunao/heliolincrr/run_linear_links_from_tracklets.py --infile $base/tracklets_linreproj/tracklets_20260220_ALL.fits --outdir \"$out\" --speed-thresh-arcsec-per-hour 5 --direction-thresh-deg 5; /home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python /pipeline/xiaoyunao/heliolincrr/rr_link_stats.py 20260220 --rr-subdir linear_links_sd5_dd5 --out $base/analysis/20260220_rr_link_stats_linear_sd5_dd5.json; /home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python /pipeline/xiaoyunao/heliolincrr/compare_with_known_asteroids.py 20260220 --rr-subdir linear_links_sd5_dd5 --out $base/analysis/20260220_rr_known_asteroid_comparison_linear_sd5_dd5.fits --summary-out $base/analysis/20260220_rr_known_asteroid_comparison_summary_linear_sd5_dd5.json; /home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python /pipeline/xiaoyunao/heliolincrr/orbit_confirm_links.py --rr-dir \"$out\" --tracklets $base/tracklets_linreproj/tracklets_20260220_ALL.fits --cores 16 --log-every 500; /home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python /pipeline/xiaoyunao/heliolincrr/compare_with_known_asteroids.py 20260220 --rr-subdir linear_links_sd5_dd5 --out $base/analysis/20260220_rr_known_asteroid_comparison_linear_sd5_dd5.fits --summary-out $base/analysis/20260220_rr_known_asteroid_comparison_summary_linear_sd5_dd5.json; /home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python /pipeline/xiaoyunao/heliolincrr/orbit_fit_stats.py --rr-dir \"$out\" --comparison-fits $base/analysis/20260220_rr_known_asteroid_comparison_linear_sd5_dd5.fits --out $base/analysis/20260220_orbit_fit_stats_linear_sd5_dd5.json'`
