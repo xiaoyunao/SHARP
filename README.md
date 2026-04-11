@@ -60,7 +60,7 @@ PYTHON_BIN=/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python bash
 - `orbit_confirm_links.py` 对 `rr_links` 做后验轨道确认并写入 `rr_links/orbit_confirm/`
 - `summarize_single_night.py` 统一写出 `/pipeline/xiaoyunao/data/heliolincrr/<night>/analysis/*single_night_summary*`
 - `summarize_single_night.py` 同时写出 `/processed1/<night>/L4/<night>_unknown_links.{fits,json}`
-- `plot_unknown_links.py` 基于该 unknown catalog 输出 `heliolincrr/plots/<night>/`
+- `run_single_night.sh` 末尾直接调用 `plot_unknown_links.py`，基于该 unknown catalog 输出 `heliolincrr/plots/<night>/`
 - 默认单夜参数固定为 `speed=5 arcsec/h`、`direction=10 deg`、`require_shared_endpoint=True`
 - 当前单夜 `orbit_confirm_links.py` 默认 `max_v_kms=35`
 

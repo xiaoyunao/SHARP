@@ -2,6 +2,19 @@
 
 ## 2026-04-11
 
+- task: 删除 `run_visual_daily.sh`，把单夜可视化彻底收口到 `run_single_night.sh`
+- files_changed: `README.md`, `WORKLOG.md`, `heliolincrr/README.md`, `heliolincrr/run_visual_daily.sh`
+- commands_run: 本地 `sed -n '1,220p' heliolincrr/run_visual_daily.sh`, `rg -n "run_visual_daily\\.sh|plot_unknown_links\\.py|run_single_night\\.sh" -S .`
+- key_findings:
+  - `heliolincrr/run_visual_daily.sh` 仅是 `plot_unknown_links.py` 的日期包装壳层
+  - 当前正式单夜流程已经在 `run_single_night.sh` 内部直接执行可视化，继续保留 `run_visual_daily.sh` 只会增加重复入口
+- validation:
+  - 无额外运行时验证；该删除只影响重复壳层，不影响 `run_single_night.sh` 主链路
+- remaining_issues:
+  - 若服务器目录还保留旧 `run_visual_daily.sh`，后续同步时应一并删除
+- next_step:
+  - 保持 `run_single_night.sh` 作为单夜唯一正式入口
+
 - task: 为单夜 summary 补齐用户关心的 6 组固定统计字段，并准备清理 `20251116` / `20260220` 服务器产物
 - files_changed: `heliolincrr/summarize_single_night.py`, `WORKLOG.md`, `PLAN.md`
 - commands_run: 本地 `sed -n '1,520p' heliolincrr/summarize_single_night.py`, `python3 -m py_compile heliolincrr/summarize_single_night.py`; 后续将补跑 `summarize_single_night.py` 到现有夜次并执行服务器删除
