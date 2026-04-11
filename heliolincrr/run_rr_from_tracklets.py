@@ -200,6 +200,8 @@ class HeliolincRR_Tracklets:
         self.comb_r_ob1 = self.r_ob_unit[self.combs_arr[:, 1], :]
         self.comb_r_so0 = self.r_so[self.comb_f0, :]
         self.comb_r_so1 = self.r_so[self.comb_f1, :]
+        self.comb_u_mean = self.comb_r_ob0 + self.comb_r_ob1
+        self.comb_u_mean /= np.clip(LA.norm(self.comb_u_mean, axis=1, keepdims=True), 1e-12, None)
 
     @staticmethod
     def eq2cart(ra, dec, d=1.0):
@@ -327,7 +329,171 @@ class HeliolincRR_Tracklets:
     def _unique_links(links_obs):
         return [list(l) for l in sorted(set(tuple(l) for l in links_obs))]
 
-    def cluster_one(self, prvs, combs_used, hypo, tol, min_len_obs, min_nights, k_neighbors_cap):
+    @staticmethod
+    def _connected_components_from_adjacency(adj: list[list[int]]) -> list[list[int]]:
+        comps = []
+        seen = set()
+        for start in range(len(adj)):
+            if start in seen:
+                continue
+            stack = [start]
+            seen.add(start)
+            comp = []
+            while stack:
+                cur = stack.pop()
+                comp.append(cur)
+                for nxt in adj[cur]:
+                    if nxt in seen:
+                        continue
+                    seen.add(nxt)
+                    stack.append(nxt)
+            comps.append(sorted(comp))
+        return comps
+
+    @staticmethod
+    def _pairwise_distances(points: np.ndarray) -> np.ndarray:
+        if len(points) == 0:
+            return np.empty((0, 0), dtype=np.float64)
+        diff = points[:, None, :] - points[None, :, :]
+        return np.sqrt(np.sum(diff * diff, axis=2))
+
+    @staticmethod
+    def _pairwise_angles_deg(unit_vectors: np.ndarray) -> np.ndarray:
+        if len(unit_vectors) == 0:
+            return np.empty((0, 0), dtype=np.float64)
+        dot = np.clip(unit_vectors @ unit_vectors.T, -1.0, 1.0)
+        return np.rad2deg(np.arccos(dot))
+
+    @staticmethod
+    def _compact_core_indices(
+        points: np.ndarray,
+        sky_units: np.ndarray,
+        diameter_limit: float,
+        centroid_limit: float,
+        motion_limit: float,
+        sky_pair_soft_deg: float,
+        sky_centroid_soft_deg: float,
+    ) -> list[int]:
+        active = list(range(len(points)))
+        if not active:
+            return []
+
+        while len(active) >= 2:
+            sub = points[active]
+            sub_sky = sky_units[active]
+            pos0 = sub[:, 0:3]
+            pos1 = sub[:, 3:6]
+            disp = pos1 - pos0
+
+            centroid = np.mean(sub, axis=0)
+            centroid_dist = np.sqrt(np.sum((sub - centroid) ** 2, axis=1))
+            disp_centroid = np.mean(disp, axis=0)
+            motion_dist = np.sqrt(np.sum((disp - disp_centroid) ** 2, axis=1))
+            sky_centroid = np.mean(sub_sky, axis=0)
+            sky_centroid /= max(float(LA.norm(sky_centroid)), 1e-12)
+            sky_dot = np.clip(sub_sky @ sky_centroid, -1.0, 1.0)
+            sky_centroid_dist = np.rad2deg(np.arccos(sky_dot))
+            pairwise = HeliolincRR_Tracklets._pairwise_distances(sub)
+            sky_pairwise = HeliolincRR_Tracklets._pairwise_angles_deg(sub_sky)
+            max_pair = float(np.max(pairwise)) if pairwise.size else 0.0
+            max_centroid = float(np.max(centroid_dist)) if centroid_dist.size else 0.0
+            max_motion = float(np.max(motion_dist)) if motion_dist.size else 0.0
+            if (
+                max_pair <= diameter_limit
+                and max_centroid <= centroid_limit
+                and max_motion <= motion_limit
+            ):
+                return active
+
+            mean_pair = np.mean(pairwise, axis=1) if pairwise.size else np.zeros(len(active), dtype=np.float64)
+            score = np.maximum(
+                centroid_dist / max(centroid_limit, 1e-12),
+                mean_pair / max(diameter_limit, 1e-12),
+            )
+            score = np.maximum(score, motion_dist / max(motion_limit, 1e-12))
+
+            # Treat sky pointing as a soft outlier signal: large-angle members are clipped first,
+            # but a mostly good >=3-tracklet core should survive instead of dropping the whole link.
+            if len(active) >= 3:
+                score = np.maximum(score, sky_centroid_dist / max(sky_centroid_soft_deg, 1e-12))
+                if sky_pairwise.size:
+                    score = np.maximum(score, np.max(sky_pairwise, axis=1) / max(sky_pair_soft_deg, 1e-12))
+            else:
+                # With only two tracklets left, a large sky separation means the pair itself is not viable.
+                max_sky_pair = float(np.max(sky_pairwise)) if sky_pairwise.size else 0.0
+                max_sky_centroid = float(np.max(sky_centroid_dist)) if sky_centroid_dist.size else 0.0
+                if max_sky_pair <= sky_pair_soft_deg and max_sky_centroid <= sky_centroid_soft_deg:
+                    return active
+                score = np.maximum(score, sky_centroid_dist / max(sky_centroid_soft_deg, 1e-12))
+
+            worst_local = int(np.argmax(score))
+            del active[worst_local]
+
+        return active
+
+    def _component_links_from_members(
+        self,
+        member_indices: list[int],
+        drvs: np.ndarray,
+        comb_obs: list[tuple[int, ...]],
+        tol: float,
+        min_len_obs: int,
+        profile: str,
+    ) -> list[list[int]]:
+        if not member_indices:
+            return []
+
+        if profile == "single-night":
+            split_edge = float(tol * 0.88)
+            diameter_limit = float(tol * 1.60)
+            centroid_limit = float(tol * 0.78)
+            motion_limit = np.inf
+            sky_pair_soft_deg = 10.0
+            sky_centroid_soft_deg = 6.0
+        else:
+            split_edge = float(tol * 0.90)
+            diameter_limit = float(tol * 1.60)
+            centroid_limit = float(tol * 0.80)
+            motion_limit = np.inf
+            sky_pair_soft_deg = 180.0
+            sky_centroid_soft_deg = 180.0
+
+        points = drvs[np.asarray(member_indices, dtype=np.int64)]
+        sky_units = self.comb_u_mean[np.asarray(member_indices, dtype=np.int64)]
+        pairwise = self._pairwise_distances(points)
+        adjacency = [[] for _ in range(len(member_indices))]
+        for i in range(len(member_indices)):
+            for j in range(i + 1, len(member_indices)):
+                if pairwise[i, j] <= split_edge:
+                    adjacency[i].append(j)
+                    adjacency[j].append(i)
+
+        subcomponents = self._connected_components_from_adjacency(adjacency)
+        links = []
+        for local_members in subcomponents:
+            if not local_members:
+                continue
+            sub_points = points[np.asarray(local_members, dtype=np.int64)]
+            sub_sky_units = sky_units[np.asarray(local_members, dtype=np.int64)]
+            kept_local = self._compact_core_indices(
+                sub_points,
+                sub_sky_units,
+                diameter_limit,
+                centroid_limit,
+                motion_limit,
+                sky_pair_soft_deg,
+                sky_centroid_soft_deg,
+            )
+            if len(kept_local) == 0:
+                continue
+            kept_members = [member_indices[local_members[i]] for i in kept_local]
+            link_obs = sorted({obs for idx in kept_members for obs in comb_obs[idx]})
+            if len(link_obs) >= min_len_obs:
+                links.append(link_obs)
+
+        return links
+
+    def cluster_one(self, prvs, combs_used, hypo, tol, min_len_obs, min_nights, k_neighbors_cap, profile):
         if prvs.size == 0:
             return []
 
@@ -382,26 +548,38 @@ class HeliolincRR_Tracklets:
         for _, i, j in edges:
             union(i, j)
 
-        links = []
+        components = []
         seen = set()
         for i in range(num_tracklets):
             root = find(i)
             if root in seen:
                 continue
             seen.add(root)
-            link = sorted(comp_obs[root])
-            if len(link) >= min_len_obs:
-                links.append(link)
+            members = [j for j in range(num_tracklets) if find(j) == root]
+            components.append(members)
+
+        links = []
+        for members in components:
+            links.extend(
+                self._component_links_from_members(
+                    member_indices=members,
+                    drvs=drvs,
+                    comb_obs=comb_obs,
+                    tol=tol,
+                    min_len_obs=min_len_obs,
+                    profile=profile,
+                )
+            )
 
         links = self._min_nights_filter(links, self.bbf, self.utimes, min_nights)
         return self._unique_links(links)
 
-    def cluster_all(self, results, tol, min_len_obs, min_nights, k_neighbors_cap, logger: ProgressLogger | None = None):
+    def cluster_all(self, results, tol, min_len_obs, min_nights, k_neighbors_cap, profile, logger: ProgressLogger | None = None):
         all_links = []
         t0 = time.perf_counter()
         n_hypos = len(results)
         for i, (prvs, combs_used, hypo) in enumerate(results, start=1):
-            links = self.cluster_one(prvs, combs_used, hypo, tol, min_len_obs, min_nights, k_neighbors_cap)
+            links = self.cluster_one(prvs, combs_used, hypo, tol, min_len_obs, min_nights, k_neighbors_cap, profile)
             all_links.extend(links)
             if logger is not None:
                 logger.log(
@@ -706,6 +884,7 @@ def main():
         min_len_obs=args.min_len_obs,
         min_nights=args.min_nights,
         k_neighbors_cap=args.k_neighbors_cap,
+        profile=args.profile,
         logger=logger,
     )
     elapsed_clustering_s = time.perf_counter() - t_cluster0

@@ -1,5 +1,106 @@
 # WORKLOG
 
+## 2026-04-11
+
+- task: 为 orbit fitting 增加失败归因字段，定位已知小行星 link 为何大量停在 `rms_arcsec=inf`
+- files_changed: `heliolincrr/orbit_confirm_links.py`, `WORKLOG.md`, `PLAN.md`
+- commands_run: 本地 `rg -n "rms_arcsec|fit_ok|is_good|inf|np.inf|float\\('inf'\\)|residual" heliolincrr/orbit_confirm_links.py heliolincrr/orbit_fit_stats.py heliolincrr/compare_with_known_asteroids.py`, `sed -n '1,260p' heliolincrr/orbit_confirm_links.py`, `sed -n '260,620p' heliolincrr/orbit_confirm_links.py`, `sed -n '620,760p' heliolincrr/orbit_confirm_links.py`, `sed -n '880,980p' heliolincrr/orbit_confirm_links.py`, `sed -n '1,260p' heliolincrr/compare_with_known_asteroids.py`, `python3 -m py_compile heliolincrr/orbit_confirm_links.py`; 服务器 `scp -P 20093 -o BatchMode=yes -o StrictHostKeyChecking=no heliolincrr/orbit_confirm_links.py smtpipeline@www.xinglong-naoc.cn:/pipeline/xiaoyunao/heliolincrr/orbit_confirm_links.py`, `ssh -p 20093 -o BatchMode=yes -o StrictHostKeyChecking=no smtpipeline@www.xinglong-naoc.cn 'cd /pipeline/xiaoyunao/heliolincrr && rm -rf /pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links/orbit_confirm && /home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python orbit_confirm_links.py --rr-dir /pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links --cores 16 --log-every 500'`, `ssh -p 20093 -o BatchMode=yes -o StrictHostKeyChecking=no smtpipeline@www.xinglong-naoc.cn '/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python - <<'"'"'PY'"'"' ... summarize fail_reason/fail_counts for known-hit links ... PY'`
+- key_findings:
+  - `rms_arcsec=inf` 不是质量门槛筛掉后的结果，而是 `fit_best_hypo_lambert()` 在所有 hypo 上都没有产出可用轨道时写出的失败哨兵值
+  - 失败可能发生在：`geod2heliod`、`min_init_earth_au`、`lambert`、`max_v_kms`、`Orbit.from_vectors`、传播、outlier clip 或非有限 RMS
+  - 已为每个 link 增加 `fail_reason` 和 `fail_counts` 两列，并在脚本结束时输出整体失败原因汇总，方便直接检查已知小行星相关 link 的失败来源
+  - 用带诊断字段的新版脚本重跑 `20260220/rr_links/orbit_confirm` 后，整体失败原因几乎完全集中在 `max_v`：`8435/8560` 个 `fit_ok=False` links 的主失败原因都是 `max_v`，只有 `125` 个主失败于 `outlier_clip`
+  - 对命中过已知小行星的 `2828` 个 RR links，只有 `109` 个 `fit_ok=True`；其余 `2719` 个失败 links 中，`2707` 个主失败原因是 `max_v`，仅 `12` 个主失败于 `outlier_clip`
+  - 已知小行星失败 links 的累计 `fail_counts` 为 `max_v=21619`、`outlier_clip=133`，平均每个失败 link 约有 `7.95` 次 `max_v` 失败，说明当前单夜 `8` 个 hypo 几乎全都在 Lambert 之后被 `max_v_kms=30` 卡掉
+  - 进一步记录 `min_rejected_max_v_kms` 后发现，known-hit 且 `fail_reason=max_v` 的 `2707` 个 links 中，最小被拒速度虽可低到 `30.23 km/s`，但分布主体非常高：`p10=172.31`、`median=567.11`、`p90=94076.05 km/s`
+  - 这些 known-hit `max_v` 失败 links 只有 `8` 个落在 `[30,35)`，`4` 个落在 `[35,40)`，`8` 个落在 `[40,50)`；绝大多数 `2616` 个都在 `>=100 km/s`
+  - 相比之下，known-hit 且 `fit_ok=True` 的 `109` 个 links，其 `best_v1_kms` 分布合理：`median=19.88`、`p90=27.58`、`max=28.91 km/s`
+  - 这说明当前问题不主要是“速度上限 30 设得略严”，而是大多数失败 link 在当前单夜 hypo / distance seed 下只会产生明显不合理的高速 Lambert 解
+  - 进一步只看“link 中全部观测都能对应到同一个已知小行星”的纯净样本，发现共有 `76` 个 pure links，且 `76/76` 全部 `fit_ok=True`、`is_good=True`
+  - 对照类别统计显示：`all_known_mixed_objects` 只有 `11/244` 能拟合，`partial_known_single_object` 只有 `18/1695` 能拟合，`partial_known_mixed_objects` 只有 `4/813` 能拟合；这些失败主因几乎也都还是 `max_v`
+  - 因此当前 orbit fitting 并不缺“把纯净单目标 link 拟合出来”的能力；真正缺的是在带污染的 RR links 中，先找到动力学自洽的子集再做拟合
+- validation:
+  - `python3 -m py_compile heliolincrr/orbit_confirm_links.py`
+  - 服务器成功重写 `/pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links/orbit_confirm/{orbit_links.fits,orbit_obs_residuals.fits,provenance.txt}`
+  - 服务器重跑结果保持 `fit_ok=137/8697`、`is_good=96/8697`
+- remaining_issues:
+  - 当前主阻塞已明确集中在单夜 orbit fitting 的 `max_v_kms=30`，但还未进一步区分这是单夜 seed/hypo 不合理，还是速度上限本身对真实小行星过严
+- next_step:
+  - 若要提高已知目标在 orbit fitting 阶段的命中，优先尝试“subset / consensus”式轨道拟合：先从 link 内部找出动力学自洽子集，再对全体观测做 inlier 扩展
+  - 扩展单夜 distance/hypo seed 仍可作为次级方向，但不应取代对子集鲁棒拟合的尝试
+
+- task: 在 RR `cluster_one()` 中加入 compact-core 拆分和全局紧致性约束，评估能否减少单夜 mixed / partial-known links
+- files_changed: `heliolincrr/run_rr_from_tracklets.py`, `WORKLOG.md`, `PLAN.md`
+- commands_run: 本地 `sed -n '1,140p' heliolincrr/run_rr_from_tracklets.py`, `sed -n '140,340p' heliolincrr/run_rr_from_tracklets.py`, `sed -n '340,460p' heliolincrr/run_rr_from_tracklets.py`, `python3 -m py_compile heliolincrr/run_rr_from_tracklets.py`; 服务器 `scp -P 20093 -o BatchMode=yes -o StrictHostKeyChecking=no heliolincrr/run_rr_from_tracklets.py smtpipeline@www.xinglong-naoc.cn:/pipeline/xiaoyunao/heliolincrr/run_rr_from_tracklets.py`, `ssh -p 20093 -o BatchMode=yes -o StrictHostKeyChecking=no smtpipeline@www.xinglong-naoc.cn '... run_rr_from_tracklets.py --profile single-night --outdir .../rr_links_compactcore ...; rr_link_stats.py ... rr_links_compactcore ...; compare_with_known_asteroids.py ... rr_links_compactcore ...'`, `ssh -p 20093 -o BatchMode=yes -o StrictHostKeyChecking=no smtpipeline@www.xinglong-naoc.cn 'python - <<\"PY\" ... classify rr_links vs rr_links_compactcore into pure_same_object / mixed / partial ... PY'`
+- key_findings:
+  - `cluster_one()` 现已改为：先做并查集 component，再在 component 内用更严格的邻接图切成 subcomponents，并通过 `component max pairwise distance` 与 `centroid residual` 的迭代裁剪提取 compact core
+  - 对 `single-night` 使用更保守的拆分阈值：更小的 `split_edge`，并对 core 施加更紧的 `diameter_limit` 和 `centroid_limit`
+  - 新试验目录 `rr_links_compactcore` 的 RR 规模从基线 `8697 / 27204` 降到 `6986 / 17529`
+  - known-tracklet 覆盖明显下降：`in_rr_link` 从 `2259/2304` 降到 `1996/2304`，`rr_given_tracklet` 从 `98.05%` 降到 `86.63%`
+  - 但 purity 方向有改善：`pure_same_object` 从 `76` 提到 `95`，`partial_known_mixed_objects` 从 `813` 降到 `377`
+  - `partial_known_single_object` 也从 `1695` 降到 `1374`，说明新的拆分确实在压缩大而混的 link
+  - `all_known_mixed_objects` 基本没变：`244 -> 243`，说明这类“全部是 known 但对象混杂”的问题不是简单 component 链式扩张造成的，还需要更细的对象级拆分策略
+  - 将 single-night 的 compact-core 阈值放宽后，生成 `rr_links_compactcore_relaxed`，RR 规模回升到 `7896 / 21600`
+  - 放宽版的 known-tracklet 覆盖回升到 `2075/2304`，`rr_given_tracklet=90.06%`，比激进版 `86.63%` 有恢复，但仍低于基线 `98.05%`
+  - purity 分类上，放宽版位于基线与激进版之间：`pure_same_object=89`、`all_known_mixed_objects=235`、`partial_known_single_object=1549`、`partial_known_mixed_objects=565`
+  - 相比基线，放宽版已经同时实现了：`pure_same_object +13`、`all_known_mixed_objects -9`、`partial_known_mixed_objects -248`，但召回代价仍偏大
+  - 第三轮进一步放宽后生成 `rr_links_compactcore_relaxed2`，RR 规模回升到 `8184 / 22812`，known-tracklet 覆盖升到 `2103/2304`，`rr_given_tracklet=91.28%`
+  - 但 purity 开始明显回退：`pure_same_object` 从第二轮的 `89` 降到 `82`，`partial_known_mixed_objects` 从 `565` 回升到 `613`，`all_known_mixed_objects` 也从 `235` 回到 `240`
+  - 这说明单纯继续放宽几何 compact-core 阈值的收益已经在变差：召回只小幅回升，但 purity 优势快速流失
+- validation:
+  - `python3 -m py_compile heliolincrr/run_rr_from_tracklets.py`
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links_compactcore/{links_tracklets.fits,linkage_members.fits,rr_summary.json}`
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_link_stats_compactcore.json`
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison_compactcore.{fits,summary.json}`
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links_compactcore_relaxed/{links_tracklets.fits,linkage_members.fits,rr_summary.json}`
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_link_stats_compactcore_relaxed.json`
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison_compactcore_relaxed.{fits,summary.json}`
+- remaining_issues:
+  - 当前 compact-core 放宽版仍以明显的 known-tracklet 召回损失换来了 purity 改善，尚未达到可接受折中
+  - `all_known_mixed_objects` 只小幅下降，说明还缺少针对“同样是 known 但属于不同目标”的拆分约束
+  - 第三轮继续放宽后，几何 compact-core 的纯阈值调节已经接近收益递减，难以单靠这一组参数同时拿回 `93%+` 召回和当前 purity 改善
+- task: 在 RR component 后处理里加入“运动一致性”约束，测试是否比纯几何 compact-core 更适合压缩 mixed links
+- files_changed: `heliolincrr/run_rr_from_tracklets.py`, `WORKLOG.md`, `PLAN.md`
+- commands_run: 本地 `python3 -m py_compile heliolincrr/run_rr_from_tracklets.py`; 服务器 `scp -P 20093 -o BatchMode=yes -o StrictHostKeyChecking=no heliolincrr/run_rr_from_tracklets.py smtpipeline@www.xinglong-naoc.cn:/pipeline/xiaoyunao/heliolincrr/run_rr_from_tracklets.py`, `ssh -p 20093 -o BatchMode=yes -o StrictHostKeyChecking=no smtpipeline@www.xinglong-naoc.cn '... run_rr_from_tracklets.py --profile single-night --outdir .../rr_links_compactcore_motion ...; rr_link_stats.py ... rr_links_compactcore_motion ...; compare_with_known_asteroids.py ... rr_links_compactcore_motion ...'`, `ssh -p 20093 -o BatchMode=yes -o StrictHostKeyChecking=no smtpipeline@www.xinglong-naoc.cn 'python - <<\"PY\" ... classify rr_links_compactcore_relaxed vs rr_links_compactcore_motion ... PY'`
+- key_findings:
+  - 在 compact-core 的迭代裁剪里新增了“位移向量到中心运动的偏差”约束，要求同一 sublink 在两个参考 epoch 之间的 motion 也要一致
+  - 这版 `rr_links_compactcore_motion` 的 purity 继续改善：相对当前最好折中点 `rr_links_compactcore_relaxed`，`pure_same_object` 从 `89` 升到 `94`，`partial_known_mixed_objects` 从 `565` 降到 `337`，`all_known_mixed_objects` 从 `235` 降到 `230`
+  - 但召回明显恶化：`in_rr_link` 从 `2075/2304` 降到 `1950/2304`，`rr_given_tracklet` 从 `90.06%` 降到 `84.64%`
+  - 说明“运动一致性”方向在物理上是对的，但当前 `motion_limit` 过严；直接套在当前 compact-core 上会比第二轮折中点更激进
+- validation:
+  - `python3 -m py_compile heliolincrr/run_rr_from_tracklets.py`
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links_compactcore_motion/{links_tracklets.fits,linkage_members.fits,rr_summary.json}`
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_link_stats_compactcore_motion.json`
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison_compactcore_motion.{fits,summary.json}`
+- remaining_issues:
+  - motion-consistency 版当前 purity 更好，但召回比 `rr_links_compactcore_relaxed` 还差，不能直接作为更优折中点
+- next_step:
+  - 保留 motion-consistency 思路，但下一步不要再和当前几何阈值叠加得这么紧；优先放宽 `motion_limit` 或只在较大 component 上启用
+  - 当前最好折中点仍然是 `rr_links_compactcore_relaxed`
+
+- task: 回到 `rr_links_compactcore_relaxed` 基线，引入 soft sky-pointing clip，并确认相同曝光不会在 RR link 中自连接
+- files_changed: `heliolincrr/run_rr_from_tracklets.py`, `WORKLOG.md`, `PLAN.md`
+- commands_run: 本地 `rg -n "deg|angle|angular|sep|distance|ra1|dec1|ra2|dec2|sky|sphere|cos\\(|arccos|dot" heliolincrr/run_rr_from_tracklets.py`, `python3 -m py_compile heliolincrr/run_rr_from_tracklets.py`; 服务器 `scp -P 20093 -o BatchMode=yes -o StrictHostKeyChecking=no heliolincrr/run_rr_from_tracklets.py smtpipeline@www.xinglong-naoc.cn:/pipeline/xiaoyunao/heliolincrr/run_rr_from_tracklets.py`, `ssh -p 20093 -o BatchMode=yes -o StrictHostKeyChecking=no smtpipeline@www.xinglong-naoc.cn '... run_rr_from_tracklets.py --profile single-night --outdir .../rr_links_compactcore_softsky ...; rr_link_stats.py ... rr_links_compactcore_softsky ...; compare_with_known_asteroids.py ... rr_links_compactcore_softsky ...'`, `ssh -p 20093 -o BatchMode=yes -o StrictHostKeyChecking=no smtpipeline@www.xinglong-naoc.cn 'python - <<\"PY\" ... classify rr_links_compactcore_relaxed vs rr_links_compactcore_softsky ... PY'`
+- key_findings:
+  - `cluster_one()` 合并 component 时已有 `comp_fnums` 交集检查，因此共享同一曝光编号的 tracklets 不会被 union 进同一个 RR link；`AB` 与另一个同样占用 `A/B` 的 tracklet 不会自连接，`AB` 与 `BC` 这类不共享完整曝光对的仍可继续 link
+  - 新版不再把 `10 deg` sky pointing 做成硬门槛，而是只在 component core 提取时作为 soft clip 分数：`>=3` 个 tracklets 时优先剔除偏离 sky centroid / sky pair angle 的成员；只剩 `2` 个时若角距仍离谱则整对丢弃
+  - `rr_links_compactcore_softsky` 的 RR 规模为 `7900 / 21325`，known-tracklet 覆盖为 `2088/2304`，`rr_given_tracklet=90.63%`
+  - 相比当前最好折中点 `rr_links_compactcore_relaxed`，soft sky 版保持了相同的 `pure_same_object=89`，并把 `partial_known_mixed_objects` 从 `565` 降到 `537`
+  - 代价是 `all_known_mixed_objects` 从 `235` 微升到 `238`，`partial_known_single_object` 从 `1549` 微升到 `1557`；整体变化不大，但方向上比 big-component motion 版更稳
+- validation:
+  - `python3 -m py_compile heliolincrr/run_rr_from_tracklets.py`
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links_compactcore_softsky/{links_tracklets.fits,linkage_members.fits,rr_summary.json}`
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_link_stats_compactcore_softsky.json`
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison_compactcore_softsky.{fits,summary.json}`
+- remaining_issues:
+  - soft sky clip 带来了小幅 purity 改善，但仍未把 `rr_given_tracklet` 拉回 `93%+`
+  - `all_known_mixed_objects` 没有继续下降，说明 sky pointing 只能部分缓解混杂
+- next_step:
+  - 若继续优化 RR，优先从 `rr_links_compactcore_softsky` 往下做更细的对象级拆分或 score-based pruning，而不是回到硬 motion 门槛
+- next_step:
+  - 暂停继续单纯放宽几何 compact-core 阈值；第二轮 `rr_links_compactcore_relaxed` 可作为当前最好折中点
+  - 下一步改成在 component 内加入更贴近轨道一致性的拆分指标，而不仅是几何紧致性
+
 ## 2026-04-10
 
 - task: 新增 orbit fitting 最终结果统计脚本，输出分桶占比、残差分布和 known-asteroid 逐阶段统计

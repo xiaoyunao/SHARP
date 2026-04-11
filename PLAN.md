@@ -18,6 +18,25 @@
 
 ## Outstanding issues
 
+- 当前 orbit fitting 的主要问题先不是阈值调参，而是大量 `fit_ok=False` link 直接停在“未产出轨道”阶段；这些行的 `rms_arcsec=inf`
+- `orbit_confirm_links.py` 已补充 `fail_reason` 与 `fail_counts` 字段，可用于区分失败发生在 `geod2heliod`、`min_init_earth_au`、`lambert`、`max_v_kms`、传播还是 outlier clip
+- `20260220` 单夜 orbit fitting 失败主因已确认高度集中在 `max_v_kms=30`：整体失败 links 中 `8435/8560` 主失败于 `max_v`，known-hit 失败 links 中 `2707/2719` 主失败于 `max_v`
+- known-hit 失败 links 的累计 `fail_counts` 为 `max_v=21619`、`outlier_clip=133`，说明当前单夜 `8` 个 hypo 对大多数已知小行星 link 几乎都在 Lambert 后被速度上限统一卡掉
+- 但 `max_v` 失败速度分布显示，这不主要是 `30 km/s` 略偏紧的问题：known-hit `max_v` 失败 links 的 `min_rejected_max_v_kms` 只有极少数贴近阈值，主体分布为 `p10=172 km/s`、`median=567 km/s`
+- known-hit 且 `fit_ok=True` 的 links，其 `best_v1_kms` 上界只有 `28.91 km/s`；当前可用解与失败解在速度上明显分成两群
+- 只看“全部观测都属于同一个已知目标”的 pure-known links 时，当前 orbit fitting 已经 `76/76` 全部拟合成功
+- 因此后续若要提升 known-hit 的 orbit fitting 命中，重点不在继续优化 pure-link 的种子，而在为带污染的 RR links 增加 subset / consensus 式鲁棒拟合
+- RR 端已试做 compact-core clustering：`pure_same_object` 从 `76` 提到 `95`，`partial_known_mixed_objects` 从 `813` 降到 `377`
+- 但当前 compact-core 版本过于激进，known-tracklet 覆盖从 `2259/2304` 降到 `1996/2304`，`rr_given_tracklet` 从 `98.05%` 降到 `86.63%`
+- `all_known_mixed_objects` 几乎未变（`244 -> 243`），说明仅靠连通分量后处理还不足以解决“多个 known 对象被合并”的问题
+- compact-core 放宽版已试跑：`pure_same_object=89`、`all_known_mixed_objects=235`、`partial_known_mixed_objects=565`，同时 `rr_given_tracklet` 回升到 `90.06%`
+- 这说明 compact-core 路线可调，但当前仍未达到兼顾 purity 与 recall 的可接受折中
+- 第三轮继续放宽后，`rr_given_tracklet` 只升到 `91.28%`，但 purity 开始回退到 `pure_same_object=82`、`partial_known_mixed_objects=613`
+- 因此单纯继续放宽几何 compact-core 阈值已接近收益递减，当前最好折中点仍是第二轮 `rr_links_compactcore_relaxed`
+- motion-consistency 版证明了更物理的约束是有效方向：`pure_same_object=94`、`partial_known_mixed_objects=337`
+- 但当前 `motion_limit` 过严，导致 `rr_given_tracklet` 掉到 `84.64%`；现阶段仍不如 `rr_links_compactcore_relaxed` 作为折中点
+- soft sky-clipping 版在 `rr_links_compactcore_relaxed` 基础上带来了小幅改进：`rr_given_tracklet=90.63%`，`partial_known_mixed_objects=537`
+- 但 `pure_same_object` 仍停在 `89`，`all_known_mixed_objects` 还略有回升到 `238`，因此它只是小幅优于 `rr_links_compactcore_relaxed`，还不是明显的新基线
 - `known_asteroid` 重复上报问题已经定位并完成程序侧保护，当前不再作为主线阻塞
 - `20260220` 的 RR 单夜基线已重新清空旧结果并重跑，唯一默认结果固定为 `8697 / 27204 / 2259/2304 / p90=8`
 - 当前服务器 `run_rr_from_tracklets.py` 已同步到仓库版本，新的 `rr_links` 基线不再混入旧脚本结果
@@ -67,7 +86,10 @@
 ## Next recommended steps
 
 1. 以新的 `/pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links` 结果作为唯一 RR 单夜基线
-2. 以当前 `rr_links/orbit_confirm` 结果作为单夜 orbit fitting 当前基准，开始系统整理其参数含义、默认值和优先调参顺序
-3. 若后续继续处理 15 夜 RR，统一基于 `w15` profile 单独维护参数与实验记录，不再借用单夜默认值
-4. 若继续测试 RR `hypo` 网格，保持正式脚本不动，统一通过 `--hypos <tmpfile>` 或 `/tmp/run_rr_from_tracklets_<tag>.py` 做隔离实验
-5. 以 `20260220_orbit_fit_stats.json` 为基础，优先找出最影响 `fit_ok/is_good` 的分桶和 residual 指标，再决定首轮 orbit fitting 调参顺序
+2. 当前 RR 最好折中点更新为 `rr_links_compactcore_softsky`
+3. 下一步继续沿 score-based 物理约束方向，但避免硬 motion 门槛；优先做更细的对象级拆分或软评分裁剪
+4. RR 端若无法把 purity/recall 拉回可接受折中，再进入 orbit fitting 的 subset / consensus 流程
+5. 在现有速度分布下，不优先直接放宽 orbit fitting `max_v_kms`；扩展单夜 distance/hypo seed 作为次级实验方向
+6. 在 RR subset / seed 原因没弄清之前，暂缓做 orbit fitting 其他阈值调参
+5. 若后续继续处理 15 夜 RR，统一基于 `w15` profile 单独维护参数与实验记录，不再借用单夜默认值
+6. 若继续测试 RR `hypo` 网格，保持正式脚本不动，统一通过 `--hypos <tmpfile>` 或 `/tmp/run_rr_from_tracklets_<tag>.py` 做隔离实验

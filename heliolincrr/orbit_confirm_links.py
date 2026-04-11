@@ -280,21 +280,37 @@ def fit_best_hypo_lambert(
     t1 = Time(jd[i1], format="jd", scale="utc")
     dt_lambert = t1 - t0
 
-    best = {"ok": False, "rms_arcsec": np.inf}
+    best = {
+        "ok": False,
+        "rms_arcsec": np.inf,
+        "fail_reason": "no_valid_hypo",
+        "fail_counts": {},
+        "best_v1_kms": np.nan,
+        "min_rejected_max_v_kms": np.nan,
+        "best_rejected_max_v_kms": np.nan,
+    }
+    fail_counts: Dict[str, int] = {}
+
+    def note_fail(reason: str) -> None:
+        fail_counts[reason] = fail_counts.get(reason, 0) + 1
+        best["fail_reason"] = reason
 
     for (r0, rdot, rdd) in hypos:
         d0 = float(r0 + rdot * dt_days[i0] + 0.5 * rdd * dt_days[i0] ** 2)
         d1 = float(r0 + rdot * dt_days[i1] + 0.5 * rdd * dt_days[i1] ** 2)
         if (d0 <= 0) or (d1 <= 0):
+            note_fail("nonpositive_hypo_distance")
             continue
 
         try:
             alpha0 = geod2heliod(r_so[i0], u_obs[i0], d0)
             alpha1 = geod2heliod(r_so[i1], u_obs[i1], d1)
         except Exception:
+            note_fail("geod2heliod")
             continue
 
         if (alpha0 <= min_init_earth_au) or (alpha1 <= min_init_earth_au):
+            note_fail("min_init_earth")
             continue
 
         r_helio0 = (r_so[i0] + alpha0 * u_obs[i0]) * u.AU
@@ -307,14 +323,20 @@ def fit_best_hypo_lambert(
             except Exception:
                 (v0, v1), = velocities
         except Exception:
+            note_fail("lambert")
             continue
 
-        if norm(v1.to_value(u.km / u.s)) >= max_v_kms:
+        v1_kms = float(norm(v1.to_value(u.km / u.s)))
+        if v1_kms >= max_v_kms:
+            if (not np.isfinite(best.get("min_rejected_max_v_kms", np.nan))) or (v1_kms < float(best["min_rejected_max_v_kms"])):
+                best["min_rejected_max_v_kms"] = v1_kms
+            note_fail("max_v")
             continue
 
         try:
             orb = Orbit.from_vectors(Sun, r_helio1, v1, epoch=t1)
         except Exception:
+            note_fail("orbit_from_vectors")
             continue
 
         dt_vec = Time(jd, format="jd", scale="utc") - t1
@@ -325,6 +347,7 @@ def fit_best_hypo_lambert(
                 r_obj.append(oi.r.to(u.AU).value)
             r_obj = np.asarray(r_obj, dtype=float)
         except Exception:
+            note_fail("propagate")
             continue
 
         rho = r_obj - r_so
@@ -334,6 +357,7 @@ def fit_best_hypo_lambert(
         if outlier_clip_arcsec is not None and np.isfinite(outlier_clip_arcsec):
             keep = resid <= float(outlier_clip_arcsec)
             if np.sum(keep) < 3:
+                note_fail("outlier_clip")
                 continue
             resid_use = resid[keep]
         else:
@@ -342,6 +366,7 @@ def fit_best_hypo_lambert(
 
         rms = float(np.sqrt(np.mean(resid_use ** 2)))
         if not np.isfinite(rms):
+            note_fail("nonfinite_rms")
             continue
 
         if rms < best["rms_arcsec"]:
@@ -359,9 +384,23 @@ def fit_best_hypo_lambert(
                 "resid_arcsec": resid,
                 "t_epoch_jd": float(t1.jd),
                 "orbit": orb,
+                "fail_reason": "",
+                "fail_counts": dict(fail_counts),
+                "best_v1_kms": v1_kms,
+                "best_rejected_max_v_kms": float(best["min_rejected_max_v_kms"]) if np.isfinite(best.get("min_rejected_max_v_kms", np.nan)) else np.nan,
             }
 
+    best["fail_counts"] = dict(fail_counts)
+    if not best.get("ok", False):
+        best["best_rejected_max_v_kms"] = float(best["min_rejected_max_v_kms"]) if np.isfinite(best.get("min_rejected_max_v_kms", np.nan)) else np.nan
     return best
+
+
+def format_fail_counts(fail_counts: Dict[str, int]) -> str:
+    if not fail_counts:
+        return ""
+    parts = [f"{key}:{fail_counts[key]}" for key in sorted(fail_counts)]
+    return ";".join(parts)
 
 
 def orbit_elements_from_poliastro(orb: Orbit) -> Dict[str, float]:
@@ -620,6 +659,11 @@ def _process_one_link_small(task: Tuple[int, np.ndarray]) -> Tuple[Optional[tupl
             np.nan, np.nan, np.nan, np.nan, np.nan, np.nan,
             np.nan, np.nan,
             float(lin_rms), float(lin_speed), float(lin_dir),
+            float(fit.get("best_v1_kms", np.nan)),
+            float(fit.get("min_rejected_max_v_kms", np.nan)),
+            float(fit.get("best_rejected_max_v_kms", np.nan)),
+            str(fit.get("fail_reason", "no_valid_hypo")),
+            format_fail_counts(fit.get("fail_counts", {})),
         )
         return summary_row, []
 
@@ -676,6 +720,11 @@ def _process_one_link_small(task: Tuple[int, np.ndarray]) -> Tuple[Optional[tupl
         float(lin_rms),
         float(lin_speed),
         float(lin_dir),
+        float(fit.get("best_v1_kms", np.nan)),
+        float(fit.get("min_rejected_max_v_kms", np.nan)),
+        float(fit.get("best_rejected_max_v_kms", np.nan)),
+        "",
+        format_fail_counts(fit.get("fail_counts", {})),
     )
 
     resid = np.asarray(fit["resid_arcsec"], dtype=np.float64)
@@ -917,6 +966,11 @@ def main():
             "lin_rms_arcsec",
             "lin_speed_arcsec_per_day",
             "lin_dir_deg",
+            "best_v1_kms",
+            "min_rejected_max_v_kms",
+            "best_rejected_max_v_kms",
+            "fail_reason",
+            "fail_counts",
         ],
     )
 
@@ -967,6 +1021,13 @@ def main():
         n_ok = int(np.sum(np.asarray(summary["fit_ok"], dtype=bool)))
         n_good = int(np.sum(np.asarray(summary["is_good"], dtype=bool)))
         log(f"[done] fit_ok={n_ok}/{len(summary)}  is_good={n_good}/{len(summary)}")
+        fail_mask = ~np.asarray(summary["fit_ok"], dtype=bool)
+        if np.any(fail_mask):
+            reasons = np.asarray(summary["fail_reason"]).astype("U64")[fail_mask]
+            uniq, cnt = np.unique(reasons, return_counts=True)
+            pairs = sorted(zip(cnt, uniq), reverse=True)
+            joined = ", ".join(f"{reason}={int(n)}" for n, reason in pairs)
+            log(f"[done] fit_fail_reasons: {joined}")
 
 
 if __name__ == "__main__":
