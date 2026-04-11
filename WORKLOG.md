@@ -2,6 +2,28 @@
 
 ## 2026-04-11
 
+- task: 隔离测试把单夜 `final_max_v_kms` 从 `30` 直接放宽到 `100` 是否能明显提升 orbit fitting
+- files_changed: `WORKLOG.md`, `PLAN.md`
+- commands_run: 服务器 `ssh -p 20093 -o BatchMode=yes -o StrictHostKeyChecking=no smtpipeline@www.xinglong-naoc.cn 'set -e; base=/pipeline/xiaoyunao/data/heliolincrr/20260220; testdir=$base/rr_links_v100; rm -rf \"$testdir\"; mkdir -p \"$testdir\"; ln -s ../rr_links/links_tracklets.fits \"$testdir/links_tracklets.fits\"; ln -s ../rr_links/linkage_members.fits \"$testdir/linkage_members.fits\"; /home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python /pipeline/xiaoyunao/heliolincrr/orbit_confirm_links.py --rr-dir \"$testdir\" --tracklets $base/tracklets_linreproj/tracklets_20260220_ALL.fits --cores 16 --log-every 500 --max-v-kms 100 --seed-max-v-kms 120; /home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python /pipeline/xiaoyunao/heliolincrr/compare_with_known_asteroids.py 20260220 --rr-subdir rr_links_v100 --out $base/analysis/20260220_rr_known_asteroid_comparison_v100.fits --summary-out $base/analysis/20260220_rr_known_asteroid_comparison_summary_v100.json; /home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python /pipeline/xiaoyunao/heliolincrr/orbit_fit_stats.py --rr-dir \"$testdir\" --comparison-fits $base/analysis/20260220_rr_known_asteroid_comparison_v100.fits --out $base/analysis/20260220_orbit_fit_stats_v100.json'`, `ssh -p 20093 -o BatchMode=yes -o StrictHostKeyChecking=no smtpipeline@www.xinglong-naoc.cn '/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python -c \"import json; base=\\\"/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis\\\"; a=json.load(open(base+\\\"/20260220_orbit_fit_stats.json\\\")); b=json.load(open(base+\\\"/20260220_orbit_fit_stats_v100.json\\\")); print(a[\\\"orbit_link_counts\\\"], b[\\\"orbit_link_counts\\\"])\"'`
+- key_findings:
+  - 在隔离目录 `rr_links_v100` 上测试 `final_max_v_kms=100`、`seed_max_v_kms=120`，未改动正式 `rr_links`
+  - 总体 orbit 成功数从正式基线 `fit_ok=263`、`is_good=110` 小幅变成 `fit_ok=269`、`is_good=111`
+  - 已知小行星统计只得到极弱增益：`fit_ok_any 438 -> 440`，`is_good_any` 维持 `272`
+  - 已知命中 link 级统计也几乎不变：`fit_ok_links 222 -> 223`，`is_good_links` 仍是 `94`
+  - `max_v` 主失败数从 `7532` 降到 `7453`，但 `outlier_clip` 失败从 `105` 升到 `178`
+  - 放宽最终速度上限后，`fit_ok` 轨道的高速尾部明显变长：`best_v1_kms` 的 `p99` 从 `28.91` 升到 `73.34`
+  - `is_good` 样本的 RMS 基本未恶化，但偏心率尾部变长，`ecc_is_good.max` 从 `2.24` 升到 `4.29`
+  - 因此 `final_max_v_kms=100` 不是完全没用，但增益很小，且开始放行更高速度、更可疑的解
+- validation:
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links_v100/orbit_confirm/{orbit_links.fits,orbit_obs_residuals.fits,provenance.txt}`
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/{20260220_rr_known_asteroid_comparison_v100.fits,20260220_rr_known_asteroid_comparison_summary_v100.json,20260220_orbit_fit_stats_v100.json}`
+- remaining_issues:
+  - 直接把 `final_max_v_kms` 放到 `100` 只带来非常有限的 known-hit 回升，不足以解释当前主要失败模式
+  - 更宽的最终速度上限已经开始放进高速尾部明显更差的解，不能直接替代正式基线
+- next_step:
+  - 若继续试 `final_max_v_kms`，应只做更细粒度的小扫描并同时看 `is_good` 与轨道分布，不建议直接把正式值切到 `100`
+  - 主线仍应回到 known-hit 失败 links 的 tracklet 级诊断分析
+
 - task: 测试“seed 阶段放宽 `max_v` + tracklet 级残差筛 inliers + 严格 refit”是否能继续提高单夜 orbit fitting 命中
 - files_changed: `heliolincrr/orbit_confirm_links.py`, `WORKLOG.md`, `PLAN.md`
 - commands_run: 本地 `sed -n '240,580p' heliolincrr/orbit_confirm_links.py`, `sed -n '580,980p' heliolincrr/orbit_confirm_links.py`, `sed -n '980,1235p' heliolincrr/orbit_confirm_links.py`, `python3 -m py_compile heliolincrr/orbit_confirm_links.py`; 服务器 `scp -P 20093 -o BatchMode=yes -o StrictHostKeyChecking=no heliolincrr/orbit_confirm_links.py smtpipeline@www.xinglong-naoc.cn:/pipeline/xiaoyunao/heliolincrr/orbit_confirm_links.py`, `ssh -p 20093 -o BatchMode=yes -o StrictHostKeyChecking=no smtpipeline@www.xinglong-naoc.cn 'rm -rf /pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links/orbit_confirm && /home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python /pipeline/xiaoyunao/heliolincrr/orbit_confirm_links.py --rr-dir /pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links --cores 16 --log-every 500 && /home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python /pipeline/xiaoyunao/heliolincrr/compare_with_known_asteroids.py 20260220 --rr-subdir rr_links --out /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison.fits --summary-out /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison_summary.json && /home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python /pipeline/xiaoyunao/heliolincrr/orbit_fit_stats.py --rr-dir /pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links --comparison-fits /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison.fits --out /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_orbit_fit_stats.json'`, `ssh -p 20093 -o BatchMode=yes -o StrictHostKeyChecking=no smtpipeline@www.xinglong-naoc.cn '/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python -c \"from astropy.table import Table; import numpy as np; orbit=Table.read(\\\"/pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links/orbit_confirm/orbit_links.fits\\\"); print(orbit.colnames); ok=orbit[np.asarray(orbit[\\\"fit_ok\\\"], dtype=bool)]; print(len(ok))\"'`
