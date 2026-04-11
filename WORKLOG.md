@@ -2,6 +2,27 @@
 
 ## 2026-04-11
 
+- task: 测试单夜 `rr_links` 只允许“上一条尾点 = 下一条首点”的共享端点强连接，评估是否能显著净化 RR
+- files_changed: `heliolincrr/run_rr_from_tracklets.py`, `WORKLOG.md`, `PLAN.md`
+- commands_run: 本地 `sed -n '1,260p' heliolincrr/run_rr_from_tracklets.py`, `sed -n '260,620p' heliolincrr/run_rr_from_tracklets.py`, `sed -n '620,980p' heliolincrr/run_rr_from_tracklets.py`, `python3 -m py_compile heliolincrr/run_rr_from_tracklets.py`; 服务器 `scp -P 20093 -o BatchMode=yes -o StrictHostKeyChecking=no heliolincrr/run_rr_from_tracklets.py smtpipeline@www.xinglong-naoc.cn:/pipeline/xiaoyunao/heliolincrr/run_rr_from_tracklets.py`, `ssh -p 20093 -o BatchMode=yes -o StrictHostKeyChecking=no smtpipeline@www.xinglong-naoc.cn 'set -e; base=/pipeline/xiaoyunao/data/heliolincrr/20260220; out=$base/rr_links_sharedend; rm -rf \"$out\"; /home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python /pipeline/xiaoyunao/heliolincrr/run_rr_from_tracklets.py --infile $base/tracklets_linreproj/tracklets_20260220_ALL.fits --outdir \"$out\" --profile single-night; /home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python /pipeline/xiaoyunao/heliolincrr/rr_link_stats.py 20260220 --rr-subdir rr_links_sharedend --out $base/analysis/20260220_rr_link_stats_sharedend.json; /home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python /pipeline/xiaoyunao/heliolincrr/compare_with_known_asteroids.py 20260220 --rr-subdir rr_links_sharedend --out $base/analysis/20260220_rr_known_asteroid_comparison_sharedend.fits --summary-out $base/analysis/20260220_rr_known_asteroid_comparison_summary_sharedend.json; /home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python /pipeline/xiaoyunao/heliolincrr/orbit_confirm_links.py --rr-dir $base/rr_links_sharedend --tracklets $base/tracklets_linreproj/tracklets_20260220_ALL.fits --cores 16 --log-every 500; /home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python /pipeline/xiaoyunao/heliolincrr/compare_with_known_asteroids.py 20260220 --rr-subdir rr_links_sharedend --out $base/analysis/20260220_rr_known_asteroid_comparison_sharedend.fits --summary-out $base/analysis/20260220_rr_known_asteroid_comparison_summary_sharedend.json; /home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python /pipeline/xiaoyunao/heliolincrr/orbit_fit_stats.py --rr-dir $base/rr_links_sharedend --comparison-fits $base/analysis/20260220_rr_known_asteroid_comparison_sharedend.fits --out $base/analysis/20260220_orbit_fit_stats_sharedend.json'`, `ssh -p 20093 -o BatchMode=yes -o StrictHostKeyChecking=no smtpipeline@www.xinglong-naoc.cn 'python -c \"from astropy.table import Table; a=Table.read(\\\"/pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links/linkage_members.fits\\\"); b=Table.read(\\\"/pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links_sharedend/linkage_members.fits\\\"); sa=sorted((int(l), str(t)) for l,t in zip(a[\\\"linkage_id\\\"], a[\\\"tracklet_id\\\"])); sb=sorted((int(l), str(t)) for l,t in zip(b[\\\"linkage_id\\\"], b[\\\"tracklet_id\\\"])); print(len(sa), len(sb), sa==sb)\"'`
+- key_findings:
+  - 在 `single-night` profile 中新增了共享端点强连接规则：只有当两条 tracklet 满足 `tail(A)==head(B)` 或 `tail(B)==head(A)` 时，才允许它们在 KD 邻边阶段进入同一 component
+  - detection key 使用 tracklet 文件中的 `file1/file2 + objID1/objID2` 精确构造，不是位置近似
+  - 但在 `20260220` 正式单夜数据上，这个新规则没有改变任何 RR 结果：`rr_links_sharedend` 与正式 `rr_links` 的 `links_tracklets.fits`、`linkage_members.fits` 完全一致
+  - 结果统计逐项相同：`n_links=7900`、`n_member_rows=21325`、`in_rr_link=2088/2304`、`fit_ok_any=438`、`is_good_any=272`
+  - orbit fitting 结果也完全相同：`fit_ok=263/7900`、`is_good=110/7900`
+  - 因此当前单夜 RR 图里的实际成团，并不是被“非共享端点的 tracklet 邻边”污染的；你提出的共享端点规则在当前实现和当前数据上已经是隐式满足的，或至少不构成新的活跃约束
+- validation:
+  - `python3 -m py_compile heliolincrr/run_rr_from_tracklets.py`
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links_sharedend/{links_tracklets.fits,linkage_members.fits,rr_summary.json}`
+  - 服务器成功写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/{20260220_rr_link_stats_sharedend.json,20260220_rr_known_asteroid_comparison_sharedend.fits,20260220_rr_known_asteroid_comparison_summary_sharedend.json,20260220_orbit_fit_stats_sharedend.json}`
+- remaining_issues:
+  - 既然共享端点约束不改变结果，当前 `rr_links` 的污染来源应继续往“共享端点链式桥接”、“同一端点附近的多目标歧义”、或 component 内后续 compact-core 选择不足等方向排查
+  - 还需要更细地看失败 link 是通过哪条共享端点链被串起来的，而不是仅仅看是否共享端点
+- next_step:
+  - 在 `rr_links` 侧继续追桥接结构：定位 `partial_known_single` / `all_known_mixed` links 中具体哪条共享端点链把不同对象或 unknown 污染串成同一个 component
+  - 若要继续收紧 RR，下一步应从“共享端点是否唯一/无歧义”入手，而不是只检查是否共享端点
+
 - task: 诊断 `rr_links` 污染模式，并对照 Rubin/LSST 等公开流程判断为什么我们的 link 更脏
 - files_changed: `WORKLOG.md`, `PLAN.md`
 - commands_run: 本地 `sed -n '1,280p' heliolincrr/compare_with_known_asteroids.py`; 服务器 `python -c 'from astropy.table import Table; print(Table.read(\".../20260220_rr_known_asteroid_comparison.fits\").colnames)'`, `python -c 'from astropy.table import Table; print(Table.read(\".../rr_links/orbit_confirm/orbit_links.fits\").colnames)'`, `python - <<PY ... classify known-hit links by tracklet-level object purity / failure reason / rejected_tracklets ... PY`

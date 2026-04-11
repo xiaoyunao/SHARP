@@ -77,6 +77,13 @@ def earth_location_mpc327() -> EarthLocation:
     )
 
 
+def build_detection_key_array(file_col, objid_col) -> np.ndarray:
+    return np.asarray(
+        [f"{Path(str(f)).name}:{int(o)}" for f, o in zip(file_col, objid_col)],
+        dtype="U256",
+    )
+
+
 def heliocentric_observer_xyz_au(times_utc: Time, loc: EarthLocation) -> np.ndarray:
     earth_bary = get_body_barycentric("earth", times_utc)
     sun_bary = get_body_barycentric("sun", times_utc)
@@ -131,9 +138,24 @@ class ProgressLogger:
 
 
 class HeliolincRR_Tracklets:
-    def __init__(self, ra1, dec1, ra2, dec2, jd1, jd2, r_so_1, r_so_2, tracklet_ids):
+    def __init__(
+        self,
+        ra1,
+        dec1,
+        ra2,
+        dec2,
+        jd1,
+        jd2,
+        r_so_1,
+        r_so_2,
+        tracklet_ids,
+        det_key1=None,
+        det_key2=None,
+    ):
         self.tracklet_ids = np.asarray(tracklet_ids).astype("U64")
         n = len(ra1)
+        self.start_det_key = None
+        self.end_det_key = None
 
         # Build 2N observations in original order
         ra = np.empty(2 * n, dtype=np.float64)
@@ -202,6 +224,19 @@ class HeliolincRR_Tracklets:
         self.comb_r_so1 = self.r_so[self.comb_f1, :]
         self.comb_u_mean = self.comb_r_ob0 + self.comb_r_ob1
         self.comb_u_mean /= np.clip(LA.norm(self.comb_u_mean, axis=1, keepdims=True), 1e-12, None)
+
+        if det_key1 is not None and det_key2 is not None:
+            det_key1 = np.asarray(det_key1).astype("U256")
+            det_key2 = np.asarray(det_key2).astype("U256")
+            start_keys = np.empty(n, dtype="U256")
+            end_keys = np.empty(n, dtype="U256")
+            first_is_start = np.asarray(jd1, dtype=np.float64) <= np.asarray(jd2, dtype=np.float64)
+            start_keys[first_is_start] = det_key1[first_is_start]
+            end_keys[first_is_start] = det_key2[first_is_start]
+            start_keys[~first_is_start] = det_key2[~first_is_start]
+            end_keys[~first_is_start] = det_key1[~first_is_start]
+            self.start_det_key = start_keys
+            self.end_det_key = end_keys
 
     @staticmethod
     def eq2cart(ra, dec, d=1.0):
@@ -516,6 +551,13 @@ class HeliolincRR_Tracklets:
                 j = int(j)
                 if j <= i or d > tol:
                     continue
+                if profile == "single-night" and self.start_det_key is not None and self.end_det_key is not None:
+                    can_chain = (
+                        self.end_det_key[i] == self.start_det_key[j]
+                        or self.end_det_key[j] == self.start_det_key[i]
+                    )
+                    if not can_chain:
+                        continue
                 edges.append((float(d), i, j))
         edges.sort(key=lambda x: (x[0], x[1], x[2]))
 
@@ -863,6 +905,8 @@ def main():
         r_so_1=r_so_1,
         r_so_2=r_so_2,
         tracklet_ids=np.asarray(tab["tracklet_id"]).astype("U64"),
+        det_key1=build_detection_key_array(tab["file1"], tab["objID1"]) if {"file1", "objID1"}.issubset(tab.colnames) else None,
+        det_key2=build_detection_key_array(tab["file2"], tab["objID2"]) if {"file2", "objID2"}.issubset(tab.colnames) else None,
     )
 
     t_prop0 = time.perf_counter()
