@@ -46,10 +46,13 @@
 - 当前正式单夜 RR 基线已切换为 `rr_links_compactcore_softsky` 升格后的 `rr_links`：`7900 / 21325 / 2088/2304 / rr_given_tracklet=90.63%`
 - 当前单夜 orbit fitting 默认物理参数已统一到 RR 单夜默认：`min-init-earth-au=0.02`、`max-v-kms=30`、`hypos=r=[1.3..4.1], rdot=0, rddot=0`
 - 单夜 orbit fitting 现已接入 tracklet-subset seed + 全 link inlier 重拟合流程
-- 在新的正式 `rr_links` 上，最新 orbit fitting 结果为：`fit_ok=266/7900`、`is_good=110/7900`
-- 对应的已知小行星命中统计更新为：`fit_ok_any=438`、`is_good_any=272`
-- 已知命中 link 级统计为：`known_hit_links=2421`、`fit_ok_links=222`、`is_good_links=94`
-- 新基线下失败主因仍以 `max_v` 为绝对主导：`7530` 个失败 link 主失败于 `max_v`，`104` 个主失败于 `outlier_clip`
+- 新增 relaxed-seed 变体：`seed_max_v_kms` 与 `final_max_v_kms` 分离，当前测试为 `120 -> 30`
+- 新版单夜 orbit 输出已带 tracklet 诊断列：`seed_tracklets`、`inlier_tracklets`、`rejected_tracklets`
+- 在新的正式 `rr_links` 上，当前最新 orbit fitting 结果为：`fit_ok=263/7900`、`is_good=110/7900`
+- 对应的已知小行星命中统计当前仍为：`fit_ok_any=438`、`is_good_any=272`
+- 已知命中 link 级统计当前为：`known_hit_links=2421`、`fit_ok_links=222`、`is_good_links=94`
+- 新测试下失败主因仍以 `max_v` 为绝对主导：`7532` 个失败 link 主失败于 `max_v`，`105` 个主失败于 `outlier_clip`
+- 这说明“放宽 seed `max_v` + 当前 tracklet 级 residual 聚合规则”并未继续提升 known-hit orbit 命中
 - 新增 `orbit_fit_stats.py`，当前单夜最终结果统计已写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_orbit_fit_stats.json`
 - 服务器正式路径 `/pipeline/xiaoyunao/heliolincrr/run_rr_from_tracklets.py` 只允许放“已入仓库、已提交”的版本
 - 任何 RR 试验改动都不再直接修改服务器正式脚本；临时实验统一使用副本，例如 `/tmp/run_rr_from_tracklets_<tag>.py`
@@ -88,8 +91,8 @@
 ## Next recommended steps
 
 1. 以当前 `/pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links` 作为唯一正式单夜 RR 基线，不再回切其它 RR 试验目录
-2. 继续在 `orbit_confirm_links.py` 上增强单夜鲁棒拟合，优先做更强的 tracklet-level seed / inlier 选择，而不是先放宽 `max_v_kms`
-3. 为单夜 robust fit 补充可观测诊断，例如 seed 来源、最终保留 tracklet 数、被排除 tracklet 数，方便定位哪些污染模式仍未被回收
+2. 基于 `seed_tracklets / inlier_tracklets / rejected_tracklets` 诊断，先分析 known-hit links 中哪些污染模式仍未被剔掉
+3. 暂不把“继续放宽 seed `max_v_kms`”作为主线；若改 orbit fitting，优先调整 tracklet 级评分/筛选规则，而不是再放物理上限
 4. 若 robust orbit fitting 继续提升有限，再回到 RR 端评估更细的对象级拆分或软评分裁剪
 5. 若后续继续处理 15 夜 RR，统一基于 `w15` profile 单独维护参数与实验记录，不再借用单夜默认值
 6. 若继续测试 RR `hypo` 网格，保持正式脚本不动，统一通过 `--hypos <tmpfile>` 或 `/tmp/run_rr_from_tracklets_<tag>.py` 做隔离实验

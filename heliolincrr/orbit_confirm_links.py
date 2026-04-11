@@ -446,6 +446,42 @@ def build_subset_tracklet_lists(tracklet_ids: np.ndarray) -> list[list[str]]:
     return subsets[:24]
 
 
+def summarize_tracklet_residuals(
+    src_tid: np.ndarray,
+    resid_arcsec: np.ndarray,
+) -> dict[str, dict[str, float]]:
+    out: dict[str, dict[str, float]] = {}
+    tids = np.asarray(src_tid).astype("U64")
+    resid = np.asarray(resid_arcsec, dtype=float)
+    for tid in np.unique(tids):
+        mask = tids == tid
+        vals = resid[mask]
+        out[str(tid)] = {
+            "median": float(np.median(vals)),
+            "max": float(np.max(vals)),
+            "n_obs": int(np.sum(mask)),
+        }
+    return out
+
+
+def select_inlier_tracklets(
+    src_tid: np.ndarray,
+    resid_arcsec: np.ndarray,
+    median_limit_arcsec: float,
+    max_limit_arcsec: float,
+) -> tuple[list[str], list[str]]:
+    stats = summarize_tracklet_residuals(src_tid, resid_arcsec)
+    kept: list[str] = []
+    rejected: list[str] = []
+    for tid in sorted(stats):
+        st = stats[tid]
+        if (st["median"] <= float(median_limit_arcsec)) and (st["max"] <= float(max_limit_arcsec)):
+            kept.append(tid)
+        else:
+            rejected.append(tid)
+    return kept, rejected
+
+
 def fit_single_night_robust(
     tids: np.ndarray,
     mjd: np.ndarray,
@@ -455,9 +491,11 @@ def fit_single_night_robust(
     loc: EarthLocation,
     hypos: List[Tuple[float, float, float]],
     min_init_earth_au: float,
-    max_v_kms: float,
+    seed_max_v_kms: float,
+    final_max_v_kms: float,
     outlier_clip_arcsec: float | None,
     inlier_arcsec: float,
+    tracklet_max_arcsec: float,
 ) -> Dict:
     best = fit_best_hypo_lambert(
         mjd=mjd,
@@ -466,15 +504,26 @@ def fit_single_night_robust(
         loc=loc,
         hypos=hypos,
         min_init_earth_au=min_init_earth_au,
-        max_v_kms=max_v_kms,
+        max_v_kms=final_max_v_kms,
         outlier_clip_arcsec=outlier_clip_arcsec,
     )
 
     tracklet_masks = build_tracklet_obs_masks(src_tid)
     subset_lists = build_subset_tracklet_lists(tids)
     candidate_fits: list[Dict] = []
-    if best.get("ok", False):
-        candidate_fits.append(best)
+    seed_fit_full = fit_best_hypo_lambert(
+        mjd=mjd,
+        ra=ra,
+        dec=dec,
+        loc=loc,
+        hypos=hypos,
+        min_init_earth_au=min_init_earth_au,
+        max_v_kms=seed_max_v_kms,
+        outlier_clip_arcsec=outlier_clip_arcsec,
+    )
+    if seed_fit_full.get("ok", False):
+        seed_fit_full["seed_tracklets"] = "ALL"
+        candidate_fits.append(seed_fit_full)
 
     for subset in subset_lists:
         subset_mask = np.zeros(len(mjd), dtype=bool)
@@ -489,7 +538,7 @@ def fit_single_night_robust(
             loc=loc,
             hypos=hypos,
             min_init_earth_au=min_init_earth_au,
-            max_v_kms=max_v_kms,
+            max_v_kms=seed_max_v_kms,
             outlier_clip_arcsec=outlier_clip_arcsec,
         )
         if fit.get("ok", False):
@@ -501,15 +550,16 @@ def fit_single_night_robust(
             resid_all = compute_orbit_residuals_arcsec(seed_fit["orbit"], mjd, ra, dec, loc)
         except Exception:
             continue
-        inlier_mask = resid_all <= float(inlier_arcsec)
-        if int(np.sum(inlier_mask)) < 3:
+        keep_tracklets, rejected_tracklets = select_inlier_tracklets(
+            src_tid=src_tid,
+            resid_arcsec=resid_all,
+            median_limit_arcsec=float(inlier_arcsec),
+            max_limit_arcsec=float(tracklet_max_arcsec),
+        )
+        if len(keep_tracklets) < 2:
             continue
-        inlier_tracklets = {
-            str(tid)
-            for tid, keep in zip(np.asarray(src_tid).astype("U64"), inlier_mask)
-            if keep
-        }
-        if len(inlier_tracklets) < 2:
+        inlier_mask = np.isin(np.asarray(src_tid).astype("U64"), np.asarray(keep_tracklets, dtype="U64"))
+        if int(np.sum(inlier_mask)) < 3:
             continue
         refit = fit_best_hypo_lambert(
             mjd=mjd[inlier_mask],
@@ -518,7 +568,7 @@ def fit_single_night_robust(
             loc=loc,
             hypos=hypos,
             min_init_earth_au=min_init_earth_au,
-            max_v_kms=max_v_kms,
+            max_v_kms=final_max_v_kms,
             outlier_clip_arcsec=outlier_clip_arcsec,
         )
         if not refit.get("ok", False):
@@ -531,6 +581,17 @@ def fit_single_night_robust(
         final_mask = final_resid <= float(inlier_arcsec)
         if int(np.sum(final_mask)) < 3:
             continue
+        final_keep_tracklets, final_rejected_tracklets = select_inlier_tracklets(
+            src_tid=src_tid,
+            resid_arcsec=final_resid,
+            median_limit_arcsec=float(inlier_arcsec),
+            max_limit_arcsec=float(tracklet_max_arcsec),
+        )
+        if len(final_keep_tracklets) < 2:
+            continue
+        final_mask = np.isin(np.asarray(src_tid).astype("U64"), np.asarray(final_keep_tracklets, dtype="U64"))
+        if int(np.sum(final_mask)) < 3:
+            continue
         refit["used_mask"] = final_mask
         refit["resid_arcsec"] = final_resid
         refit["n_obs"] = int(len(mjd))
@@ -539,6 +600,10 @@ def fit_single_night_robust(
         refit["max_arcsec"] = float(np.max(final_resid[final_mask]))
         refit["rms_arcsec"] = float(np.sqrt(np.mean(final_resid[final_mask] ** 2)))
         refit["seed_tracklets"] = seed_fit.get("seed_tracklets", "")
+        refit["inlier_tracklets"] = ";".join(final_keep_tracklets)
+        refit["rejected_tracklets"] = ";".join(final_rejected_tracklets)
+        refit["seed_max_v_kms"] = float(seed_max_v_kms)
+        refit["final_max_v_kms"] = float(final_max_v_kms)
 
         if (not best.get("ok", False)) or (refit["rms_arcsec"] < best["rms_arcsec"]):
             best = refit
@@ -722,6 +787,7 @@ G_LOC: Optional[EarthLocation] = None
 G_HYPOS: Optional[List[Tuple[float, float, float]]] = None
 G_MIN_INIT: float = 0.0
 G_MAX_V: float = 200.0
+G_SEED_MAX_V: float = 200.0
 G_OUTLIER_CLIP: Optional[float] = None
 G_SINGLE_THR: float = 3.0
 G_MULTI_THR: float = 1.2
@@ -739,6 +805,7 @@ def _init_worker(
     hypos: List[Tuple[float, float, float]],
     min_init: float,
     max_v: float,
+    seed_max_v: float,
     outlier_clip: Optional[float],
     single_thr: float,
     multi_thr: float,
@@ -749,7 +816,7 @@ def _init_worker(
     pred_days: float,
 ):
     global G_IDX, G_TARR, G_LOC, G_HYPOS
-    global G_MIN_INIT, G_MAX_V, G_OUTLIER_CLIP
+    global G_MIN_INIT, G_MAX_V, G_SEED_MAX_V, G_OUTLIER_CLIP
     global G_SINGLE_THR, G_MULTI_THR, G_SINGLE_MAX, G_MULTI_MAX
     global G_MIN_USED_FRAC, G_ECC_MAX_MULTI, G_PRED_DAYS
 
@@ -760,6 +827,7 @@ def _init_worker(
 
     G_MIN_INIT = float(min_init)
     G_MAX_V = float(max_v)
+    G_SEED_MAX_V = float(seed_max_v)
     G_OUTLIER_CLIP = outlier_clip
 
     G_SINGLE_THR = float(single_thr)
@@ -798,9 +866,11 @@ def _process_one_link_small(task: Tuple[int, np.ndarray]) -> Tuple[Optional[tupl
             loc=G_LOC,
             hypos=G_HYPOS,
             min_init_earth_au=G_MIN_INIT,
-            max_v_kms=G_MAX_V,
+            seed_max_v_kms=G_SEED_MAX_V,
+            final_max_v_kms=G_MAX_V,
             outlier_clip_arcsec=G_OUTLIER_CLIP,
             inlier_arcsec=min(G_SINGLE_MAX, max(G_SINGLE_THR * 1.5, 3.0)),
+            tracklet_max_arcsec=max(G_SINGLE_MAX, max(G_SINGLE_THR * 2.5, 6.0)),
         )
     else:
         fit = fit_best_hypo_lambert(
@@ -829,6 +899,11 @@ def _process_one_link_small(task: Tuple[int, np.ndarray]) -> Tuple[Optional[tupl
             float(fit.get("best_rejected_max_v_kms", np.nan)),
             str(fit.get("fail_reason", "no_valid_hypo")),
             format_fail_counts(fit.get("fail_counts", {})),
+            "",
+            "",
+            "",
+            float(G_SEED_MAX_V),
+            float(G_MAX_V),
         )
         return summary_row, []
 
@@ -890,6 +965,11 @@ def _process_one_link_small(task: Tuple[int, np.ndarray]) -> Tuple[Optional[tupl
         float(fit.get("best_rejected_max_v_kms", np.nan)),
         "",
         format_fail_counts(fit.get("fail_counts", {})),
+        str(fit.get("seed_tracklets", "")),
+        str(fit.get("inlier_tracklets", "")),
+        str(fit.get("rejected_tracklets", "")),
+        float(fit.get("seed_max_v_kms", G_SEED_MAX_V)),
+        float(fit.get("final_max_v_kms", G_MAX_V)),
     )
 
     resid = np.asarray(fit["resid_arcsec"], dtype=np.float64)
@@ -938,6 +1018,7 @@ def main():
 
     ap.add_argument("--min-init-earth-au", type=float, default=None)
     ap.add_argument("--max-v-kms", type=float, default=None)
+    ap.add_argument("--seed-max-v-kms", type=float, default=None)
     ap.add_argument("--hypos", type=str, default=None)
 
     ap.add_argument("--single-rms-arcsec", type=float, default=5.0)
@@ -1013,6 +1094,7 @@ def main():
         min_init = float(args.min_init_earth_au)
 
     max_v_kms = float(PROFILE_DEFAULTS[profile]["max_v_kms"]) if args.max_v_kms is None else float(args.max_v_kms)
+    seed_max_v_kms = float(max(80.0, max_v_kms * 4.0)) if args.seed_max_v_kms is None else float(args.seed_max_v_kms)
 
     outlier_clip = None if args.outlier_clip_arcsec <= 0 else float(args.outlier_clip_arcsec)
 
@@ -1044,6 +1126,7 @@ def main():
             hypos=hypos,
             min_init=min_init,
             max_v=max_v_kms,
+            seed_max_v=seed_max_v_kms,
             outlier_clip=outlier_clip,
             single_thr=float(args.single_rms_arcsec),
             multi_thr=float(args.multi_rms_arcsec),
@@ -1079,6 +1162,7 @@ def main():
                 hypos,
                 float(min_init),
                 max_v_kms,
+                seed_max_v_kms,
                 outlier_clip,
                 float(args.single_rms_arcsec),
                 float(args.multi_rms_arcsec),
@@ -1136,6 +1220,11 @@ def main():
             "best_rejected_max_v_kms",
             "fail_reason",
             "fail_counts",
+            "seed_tracklets",
+            "inlier_tracklets",
+            "rejected_tracklets",
+            "seed_max_v_kms",
+            "final_max_v_kms",
         ],
     )
 
@@ -1147,6 +1236,7 @@ def main():
     summary.meta["n_hypos"] = int(len(hypos))
     summary.meta["min_init_earth_au"] = float(min_init)
     summary.meta["max_v_kms"] = float(max_v_kms)
+    summary.meta["seed_max_v_kms"] = float(seed_max_v_kms)
     summary.meta["single_rms_arcsec"] = float(args.single_rms_arcsec)
     summary.meta["multi_rms_arcsec"] = float(args.multi_rms_arcsec)
     summary.meta["pred_days"] = float(args.pred_days)
@@ -1176,7 +1266,7 @@ def main():
 
     try:
         (outdir / "provenance.txt").write_text(
-            f"rr_dir: {rr_dir}\ntracklets: {tracklets_path}\nmode: {mode}\nnight: {night}\n",
+            f"rr_dir: {rr_dir}\ntracklets: {tracklets_path}\nmode: {mode}\nnight: {night}\nseed_max_v_kms: {seed_max_v_kms}\nfinal_max_v_kms: {max_v_kms}\n",
             encoding="utf-8",
         )
     except Exception:
