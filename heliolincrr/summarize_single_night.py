@@ -54,20 +54,22 @@ def build_known_maps(matched: Table) -> tuple[dict[str, str], dict[str, set[str]
     return known_by_det, object_to_detkeys
 
 
-def load_mask_keys(mask_dir: Path) -> set[str]:
+def load_mask_stats(mask_dir: Path) -> tuple[set[str], int]:
     keys: set[str] = set()
+    total_rows = 0
     if not mask_dir.exists():
-        return keys
+        return keys, total_rows
     for fn in sorted(mask_dir.glob("OBJ_MP_*_cat.fits.gz")):
         try:
             t = Table.read(fn)
         except Exception:
             continue
+        total_rows += int(len(t))
         if "objID" not in t.colnames:
             continue
         for obj_id in np.asarray(t["objID"], dtype=np.int64):
             keys.add(f"{fn.name}:{int(obj_id)}")
-    return keys
+    return keys, total_rows
 
 
 def classify_tracklets(tracklets: Table, known_by_det: dict[str, str]) -> dict[str, dict[str, object]]:
@@ -241,14 +243,103 @@ def build_unknown_catalog_rows(
     return rows
 
 
+def build_requested_metrics(
+    *,
+    matched_total: int,
+    survives_mask: int,
+    mask_total_rows: int,
+    trk_before: Counter,
+    link_class_counts: Counter,
+    fit_ok_class_counts: Counter,
+    links_total: int,
+    orbit_fit_ok: int,
+    orbit_is_good: int,
+    object_to_detkeys: dict[str, set[str]],
+    object_to_same2_tracklets: dict[str, list[str]],
+    linked_tids: set[str],
+) -> dict[str, object]:
+    known_objects_ge3_total = 0
+    known_objects_ge3_linked = 0
+    for obj, detkeys in object_to_detkeys.items():
+        if len(detkeys) < 3:
+            continue
+        known_objects_ge3_total += 1
+        tids = object_to_same2_tracklets.get(obj, [])
+        if any(tid in linked_tids for tid in tids):
+            known_objects_ge3_linked += 1
+
+    mask_deleted = max(0, matched_total - survives_mask)
+    return {
+        "mask_gaia": {
+            "known_detections_total": int(matched_total),
+            "known_detections_after_mask": int(survives_mask),
+            "known_detections_deleted": int(mask_deleted),
+            "known_detection_delete_fraction": (
+                float(mask_deleted / matched_total) if matched_total > 0 else None
+            ),
+            "masked_catalog_total_detections": int(mask_total_rows),
+            "known_detection_fraction_in_masked_catalog": (
+                float(survives_mask / mask_total_rows) if mask_total_rows > 0 else None
+            ),
+        },
+        "tracklets": {
+            "all_non_asteroid": int(trk_before["0"]),
+            "one_endpoint_known": int(trk_before["1"]),
+            "two_endpoints_same_known": int(trk_before["2_same"]),
+            "two_endpoints_different_known": int(trk_before["2_diff"]),
+        },
+        "links": {
+            "all_same_known": int(link_class_counts["all_same_asteroid"]),
+            "all_different_known": int(link_class_counts["all_asteroid_mixed_objects"]),
+            "known_plus_non_known": int(link_class_counts["mixed_with_non_asteroid"]),
+            "all_non_known": int(link_class_counts["all_non_asteroid"]),
+        },
+        "known_objects_with_ge_3_detections": {
+            "total_objects": int(known_objects_ge3_total),
+            "linked_objects": int(known_objects_ge3_linked),
+            "linked_fraction": (
+                float(known_objects_ge3_linked / known_objects_ge3_total)
+                if known_objects_ge3_total > 0
+                else None
+            ),
+        },
+        "orbit_fit": {
+            "fit_ok_links": int(orbit_fit_ok),
+            "fit_ok_fraction": float(orbit_fit_ok / links_total) if links_total > 0 else None,
+            "is_good_links": int(orbit_is_good),
+            "is_good_fraction": float(orbit_is_good / links_total) if links_total > 0 else None,
+            "all_same_known_links": int(link_class_counts["all_same_asteroid"]),
+            "fit_ok_all_non_known_links": int(fit_ok_class_counts["all_non_asteroid"]),
+        },
+    }
+
+
 def build_text_summary(summary: dict[str, object]) -> str:
     t_before = summary["tracklets_before_link"]
     t_after = summary["tracklets_after_link"]
     same2 = summary["same_asteroid_2endpoint_tracklets"]
     link_counts = summary["link_class_counts"]
     fit_counts = summary["fit_ok_link_class_counts"]
+    req = summary["requested_metrics"]
     lines = [
         f"Night: {summary['night']}",
+        "",
+        "Requested metrics:",
+        f"  mask known total: {req['mask_gaia']['known_detections_total']}",
+        f"  mask known after mask: {req['mask_gaia']['known_detections_after_mask']}",
+        f"  mask known deleted: {req['mask_gaia']['known_detections_deleted']}",
+        f"  mask delete fraction: {req['mask_gaia']['known_detection_delete_fraction']:.6f}" if req["mask_gaia"]["known_detection_delete_fraction"] is not None else "  mask delete fraction: null",
+        f"  masked catalog total detections: {req['mask_gaia']['masked_catalog_total_detections']}",
+        f"  known fraction in masked catalog: {req['mask_gaia']['known_detection_fraction_in_masked_catalog']:.6f}" if req["mask_gaia"]["known_detection_fraction_in_masked_catalog"] is not None else "  known fraction in masked catalog: null",
+        f"  known objects with >=3 detections: {req['known_objects_with_ge_3_detections']['total_objects']}",
+        f"  known objects with >=3 detections linked: {req['known_objects_with_ge_3_detections']['linked_objects']}",
+        f"  known objects with >=3 detections linked fraction: {req['known_objects_with_ge_3_detections']['linked_fraction']:.6f}" if req["known_objects_with_ge_3_detections"]["linked_fraction"] is not None else "  known objects with >=3 detections linked fraction: null",
+        f"  orbit fit_ok links: {req['orbit_fit']['fit_ok_links']}",
+        f"  orbit fit_ok fraction: {req['orbit_fit']['fit_ok_fraction']:.6f}" if req["orbit_fit"]["fit_ok_fraction"] is not None else "  orbit fit_ok fraction: null",
+        f"  orbit is_good links: {req['orbit_fit']['is_good_links']}",
+        f"  orbit is_good fraction: {req['orbit_fit']['is_good_fraction']:.6f}" if req["orbit_fit"]["is_good_fraction"] is not None else "  orbit is_good fraction: null",
+        f"  orbit all_same_known links: {req['orbit_fit']['all_same_known_links']}",
+        f"  fit_ok all_non_known links: {req['orbit_fit']['fit_ok_all_non_known_links']}",
         "",
         "Tracklets before link:",
         f"  0 endpoint asteroid: {t_before['0_endpoint_asteroid']}",
@@ -320,7 +411,7 @@ def main() -> None:
     matched_path = processed_root / night / "L4" / f"{night}_matched_asteroids.fits"
     matched = Table.read(matched_path) if matched_path.exists() else Table()
     mask_dir = root_out / night / "mask_gaia"
-    mask_keys = load_mask_keys(mask_dir)
+    mask_keys, mask_total_rows = load_mask_stats(mask_dir)
 
     if len(matched) > 0:
         known_by_det, object_to_detkeys = build_known_maps(matched)
@@ -377,6 +468,23 @@ def main() -> None:
             unknown_fits.unlink()
     unknown_json.write_text(json.dumps(unknown_rows, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
+    orbit_fit_ok = int(np.sum(np.asarray(orbit_links["fit_ok"], dtype=bool)))
+    orbit_is_good = int(np.sum(np.asarray(orbit_links["is_good"], dtype=bool)))
+    requested_metrics = build_requested_metrics(
+        matched_total=matched_total,
+        survives_mask=survives_mask,
+        mask_total_rows=mask_total_rows,
+        trk_before=trk["before_counts"],
+        link_class_counts=link_class_counts,
+        fit_ok_class_counts=fit_ok_class_counts,
+        links_total=int(len(links)),
+        orbit_fit_ok=orbit_fit_ok,
+        orbit_is_good=orbit_is_good,
+        object_to_detkeys=object_to_detkeys,
+        object_to_same2_tracklets=object_to_same2_tracklets,
+        linked_tids=linked_tids,
+    )
+
     summary = {
         "night": night,
         "paths": {
@@ -391,11 +499,12 @@ def main() -> None:
         "counts": {
             "matched_detections_total": matched_total,
             "mask_gaia_known_detections": survives_mask,
+            "mask_gaia_total_detections": int(mask_total_rows),
             "tracklets_total": int(len(tracklets)),
             "links_total": int(len(links)),
             "member_rows_total": int(len(members)),
-            "orbit_fit_ok": int(np.sum(np.asarray(orbit_links["fit_ok"], dtype=bool))),
-            "orbit_is_good": int(np.sum(np.asarray(orbit_links["is_good"], dtype=bool))),
+            "orbit_fit_ok": orbit_fit_ok,
+            "orbit_is_good": orbit_is_good,
         },
         "tracklets_before_link": {
             "0_endpoint_asteroid": int(trk["before_counts"]["0"]),
@@ -431,6 +540,7 @@ def main() -> None:
             "by_tracklet_class_pattern": summarize_count_map(Counter(tuple(row["tracklet_classes"]) for row in failed_links)),
             "rows": failed_links,
         },
+        "requested_metrics": requested_metrics,
         "unknown_fit_ok_catalog": {
             "count": int(len(unknown_rows)),
             "rows": unknown_rows,

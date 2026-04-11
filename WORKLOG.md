@@ -2,6 +2,21 @@
 
 ## 2026-04-11
 
+- task: 为单夜 summary 补齐用户关心的 6 组固定统计字段，并准备清理 `20251116` / `20260220` 服务器产物
+- files_changed: `heliolincrr/summarize_single_night.py`, `WORKLOG.md`, `PLAN.md`
+- commands_run: 本地 `sed -n '1,520p' heliolincrr/summarize_single_night.py`, `python3 -m py_compile heliolincrr/summarize_single_night.py`; 后续将补跑 `summarize_single_night.py` 到现有夜次并执行服务器删除
+- key_findings:
+  - 现有 summary 已有大部分核心计数，但还缺少用户明确要求的固定字段封装
+  - 这次需要把 `mask_gaia` 误删比例、mask 后已知占比、tracklet/link 四分类、`>=3 detections` 已知对象级 linked 统计、以及 orbit fit 比率统一固化
+- validation:
+  - `python3 -m py_compile heliolincrr/summarize_single_night.py`
+- remaining_issues:
+  - 还未用新脚本重写 `20251116` / `20260220` 的 summary
+  - 还未删除服务器上这两晚在 `data`、`L4`、`plots` 下的结果
+- next_step:
+  - 用新 `summarize_single_night.py` 对现有结果补写 summary 并检查字段
+  - 提交推送后删除服务器上 `20251116` / `20260220` 相关目录产物
+
 - task: 清理单夜正式链路遗留辅助脚本，收口文档，并确认 `20260220` 新流程已完整产出 summary、unknown catalog 和 GIF
 - files_changed: `README.md`, `PLAN.md`, `WORKLOG.md`, `heliolincrr/README.md`, `heliolincrr/dump_link_detections_from_L2.py`, `heliolincrr/known_motion_stats.py`
 - commands_run: 本地 `find heliolincrr -maxdepth 1 -type f | sort`, `rg -n "dump_link_detections_from_L2|known_motion_stats|summarize_single_night|plot_unknown_links|run_visual_daily|run_pipeline_15|run_rr_from_tracklets_15|merge_tracklets_15|orbit_confirm_links_15" -S heliolincrr README.md PLAN.md WORKLOG.md`, `sed -n '1,220p' heliolincrr/{dump_link_detections_from_L2.py,known_motion_stats.py}`, `bash -n heliolincrr/run_single_night.sh heliolincrr/run_pipeline_15.sh heliolincrr/run_visual_daily.sh`, `python3 -m py_compile heliolincrr/{summarize_single_night.py,plot_unknown_links.py,merge_tracklets_15.py,run_rr_from_tracklets_15.py,orbit_confirm_links_15.py,orbit_confirm_links.py}`; 服务器 `sed -n '1,220p' /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_single_night_summary.txt`, `find /pipeline/xiaoyunao/heliolincrr/plots/20260220 -maxdepth 1 -name "unknown_link_*_20260220.gif" | wc -l`, `ls -l /pipeline/xiaoyunao/heliolincrr/plots/20260220/20260220_unknown_link_summary.json`, `/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python -c "import json; from pathlib import Path; rows=json.loads(Path('/pipeline/xiaoyunao/heliolincrr/plots/20260220/20260220_unknown_link_summary.json').read_text()); print(len(rows))"`
