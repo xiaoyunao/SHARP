@@ -62,7 +62,7 @@ MPC327_ALT_M = 868.221
 PROFILE_DEFAULTS = {
     "single-night": {
         "min_init_earth_au": 0.02,
-        "max_v_kms": 30.0,
+        "max_v_kms": 35.0,
         "hypos": [
             (1.3, 0.0, 0.0),
             (1.7, 0.0, 0.0),

@@ -2,6 +2,70 @@
 
 ## 2026-04-11
 
+- task: 清理单夜正式链路遗留辅助脚本，收口文档，并确认 `20260220` 新流程已完整产出 summary、unknown catalog 和 GIF
+- files_changed: `README.md`, `PLAN.md`, `WORKLOG.md`, `heliolincrr/README.md`, `heliolincrr/dump_link_detections_from_L2.py`, `heliolincrr/known_motion_stats.py`
+- commands_run: 本地 `find heliolincrr -maxdepth 1 -type f | sort`, `rg -n "dump_link_detections_from_L2|known_motion_stats|summarize_single_night|plot_unknown_links|run_visual_daily|run_pipeline_15|run_rr_from_tracklets_15|merge_tracklets_15|orbit_confirm_links_15" -S heliolincrr README.md PLAN.md WORKLOG.md`, `sed -n '1,220p' heliolincrr/{dump_link_detections_from_L2.py,known_motion_stats.py}`, `bash -n heliolincrr/run_single_night.sh heliolincrr/run_pipeline_15.sh heliolincrr/run_visual_daily.sh`, `python3 -m py_compile heliolincrr/{summarize_single_night.py,plot_unknown_links.py,merge_tracklets_15.py,run_rr_from_tracklets_15.py,orbit_confirm_links_15.py,orbit_confirm_links.py}`; 服务器 `sed -n '1,220p' /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_single_night_summary.txt`, `find /pipeline/xiaoyunao/heliolincrr/plots/20260220 -maxdepth 1 -name "unknown_link_*_20260220.gif" | wc -l`, `ls -l /pipeline/xiaoyunao/heliolincrr/plots/20260220/20260220_unknown_link_summary.json`, `/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python -c "import json; from pathlib import Path; rows=json.loads(Path('/pipeline/xiaoyunao/heliolincrr/plots/20260220/20260220_unknown_link_summary.json').read_text()); print(len(rows))"`
+- key_findings:
+  - `dump_link_detections_from_L2.py` 与 `known_motion_stats.py` 都不再被任何正式入口调用，属于调试/分析遗留脚本
+  - 当前正式单夜链路已稳定收口为：`run_single_night.sh -> summarize_single_night.py -> plot_unknown_links.py`
+  - 当前正式 15 夜链路已稳定收口为：`run_pipeline_15.sh -> merge_tracklets_15.py -> run_rr_from_tracklets_15.py -> orbit_confirm_links_15.py`
+  - `20260220` 新正式单夜流程结果已完整落盘：`582` 条 links，`569/582 fit_ok`，`569/582 is_good`
+  - `20260220` summary 显示：`all_same_asteroid=518`、`mixed_with_non_asteroid=17`、`all_non_asteroid=47`，其中 `all_non_asteroid fit_ok=34`
+  - `20260220` unknown catalog 已写出 `34` 行，并已生成 `34` 个 GIF 和 `20260220_unknown_link_summary.json`
+- validation:
+  - `bash -n heliolincrr/run_single_night.sh heliolincrr/run_pipeline_15.sh heliolincrr/run_visual_daily.sh`
+  - `python3 -m py_compile heliolincrr/summarize_single_night.py heliolincrr/plot_unknown_links.py heliolincrr/merge_tracklets_15.py heliolincrr/run_rr_from_tracklets_15.py heliolincrr/orbit_confirm_links_15.py heliolincrr/orbit_confirm_links.py`
+  - 服务器确认 `heliolincrr/plots/20260220/` 中 GIF 数量与 unknown catalog 行数一致，均为 `34`
+- remaining_issues:
+  - 文档和日志已收口，但还未形成新的 git 提交
+  - 后续若继续调单夜 completeness，仍只建议在当前线性 linking 规则上做小范围扫描
+- next_step:
+  - 将这次“正式链路标准化 + 20260220 从头重跑”作为一个里程碑提交并推送
+  - 后续继续把单夜与 15 夜流程分开维护，不再恢复已删除的旧统计脚本和辅助脚本
+
+- task: 将单夜 orbit confirm 正式默认 `max_v` 从 `30` 提到 `35`，重跑 `20260220` 并确认新增 unknown link
+- files_changed: `heliolincrr/orbit_confirm_links.py`, `README.md`, `WORKLOG.md`, `PLAN.md`
+- commands_run: 本地 `rg -n "PROFILE_DEFAULTS|max_v_kms" heliolincrr/orbit_confirm_links.py`, `python3 -m py_compile heliolincrr/orbit_confirm_links.py`, `scp -P 20093 -o BatchMode=yes -o StrictHostKeyChecking=no heliolincrr/orbit_confirm_links.py smtpipeline@www.xinglong-naoc.cn:/pipeline/xiaoyunao/heliolincrr/`; 服务器 `cp -a /pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links/orbit_confirm /pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links/orbit_confirm_v30`, `cp /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_orbit_fit_stats.json /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_orbit_fit_stats_v30_backup.json`, `rm -rf /pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links/orbit_confirm`, `/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python /pipeline/xiaoyunao/heliolincrr/orbit_confirm_links.py --rr-dir /pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links --tracklets /pipeline/xiaoyunao/data/heliolincrr/20260220/tracklets_linreproj/tracklets_20260220_ALL.fits --cores 16 --log-every 500`, `/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python /pipeline/xiaoyunao/heliolincrr/compare_with_known_asteroids.py 20260220 --rr-subdir rr_links --out /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison.fits --summary-out /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison_summary.json`, `/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python /pipeline/xiaoyunao/heliolincrr/orbit_fit_stats.py --rr-dir /pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links --comparison-fits /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison.fits --out /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_orbit_fit_stats.json`, `python - <<'PY' ... compare orbit_confirm_v30 vs current orbit_confirm ... PY`
+- key_findings:
+  - 单夜 orbit confirm 正式 `PROFILE_DEFAULTS["single-night"]["max_v_kms"]` 已从 `30.0` 提到 `35.0`
+  - `20260220` 重跑后，单夜结果从 `fit_ok=565/582, is_good=565/582` 提升到 `fit_ok=569/582, is_good=569/582`
+  - 失败 links 从 `17` 条降到 `13` 条，仍全部卡在 `max_v`
+  - 已知小行星命中完全不变：`fit_ok_any=1590`、`is_good_any=1590`
+  - 新增通过的正是此前贴近阈值的 4 条 unknown links：`240, 330, 478, 480`
+  - 这 4 条新增 link 全部 `is_good=True`，其 `best_v1_kms` 分别为 `31.27`, `34.79`, `30.41`, `30.97`
+- validation:
+  - `python3 -m py_compile heliolincrr/orbit_confirm_links.py`
+  - 服务器成功重写 `/pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links/orbit_confirm/{orbit_links.fits,orbit_obs_residuals.fits}`
+  - 服务器成功重写 `/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/{20260220_rr_known_asteroid_comparison.fits,20260220_rr_known_asteroid_comparison_summary.json,20260220_orbit_fit_stats.json}`
+- remaining_issues:
+  - 当前单夜已知 purity 不再是瓶颈，后续主要仍是 unknown completeness 与候选筛选
+  - 还没有继续检查 `35` 以上是否还存在少量值得保留的边缘 unknown links
+- next_step:
+  - 暂时将 `35 km/s` 作为单夜正式 orbit confirm 默认值继续使用
+  - 后续优先查看 `fit_ok` 且 `all_non_asteroid` 的 unknown links 可视化结果，再决定是否继续放宽
+
+- task: 清理单夜 linking 历史试验结果，并用正式 `speed=5 / direction=10 / require_shared_endpoint=True` 结果重建 `rr_links` 后重跑 orbit confirm
+- files_changed: `README.md`, `WORKLOG.md`, `PLAN.md`
+- commands_run: 本地 `git status --short --branch`, `sed -n '220,320p' heliolincrr/run_single_night.sh`, `shasum -a 256 heliolincrr/run_linear_links_from_tracklets.py heliolincrr/orbit_confirm_links.py heliolincrr/rr_link_stats.py heliolincrr/compare_with_known_asteroids.py heliolincrr/orbit_fit_stats.py`; 服务器 `find /pipeline/xiaoyunao/data/heliolincrr/20260220 -maxdepth 1 -type d \\( -name "rr_links*" -o -name "linear_links*" -o -name "orbit_confirm*" \\) | sort`, `find /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis -maxdepth 1 -type f \\( -name "20260220_rr_*" -o -name "20260220_orbit_fit_stats*" \\) | sort`, `rm -rf /pipeline/xiaoyunao/data/heliolincrr/20260220/linear_links_sd5_dd5 /pipeline/xiaoyunao/data/heliolincrr/20260220/linear_links_sd10_dd5 /pipeline/xiaoyunao/data/heliolincrr/20260220/linear_links_sd5_dd10_noshare /pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links_sharedend /pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links_v100`, `rm -f /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_link_stats_linear_*.json /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison_linear_*.fits /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison_summary_linear_*.json /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_orbit_fit_stats_linear_*.json /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison_sharedend.fits /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison_summary_sharedend.json /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_link_stats_sharedend.json /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_orbit_fit_stats_sharedend.json /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison_v100.fits /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison_summary_v100.json /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_orbit_fit_stats_v100.json`, `/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python /pipeline/xiaoyunao/heliolincrr/run_linear_links_from_tracklets.py --infile /pipeline/xiaoyunao/data/heliolincrr/20260220/tracklets_linreproj/tracklets_20260220_ALL.fits --outdir /pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links --speed-thresh-arcsec-per-hour 5 --direction-thresh-deg 10 --require-shared-endpoint`, `/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python /pipeline/xiaoyunao/heliolincrr/rr_link_stats.py 20260220 --rr-subdir rr_links --out /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_link_stats.json`, `/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python /pipeline/xiaoyunao/heliolincrr/orbit_confirm_links.py --rr-dir /pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links --tracklets /pipeline/xiaoyunao/data/heliolincrr/20260220/tracklets_linreproj/tracklets_20260220_ALL.fits --cores 16 --log-every 500`, `/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python /pipeline/xiaoyunao/heliolincrr/compare_with_known_asteroids.py 20260220 --rr-subdir rr_links --out /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison.fits --summary-out /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison_summary.json`, `/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python /pipeline/xiaoyunao/heliolincrr/orbit_fit_stats.py --rr-dir /pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links --comparison-fits /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison.fits --out /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_orbit_fit_stats.json`, `rm -rf /pipeline/xiaoyunao/data/heliolincrr/20260220/linear_links_sd5_dd10`, `rm -f /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_link_stats_linear_sd5_dd10.json /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison_linear_sd5_dd10.fits /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_rr_known_asteroid_comparison_summary_linear_sd5_dd10.json /pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_orbit_fit_stats_linear_sd5_dd10.json`
+- key_findings:
+  - 服务器 `20260220` 单夜历史试验目录与分析副本已删除，只保留正式 `rr_links` 与三份正式分析文件
+  - 正式单夜 `rr_links` 已重新由 `run_linear_links_from_tracklets.py` 用默认参数 `speed=5 arcsec/h`、`direction=10 deg`、`require_shared_endpoint=True` 生成
+  - 当前正式单夜 link 统计为：`n_links=582`、`n_member_rows=1166`；其中 `581` 条为 2-tracklet link，`1` 条为 4-tracklet chain
+  - 已知检测覆盖为：`in_rr_link=1590/2304`，`rr_given_tracklet=69.01%`
+  - orbit confirm 结果为：`fit_ok=565/582`、`is_good=565/582`
+  - 失败 link 只有 `17` 条，且主失败原因全部为 `max_v`
+  - 对进入 link 的已知检测，`fit_ok_any=1590`、`is_good_any=1590`，说明当前正式单夜线性 links 的动力学 purity 很高
+- validation:
+  - 本地与服务器正式脚本 SHA 一致：`run_linear_links_from_tracklets.py`, `orbit_confirm_links.py`, `rr_link_stats.py`, `compare_with_known_asteroids.py`, `orbit_fit_stats.py`
+  - 服务器当前只保留 `/pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links`
+  - 服务器当前只保留正式分析文件：`20260220_rr_link_stats.json`, `20260220_rr_known_asteroid_comparison.fits`, `20260220_rr_known_asteroid_comparison_summary.json`, `20260220_orbit_fit_stats.json`
+- remaining_issues:
+  - 当前正式单夜链路 purity 很高，但已知检测召回仍只有 `1590/2304`
+  - 若要继续提升单夜召回，仍需要在当前线性 linking 路线上继续做小范围边规则扫描
+- next_step:
+  - 将当前 `rr_links + orbit_confirm` 结果作为单夜正式基线继续使用
+  - 后续若要提升单夜 completeness，只围绕 `speed/direction/shared-endpoint` 规则微调，不回到单夜 RR 聚类路线
+
 - task: 将单夜正式流程切换为线性 linking，并把 `run_rr_from_tracklets.py` 收口为 15 夜专用
 - files_changed: `heliolincrr/run_linear_links_from_tracklets.py`, `heliolincrr/run_single_night.sh`, `heliolincrr/run_rr_from_tracklets.py`, `README.md`, `WORKLOG.md`, `PLAN.md`
 - commands_run: 本地 `sed -n '240,380p' heliolincrr/run_single_night.sh`, `rg -n "run_rr_from_tracklets|single-night|linear_links|rr_links" -S heliolincrr README.md PLAN.md WORKLOG.md`, `python3 -m py_compile heliolincrr/run_linear_links_from_tracklets.py heliolincrr/run_rr_from_tracklets.py`, `bash -n heliolincrr/run_single_night.sh`

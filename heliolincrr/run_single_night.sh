@@ -38,30 +38,12 @@ MASK_GAIA_DIR="${ROOT_OUT}/${NIGHT}/mask_gaia"
 TRACKLET_DIR="${ROOT_OUT}/${NIGHT}/tracklets_linreproj"
 NIGHTLY_ALL="${TRACKLET_DIR}/tracklets_${NIGHT}_ALL.fits"
 
-W15_OUTDIR="${ROOT_OUT}/${NIGHT}/tracklets_windows_15"
-W15_NDAYS=15
-
 RR_NIGHT_DIR="${ROOT_OUT}/${NIGHT}/rr_links"
-RR_W15_DIR="${ROOT_OUT}/${NIGHT}/rr_links_15"
+ANALYSIS_DIR="${ROOT_OUT}/${NIGHT}/analysis"
+PLOTS_ROOT="/pipeline/xiaoyunao/heliolincrr/plots"
 
-# =============================
-# Linear-link parameters — single night
-# =============================
 LINEAR_NIGHT_SPEED=5
 LINEAR_NIGHT_DIRECTION=10
-
-# =============================
-# RR parameters — 15 nights
-# =============================
-RR_W15_CORES=20
-RR_W15_REF_MODE="mid"
-RR_W15_REF_DT=0.50
-RR_W15_TOL=0.02
-RR_W15_MIN_LEN_OBS=4
-RR_W15_MIN_NIGHTS=2
-RR_W15_KCAP=200
-RR_W15_MAXV=200
-RR_W15_MININIT=0.02
 
 night_mask_dir() {
   local night="$1"
@@ -91,6 +73,10 @@ count_l2_masked_files() {
   local night="$1"
   local mask_dir
   mask_dir="$(night_mask_dir "${night}")"
+  if [[ ! -d "${mask_dir}" ]]; then
+    echo 0
+    return 0
+  fi
   find "${mask_dir}" -maxdepth 1 -name 'OBJ_MP_*_cat.fits.gz' 2>/dev/null | wc -l | tr -d ' '
 }
 
@@ -187,33 +173,6 @@ ensure_nightly_all() {
   fi
 }
 
-prepare_previous_nights_for_w15() {
-  local end_night="$1"
-  local nights
-  mapfile -t nights < <("${PYTHON_BIN}" - <<PY
-from datetime import datetime, timedelta
-end = datetime.strptime("${end_night}", "%Y%m%d")
-start = end - timedelta(days=${W15_NDAYS} - 1)
-d = start
-while d < end:
-    print(d.strftime("%Y%m%d"))
-    d += timedelta(days=1)
-PY
-)
-
-  local n
-  for n in "${nights[@]}"; do
-    if ! is_valid_table "$(nightly_all_path "${n}")"; then
-      echo "[info] missing/invalid prior nightly ALL for W15: ${n}"
-      ensure_nightly_all "${n}"
-    fi
-  done
-}
-
-# =============================
-# Early check: reuse existing nightly ALL
-# If exists, skip Step 1–3
-# =============================
 if is_valid_table "${NIGHTLY_ALL}"; then
   echo "[info] nightly ALL already exists, skip Step1–3:"
   echo "       ${NIGHTLY_ALL}"
@@ -247,9 +206,10 @@ if [[ "${N_TRK_NIGHT}" -le 0 ]]; then
 fi
 
 # =============================
-# Step 4a: linear linking — single night (ALWAYS run if Step3 passed)
+# Step 4: linear linking — single night
 # =============================
 mkdir -p "${RR_NIGHT_DIR}"
+mkdir -p "${ANALYSIS_DIR}"
 
 "${PYTHON_BIN}" run_linear_links_from_tracklets.py \
   --infile "${NIGHTLY_ALL}" \
@@ -258,88 +218,30 @@ mkdir -p "${RR_NIGHT_DIR}"
   --direction-thresh-deg "${LINEAR_NIGHT_DIRECTION}" \
   --require-shared-endpoint
 
-if [[ "${RUN_W15}" -ne 1 ]]; then
-  echo "[info] RUN_W15=${RUN_W15}; skip W15 processing"
-  exit 0
-fi
+# =============================
+# Step 5: orbit confirm
+# =============================
+rm -rf "${RR_NIGHT_DIR}/orbit_confirm"
+"${PYTHON_BIN}" orbit_confirm_links.py \
+  --rr-dir "${RR_NIGHT_DIR}" \
+  --tracklets "${NIGHTLY_ALL}" \
+  --cores 16 \
+  --log-every 500
 
 # =============================
-# Step 4b: merge rolling window (15 nights)
-#         failure here MUST NOT block single-night RR (B)
+# Step 6: summarize
 # =============================
-if [[ "${PREP_W15_MISSING_NIGHTS}" -eq 1 ]]; then
-  prepare_previous_nights_for_w15 "${NIGHT}"
-fi
-
-mkdir -p "${W15_OUTDIR}"
-
-"${PYTHON_BIN}" merge_tracklets_window15.py "${NIGHT}" \
-  --root "${ROOT_OUT}" \
-  --ndays "${W15_NDAYS}" \
-  --nightly-subpath "tracklets_linreproj" \
-  --nightly-name-template "tracklets_{night}_ALL.fits" \
-  --outdir "${W15_OUTDIR}" \
-  --overwrite \
-  --write-index \
-  || {
-    echo "[skip] W15 RR skipped because window merge failed"
-    exit 0
-  }
+"${PYTHON_BIN}" summarize_single_night.py "${NIGHT}" \
+  --processed-root "${ROOT_RAW}" \
+  --root-out "${ROOT_OUT}" \
+  --rr-subdir "rr_links"
 
 # =============================
-# Step 5: find W15 file safely (no ls | tail)
+# Step 7: visualize unknown fit_ok links
 # =============================
-shopt -s nullglob
-W15_CANDIDATES=(${W15_OUTDIR}/tracklets_*_${NIGHT}_W${W15_NDAYS}.fits)
-shopt -u nullglob
+"${PYTHON_BIN}" plot_unknown_links.py "${NIGHT}" \
+  --processed-root "${ROOT_RAW}" \
+  --root-out "${ROOT_OUT}" \
+  --plot-root "${PLOTS_ROOT}"
 
-if [[ ${#W15_CANDIDATES[@]} -eq 0 ]]; then
-  echo "[skip] W15 RR skipped because no window file found"
-  exit 0
-fi
-
-W15_FILE="${W15_CANDIDATES[-1]}"
-echo "[info] W15_FILE=${W15_FILE}"
-
-# =============================
-# Step 6: read meta.json, check n_nights_found (B)
-# =============================
-META_JSON="${W15_FILE}.meta.json"
-if [[ ! -f "${META_JSON}" ]]; then
-  echo "[skip] W15 RR skipped because meta json missing"
-  exit 0
-fi
-
-N_FOUND="$("${PYTHON_BIN}" - <<PY
-import json
-with open("${META_JSON}","r",encoding="utf-8") as f:
-    m=json.load(f)
-print(int(m.get("n_nights_found",0)))
-PY
-)"
-
-echo "[info] W15 n_nights_found=${N_FOUND}"
-
-if [[ "${N_FOUND}" -lt 5 ]]; then
-  echo "[skip] W15 RR skipped because n_nights_found < 5"
-  exit 0
-fi
-
-# =============================
-# Step 7: RR — 15-night window
-# =============================
-mkdir -p "${RR_W15_DIR}"
-
-"${PYTHON_BIN}" run_rr_from_tracklets.py \
-  --infile "${W15_FILE}" \
-  --outdir "${RR_W15_DIR}" \
-  --profile w15 \
-  --cores "${RR_W15_CORES}" \
-  --ref-epoch-mode "${RR_W15_REF_MODE}" \
-  --ref-dt-days "${RR_W15_REF_DT}" \
-  --tol "${RR_W15_TOL}" \
-  --min-len-obs "${RR_W15_MIN_LEN_OBS}" \
-  --min-nights "${RR_W15_MIN_NIGHTS}" \
-  --k-neighbors-cap "${RR_W15_KCAP}" \
-  --max-v-kms "${RR_W15_MAXV}" \
-  --min-init-earth-au "${RR_W15_MININIT}"
+echo "[done] single-night pipeline finished for ${NIGHT}"

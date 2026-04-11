@@ -57,9 +57,18 @@ PYTHON_BIN=/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python bash
 
 - `mask_gaia -> make_tracklet -> merge_tracklets_night`
 - `run_linear_links_from_tracklets.py` 生成 `/pipeline/xiaoyunao/data/heliolincrr/<night>/rr_links`
+- `orbit_confirm_links.py` 对 `rr_links` 做后验轨道确认并写入 `rr_links/orbit_confirm/`
+- `summarize_single_night.py` 统一写出 `/pipeline/xiaoyunao/data/heliolincrr/<night>/analysis/*single_night_summary*`
+- `summarize_single_night.py` 同时写出 `/processed1/<night>/L4/<night>_unknown_links.{fits,json}`
+- `plot_unknown_links.py` 基于该 unknown catalog 输出 `heliolincrr/plots/<night>/`
 - 默认单夜参数固定为 `speed=5 arcsec/h`、`direction=10 deg`、`require_shared_endpoint=True`
+- 当前单夜 `orbit_confirm_links.py` 默认 `max_v_kms=35`
 
-当前 15 夜流程仍使用 `run_rr_from_tracklets.py --profile w15`。
+当前 15 夜流程入口为 `run_pipeline_15.sh`，内部依次调用：
+
+- `merge_tracklets_15.py`
+- `run_rr_from_tracklets_15.py`
+- `orbit_confirm_links_15.py`
 
 ## 依赖与路径
 
@@ -75,6 +84,9 @@ PYTHON_BIN=/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python bash
 - `heliolincrr` 的关键脚本已与服务器哈希核对一致
 - `known_asteroid` 已按 2026-04-07 服务器现版重建关键入口脚本
 - 2026-04-08 起，仓库已移除全部 `*_local` 目录
+- `20260220` 单夜正式目录已清理为只保留 `rr_links` 与正式分析文件
+- `20260220` 当前单夜正式结果为：`582` 条 links，`1590/2304` 个已知检测进入 link，`orbit_confirm` 得到 `569/582 fit_ok` 且 `569/582 is_good`
+- `20260220` 已写出 `34` 条 unknown fit_ok catalog 行，并生成 `34` 个 unknown-link GIF
 
 ## 版本记录
 
