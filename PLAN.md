@@ -8,6 +8,7 @@
 - 单夜默认 linking 参数固定为 `speed=5 arcsec/h`、`direction=10 deg`、`require_shared_endpoint=True`
 - 单夜默认 orbit confirm 参数固定为 `max_v_kms=35`
 - 单夜正式输出固定写入 `/pipeline/xiaoyunao/data/heliolincrr/<night>/rr_links`
+- 在此基础上维护 `20251116..20260410` 批量结果与后续聚合统计
 
 ## Milestones
 
@@ -15,6 +16,9 @@
 2. 15 夜流程已拆分为 `merge_tracklets_15.py -> run_rr_from_tracklets_15.py -> orbit_confirm_links_15.py`
 3. `20260220` 单夜历史试验目录与分析结果已清理，只保留正式 `rr_links`
 4. `20260220` 已从空目录按新单夜正式链路完整重跑到 summary、unknown catalog 和 GIF
+5. 已完成本地/服务器初始化检查，确认可从服务器直接启动批处理
+6. `20251116..20260410` 批处理已完成，后半段使用 `SKIP_PLOTS=1` 跳过 GIF
+7. `/pipeline/xiaoyunao/stats/heliolincrr/aggregate_nightly_stats.py` 已生成全区间 `20251116..20260410` 统计图与汇总表
 
 ## Outstanding issues
 
@@ -27,6 +31,10 @@
 - 当前单夜 purity 已足够高，后续如果继续优化，核心问题只剩 completeness
 - 单夜 formal path 已清理完成，后续不要再在正式目录旁边长期保留 `linear_links_*`、`rr_links_*` 试验目录
 - 15 夜 `w15` 流程仍需继续与单夜完全分开维护
+- 完整区间 `20251116..20260410` 已聚合完成；manifest 记录 `98` 个有 summary 夜次、`48` 个缺 summary 夜次
+- 绘图当前 mask 掉 `20251226`、`20260111`、`20260119`、`20260123`
+- 失败且无 summary 的夜次仍未单独诊断：`20251117`、`20251122`、`20251201`、`20260221`、`20260224`、`20260402`、`20260408`
+- 桌面 `/Users/island/Desktop/plot` 已同步最新图区间，但仍含旧区间 `20251116..20260116` 的 3 个汇总文件
 
 ## Validation criteria
 
@@ -36,10 +44,11 @@
 - `summarize_single_night.py` 能稳定写出 summary、unknown catalog、以及固定的 6 组 requested metrics
 - `plot_unknown_links.py` 能稳定按 unknown catalog 产出 GIF 和 summary
 - 正式单夜目录中不保留旧试验目录与旧分析副本
+- 批处理日志中每个有原始数据的夜次都应出现明确的 `START/OK/FAIL/SKIP` 记录
 
 ## Next recommended steps
 
-1. 先补全 `summarize_single_night.py` 的 requested metrics 字段并验证到现有夜次
-2. 保持当前单夜正式参数 `speed=5`, `direction=10`, `require_shared_endpoint=True`, `orbit max_v=35` 不变
-3. 若后续继续提升单夜召回，只围绕线性 linking 的边规则做小范围扫描
-4. 15 夜流程继续只通过 `run_pipeline_15.sh` 及其 `_15` 脚本单独维护和记录
+1. 如需补齐失败夜次，逐个检查 nightly 日志并决定是否单独重跑
+2. 后续新增夜次时，直接用 `aggregate_nightly_stats.py --start 20251116 --end <latest>` 刷新整套图
+3. 保持当前单夜正式参数 `speed=5`, `direction=10`, `require_shared_endpoint=True`, `orbit max_v=35` 不变
+4. 若需要更细的轨道拟合诊断，可继续在聚合脚本中追加 `raan_deg`、`argp_deg`、`nu_deg`、`best_v1_kms` 等参数图

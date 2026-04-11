@@ -19,6 +19,7 @@ PYTHON_BIN="${PYTHON_BIN:-${HELIOLINC_PYTHON_DEFAULT}}"
 RUN_W15="${RUN_W15:-0}"
 PREP_W15_MISSING_NIGHTS="${PREP_W15_MISSING_NIGHTS:-1}"
 FORCE_MASK_GAIA="${FORCE_MASK_GAIA:-0}"
+SKIP_PLOTS="${SKIP_PLOTS:-0}"
 
 if [[ ! -x "${PYTHON_BIN}" ]]; then
   echo "[fatal] Python executable not found: ${PYTHON_BIN}"
@@ -239,9 +240,13 @@ rm -rf "${RR_NIGHT_DIR}/orbit_confirm"
 # =============================
 # Step 7: visualize unknown fit_ok links
 # =============================
-"${PYTHON_BIN}" plot_unknown_links.py "${NIGHT}" \
-  --processed-root "${ROOT_RAW}" \
-  --root-out "${ROOT_OUT}" \
-  --plot-root "${PLOTS_ROOT}"
+if [[ "${SKIP_PLOTS}" -eq 1 ]]; then
+  echo "[info] skip Step7 plots for ${NIGHT} because SKIP_PLOTS=1"
+else
+  "${PYTHON_BIN}" plot_unknown_links.py "${NIGHT}" \
+    --processed-root "${ROOT_RAW}" \
+    --root-out "${ROOT_OUT}" \
+    --plot-root "${PLOTS_ROOT}"
+fi
 
 echo "[done] single-night pipeline finished for ${NIGHT}"

@@ -2,6 +2,133 @@
 
 ## 2026-04-11
 
+- task: 完成 `20251116..20260410` 单夜未知小行星批量运行，并将全区间统计图刷新到桌面 `plot`
+- files_changed: `heliolincrr/run_single_night.sh`, `heliolincrr/aggregate_nightly_stats.py`, `WORKLOG.md`, `PLAN.md`
+- commands_run: 服务器主批处理 `/pipeline/xiaoyunao/data/heliolincrr/batch_logs/run_single_night_20251122_20260410_skipplots_20260411_223356.log`; 服务器 `/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python /pipeline/xiaoyunao/stats/heliolincrr/aggregate_nightly_stats.py --start 20251116 --end 20260410 --outdir /pipeline/xiaoyunao/stats/heliolincrr`; 本地 `scp smtpipeline@www.xinglong-naoc.cn:'/pipeline/xiaoyunao/stats/heliolincrr/*' /Users/island/Desktop/plot/`
+- key_findings:
+  - 单夜批处理已完成到 `20260410`，最终 `20260402` 与 `20260408` 失败、`20260409` 缺原始数据，其余尾段夜次已完成
+  - `run_single_night.sh` 已支持 `SKIP_PLOTS=1`，批处理后半段在无 GIF 模式下完成了计算与 summary
+  - 已新增 `aggregate_nightly_stats.py`，可直接聚合 nightly summary 与 orbit FITS，生成 nightly 统计图和轨道参数图
+  - 统计图区间已刷新为 `20251116..20260410`
+  - 绘图已 mask 掉 `20251226`、`20260111`、`20260119`、`20260123`
+  - `24/25/26` 现为全样本轨道散点图：`a-ecc`、`a-inc`、`ecc-inc`
+  - 新图与汇总表已同步到本机桌面目录 `/Users/island/Desktop/plot`
+- validation:
+  - 批处理日志已确认末尾到 `OK 20260410`
+  - 服务器 manifest `nightly_metrics_20251116_20260410_manifest.json` 已写出，覆盖 `98` 个有 summary 夜次
+  - 本机桌面 `plot` 目录已收到最新 PNG 与 `nightly_metrics_20251116_20260410.{csv,json,manifest.json}`
+- remaining_issues:
+  - 失败夜次仍未单独诊断：`20251117`、`20251122`、`20251201`、`20260221`、`20260224`、`20260402`、`20260408`
+  - 桌面 `plot` 目录里仍保留旧区间 `20251116..20260116` 的 3 个汇总文件
+- next_step:
+  - 如需补齐失败夜次，可逐个检查对应 nightly 日志
+  - 如需清理桌面目录，可只保留 `20251116..20260410` 这一版汇总文件
+
+- task: 新增 heliolincrr 单夜聚合统计脚本，并在服务器 `/pipeline/xiaoyunao/stats/heliolincrr` 产出 `20251116..20260116` 的统计图和汇总表
+- files_changed: `heliolincrr/aggregate_nightly_stats.py`, `WORKLOG.md`, `PLAN.md`
+- commands_run: 本地 `sed -n '1,760p' heliolincrr/summarize_single_night.py`, `python3 -m py_compile heliolincrr/aggregate_nightly_stats.py`; 服务器 `ls -la /pipeline/xiaoyunao/stats`, `sed -n '1,260p' /pipeline/xiaoyunao/stats/stats.py`, `/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python /pipeline/xiaoyunao/stats/heliolincrr/aggregate_nightly_stats.py --start 20251116 --end 20260116 --outdir /pipeline/xiaoyunao/stats/heliolincrr`
+- key_findings:
+  - `summarize_single_night.py` 的 `requested_metrics` 已覆盖用户要求的 1 到 6 项 nightly 主统计，可直接作为聚合输入
+  - “已知小行星轨道拟合精度 / RMS 分布” 通过逐夜读取 `rr_links/orbit_confirm/orbit_links.fits`，并结合 `matched_asteroids.fits + linkage_members.fits + tracklets_ALL.fits` 重新识别 `all_same_asteroid & fit_ok` links 后提取
+  - 新脚本已写到服务器 `/pipeline/xiaoyunao/stats/heliolincrr/aggregate_nightly_stats.py`
+  - 已产出 `nightly_metrics_20251116_20260116.{csv,json}`、manifest、以及 `01..09` 共 9 张 PNG 图
+  - 测试区间 `20251116..20260116` 中共有 `51` 个夜次已有 summary，`11` 个夜次缺 summary；累计已知 `all_same_asteroid & fit_ok` RMS 样本数为 `37342`
+- validation:
+  - `python3 -m py_compile heliolincrr/aggregate_nightly_stats.py`
+  - 服务器实跑成功，输出 manifest 和 9 张 PNG 均已写出
+- remaining_issues:
+  - 当前图是第一版；若需要中文标题、换成堆叠柱状图或加入 rolling mean，可在现有汇总表基础上继续改
+  - 统计覆盖到 `20260116` 为止，后续夜次可等主批处理继续推进后重跑同一脚本刷新
+- next_step:
+  - 视需要补查失败夜次 `20251117`、`20251122`、`20251201` 等无 summary 的根因
+  - 待单夜批处理跑到更晚日期后，复用同一脚本更新更长区间的图表
+
+- task: 按用户要求把聚合图改为“一个参数一张图”，屏蔽异常夜次 `20251226` / `20260111`，并补充轨道参数分布图
+- files_changed: `heliolincrr/aggregate_nightly_stats.py`, `WORKLOG.md`, `PLAN.md`
+- commands_run: 本地 `python3 -m py_compile heliolincrr/aggregate_nightly_stats.py`; 服务器 `rm -f /pipeline/xiaoyunao/stats/heliolincrr/*.png`, `/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python /pipeline/xiaoyunao/stats/heliolincrr/aggregate_nightly_stats.py --start 20251116 --end 20260116 --outdir /pipeline/xiaoyunao/stats/heliolincrr`
+- key_findings:
+  - 已取消多参数叠图，改为单参数单图的 nightly 柱状图
+  - `20251226` 与 `20260111` 已通过 `masked_plot_nights` 从绘图序列中剔除，但原始汇总表仍保留这两晚数据
+  - 保留 nightly RMS boxplot，并新增 `a_au`、`ecc`、`inc_deg` 的 nightly 中位数图与总体直方图
+  - 当前 `orbit_links.fits` 里还可继续扩展的轨道参数包括：`raan_deg`、`argp_deg`、`nu_deg`、`best_v1_kms`
+- validation:
+  - 服务器已重新写出 `01..31` 全套 PNG
+- remaining_issues:
+  - 若用户后续需要轨道角元素的趋势图，可在现有脚本上继续追加
+- next_step:
+  - 根据用户反馈继续微调图形风格或补加额外轨道参数图
+
+- task: 将 `24/25/26` 从 nightly 中位数图改为全样本轨道散点图，并用临时目录验证后替换正式输出
+- files_changed: `heliolincrr/aggregate_nightly_stats.py`, `WORKLOG.md`, `PLAN.md`
+- commands_run: 本地 `python3 -m py_compile heliolincrr/aggregate_nightly_stats.py`; 服务器 `/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python /pipeline/xiaoyunao/stats/heliolincrr/aggregate_nightly_stats.py --start 20251116 --end 20260116 --outdir /pipeline/xiaoyunao/stats/heliolincrr_test_scatter`, `cp -f /pipeline/xiaoyunao/stats/heliolincrr_test_scatter/* /pipeline/xiaoyunao/stats/heliolincrr/`
+- key_findings:
+  - `24/25/26` 现已改为全样本散点图：`a vs ecc`、`a vs inc`、`ecc vs inc`
+  - 散点图采用单色，并过滤明显不合理值：`a<=0`、`a>=1000`、`ecc<0`、`ecc>=1.5`、`inc<0`、`inc>=180`
+  - 为避免正式目录中旧文件残留造成混淆，先在 `heliolincrr_test_scatter` 临时目录完成验证，再整体覆盖正式目录
+- validation:
+  - 临时目录与正式目录当前都已包含 `24_known_fit_a_vs_ecc_scatter.png`、`25_known_fit_a_vs_inc_scatter.png`、`26_known_fit_ecc_vs_inc_scatter.png`
+- remaining_issues:
+  - 若后续不再需要 `29/30/31` 三张分布图，可再删掉；当前仍保留
+- next_step:
+  - 视用户反馈决定是否进一步追加 `raan_deg`、`argp_deg`、`nu_deg`、`best_v1_kms` 的散点或分布图
+
+- task: 为单夜正式脚本增加可选跳过 GIF 的开关，并安排在 `20251121` 后切换到无可视化批处理
+- files_changed: `heliolincrr/run_single_night.sh`, `WORKLOG.md`, `PLAN.md`
+- commands_run: 本地 `bash -n heliolincrr/run_single_night.sh`; 服务器 `scp heliolincrr/run_single_night.sh smtpipeline@www.xinglong-naoc.cn:/pipeline/xiaoyunao/heliolincrr/run_single_night.sh`, `ps -p 1837356 -o pid=,stat=,etime=,cmd=`
+- key_findings:
+  - 当前主批处理已推进到 `START 20251121`
+  - GIF 生成明显拖慢单夜总时长，因此需要将计算/统计与可视化解耦
+  - 已为 `run_single_night.sh` 增加环境变量开关 `SKIP_PLOTS=1`，打开后会跳过 Step 7，仅保留 linking、orbit confirm、summary、unknown catalog
+  - 已把更新后的脚本同步到服务器正式目录
+  - 已启动 watcher，等待 `20251121` 出现 `OK` 或 `FAIL` 后，自动停止旧主批处理并从 `20251122` 开始以 `SKIP_PLOTS=1` 继续批跑
+  - watcher PID=`1837356`，日志=`/pipeline/xiaoyunao/data/heliolincrr/batch_logs/handoff_skip_plots_after_20251121_20260411_220853.log`
+- validation:
+  - `bash -n heliolincrr/run_single_night.sh`
+  - watcher 进程已在服务器运行
+- remaining_issues:
+  - 需等待 `20251121` 实际完成，确认 watcher 完成交接并拉起新的 skip-plots 批处理
+  - 后续需单独安排补画缺失 night 的 GIF
+- next_step:
+  - 观察 watcher 日志，确认新批处理 PID 和日志路径
+  - 批量计算完成后，再按需要回补 plots
+
+- task: 在主批处理继续前进的同时，单独补画 `20251118` 的 unknown-link GIF
+- files_changed: `WORKLOG.md`, `PLAN.md`
+- commands_run: 服务器 `nohup /home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python /pipeline/xiaoyunao/heliolincrr/plot_unknown_links.py 20251118 --processed-root /processed1 --root-out /pipeline/xiaoyunao/data/heliolincrr --plot-root /pipeline/xiaoyunao/heliolincrr/plots`, `ps -p 1829661 -o pid=,stat=,etime=,pcpu=,pmem=,cmd=`, `tail -n 20 /pipeline/xiaoyunao/data/heliolincrr/batch_logs/replot_unknown_links_20251118_20260411_212614.log`
+- key_findings:
+  - 主批处理仍会按顺序继续跑到 `20260410`
+  - `20251118` 的 summary 和 unknown catalog 完整存在，但 `plots/20251118` 被误删
+  - `20251118_unknown_links.json` 当前共有 `88` 条，因此补图目标是 `88` 个 GIF
+  - 已单独启动补图后台进程，PID=`1829661`，日志=`/pipeline/xiaoyunao/data/heliolincrr/batch_logs/replot_unknown_links_20251118_20260411_212614.log`
+- validation:
+  - 补图进程已启动并处于运行态
+- remaining_issues:
+  - 需等待 `20251118` 补图完成并确认 GIF 数量达到 `88`
+  - 主批处理仍需继续监控后续夜次
+- next_step:
+  - 跟踪 `20251118` 补图日志和 GIF 数量
+  - 继续监控主批处理的 `OK/FAIL/SKIP`
+
+- task: 初始化新会话并启动未知小行星单夜批处理，按日期顺序覆盖 `20251116` 到 `20260410`
+- files_changed: `WORKLOG.md`, `PLAN.md`
+- commands_run: 本地 `git status --short --branch`, `git branch --show-current`, `git fetch --all --prune`, `git log --oneline --decorate --graph -n 15 --all`, `sed -n '1,220p' WORKLOG.md`, `sed -n '1,220p' PLAN.md`, `sed -n '1,240p' heliolincrr/run_single_night.sh`, `sed -n '1,240p' README.md`, `sed -n '1,260p' heliolincrr/README.md`; 服务器 `hostname`, `ls -ld /pipeline/xiaoyunao/heliolincrr /pipeline/xiaoyunao/data/heliolincrr /processed1`, `sed -n '1,260p' /pipeline/xiaoyunao/heliolincrr/run_single_night.sh`, `/home/smtpipeline/Softwares/miniconda3/bin/python - <<'PY' ... scan nights ... PY`
+- key_findings:
+  - 仓库当前位于 `main`，工作区干净，且已与 `origin/main` 同步
+  - 正式单夜入口仍为服务器 `/pipeline/xiaoyunao/heliolincrr/run_single_night.sh`
+  - 目标区间 `20251116..20260410` 共 `146` 夜，其中 `/processed1` 现有原始数据 `112` 夜，已有完整 summary 的只有 `20251118`
+  - 当前无其他活跃单夜流程占用服务器
+- validation:
+  - 已核对服务器脚本与仓库脚本一致
+  - 已确认服务器目录 `/processed1`、`/pipeline/xiaoyunao/heliolincrr`、`/pipeline/xiaoyunao/data/heliolincrr` 可访问
+  - 已通过 `nohup` 启动服务器后台批处理，PID=`1824895`，日志=`/pipeline/xiaoyunao/data/heliolincrr/batch_logs/run_single_night_20251116_20260410_20260411_211136.log`
+  - 启动后即时检查确认首夜 `20251116` 已进入 `mask_gaia`
+- remaining_issues:
+  - 需持续观察后台批处理日志，确认后续夜次是否存在失败或异常中断
+  - 区间内有 `34` 夜缺少 `/processed1/<night>` 原始数据，批处理需自动跳过
+- next_step:
+  - 按日志继续跟踪 `START/OK/FAIL/SKIP` 进度
+  - 若出现失败夜次，再针对单夜日志做定点诊断
+
 - task: 删除 `run_visual_daily.sh`，把单夜可视化彻底收口到 `run_single_night.sh`
 - files_changed: `README.md`, `WORKLOG.md`, `heliolincrr/README.md`, `heliolincrr/run_visual_daily.sh`
 - commands_run: 本地 `sed -n '1,220p' heliolincrr/run_visual_daily.sh`, `rg -n "run_visual_daily\\.sh|plot_unknown_links\\.py|run_single_night\\.sh" -S .`
