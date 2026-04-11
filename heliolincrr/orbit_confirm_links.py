@@ -21,6 +21,7 @@ Outputs (default: <rr_dir>/orbit_confirm):
 from __future__ import annotations
 
 import argparse
+import itertools
 import math
 import os
 from concurrent.futures import ProcessPoolExecutor
@@ -396,6 +397,155 @@ def fit_best_hypo_lambert(
     return best
 
 
+def compute_orbit_residuals_arcsec(
+    orb: Orbit,
+    mjd: np.ndarray,
+    ra: np.ndarray,
+    dec: np.ndarray,
+    loc: EarthLocation,
+) -> np.ndarray:
+    t = Time(mjd, format="mjd", scale="utc")
+    r_so = heliocentric_observer_xyz_au(t, loc)
+    u_obs = eq_unitvec(ra, dec)
+    dt_vec = t - orb.epoch
+    r_obj = []
+    for dti in dt_vec:
+        oi = orb.propagate(dti)
+        r_obj.append(oi.r.to(u.AU).value)
+    r_obj = np.asarray(r_obj, dtype=float)
+    rho = r_obj - r_so
+    u_pred = rho / np.clip(norm(rho, axis=1, keepdims=True), 1e-30, None)
+    return angular_sep_arcsec(u_obs, u_pred)
+
+
+def build_tracklet_obs_masks(src_tid: np.ndarray) -> dict[str, np.ndarray]:
+    out: dict[str, np.ndarray] = {}
+    tids = np.asarray(src_tid).astype("U64")
+    for tid in np.unique(tids):
+        out[str(tid)] = tids == tid
+    return out
+
+
+def build_subset_tracklet_lists(tracklet_ids: np.ndarray) -> list[list[str]]:
+    tids = [str(x) for x in np.asarray(tracklet_ids).astype("U64")]
+    uniq = []
+    seen = set()
+    for tid in tids:
+        if tid in seen:
+            continue
+        seen.add(tid)
+        uniq.append(tid)
+
+    subsets: list[list[str]] = []
+    n = len(uniq)
+    if n >= 3:
+        subsets.extend([list(c) for c in itertools.combinations(uniq, 3)])
+    subsets.extend([list(c) for c in itertools.combinations(uniq, 2)])
+    if not subsets and uniq:
+        subsets.append(uniq[:])
+    return subsets[:24]
+
+
+def fit_single_night_robust(
+    tids: np.ndarray,
+    mjd: np.ndarray,
+    ra: np.ndarray,
+    dec: np.ndarray,
+    src_tid: np.ndarray,
+    loc: EarthLocation,
+    hypos: List[Tuple[float, float, float]],
+    min_init_earth_au: float,
+    max_v_kms: float,
+    outlier_clip_arcsec: float | None,
+    inlier_arcsec: float,
+) -> Dict:
+    best = fit_best_hypo_lambert(
+        mjd=mjd,
+        ra=ra,
+        dec=dec,
+        loc=loc,
+        hypos=hypos,
+        min_init_earth_au=min_init_earth_au,
+        max_v_kms=max_v_kms,
+        outlier_clip_arcsec=outlier_clip_arcsec,
+    )
+
+    tracklet_masks = build_tracklet_obs_masks(src_tid)
+    subset_lists = build_subset_tracklet_lists(tids)
+    candidate_fits: list[Dict] = []
+    if best.get("ok", False):
+        candidate_fits.append(best)
+
+    for subset in subset_lists:
+        subset_mask = np.zeros(len(mjd), dtype=bool)
+        for tid in subset:
+            subset_mask |= tracklet_masks.get(str(tid), np.zeros(len(mjd), dtype=bool))
+        if int(np.sum(subset_mask)) < 3:
+            continue
+        fit = fit_best_hypo_lambert(
+            mjd=mjd[subset_mask],
+            ra=ra[subset_mask],
+            dec=dec[subset_mask],
+            loc=loc,
+            hypos=hypos,
+            min_init_earth_au=min_init_earth_au,
+            max_v_kms=max_v_kms,
+            outlier_clip_arcsec=outlier_clip_arcsec,
+        )
+        if fit.get("ok", False):
+            fit["seed_tracklets"] = ";".join(subset)
+            candidate_fits.append(fit)
+
+    for seed_fit in candidate_fits:
+        try:
+            resid_all = compute_orbit_residuals_arcsec(seed_fit["orbit"], mjd, ra, dec, loc)
+        except Exception:
+            continue
+        inlier_mask = resid_all <= float(inlier_arcsec)
+        if int(np.sum(inlier_mask)) < 3:
+            continue
+        inlier_tracklets = {
+            str(tid)
+            for tid, keep in zip(np.asarray(src_tid).astype("U64"), inlier_mask)
+            if keep
+        }
+        if len(inlier_tracklets) < 2:
+            continue
+        refit = fit_best_hypo_lambert(
+            mjd=mjd[inlier_mask],
+            ra=ra[inlier_mask],
+            dec=dec[inlier_mask],
+            loc=loc,
+            hypos=hypos,
+            min_init_earth_au=min_init_earth_au,
+            max_v_kms=max_v_kms,
+            outlier_clip_arcsec=outlier_clip_arcsec,
+        )
+        if not refit.get("ok", False):
+            continue
+
+        try:
+            final_resid = compute_orbit_residuals_arcsec(refit["orbit"], mjd, ra, dec, loc)
+        except Exception:
+            continue
+        final_mask = final_resid <= float(inlier_arcsec)
+        if int(np.sum(final_mask)) < 3:
+            continue
+        refit["used_mask"] = final_mask
+        refit["resid_arcsec"] = final_resid
+        refit["n_obs"] = int(len(mjd))
+        refit["n_used"] = int(np.sum(final_mask))
+        refit["med_arcsec"] = float(np.median(final_resid[final_mask]))
+        refit["max_arcsec"] = float(np.max(final_resid[final_mask]))
+        refit["rms_arcsec"] = float(np.sqrt(np.mean(final_resid[final_mask] ** 2)))
+        refit["seed_tracklets"] = seed_fit.get("seed_tracklets", "")
+
+        if (not best.get("ok", False)) or (refit["rms_arcsec"] < best["rms_arcsec"]):
+            best = refit
+
+    return best
+
+
 def format_fail_counts(fail_counts: Dict[str, int]) -> str:
     if not fail_counts:
         return ""
@@ -638,16 +788,31 @@ def _process_one_link_small(task: Tuple[int, np.ndarray]) -> Tuple[Optional[tupl
     n_nights = count_nights_from_mjd(mjd)
     thr_rms = G_SINGLE_THR if n_nights <= 1 else G_MULTI_THR
 
-    fit = fit_best_hypo_lambert(
-        mjd=mjd,
-        ra=ra,
-        dec=dec,
-        loc=G_LOC,
-        hypos=G_HYPOS,
-        min_init_earth_au=G_MIN_INIT,
-        max_v_kms=G_MAX_V,
-        outlier_clip_arcsec=G_OUTLIER_CLIP,
-    )
+    if n_nights <= 1:
+        fit = fit_single_night_robust(
+            tids=tids,
+            mjd=mjd,
+            ra=ra,
+            dec=dec,
+            src_tid=src_tid,
+            loc=G_LOC,
+            hypos=G_HYPOS,
+            min_init_earth_au=G_MIN_INIT,
+            max_v_kms=G_MAX_V,
+            outlier_clip_arcsec=G_OUTLIER_CLIP,
+            inlier_arcsec=min(G_SINGLE_MAX, max(G_SINGLE_THR * 1.5, 3.0)),
+        )
+    else:
+        fit = fit_best_hypo_lambert(
+            mjd=mjd,
+            ra=ra,
+            dec=dec,
+            loc=G_LOC,
+            hypos=G_HYPOS,
+            min_init_earth_au=G_MIN_INIT,
+            max_v_kms=G_MAX_V,
+            outlier_clip_arcsec=G_OUTLIER_CLIP,
+        )
 
     if not fit.get("ok", False):
         summary_row = (
