@@ -64,6 +64,10 @@
 - 因此当前 `rr_links` 之所以脏，不是简单调 orbit 拟合阈值能解决，而是上游单夜聚类本身比公开成熟流程少了几层 purity 控制
 - 已测试把单夜 RR 强制收紧到“只有共享尾/首端点的 tracklet 才允许强连接”，但 `rr_links_sharedend` 与正式 `rr_links` 完全一致
 - 这说明当前污染并不是来自“非共享端点的错误邻边”，而更可能来自“共享端点链式桥接”或“共享端点本身存在多目标歧义”
+- 新开了不依赖轨道传播的单夜直线 linking 路线：共享端点 + 速度差阈值 + 方向差阈值
+- 首轮 `5 arcsec/h + 5 deg` 实验得到 `546` 条 links，其中 `539/546` 都 `is_good`，说明 purity 非常高
+- 但它只覆盖了 `1555/2304` 个已知检测，`rr_given_tracklet=67.49%`，召回明显偏低
+- 因此这条新路线值得继续，但要靠阈值扫描找 recall/purity 折中，而不是把当前 `5/5` 直接当正式基线
 - 新增 `orbit_fit_stats.py`，当前单夜最终结果统计已写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_orbit_fit_stats.json`
 - 服务器正式路径 `/pipeline/xiaoyunao/heliolincrr/run_rr_from_tracklets.py` 只允许放“已入仓库、已提交”的版本
 - 任何 RR 试验改动都不再直接修改服务器正式脚本；临时实验统一使用副本，例如 `/tmp/run_rr_from_tracklets_<tag>.py`
@@ -104,7 +108,8 @@
 1. 以当前 `/pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links` 作为唯一正式单夜 RR 基线，不再回切其它 RR 试验目录
 2. 直接回到 `rr_links` 侧，优先诊断并拆解 `partial_known_single` 与 `all_known_mixed` 两类污染 link 的成团原因
 3. 重点检查共享端点链里的桥接歧义：不是“是否共享端点”，而是“同一共享端点附近是否存在多个可串接候选”
-4. 暂不把“继续放宽 seed/final `max_v_kms`”作为主线；orbit fitting 只保留为辅助诊断与最终 purity 过滤
-5. RR 侧优先考虑补上更接近公开成熟流程的 purity 控制，例如共享端点唯一性约束、对象级拆分、以及 link 去重/净化
-6. 若后续继续处理 15 夜 RR，统一基于 `w15` profile 单独维护参数与实验记录，不再借用单夜默认值
-7. 若继续测试 RR `hypo` 网格，保持正式脚本不动，统一通过 `--hypos <tmpfile>` 或 `/tmp/run_rr_from_tracklets_<tag>.py` 做隔离实验
+4. 平行保留新的单夜直线 linking 路线，优先扫描 `speed/direction` 阈值，寻找高 purity 下更可接受的 recall
+5. 暂不把“继续放宽 seed/final `max_v_kms`”作为主线；orbit fitting 只保留为辅助诊断与最终 purity 过滤
+6. RR 侧优先考虑补上更接近公开成熟流程的 purity 控制，例如共享端点唯一性约束、对象级拆分、以及 link 去重/净化
+7. 若后续继续处理 15 夜 RR，统一基于 `w15` profile 单独维护参数与实验记录，不再借用单夜默认值
+8. 若继续测试 RR `hypo` 网格，保持正式脚本不动，统一通过 `--hypos <tmpfile>` 或 `/tmp/run_rr_from_tracklets_<tag>.py` 做隔离实验
