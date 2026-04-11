@@ -2,6 +2,28 @@
 
 ## 2026-04-11
 
+- task: 诊断 `rr_links` 污染模式，并对照 Rubin/LSST 等公开流程判断为什么我们的 link 更脏
+- files_changed: `WORKLOG.md`, `PLAN.md`
+- commands_run: 本地 `sed -n '1,280p' heliolincrr/compare_with_known_asteroids.py`; 服务器 `python -c 'from astropy.table import Table; print(Table.read(\".../20260220_rr_known_asteroid_comparison.fits\").colnames)'`, `python -c 'from astropy.table import Table; print(Table.read(\".../rr_links/orbit_confirm/orbit_links.fits\").colnames)'`, `python - <<PY ... classify known-hit links by tracklet-level object purity / failure reason / rejected_tracklets ... PY`
+- key_findings:
+  - 按 tracklet 归属对象重新分类 `known-hit` links 后，`all_known_single` 共有 `95` 条，其中 `94/95` 都能 `fit_ok` 且 `94/95` 都是 `is_good`
+  - 一旦 link 在 tracklet 层面发生混杂，成功率会急剧崩掉：`all_known_mixed` 只有 `36/276 fit_ok`、`0 is_good`；`partial_known_single` 只有 `57/1551 fit_ok`、`0 is_good`；`partial_known_mixed` 只有 `35/499 fit_ok`、`0 is_good`
+  - 因此当前单夜 orbit fitting 对“本来纯净的 link”基本没问题，主瓶颈确实来自 `rr_links` 端把不属于同一真实目标的 tracklet 聚到了一起
+  - 失败 link 的主失败原因仍几乎全是 `max_v`，说明这些混 link 从几何上就不支持正常单体轨道，而不是仅仅被较严阈值误伤
+  - 对最大失败群 `partial_known_single` 而言，中位数为 `3` 条 tracklet，其中通常只有 `1` 条 unknown 污染，但当前 orbit fitting 只剔除了极少数 unknown tracklet，说明现有轨道后处理并不能稳定清掉这类上游污染
+  - 对照 Rubin/LSST 公开流程，差异非常大：其正式 discovery linkage 要求至少 `3` 个不同夜晚的 tracklets、`14` 天窗口内完成，并在最终阶段用 `link_purify` 做非重叠高纯度筛选
+  - Rubin/DP0.3 文档还明确说明在 tracklet/linking 前会先移除 stationary sources、已知高置信已知目标匹配、以及 artifacts；而我们当前单夜 RR 仍是在更脏的候选集合上做单夜聚类
+  - Rubin/DP1 还使用更强的 tracklet 端约束，例如 `make_tracklets` 最少 `3` 个 detection、最小位移 `5 arcsec`、并在多夜 `heliolinc` 之后再做 orbit-fit residual 驱动的 `link_purify`
+  - Pan-STARRS / LSST 的公开结果也都强调多夜 linking + orbit determination 的 purity 控制：LSST MOPS 模拟得到的 NEO catalog 约 `96%` correct linkages，而这建立在至少 `3` 夜 tracklets 和后续 orbit filtering 基础上
+- validation:
+  - 服务器读取 `/pipeline/xiaoyunao/data/heliolincrr/20260220/{analysis/20260220_rr_known_asteroid_comparison.fits,rr_links/orbit_confirm/orbit_links.fits,rr_links/linkage_members.fits}` 做交叉统计成功
+- remaining_issues:
+  - 当前还没有把这些脏 link 的上游形成原因继续拆到 RR 邻接/聚类层面，例如究竟是哪类邻边把不同对象串起来
+  - 也还没有对 `partial_known_single` 这类“一个真实对象 + 少量 unknown 污染”的最大失败群做专门拆分策略
+- next_step:
+  - 直接回到 `rr_links` 侧，优先诊断 `partial_known_single` 和 `all_known_mixed` 两类 links 在邻接图/cluster 形成上的共同模式
+  - 不再把 orbit fitting 阈值放宽当作主线，后续只把 orbit fitting 作为辅助诊断和最终 purity 过滤
+
 - task: 隔离测试把单夜 `final_max_v_kms` 从 `30` 直接放宽到 `100` 是否能明显提升 orbit fitting
 - files_changed: `WORKLOG.md`, `PLAN.md`
 - commands_run: 服务器 `ssh -p 20093 -o BatchMode=yes -o StrictHostKeyChecking=no smtpipeline@www.xinglong-naoc.cn 'set -e; base=/pipeline/xiaoyunao/data/heliolincrr/20260220; testdir=$base/rr_links_v100; rm -rf \"$testdir\"; mkdir -p \"$testdir\"; ln -s ../rr_links/links_tracklets.fits \"$testdir/links_tracklets.fits\"; ln -s ../rr_links/linkage_members.fits \"$testdir/linkage_members.fits\"; /home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python /pipeline/xiaoyunao/heliolincrr/orbit_confirm_links.py --rr-dir \"$testdir\" --tracklets $base/tracklets_linreproj/tracklets_20260220_ALL.fits --cores 16 --log-every 500 --max-v-kms 100 --seed-max-v-kms 120; /home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python /pipeline/xiaoyunao/heliolincrr/compare_with_known_asteroids.py 20260220 --rr-subdir rr_links_v100 --out $base/analysis/20260220_rr_known_asteroid_comparison_v100.fits --summary-out $base/analysis/20260220_rr_known_asteroid_comparison_summary_v100.json; /home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python /pipeline/xiaoyunao/heliolincrr/orbit_fit_stats.py --rr-dir \"$testdir\" --comparison-fits $base/analysis/20260220_rr_known_asteroid_comparison_v100.fits --out $base/analysis/20260220_orbit_fit_stats_v100.json'`, `ssh -p 20093 -o BatchMode=yes -o StrictHostKeyChecking=no smtpipeline@www.xinglong-naoc.cn '/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python -c \"import json; base=\\\"/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis\\\"; a=json.load(open(base+\\\"/20260220_orbit_fit_stats.json\\\")); b=json.load(open(base+\\\"/20260220_orbit_fit_stats_v100.json\\\")); print(a[\\\"orbit_link_counts\\\"], b[\\\"orbit_link_counts\\\"])\"'`

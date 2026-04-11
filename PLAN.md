@@ -56,6 +56,12 @@
 - `final_max_v_kms=100` 的隔离实验只带来极弱增益：`fit_ok_any 438 -> 440`、`is_good_any` 仍为 `272`
 - 同时更宽的最终速度上限已经引入更高速度尾部，`fit_ok` 样本 `best_v1_kms p99` 升到 `73.34 km/s`
 - 因此暂不建议把正式 `final_max_v_kms` 直接切到 `100`
+- tracklet-level 诊断已进一步确认主瓶颈在 `rr_links` purity，而不在 orbit fitting 本身：
+  - `all_known_single` 为 `95` 条，`94/95` 都 `is_good`
+  - `all_known_mixed`、`partial_known_single`、`partial_known_mixed` 三类几乎都无法产出 `is_good`
+- 对最大失败群 `partial_known_single` 而言，中位数仅混入 `1` 条 unknown tracklet，但当前 orbit fitting 并不能稳定把它踢掉
+- Rubin/LSST 公开流程的正式 discovery linking 与我们当前单夜 RR 有根本差异：至少 `3` 夜 tracklets、先去 stationary/known/artifacts、再做 `link_purify` 非重叠净化
+- 因此当前 `rr_links` 之所以脏，不是简单调 orbit 拟合阈值能解决，而是上游单夜聚类本身比公开成熟流程少了几层 purity 控制
 - 新增 `orbit_fit_stats.py`，当前单夜最终结果统计已写出 `/pipeline/xiaoyunao/data/heliolincrr/20260220/analysis/20260220_orbit_fit_stats.json`
 - 服务器正式路径 `/pipeline/xiaoyunao/heliolincrr/run_rr_from_tracklets.py` 只允许放“已入仓库、已提交”的版本
 - 任何 RR 试验改动都不再直接修改服务器正式脚本；临时实验统一使用副本，例如 `/tmp/run_rr_from_tracklets_<tag>.py`
@@ -94,8 +100,8 @@
 ## Next recommended steps
 
 1. 以当前 `/pipeline/xiaoyunao/data/heliolincrr/20260220/rr_links` 作为唯一正式单夜 RR 基线，不再回切其它 RR 试验目录
-2. 基于 `seed_tracklets / inlier_tracklets / rejected_tracklets` 诊断，先分析 known-hit links 中哪些污染模式仍未被剔掉
-3. 暂不把“继续放宽 seed/final `max_v_kms`”作为主线；若改 orbit fitting，优先调整 tracklet 级评分/筛选规则，而不是再放物理上限
-4. 若 robust orbit fitting 继续提升有限，再回到 RR 端评估更细的对象级拆分或软评分裁剪
+2. 直接回到 `rr_links` 侧，优先诊断并拆解 `partial_known_single` 与 `all_known_mixed` 两类污染 link 的成团原因
+3. 暂不把“继续放宽 seed/final `max_v_kms`”作为主线；orbit fitting 只保留为辅助诊断与最终 purity 过滤
+4. RR 侧优先考虑补上更接近公开成熟流程的 purity 控制，例如更严格的邻接约束、对象级拆分、以及 link 去重/净化
 5. 若后续继续处理 15 夜 RR，统一基于 `w15` profile 单独维护参数与实验记录，不再借用单夜默认值
 6. 若继续测试 RR `hypo` 网格，保持正式脚本不动，统一通过 `--hypos <tmpfile>` 或 `/tmp/run_rr_from_tracklets_<tag>.py` 做隔离实验
