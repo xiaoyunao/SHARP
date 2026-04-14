@@ -1,5 +1,54 @@
 # WORKLOG
 
+## 2026-04-14
+
+- task: 按用户 `sitian_stats.ipynb` 原代码复现 `known_asteroid` 两张图，并新增 Gaia mask + 静止源剔除流程图
+- files_changed: `known_asteroid/make_ppt_known_object_plots.py`, `heliolincrr/plot_masking_static_flow.py`, `resources/sitian_stats_cell_0.py`, `resources/sitian_stats_cell_1.py`, `WORKLOG.md`, `PLAN.md`
+- commands_run: 本地 `python3 - <<'PY' ... read /Volumes/Foundation/Asteroid/sitian_stats.ipynb ... PY`, `python3 /Users/yunaoxiao/Desktop/smt_asteroid/resources/sitian_stats_cell_0.py`, `python3 /Users/yunaoxiao/Desktop/smt_asteroid/resources/sitian_stats_cell_1.py`; 服务器 `/home/smtpipeline/Softwares/miniconda3/bin/python - <<'PY' ... build /pipeline/xiaoyunao/ppt_assets_20260414/data/sitian_all_matched_enriched.fits ... PY`, `scp ...:/pipeline/xiaoyunao/ppt_assets_20260414/data/sitian_all_matched_enriched.fits /Users/yunaoxiao/Desktop/sitian.fits`, `PYTHONPATH=/pipeline/xiaoyunao /home/smtpipeline/Softwares/miniconda3/bin/python /pipeline/xiaoyunao/ppt_assets_20260414/scripts/plot_masking_static_flow.py 20260220 --outdir /pipeline/xiaoyunao/ppt_assets_20260414/outputs/gaia_static_flow`
+- key_findings:
+  - 用户要求 `known_asteroid` 两张图必须严格按 `/Volumes/Foundation/Asteroid/sitian_stats.ipynb` 复现；因此改为直接生成 notebook 所需的 `/Users/yunaoxiao/Desktop/sitian.fits`，再按 notebook 前两段原代码在本机出图
+  - 已生成桌面文件 `/Users/yunaoxiao/Desktop/sitian.fits`，共 `476139` 行，包含 `orbit_elements_a/e/i` 和 `object_orbit_class_name`
+  - 服务器拼表结果中 `476138/476139` 行已补齐轨道参数和类型，仅剩 `1` 行未匹配
+  - 已按 notebook 原代码写出 `/Users/yunaoxiao/Desktop/asteroid_orbits.png` 与 `/Users/yunaoxiao/Desktop/sitian_ra_dec_healpix_nside64_counts_linear_clim0_200.png`
+  - 新增 `heliolincrr/plot_masking_static_flow.py`，将三张原始 catalog、三张 Gaia mask 后 catalog，以及三张曝光叠加后的静止源扣除结果排成流程图
+  - 当前流程图自动选中 `20260220` 的 `group 073`：`OBJ_MP_0428_0219/0245/0271_cat.fits.gz`；Gaia mask 后总数 `9079`，静止源剔除后 `4542`，本步移除 `4537`
+- validation:
+  - 本机成功写出 `/Users/yunaoxiao/Desktop/asteroid_orbits.png`
+  - 本机成功写出 `/Users/yunaoxiao/Desktop/sitian_ra_dec_healpix_nside64_counts_linear_clim0_200.png`
+  - 服务器成功写出 `/pipeline/xiaoyunao/ppt_assets_20260414/outputs/gaia_static_flow/20260220_gaia_static_flow.png`
+  - 服务器成功写出 `/pipeline/xiaoyunao/ppt_assets_20260414/outputs/gaia_static_flow/20260220_gaia_static_flow.json`
+- remaining_issues:
+  - 服务器没有 `Times New Roman` 字体，流程图在服务器端只能回退到替代字体；若要绝对一致字形，需要在本机再重画一版
+  - `survey_year_full` 仍在后台运行，尚未完成 `365` 晚 GIF
+- next_step:
+  - 持续跟进 `survey_year_full.log`
+  - 若用户仍不满意流程图版式，再把 `gaia_static_flow` 搬到本机按相同数据重画
+
+- task: 为项目汇报准备 PPT 画图工作区，并产出 `survey` / `known_asteroid` / `heliolincrr` 的第一批可用图
+- files_changed: `survey/make_yearly_coverage_animation.py`, `known_asteroid/make_ppt_known_object_plots.py`, `heliolincrr/plot_gaia_masking_story.py`, `WORKLOG.md`, `PLAN.md`
+- commands_run: 本地 `git status --short --branch`, `git branch --show-current`, `git log --oneline --decorate -n 10`, `python3 -m py_compile survey/make_yearly_coverage_animation.py known_asteroid/make_ppt_known_object_plots.py heliolincrr/plot_gaia_masking_story.py`; 服务器 `mkdir -p /pipeline/xiaoyunao/ppt_assets_20260414/{scripts,data,outputs,logs,tmp}`, `scp ... /pipeline/xiaoyunao/ppt_assets_20260414/scripts/`, `/home/smtpipeline/Softwares/miniconda3/bin/python /pipeline/xiaoyunao/ppt_assets_20260414/scripts/make_ppt_known_object_plots.py --outdir /pipeline/xiaoyunao/ppt_assets_20260414/outputs/known_object_test --max-sbdb 20`, `/home/smtpipeline/Softwares/miniconda3/bin/python /pipeline/xiaoyunao/ppt_assets_20260414/scripts/plot_gaia_masking_story.py 20260220 --filename OBJ_MP_0024_0045_cat.fits.gz --outdir /pipeline/xiaoyunao/ppt_assets_20260414/outputs/gaia_masking_test_fast`, `/home/smtpipeline/Softwares/miniconda3/bin/python /pipeline/xiaoyunao/ppt_assets_20260414/scripts/make_yearly_coverage_animation.py --start-date 2025-01-01 --n-nights 12 --outdir /pipeline/xiaoyunao/ppt_assets_20260414/outputs/survey_test --history-out /pipeline/xiaoyunao/ppt_assets_20260414/data/survey_test_history.fits`, `nohup /home/smtpipeline/Softwares/miniconda3/bin/python /pipeline/xiaoyunao/ppt_assets_20260414/scripts/make_yearly_coverage_animation.py --start-date 2025-01-01 --n-nights 365 --outdir /pipeline/xiaoyunao/ppt_assets_20260414/outputs/survey_year_full --history-out /pipeline/xiaoyunao/ppt_assets_20260414/data/survey_year_full_history.fits > /pipeline/xiaoyunao/ppt_assets_20260414/logs/survey_year_full.log 2>&1 &`
+- key_findings:
+  - 已在服务器创建独立汇报素材目录 `/pipeline/xiaoyunao/ppt_assets_20260414`，后续脚本、中间数据和成图都统一放这里，不污染正式 runtime
+  - `known_asteroid` 最新总历史表位于 `/pipeline/xiaoyunao/known_asteroid/runtime/history/all_matched_asteroids.fits`，共有 `476139` 行检测、`52890` 个唯一对象
+  - 轨道元素补齐不需要大规模在线查 SBDB：服务器 `aleph` 可直接从 `astorb.dat` 读出 `a/e/i`；本轮 `52889/52890` 个对象已补齐，其中 `51040` 来自编号对象本地匹配，`1849` 来自未编号名称匹配，只剩 `1` 个缺失
+  - 已产出 `known_object_orbits.png` 和 `known_object_nside64_counts.png`，测试结果在 `/pipeline/xiaoyunao/ppt_assets_20260414/outputs/known_object_test/`
+  - `Gaia masking` 第一版故事板已选用 `20260220` 的 `OBJ_MP_0024_0045_cat.fits.gz`，从 `16495` 个检测降到 `587` 个，删除 `15908` 个点，删除比例 `96.44%`
+  - `survey` 365 晚动画脚本已独立实现；12 晚测试版 GIF 已成功写出；正式 365 晚版已在服务器后台启动，真实 Python PID 为 `2205124`
+- validation:
+  - 本地 `python3 -m py_compile survey/make_yearly_coverage_animation.py known_asteroid/make_ppt_known_object_plots.py heliolincrr/plot_gaia_masking_story.py`
+  - 服务器成功写出 `/pipeline/xiaoyunao/ppt_assets_20260414/outputs/known_object_test/{known_object_orbits.png,known_object_nside64_counts.png,known_object_orbits_enriched.fits,known_object_plot_summary.json}`
+  - 服务器成功写出 `/pipeline/xiaoyunao/ppt_assets_20260414/outputs/gaia_masking_test_fast/{20260220_gaia_masking_story.png,20260220_gaia_masking_story.gif,20260220_gaia_masking_story.json}`
+  - 服务器成功写出 `/pipeline/xiaoyunao/ppt_assets_20260414/outputs/survey_test/survey_yearly_coverage.gif`
+  - `pgrep -af "make_yearly_coverage_animation.py --start-date 2025-01-01 --n-nights 365"` 已确认后台正式任务在运行，日志已出现 `001/365`、`002/365`
+- remaining_issues:
+  - `survey_year_full` 365 晚正式动画仍在后台生成中，尚未完成
+  - `known_object_orbits.png` 的图例布局已做一轮调整，但最终是否还要再压缩或拆图，需要结合 PPT 实际版式再看
+  - `Gaia masking` 当前只出了单帧故事板和简单 GIF；若汇报时需要更强“翻页感”，可再做 zoom-in 或 before/after 双色闪烁版
+- next_step:
+  - 等 `survey_year_full.log` 跑完后检查 `survey_year_full/survey_yearly_coverage.gif` 的节奏和尾部效果
+  - 视 PPT 版式决定是否继续微调 `known_object_orbits.png`
+  - 如需更强视觉效果，再补一版 `Gaia masking` zoom-in 或局部放大图
+
 ## 2026-04-11
 
 - task: 完成 `20251116..20260410` 单夜未知小行星批量运行，并将全区间统计图刷新到桌面 `plot`
