@@ -19,17 +19,22 @@
   - 初始全量脚本从 `20251115` 启动；`20251115` 生成 `882` 个 unknown 后进入 GIF 阶段，用户判断该晚结果有问题
   - 已终止 `20251115` 当前运行，清理 `20251115` 的 `mask_gaia`, `tracklets_linreproj`, `rr_links`, `analysis`, plots, review package, unknown JSON/FITS/ADES 和刚写入的 `trkSub` history
   - 已重启全量脚本，改从 `20251116` 跑到 `20260514`
+  - `20251116` 完成：`unknown=11`, `ades_rows=33`, `review_full_rows=33`
+  - `20251118` 完成：`unknown=73`, `ades_rows=219`, `review_full_rows=219`
+  - `20251119` orbit confirm 得到 `fit_ok=1481/1493`，用户判断该晚也不可信；已终止并清理该晚 unknown/过程产物
+  - `run_single_night.sh` 新增 `MAX_ORBIT_FIT_OK_LINKS`，默认 `200`；超过阈值返回 skip code `20`，并删除该晚 summary/unknown/ADES 输出
+  - 已启动新续跑脚本从 `20251120` 继续，保留已有 `trkSub` history，不重置 `20251116` 和 `20251118` 编号
   - 全量脚本会清理旧 unknown/heliolincrr 产物和 scoped `/tmp` 测试目录，保留 `/processed1/<night>/L1/L2` 和 known matched
   - 全量步骤顺序为：mask Gaia -> tracklet/merge -> link -> orbit confirm -> summarize/扣 known -> assign `trkSub` -> GIF -> review package -> ADES PSV；不 validate、不 submit
 - validation:
   - 服务器 `20260220` review package 测试成功：`n_catalog_rows=34`, `n_gifs_copied=34`, `review_ades_rows=102`, `review_full_rows=102`
   - `20260220_unknown_review_full.fits` 可读，包含 `RA_Win`, `DEC_Win`, `RA_PSF`, `DEC_PSF`, `source_tracklet_ids`
 - remaining_issues:
-  - 新全量后台任务仍在运行，PID `1642747`
-  - 日志：`/pipeline/xiaoyunao/data/heliolincrr/batch_logs/unknown_full_remask_20260514_163411.log`
-  - 状态表：`/pipeline/xiaoyunao/data/heliolincrr/batch_logs/unknown_full_remask_20260514_163411_status.tsv`
+  - 新全量后台任务仍在运行，PID `1649170`
+  - 当前续跑从 `20251120` 开始
+  - 最新日志/状态表需用 `ls -t /pipeline/xiaoyunao/data/heliolincrr/batch_logs/unknown_full_remask_*.log`
 - next_step:
-  - 监控 `20251116` 是否完整通过；全量完成后审计每晚 `unknown_count`, `review_full_rows`, `ADES PSV` 行数和失败/跳过原因
+  - 监控 `20251120` 是否完整通过；全量完成后审计每晚 `unknown_count`, `review_full_rows`, `ADES PSV` 行数和失败/跳过原因
 
 - task: 追查 `20260414` 缺 known matched FITS 的原因
 - files_changed: `WORKLOG.md`, `PLAN.md`

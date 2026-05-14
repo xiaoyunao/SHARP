@@ -28,6 +28,8 @@ REQUIRE_UNKNOWN_REVIEW="${REQUIRE_UNKNOWN_REVIEW:-0}"
 VALIDATE_UNKNOWN_MPC="${VALIDATE_UNKNOWN_MPC:-0}"
 SUBMIT_UNKNOWN_MPC="${SUBMIT_UNKNOWN_MPC:-0}"
 MAX_TRACKLETS_PER_GROUP="${MAX_TRACKLETS_PER_GROUP:-100000}"
+MAX_ORBIT_FIT_OK_LINKS="${MAX_ORBIT_FIT_OK_LINKS:-200}"
+ORBIT_FIT_OK_SKIP_CODE=20
 
 if [[ ! -x "${PYTHON_BIN}" ]]; then
   echo "[fatal] Python executable not found: ${PYTHON_BIN}"
@@ -241,6 +243,26 @@ rm -rf "${RR_NIGHT_DIR}/orbit_confirm"
   --tracklets "${NIGHTLY_ALL}" \
   --cores 16 \
   --log-every 500
+
+ORBIT_FIT_OK_COUNT="$("${PYTHON_BIN}" - <<PY
+from astropy.table import Table
+t = Table.read("${RR_NIGHT_DIR}/orbit_confirm/orbit_links.fits")
+print(int(sum(bool(x) for x in t["fit_ok"])))
+PY
+)"
+echo "[info] orbit fit_ok links=${ORBIT_FIT_OK_COUNT} threshold=${MAX_ORBIT_FIT_OK_LINKS}"
+if [[ "${MAX_ORBIT_FIT_OK_LINKS}" -gt 0 && "${ORBIT_FIT_OK_COUNT}" -gt "${MAX_ORBIT_FIT_OK_LINKS}" ]]; then
+  echo "[skip] orbit fit_ok links ${ORBIT_FIT_OK_COUNT} exceeds MAX_ORBIT_FIT_OK_LINKS=${MAX_ORBIT_FIT_OK_LINKS}; skip ${NIGHT}"
+  rm -f "${SUMMARY_JSON}" \
+        "${ANALYSIS_DIR}/${NIGHT}_single_night_summary.txt" \
+        "${UNKNOWN_JSON}" \
+        "${UNKNOWN_FITS}" \
+        "${ROOT_RAW}/${NIGHT}/L4/${NIGHT}_unknown_links_ades.psv" \
+        "${ROOT_RAW}/${NIGHT}/L4/${NIGHT}_unknown_mpc_reply.txt" \
+        "${ROOT_RAW}/${NIGHT}/L4/${NIGHT}_unknown_mpc_validate_reply.txt" \
+        "${ROOT_RAW}/${NIGHT}/L4/${NIGHT}_unknown_validate_reply.txt"
+  exit "${ORBIT_FIT_OK_SKIP_CODE}"
+fi
 
 # =============================
 # Step 6: summarize

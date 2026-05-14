@@ -2,13 +2,14 @@
 
 ## Current objective
 
-回到 `heliolincrr` 主线，先把单夜 unknown 搜索/提取自动化做稳。当前正在用新 Gaia mask 规则全量重跑 `20251116..20260514`，服务器后台 PID `1642747`。
+回到 `heliolincrr` 主线，先把单夜 unknown 搜索/提取自动化做稳。当前正在用新 Gaia mask 规则全量重跑 `20251120..20260514`，服务器后台 PID `1649170`。
 
 本轮全量任务：
 
-- 日志：`/pipeline/xiaoyunao/data/heliolincrr/batch_logs/unknown_full_remask_20260514_163411.log`
-- 状态表：`/pipeline/xiaoyunao/data/heliolincrr/batch_logs/unknown_full_remask_20260514_163411_status.tsv`
+- 最新日志/状态表用 `ls -t /pipeline/xiaoyunao/data/heliolincrr/batch_logs/unknown_full_remask_*.log` 查找
 - `20251115` 的本轮中间产物已按用户要求清理，本轮不继续处理该晚
+- `20251119` orbit fit_ok=`1481/1493`，已按用户要求清理并跳过
+- `run_single_night.sh` 已新增 `MAX_ORBIT_FIT_OK_LINKS=200` 默认阈值；超过阈值返回 skip code `20` 并清理 unknown/ADES 输出
 - 已清理旧 unknown/heliolincrr 产物和 scoped `/tmp` 测试目录
 - 保留 `/processed1/<night>/L1/L2` 和 known matched
 - 顺序：link 完成 -> 轨道确认 -> summarize/扣 known 并生成 unknown catalog -> 分配 `trkSub` -> 生成 GIF/review package -> 跳过观测助手外部检查 -> 生成 ADES PSV
@@ -51,10 +52,11 @@
 14. `mask_gaia.py` 已改为同时使用 `RA_Win/DEC_Win` 和 `RA_PSF/DEC_PSF` 匹配 Gaia，`run_single_night.sh` 使用 `--match-arcsec 1.5`
 15. `package_unknown_review.py` 已新增 `*_unknown_review_full.fits`，逐 detection 记录 `RA_Win/DEC_Win`, `RA_PSF/DEC_PSF`, `trk_sub`, `linkage_id`, detection 所属 tracklet、整条 link 的 tracklet 列表和轨道摘要
 16. `merge_tracklets_night.py --allow-empty` 和 `run_single_night.sh` 已支持 no-group/no-tracklet 夜生成 empty unknown 结果
+17. `run_single_night.sh` 已支持 `MAX_ORBIT_FIT_OK_LINKS`，默认 `200`，用于跳过 orbit fit_ok 过多的异常夜
 
 ## Outstanding issues
 
-- 服务器全量重跑任务 `1642747` 正在运行；完成后需要审计状态表和每晚产物
+- 服务器全量重跑任务 `1649170` 正在运行；完成后需要审计状态表和每晚产物
 - `20251116..20260410` 仍有 `48` 个日历夜没有 summary，需要区分缺原始数据、失败和未跑
 - `20260414` 目录名与 observing-night 归属不一致；用户判断 `0414` 实际应无这些观测，本轮按缺 known matched 跳过
 - 本轮全量重跑已清空旧 unknown `trkSub` history；历史编号会随新 catalog 重新分配，且本轮不 submit
@@ -80,7 +82,7 @@
 
 ## Next recommended steps
 
-1. 监控 `unknown_full_remask_20260514_163411.log` 和 status TSV，确认 `20251116` 和后续夜次通过
+1. 监控最新 `unknown_full_remask_*.log` 和 status TSV，确认 `20251120` 和后续夜次通过
 2. 全量完成后审计 done/fail/skip 数量、unknown count、review full FITS 行数和 ADES 行数
 3. 抽查若干 review package tar，确认 GIF、review CSV、`*_unknown_review_full.fits`、`*_unknown_review_ades.fits` 均包含在包内
 4. 对失败夜按 status note 分类修复或记录跳过原因
