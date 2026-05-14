@@ -2,6 +2,19 @@
 
 ## 2026-05-14
 
+- task: 新增运行产物路径索引文档，固定记录 L4、known/unknown plots 和 survey scheduler 输出位置
+- files_changed: `OUTPUTS.md`, `README.md`, `WORKLOG.md`
+- commands_run: 本地新增文档并执行 `git diff --check`
+- key_findings:
+  - 单夜 L4、unknown `trkSub` history、heliolincrr analysis、unknown GIF、known plots、survey plans/history/plots 应分开记录，避免误以为所有产物都在 L4 下
+  - `known_asteroid/plots/<night>/survey_coverage_<night>.png` 是 known 可视化脚本生成的 coverage 汇总，`survey/plots/<night>/` 是 scheduler 自己的 nightly cycle 图
+- validation:
+  - 文档路径来自服务器实查与当前脚本默认参数
+- remaining_issues:
+  - 后续若 daily unknown wrapper 引入新日志目录，需要同步更新 `OUTPUTS.md`
+- next_step:
+  - 继续实现 daily unknown wrapper 和人工复核 GIF 打包
+
 - task: 实现全局 `trkSub` 历史分配，并用 `20260220` unknown catalog 完成 MPC 格式验证和正式提交
 - files_changed: `heliolincrr/assign_unknown_trksub.py`, `heliolincrr/export_unknown_ades.py`, `heliolincrr/run_single_night.sh`, `heliolincrr/README.md`, `README.md`, `WORKLOG.md`, `PLAN.md`
 - commands_run: 本地 `python3 -m py_compile heliolincrr/assign_unknown_trksub.py heliolincrr/export_unknown_ades.py heliolincrr/summarize_single_night.py`, `bash -n heliolincrr/run_single_night.sh`, `git diff --check`; 服务器 `scp ... /pipeline/xiaoyunao/heliolincrr/`, `assign_unknown_trksub.py 20260220 --history /pipeline/xiaoyunao/data/heliolincrr/trksub_history.jsonl`, `export_unknown_ades.py 20260220 --validate`, `export_unknown_ades.py 20260220 --submit`

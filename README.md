@@ -23,6 +23,8 @@
 - `resources/known_asteroid/`
   - 放补充参考文件，例如 `submit.xsd`
 
+运行产物路径汇总见 `OUTPUTS.md`。
+
 ## 服务器运行
 
 ### survey
