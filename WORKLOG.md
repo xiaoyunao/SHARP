@@ -2,6 +2,22 @@
 
 ## 2026-05-14
 
+- task: 诊断 backfill 中 `20251201`, `20260128`, `20260224` 三个 `rc=1` 夜次
+- files_changed: `WORKLOG.md`
+- commands_run: 服务器按夜次截取 `/pipeline/xiaoyunao/data/heliolincrr/batch_logs/unknown_backfill_continue_20260514_115014.log`; 检查各夜 `mask_gaia.log`, `make_tracklet.log`, `tracklets_*_ALL.fits`, `rr_links/progress.log`; 本地查看 `make_tracklet_linreproj.py`, `run_single_night.sh`, `run_linear_links_from_tracklets.py`
+- key_findings:
+  - `20251201`: Gaia mask 成功，`39/39` 个 L2 catalog 有输出，但 `make_tracklet` 记录 `n_groups=0`；所有曝光按 `0.5 deg` 中心距分组后没有任何 `len(group) >= 2` 的重复视场，因此没有生成 `tracklets_20251201_g*.fits`，`merge_tracklets_night.py` 报 `No tracklet files matched pattern`
+  - `20260128`: 已有 `tracklets_20260128_ALL.fits`，共 `113` 条 2 点 tracklet；linear linking 阶段在 `--require-shared-endpoint`, speed `5 arcsec/hour`, direction `10 deg` 条件下得到 `n_edges=0`, `n_links=0`，随后 `run_linear_links_from_tracklets.py` 空表写出逻辑触发 Astropy `ValueError`
+  - `20260224`: 已有 `tracklets_20260224_ALL.fits`，共 `342` 条 2 点 tracklet；linear linking 同样得到 `n_edges=0`, `n_links=0`，触发同一个空表写出 bug
+  - `20260128` 和 `20260224` 的直接失败是脚本没有优雅处理 0-link 夜次；物理/数据原因是当前参数下没有可连接成 3 点以上链的 shared-endpoint tracklet 对
+- validation:
+  - 三个夜次当前均未生成 `/processed1/<night>/L4/<night>_unknown_links.{json,fits}` 和 nightly summary
+- remaining_issues:
+  - 是否把 0-link 夜次视为“成功但 unknown=0”需要决定；若是，应修复 `run_linear_links_from_tracklets.py` 和后续 summary/orbit confirm 对空 link 表的处理
+  - `20251201` 是否需要放宽/重做曝光分组不能直接判断；按当前算法它没有重复视场，可能应记录为 skip 而非失败
+- next_step:
+  - 先让当前新夜次 backfill 继续跑；之后可单独修复 0-link 空表处理并重跑 `20260128`, `20260224`
+
 - task: 恢复 unknown backfill 后台任务上下文，并从失败的第 3 步后继续补跑
 - files_changed: `WORKLOG.md`, `PLAN.md`
 - commands_run: 本地 `git status --short --branch`, `git fetch --all --prune`, `git log --oneline --decorate --graph -n 15 --all`, `sed -n '1,220p' WORKLOG.md`, `sed -n '1,220p' PLAN.md`; 服务器检查 `/pipeline/xiaoyunao/data/heliolincrr/batch_logs/unknown_backfill_20260514_114429.log`、`trksub_history.jsonl`、`review_packages`; 服务器启动 `/tmp/run_unknown_backfill_continue_20260514.sh`
