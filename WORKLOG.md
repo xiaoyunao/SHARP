@@ -2,6 +2,23 @@
 
 ## 2026-05-14
 
+- task: 确认 unknown GIF 覆盖情况，并新增观测助手复核包生成脚本
+- files_changed: `heliolincrr/package_unknown_review.py`, `heliolincrr/README.md`, `OUTPUTS.md`, `PLAN.md`, `WORKLOG.md`
+- commands_run: 服务器 `find /pipeline/xiaoyunao/heliolincrr/plots -mindepth 1 -maxdepth 1 -type d ...`, 本地 `python3 -m py_compile heliolincrr/package_unknown_review.py`; 服务器 `/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python /pipeline/xiaoyunao/heliolincrr/package_unknown_review.py 20260220 --make-tar`
+- key_findings:
+  - unknown GIF 不止 `20260220`：服务器 `heliolincrr/plots` 下已有多晚 GIF，总计 `5053` 个
+  - `20260220` 有 `34` 个 unknown GIF 和 summary
+  - 新增 `package_unknown_review.py`，可把某晚 GIF 按 `<trkSub>_linkXXXX_<night>.gif` 复制到 review package，并生成两列 `tracklet_id,is_real` CSV 模板
+- validation:
+  - 服务器 `20260220` 真实产物打包成功：`34/34` 个 GIF 复制，`n_gifs_missing=0`
+  - 已生成 `/pipeline/xiaoyunao/heliolincrr/review_packages/20260220/20260220_unknown_review.csv`
+  - 已生成 `/pipeline/xiaoyunao/heliolincrr/review_packages/20260220_unknown_review.tar.gz`，大小约 `23M`
+- remaining_issues:
+  - daily wrapper 还未自动调用 review package
+  - 观测助手回填后的 review CSV 仍需人工放回服务器指定路径
+- next_step:
+  - 在服务器用 `20260220` 打包一次，确认 tar 包和 CSV 模板结构
+
 - task: 新增运行产物路径索引文档，固定记录 L4、known/unknown plots 和 survey scheduler 输出位置
 - files_changed: `OUTPUTS.md`, `README.md`, `WORKLOG.md`
 - commands_run: 本地新增文档并执行 `git diff --check`

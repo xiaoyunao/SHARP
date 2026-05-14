@@ -72,6 +72,28 @@ XA000002,0
 其中 `tracklet_id` 对应写入 unknown catalog 的 `trk_sub`，`is_real=1`
 才允许上报，`0` 会被过滤。
 
+给观测助手打包某晚 unknown GIF，并生成复核 CSV 模板：
+
+```bash
+/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python package_unknown_review.py 20260220 --make-tar
+```
+
+默认输出：
+
+```text
+/pipeline/xiaoyunao/heliolincrr/review_packages/<night>/
+  gifs/
+    <trkSub>_linkXXXX_<night>.gif
+  <night>_unknown_review.csv
+  <night>_unknown_review_manifest.json
+/pipeline/xiaoyunao/heliolincrr/review_packages/<night>_unknown_review.tar.gz
+```
+
+观测助手只需要填写 `<night>_unknown_review.csv` 的 `is_real` 列：
+
+- `1`: 真源，允许进入 unknown ADES
+- `0`: 假源，导出和上报时过滤
+
 单独导出 unknown ADES PSV：
 
 ```bash

@@ -88,6 +88,17 @@ unknown GIF：
   <night>_unknown_link_summary.json
 ```
 
+unknown 人工复核包：
+
+```text
+/pipeline/xiaoyunao/heliolincrr/review_packages/<night>/
+  gifs/
+    <trkSub>_linkXXXX_<night>.gif
+  <night>_unknown_review.csv
+  <night>_unknown_review_manifest.json
+/pipeline/xiaoyunao/heliolincrr/review_packages/<night>_unknown_review.tar.gz
+```
+
 ## known_asteroid Plots
 
 known asteroid nightly visual products are not written under L4. They are stored in:

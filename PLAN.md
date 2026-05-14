@@ -31,7 +31,7 @@
 - 当前单夜自动化还没有“每日选择目标夜 + 防重复 + 日志 + 产物检查”的外层入口
 - GIF 可视化很慢，应在自动提取中默认可跳过或限量，避免拖慢主计算
 - 15 夜流程尚未接入同一个 `trkSub` history
-- 人工复核 GIF 打包和 review CSV 生成器仍未实现
+- 人工复核 GIF 打包和 review CSV 生成器已实现初版，仍需接入 daily wrapper
 - `20260220` unknown 正式 submit 已完成，需后续跟进 MPC/WAMO ingest 结果
 - unknown 真实提交策略仍需收紧；后续 daily wrapper 默认不应自动 submit
 
@@ -53,5 +53,5 @@
 1. 新增一个 `heliolincrr/run_daily_unknown.sh` 或 Python wrapper，负责每日选择目标夜并调用 `run_single_night.sh`
 2. 默认 `SKIP_PLOTS=1`，只做提取和 summary；必要时再单独补 GIF
 3. 增加产物检查：summary、unknown JSON/FITS、matched count、unknown count、ADES 行数
-4. 为观测助手实现 unknown GIF 打包和 review CSV 模板输出
+4. 将 unknown GIF 打包和 review CSV 模板输出接入 daily wrapper
 5. 将未来 15 夜 unknown catalog 接入同一个 `assign_unknown_trksub.py`
