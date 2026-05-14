@@ -22,14 +22,18 @@
 4. 历史主批处理曾推进到 `20260410`，当前 `20251116..20260410` 中有 `98` 个可读 nightly summary
 5. 现有 summary 统计：平均 `64.63` 条 unknown fit_ok/night；排除异常夜后平均 `53.17` 条/night
 6. 已新增 `--trk-sub-map`、人工复核 CSV 过滤接口和 `export_unknown_ades.py` unknown ADES 导出器
+7. 已实现全局 `trkSub` 历史分配：`/pipeline/xiaoyunao/data/heliolincrr/trksub_history.jsonl`
+8. `20260220` unknown ADES 已通过 MPC test validation，并完成一次正式 submit
 
 ## Outstanding issues
 
 - `20251116..20260410` 仍有 `48` 个日历夜没有 summary，需要区分缺原始数据、失败和未跑
 - 当前单夜自动化还没有“每日选择目标夜 + 防重复 + 日志 + 产物检查”的外层入口
 - GIF 可视化很慢，应在自动提取中默认可跳过或限量，避免拖慢主计算
-- 正式 `trkSub` 编号规则尚未确定；当前仅接受外部映射文件
-- unknown 真实提交策略还未定；当前默认只导出，不自动提交
+- 15 夜流程尚未接入同一个 `trkSub` history
+- 人工复核 GIF 打包和 review CSV 生成器仍未实现
+- `20260220` unknown 正式 submit 已完成，需后续跟进 MPC/WAMO ingest 结果
+- unknown 真实提交策略仍需收紧；后续 daily wrapper 默认不应自动 submit
 
 ## Validation criteria
 
@@ -39,14 +43,15 @@
   - `/pipeline/xiaoyunao/data/heliolincrr/<night>/analysis/<night>_single_night_summary.txt`
   - `/processed1/<night>/L4/<night>_unknown_links.json`
 - summary 中 `counts.matched_detections_total > 0`，否则不能认为已完成已知小行星扣除
-- 若启用 `trkSub`，每个 unknown link 的 `trk_sub` 必须符合 1-8 位 `[A-Za-z0-9_-]`
+- 若启用 `trkSub`，每个 unknown link 的 `trk_sub` 必须符合 8 位 `[0-9a-zA-Z]`
+- `trkSub` 分配必须写入全局 history，并且重复运行同一 catalog 不新增重复记录
 - 若启用人工复核，`is_real=0` 的 `trk_sub` 不得进入 ADES PSV
 - 自动入口日志需记录 target night、skip/run reason、exit code、核心产物路径和 unknown count
 
 ## Next recommended steps
 
-1. 确定 `trkSub` 编号规则，并实现自动编号生成器
-2. 新增一个 `heliolincrr/run_daily_unknown.sh` 或 Python wrapper，负责每日选择目标夜并调用 `run_single_night.sh`
-3. 默认 `SKIP_PLOTS=1`，只做提取和 summary；必要时再单独补 GIF
-4. 增加产物检查：summary、unknown JSON/FITS、matched count、unknown count、ADES 行数
-5. 在服务器用最近有原始数据但未跑的夜次做一次 dry-run 或 skip-check 验证
+1. 新增一个 `heliolincrr/run_daily_unknown.sh` 或 Python wrapper，负责每日选择目标夜并调用 `run_single_night.sh`
+2. 默认 `SKIP_PLOTS=1`，只做提取和 summary；必要时再单独补 GIF
+3. 增加产物检查：summary、unknown JSON/FITS、matched count、unknown count、ADES 行数
+4. 为观测助手实现 unknown GIF 打包和 review CSV 模板输出
+5. 将未来 15 夜 unknown catalog 接入同一个 `assign_unknown_trksub.py`

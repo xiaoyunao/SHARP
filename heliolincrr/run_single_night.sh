@@ -21,6 +21,7 @@ PREP_W15_MISSING_NIGHTS="${PREP_W15_MISSING_NIGHTS:-1}"
 FORCE_MASK_GAIA="${FORCE_MASK_GAIA:-0}"
 SKIP_PLOTS="${SKIP_PLOTS:-0}"
 TRK_SUB_MAP="${TRK_SUB_MAP:-}"
+ASSIGN_UNKNOWN_TRKSUB="${ASSIGN_UNKNOWN_TRKSUB:-1}"
 EXPORT_UNKNOWN_ADES="${EXPORT_UNKNOWN_ADES:-0}"
 UNKNOWN_REVIEW_CSV="${UNKNOWN_REVIEW_CSV:-}"
 REQUIRE_UNKNOWN_REVIEW="${REQUIRE_UNKNOWN_REVIEW:-0}"
@@ -40,6 +41,7 @@ echo "[info] PYTHON_BIN=${PYTHON_BIN}"
 # =============================
 ROOT_RAW="/processed1"
 ROOT_OUT="/pipeline/xiaoyunao/data/heliolincrr"
+TRK_SUB_HISTORY="${TRK_SUB_HISTORY:-${ROOT_OUT}/trksub_history.jsonl}"
 
 MASK_GAIA_DIR="${ROOT_OUT}/${NIGHT}/mask_gaia"
 TRACKLET_DIR="${ROOT_OUT}/${NIGHT}/tracklets_linreproj"
@@ -48,6 +50,9 @@ NIGHTLY_ALL="${TRACKLET_DIR}/tracklets_${NIGHT}_ALL.fits"
 RR_NIGHT_DIR="${ROOT_OUT}/${NIGHT}/rr_links"
 ANALYSIS_DIR="${ROOT_OUT}/${NIGHT}/analysis"
 PLOTS_ROOT="/pipeline/xiaoyunao/heliolincrr/plots"
+SUMMARY_JSON="${ANALYSIS_DIR}/${NIGHT}_single_night_summary.json"
+UNKNOWN_JSON="${ROOT_RAW}/${NIGHT}/L4/${NIGHT}_unknown_links.json"
+UNKNOWN_FITS="${ROOT_RAW}/${NIGHT}/L4/${NIGHT}_unknown_links.fits"
 
 LINEAR_NIGHT_SPEED=5
 LINEAR_NIGHT_DIRECTION=10
@@ -242,12 +247,29 @@ SUMMARY_ARGS=(
   summarize_single_night.py "${NIGHT}"
   --processed-root "${ROOT_RAW}" \
   --root-out "${ROOT_OUT}" \
-  --rr-subdir "rr_links"
+  --rr-subdir "rr_links" \
+  --summary-json "${SUMMARY_JSON}" \
+  --unknown-json "${UNKNOWN_JSON}" \
+  --unknown-fits "${UNKNOWN_FITS}"
 )
 if [[ -n "${TRK_SUB_MAP}" ]]; then
   SUMMARY_ARGS+=(--trk-sub-map "${TRK_SUB_MAP}")
 fi
 "${PYTHON_BIN}" "${SUMMARY_ARGS[@]}"
+
+# =============================
+# Step 6a: assign globally unique unknown trkSub IDs
+# =============================
+if [[ "${ASSIGN_UNKNOWN_TRKSUB}" -eq 1 ]]; then
+  "${PYTHON_BIN}" assign_unknown_trksub.py "${NIGHT}" \
+    --mode "single-night" \
+    --catalog "${UNKNOWN_JSON}" \
+    --fits "${UNKNOWN_FITS}" \
+    --summary-json "${SUMMARY_JSON}" \
+    --history "${TRK_SUB_HISTORY}"
+else
+  echo "[info] skip unknown trkSub assignment for ${NIGHT} because ASSIGN_UNKNOWN_TRKSUB=0"
+fi
 
 # =============================
 # Step 6b: optional unknown ADES export / submission
@@ -258,6 +280,7 @@ if [[ "${EXPORT_UNKNOWN_ADES}" -eq 1 ]]; then
   ADES_ARGS=(
     export_unknown_ades.py "${NIGHT}"
     --processed-root "${ROOT_RAW}"
+    --catalog "${UNKNOWN_JSON}"
     --out "${UNKNOWN_ADES_OUT}"
     --response-out "${UNKNOWN_ADES_REPLY}"
   )

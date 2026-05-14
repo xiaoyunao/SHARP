@@ -70,54 +70,85 @@ def read_review_csv(path: str | None, require_review: bool) -> tuple[dict[str, i
 
 def build_header(args: argparse.Namespace) -> str:
     lines = ["# version=2017"]
+
     lines.append("# observatory")
     lines.append(f"! mpcCode {args.obs_code}")
     if args.obs_name:
         lines.append(f"! name {args.obs_name}")
 
     lines.append("# submitter")
-    lines.append(f"! name {args.submitter_name}")
+    if args.submitter_name:
+        lines.append(f"! name {args.submitter_name}")
     if args.institution:
         lines.append(f"! institution {args.institution}")
 
-    for block_name, values in (
-        ("observers", args.observers),
-        ("measurers", args.measurers),
-        ("coinvestigators", args.coinvestigators),
-        ("collaborators", args.collaborators),
-    ):
-        names = split_semicolon(values)
-        if names:
-            lines.append(f"# {block_name}")
-            for name in names:
-                lines.append(f"! name {name}")
+    obs_list = split_semicolon(args.observers)
+    if obs_list:
+        lines.append("# observers")
+        for name in obs_list:
+            lines.append(f"! name {name}")
 
-    telescope_lines = []
-    for key, value in (
-        ("name", args.telescope_name),
-        ("aperture", args.aperture),
-        ("design", args.design),
-        ("detector", args.detector),
-        ("fRatio", args.f_ratio),
-        ("filter", args.filter_name),
-        ("arraySize", args.array_size),
-        ("pixelScale", args.pixel_scale),
-    ):
-        if value:
-            telescope_lines.append(f"! {key} {value}")
+    meas_list = split_semicolon(args.measurers)
+    if meas_list:
+        lines.append("# measurers")
+        for name in meas_list:
+            lines.append(f"! name {name}")
+
+    telescope_lines: list[str] = []
+    if args.telescope_name:
+        telescope_lines.append(f"! name {args.telescope_name}")
+    if args.aperture:
+        telescope_lines.append(f"! aperture {args.aperture}")
+    if args.design:
+        telescope_lines.append(f"! design {args.design}")
+    if args.detector:
+        telescope_lines.append(f"! detector {args.detector}")
+    if args.f_ratio:
+        telescope_lines.append(f"! fRatio {args.f_ratio}")
+    if args.filter_name:
+        telescope_lines.append(f"! filter {args.filter_name}")
+    if args.array_size:
+        telescope_lines.append(f"! arraySize {args.array_size}")
+    if args.pixel_scale:
+        telescope_lines.append(f"! pixelScale {args.pixel_scale}")
     if telescope_lines:
         lines.append("# telescope")
         lines.extend(telescope_lines)
 
+    coinvestigator_list = split_semicolon(args.coinvestigators)
+    if coinvestigator_list:
+        lines.append("# coinvestigators")
+        for name in coinvestigator_list:
+            lines.append(f"! name {name}")
+
+    collaborator_list = split_semicolon(args.collaborators)
+    if collaborator_list:
+        lines.append("# collaborators")
+        for name in collaborator_list:
+            lines.append(f"! name {name}")
+
     if args.funding_source:
         lines.append(f"# fundingSource {args.funding_source}")
-    comments = split_semicolon(args.comment)
-    if comments:
+
+    comment_list = split_semicolon(args.comment)
+    if comment_list:
         lines.append("# comment")
-        for line in comments:
+        for line in comment_list:
             lines.append(f"! line {line}")
+
     lines.append("")
     return "\n".join(lines)
+
+
+def compute_logsnr(flux: float | None, flux_err: float | None) -> str:
+    if flux is None or flux_err is None:
+        return ""
+    if not np.isfinite(flux) or not np.isfinite(flux_err) or flux_err == 0:
+        return ""
+    snr = flux / flux_err
+    if not np.isfinite(snr) or snr <= 0:
+        return ""
+    return f"{np.log10(snr):.2f}"
 
 
 def load_unknown_rows(path: Path) -> list[dict[str, object]]:
@@ -158,7 +189,11 @@ def load_detection_row(processed_root: Path, night: str, image_name: str, obj_id
     required = ["MJD", "RA_Win", "DEC_Win", "RAErr_Win", "DECErr_Win", "Mag_Aper4", "MagErr_Aper4"]
     if any(col not in table.colnames for col in required):
         return None
-    return {col: float(row[col]) for col in required}
+    out = {col: float(row[col]) for col in required}
+    for optional in ("Flux_Aper4", "FluxErr_Aper4"):
+        if optional in table.colnames:
+            out[optional] = float(row[optional])
+    return out
 
 
 def build_obs_rows(args: argparse.Namespace) -> tuple[list[dict[str, object]], dict[str, int]]:
@@ -221,6 +256,7 @@ def build_obs_rows(args: argparse.Namespace) -> tuple[list[dict[str, object]], d
                     "trkSub": trk_sub,
                     "mode": args.mode,
                     "stn": args.obs_code,
+                    "prog": args.prog,
                     "obsTime": mjd_to_obs_time_z(mjd),
                     "ra": f"{ra:.10f}",
                     "dec": f"{dec:.10f}",
@@ -231,6 +267,7 @@ def build_obs_rows(args: argparse.Namespace) -> tuple[list[dict[str, object]], d
                     "rmsMag": f"{rms_mag:.3f}",
                     "band": args.band,
                     "photCat": args.photcat,
+                    "logSNR": compute_logsnr(det.get("Flux_Aper4"), det.get("FluxErr_Aper4")),
                 }
             )
     stats["exported_observations"] = len(obs_rows)
@@ -238,7 +275,12 @@ def build_obs_rows(args: argparse.Namespace) -> tuple[list[dict[str, object]], d
 
 
 def write_psv(args: argparse.Namespace, obs_rows: list[dict[str, object]]) -> None:
-    cols = ["trkSub", "mode", "stn", "obsTime", "ra", "dec", "rmsRA", "rmsDec", "astCat", "mag", "rmsMag", "band", "photCat"]
+    cols = ["trkSub", "mode", "stn"]
+    if args.prog:
+        cols.append("prog")
+    cols.extend(["obsTime", "ra", "dec", "rmsRA", "rmsDec", "astCat", "mag", "rmsMag", "band", "photCat"])
+    if args.include_logsnr:
+        cols.append("logSNR")
     lines = [build_header(args).rstrip("\n"), " | ".join(cols)]
     for row in obs_rows:
         lines.append("|".join(str(row[col]) for col in cols))
@@ -311,6 +353,8 @@ def build_argparser() -> argparse.ArgumentParser:
     ap.add_argument("--band", default="G")
     ap.add_argument("--photcat", default="Gaia3E")
     ap.add_argument("--err-unit", default="deg", choices=["arcsec", "deg", "mas"])
+    ap.add_argument("--prog", default="", help="Optional MPC program code value")
+    ap.add_argument("--include-logsnr", action="store_true", help="Include logSNR when flux columns exist")
     ap.add_argument("--ac2-email", default="wsgp2024@163.com")
     ap.add_argument("--ack", default="Unknown-object ADES submission")
     ap.add_argument("--obj-type", default="NEO")

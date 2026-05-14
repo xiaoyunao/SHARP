@@ -15,8 +15,18 @@
 
 ## Unknown trkSub and review interface
 
-MPC ADES 的 unknown 临时标识使用 `trkSub`。当前代码只接受 1-8 位
-ASCII 字母、数字、下划线或连字符。
+MPC ADES 的 unknown 临时标识使用 `trkSub`。本项目自动分配的 `trkSub`
+采用 8 位 62 进制：
+
+- 字符表：`0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ`
+- `a=10`，`z=35`，`A=36`
+- 起始值：`00000001`
+- 默认历史文件：`/pipeline/xiaoyunao/data/heliolincrr/trksub_history.jsonl`
+- 历史文件旁边会使用 `.lock` 文件加锁，避免单夜和 15 夜流程同时分配时撞号
+
+历史文件一行一个 JSON 记录，包含 `trk_sub`、night、mode、linkage_id、
+内部 tracklet ids、原始 image/object ids、MJD、RA/Dec 和轨道拟合摘要，便于从
+上报编号追溯到源观测点、tracklet 和 link。
 
 在单夜 summary 阶段可传入编号映射：
 
@@ -37,6 +47,18 @@ linkage_id,trk_sub
 ```text
 tracklet_id,trk_sub
 T12345,XA000001
+```
+
+正常单夜流程默认会在 summary 后自动调用 `assign_unknown_trksub.py`，给还没有
+`trk_sub` 的 unknown rows 分配全局唯一编号，并回写：
+
+- `/processed1/<night>/L4/<night>_unknown_links.json`
+- `/processed1/<night>/L4/<night>_unknown_links.fits`
+
+如需临时关闭：
+
+```bash
+ASSIGN_UNKNOWN_TRKSUB=0 bash run_single_night.sh 20260220
 ```
 
 人工复核接口预留为两列 CSV：

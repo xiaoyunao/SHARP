@@ -2,6 +2,30 @@
 
 ## 2026-05-14
 
+- task: 实现全局 `trkSub` 历史分配，并用 `20260220` unknown catalog 完成 MPC 格式验证和正式提交
+- files_changed: `heliolincrr/assign_unknown_trksub.py`, `heliolincrr/export_unknown_ades.py`, `heliolincrr/run_single_night.sh`, `heliolincrr/README.md`, `README.md`, `WORKLOG.md`, `PLAN.md`
+- commands_run: 本地 `python3 -m py_compile heliolincrr/assign_unknown_trksub.py heliolincrr/export_unknown_ades.py heliolincrr/summarize_single_night.py`, `bash -n heliolincrr/run_single_night.sh`, `git diff --check`; 服务器 `scp ... /pipeline/xiaoyunao/heliolincrr/`, `assign_unknown_trksub.py 20260220 --history /pipeline/xiaoyunao/data/heliolincrr/trksub_history.jsonl`, `export_unknown_ades.py 20260220 --validate`, `export_unknown_ades.py 20260220 --submit`
+- key_findings:
+  - 正式编号规则已实现为 8 位 62 进制：`0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ`，从 `00000001` 开始；例如第 10 个为 `0000000a`
+  - 新增全局历史文件 `/pipeline/xiaoyunao/data/heliolincrr/trksub_history.jsonl`，一行一个 JSON record，包含 `trk_sub`、mode、night、linkage_id、内部 tracklet ids、image/object ids、MJD、RA/Dec、轨道拟合摘要和源 catalog/summary 路径
+  - 历史分配使用 `/pipeline/xiaoyunao/data/heliolincrr/trksub_history.jsonl.lock` 加锁，供后续单夜和 15 夜共用，避免撞号
+  - `run_single_night.sh` 现在默认 `ASSIGN_UNKNOWN_TRKSUB=1`，summary 后自动分配全局唯一 `trkSub` 并回写 unknown JSON/FITS
+  - `export_unknown_ades.py` 已调整为尽量对齐 known ADES：除 `permID/provID` 替换为 `trkSub` 外，后续列保持 `mode/stn/obsTime/ra/dec/rmsRA/rmsDec/astCat/mag/rmsMag/band/photCat`
+- validation:
+  - 本地 py_compile、bash -n、git diff --check 均通过
+  - 本地临时 catalog 测试确认从 `00000001`、`00000002` 开始，重复运行会复用历史，不新增记录
+  - 服务器 `20260220` 已给 `34` 条 unknown rows 分配 `trkSub`，写入 `34` 行历史；重复分配测试返回 `assigned_new=0`, `reused_existing=34`
+  - 服务器导出 `/processed1/20260220/L4/20260220_unknown_links_ades.psv`，包含 `102` 行 obsData
+  - MPC test endpoint 返回 submission ID `2026-05-14T02:59:37.174_00000ST1`
+  - MPC 正式 submit 返回 submission ID `2026-05-14T03:00:19.564_0000Bx4c`
+- remaining_issues:
+  - `20260220` 已正式提交 unknown ADES；后续需在 MPC/WAMO 侧跟进 ingest 结果
+  - 15 夜流程尚未接入同一个 `assign_unknown_trksub.py`
+  - 人工复核 GIF 打包和 review CSV 生成器仍未实现，仅导出过滤接口已预留
+- next_step:
+  - 将 15 夜 unknown catalog 未来接入同一个 history
+  - 实现 daily unknown wrapper，并默认先导出/验证，不自动提交
+
 - task: 为单夜 unknown catalog 增加 MPC `trkSub` 编号接口、人工复核过滤接口和 ADES PSV 导出器
 - files_changed: `heliolincrr/summarize_single_night.py`, `heliolincrr/export_unknown_ades.py`, `heliolincrr/run_single_night.sh`, `heliolincrr/README.md`, `README.md`, `WORKLOG.md`, `PLAN.md`
 - commands_run: 官方 ADES schema 查询；本地 `python3 -m py_compile heliolincrr/summarize_single_night.py heliolincrr/export_unknown_ades.py`, `bash -n heliolincrr/run_single_night.sh`; 服务器临时 `/tmp/summarize_single_night.py 20260220 --trk-sub-map /tmp/unknown_trksub_test.csv ...`, `/tmp/export_unknown_ades.py 20260220 --catalog /tmp/20260220_unknown_links_test.json --out /tmp/20260220_unknown_links_test.psv`, 复核 CSV `--review-csv /tmp/unknown_review_test.csv --require-review`
