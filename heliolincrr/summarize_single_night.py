@@ -2,13 +2,18 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import json
 import math
+import re
 from collections import Counter, defaultdict
 from pathlib import Path
 
 import numpy as np
 from astropy.table import Table
+
+
+TRK_SUB_RE = re.compile(r"^[-A-Za-z0-9_]{1,8}$")
 
 
 def det_key(file_value, obj_id) -> str:
@@ -37,6 +42,47 @@ def format_float(value) -> float | None:
 
 def semicolon_join(values) -> str:
     return ";".join(str(v) for v in values)
+
+
+def validate_trk_sub(value: str) -> str:
+    value = str(value).strip()
+    if not value:
+        return ""
+    if not TRK_SUB_RE.fullmatch(value):
+        raise ValueError(
+            f"Invalid trkSub {value!r}: must be 1-8 characters using A-Z, a-z, 0-9, '_' or '-'."
+        )
+    return value
+
+
+def load_trk_sub_map(path: str | None) -> dict[str, str]:
+    if not path:
+        return {}
+    map_path = Path(path)
+    if not map_path.exists():
+        raise FileNotFoundError(f"trkSub map not found: {map_path}")
+
+    if map_path.suffix.lower() == ".json":
+        data = json.loads(map_path.read_text(encoding="utf-8"))
+        if isinstance(data, dict):
+            return {str(k): validate_trk_sub(v) for k, v in data.items()}
+        rows = data
+    else:
+        text = map_path.read_text(encoding="utf-8")
+        sample = text[:2048]
+        dialect = csv.Sniffer().sniff(sample, delimiters=",\t|") if sample.strip() else csv.excel
+        rows = list(csv.DictReader(text.splitlines(), dialect=dialect))
+
+    out: dict[str, str] = {}
+    for row in rows:
+        trk_sub = validate_trk_sub(row.get("trk_sub") or row.get("trkSub") or row.get("tracklet_id") or "")
+        if not trk_sub:
+            continue
+        for key_name in ("linkage_id", "tracklet_id", "internal_tracklet_id"):
+            key = str(row.get(key_name, "")).strip()
+            if key:
+                out[key] = trk_sub
+    return out
 
 
 def summarize_count_map(counter: Counter) -> dict[str, int]:
@@ -177,14 +223,22 @@ def classify_links(
 def build_unknown_catalog_rows(
     link_info: dict[int, dict[str, object]],
     tracklet_info: dict[str, dict[str, object]],
+    trk_sub_map: dict[str, str] | None = None,
 ) -> list[dict[str, object]]:
     rows: list[dict[str, object]] = []
+    trk_sub_map = trk_sub_map or {}
     for lid in sorted(link_info):
         info = link_info[lid]
         if not (info["fit_ok"] and info["link_class"] == "all_non_asteroid"):
             continue
         orbit_row = info["orbit_row"]
         tids = info["tracklet_ids"]
+        trk_sub = trk_sub_map.get(str(lid), "")
+        if not trk_sub:
+            for tid in tids:
+                trk_sub = trk_sub_map.get(str(tid), "")
+                if trk_sub:
+                    break
         det_files = []
         det_objids = []
         det_mjds = []
@@ -212,6 +266,7 @@ def build_unknown_catalog_rows(
 
         rows.append(
             {
+                "trk_sub": trk_sub,
                 "linkage_id": lid,
                 "n_tracklets": int(orbit_row["n_tracklets"]),
                 "n_obs": int(orbit_row["n_obs"]),
@@ -389,6 +444,14 @@ def main() -> None:
     ap.add_argument("--summary-txt", default=None)
     ap.add_argument("--unknown-fits", default=None)
     ap.add_argument("--unknown-json", default=None)
+    ap.add_argument(
+        "--trk-sub-map",
+        default=None,
+        help=(
+            "Optional CSV/TSV/JSON mapping from linkage_id or internal tracklet_id "
+            "to MPC trkSub. trkSub must be 1-8 chars: A-Z, a-z, 0-9, '_' or '-'."
+        ),
+    )
     args = ap.parse_args()
 
     night = str(args.night)
@@ -458,7 +521,8 @@ def main() -> None:
             }
         )
 
-    unknown_rows = build_unknown_catalog_rows(link_info, tracklet_info)
+    trk_sub_map = load_trk_sub_map(args.trk_sub_map)
+    unknown_rows = build_unknown_catalog_rows(link_info, tracklet_info, trk_sub_map=trk_sub_map)
     unknown_fits.parent.mkdir(parents=True, exist_ok=True)
     unknown_json.parent.mkdir(parents=True, exist_ok=True)
     if unknown_rows:

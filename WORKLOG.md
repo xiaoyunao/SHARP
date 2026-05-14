@@ -1,5 +1,43 @@
 # WORKLOG
 
+## 2026-05-14
+
+- task: 为单夜 unknown catalog 增加 MPC `trkSub` 编号接口、人工复核过滤接口和 ADES PSV 导出器
+- files_changed: `heliolincrr/summarize_single_night.py`, `heliolincrr/export_unknown_ades.py`, `heliolincrr/run_single_night.sh`, `heliolincrr/README.md`, `README.md`, `WORKLOG.md`, `PLAN.md`
+- commands_run: 官方 ADES schema 查询；本地 `python3 -m py_compile heliolincrr/summarize_single_night.py heliolincrr/export_unknown_ades.py`, `bash -n heliolincrr/run_single_night.sh`; 服务器临时 `/tmp/summarize_single_night.py 20260220 --trk-sub-map /tmp/unknown_trksub_test.csv ...`, `/tmp/export_unknown_ades.py 20260220 --catalog /tmp/20260220_unknown_links_test.json --out /tmp/20260220_unknown_links_test.psv`, 复核 CSV `--review-csv /tmp/unknown_review_test.csv --require-review`
+- key_findings:
+  - MPC ADES `trkSub` schema 要求 1-8 字符，字符集为 ASCII 字母、数字、`_`、`-`
+  - unknown ADES 与 known ADES 的核心差别是 ID 列改用 `trkSub`，不写 `permID/provID`
+  - `summarize_single_night.py` 现支持 `--trk-sub-map`，可按 `linkage_id` 或内部 `tracklet_id` 给 unknown row 写入同一个 `trk_sub`
+  - 新增 `export_unknown_ades.py`，从 unknown JSON 展开每个 detection，回查 `/processed1/<night>/L2/*_cat.fits.gz` 获取 `MJD/RA_Win/DEC_Win/RAErr_Win/DECErr_Win/Mag_Aper4/MagErr_Aper4` 并写 ADES PSV
+  - 预留人工复核接口：CSV 两列 `tracklet_id,is_real`，其中 `tracklet_id` 对应 `trk_sub`，`is_real=0` 的假源不会导出
+- validation:
+  - 本地 py_compile 和 bash -n 通过
+  - 服务器 `20260220` 临时测试中，前两个 unknown link 映射为 `XA000001/XA000002` 后成功导出 `6` 行 ADES obsData
+  - 服务器复核 CSV 将 `XA000002` 标为 `0` 后，`--require-review` 只导出 `XA000001` 的 `3` 行
+- remaining_issues:
+  - 正式 `trkSub` 编号规则尚未由用户确定，当前只实现映射接口和格式校验
+  - 尚未对 MPC test endpoint 做 validate/submit；真实提交默认关闭，需显式设置 `SUBMIT_UNKNOWN_MPC=1`
+- next_step:
+  - 等用户确定 `trkSub` 编号规则后，把编号生成器接到单夜自动流程
+
+- task: 结束 PPT 绘图后台检查，并恢复 `heliolincrr` 单夜 unknown 主线，统计现有 nightly unknown 产物
+- files_changed: `WORKLOG.md`, `PLAN.md`
+- commands_run: 本地/服务器 `pgrep -af "[m]ake_yearly_coverage_animation.py .*--start-date 2025-01-01 .*--n-nights 365"`, `tail -n 25 /pipeline/xiaoyunao/ppt_assets_20260414/logs/survey_year_full.log`, 服务器 Python 扫描 `/pipeline/xiaoyunao/data/heliolincrr/20*/analysis/*_single_night_summary.json`
+- key_findings:
+  - `survey_year_full` 已自行完成，未发现残留绘图进程；输出 `/pipeline/xiaoyunao/ppt_assets_20260414/outputs/survey_year_full/survey_yearly_coverage.gif` 已存在
+  - `heliolincrr` 主批处理区间 `20251116..20260410` 中现有 `98` 个可读单夜 summary，合计 `6334` 条 `unknown_fit_ok_catalog`
+  - 平均每个有 summary 夜次 `64.63` 条，median `45` 条；排除已标记异常夜 `20251226/20260111/20260119/20260123` 后平均 `53.17` 条，median `45` 条
+  - 这 `98` 个 summary 的 `matched_detections_total` 都大于 0，说明当前 unknown catalog 生成时均有 `matched_asteroids.fits` 参与已知小行星扣除
+- validation:
+  - 服务器统计脚本成功读取 `98` 个 summary
+  - 已确认 no_or_zero_matched=`0`
+- remaining_issues:
+  - `20251116..20260410` 仍有 `48` 个日历夜没有 summary，包含缺原始数据、失败夜和未跑夜
+  - 上报链路暂缓，下一阶段先把单夜 unknown 提取和日报告自动化做稳
+- next_step:
+  - 设计并实现单夜 unknown 自动入口：自动选择目标夜、运行 `run_single_night.sh`、生成候选清单/summary、记录日志，默认不自动上报
+
 ## 2026-04-14
 
 - task: 按用户 `sitian_stats.ipynb` 原代码复现 `known_asteroid` 两张图，并新增 Gaia mask + 静止源剔除流程图

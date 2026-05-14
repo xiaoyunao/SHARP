@@ -60,7 +60,10 @@ PYTHON_BIN=/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python bash
 - `orbit_confirm_links.py` 对 `rr_links` 做后验轨道确认并写入 `rr_links/orbit_confirm/`
 - `summarize_single_night.py` 统一写出 `/pipeline/xiaoyunao/data/heliolincrr/<night>/analysis/*single_night_summary*`
 - `summarize_single_night.py` 同时写出 `/processed1/<night>/L4/<night>_unknown_links.{fits,json}`
+- `summarize_single_night.py` 可通过 `--trk-sub-map` 给 unknown link 写入 MPC `trkSub`
+- `export_unknown_ades.py` 可将带 `trkSub` 的 unknown catalog 导出为 ADES PSV，并可用人工复核 CSV 过滤假源
 - `run_single_night.sh` 末尾直接调用 `plot_unknown_links.py`，基于该 unknown catalog 输出 `heliolincrr/plots/<night>/`
+- `run_single_night.sh` 可通过 `EXPORT_UNKNOWN_ADES=1` 打开 unknown ADES 导出；真实提交需额外显式设置 `SUBMIT_UNKNOWN_MPC=1`
 - 默认单夜参数固定为 `speed=5 arcsec/h`、`direction=10 deg`、`require_shared_endpoint=True`
 - 当前单夜 `orbit_confirm_links.py` 默认 `max_v_kms=35`
 

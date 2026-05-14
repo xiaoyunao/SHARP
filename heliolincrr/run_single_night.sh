@@ -20,6 +20,12 @@ RUN_W15="${RUN_W15:-0}"
 PREP_W15_MISSING_NIGHTS="${PREP_W15_MISSING_NIGHTS:-1}"
 FORCE_MASK_GAIA="${FORCE_MASK_GAIA:-0}"
 SKIP_PLOTS="${SKIP_PLOTS:-0}"
+TRK_SUB_MAP="${TRK_SUB_MAP:-}"
+EXPORT_UNKNOWN_ADES="${EXPORT_UNKNOWN_ADES:-0}"
+UNKNOWN_REVIEW_CSV="${UNKNOWN_REVIEW_CSV:-}"
+REQUIRE_UNKNOWN_REVIEW="${REQUIRE_UNKNOWN_REVIEW:-0}"
+VALIDATE_UNKNOWN_MPC="${VALIDATE_UNKNOWN_MPC:-0}"
+SUBMIT_UNKNOWN_MPC="${SUBMIT_UNKNOWN_MPC:-0}"
 
 if [[ ! -x "${PYTHON_BIN}" ]]; then
   echo "[fatal] Python executable not found: ${PYTHON_BIN}"
@@ -232,10 +238,45 @@ rm -rf "${RR_NIGHT_DIR}/orbit_confirm"
 # =============================
 # Step 6: summarize
 # =============================
-"${PYTHON_BIN}" summarize_single_night.py "${NIGHT}" \
+SUMMARY_ARGS=(
+  summarize_single_night.py "${NIGHT}"
   --processed-root "${ROOT_RAW}" \
   --root-out "${ROOT_OUT}" \
   --rr-subdir "rr_links"
+)
+if [[ -n "${TRK_SUB_MAP}" ]]; then
+  SUMMARY_ARGS+=(--trk-sub-map "${TRK_SUB_MAP}")
+fi
+"${PYTHON_BIN}" "${SUMMARY_ARGS[@]}"
+
+# =============================
+# Step 6b: optional unknown ADES export / submission
+# =============================
+if [[ "${EXPORT_UNKNOWN_ADES}" -eq 1 ]]; then
+  UNKNOWN_ADES_OUT="${ROOT_RAW}/${NIGHT}/L4/${NIGHT}_unknown_links_ades.psv"
+  UNKNOWN_ADES_REPLY="${ROOT_RAW}/${NIGHT}/L4/${NIGHT}_unknown_mpc_reply.txt"
+  ADES_ARGS=(
+    export_unknown_ades.py "${NIGHT}"
+    --processed-root "${ROOT_RAW}"
+    --out "${UNKNOWN_ADES_OUT}"
+    --response-out "${UNKNOWN_ADES_REPLY}"
+  )
+  if [[ -n "${UNKNOWN_REVIEW_CSV}" ]]; then
+    ADES_ARGS+=(--review-csv "${UNKNOWN_REVIEW_CSV}")
+  fi
+  if [[ "${REQUIRE_UNKNOWN_REVIEW}" -eq 1 ]]; then
+    ADES_ARGS+=(--require-review)
+  fi
+  if [[ "${VALIDATE_UNKNOWN_MPC}" -eq 1 ]]; then
+    ADES_ARGS+=(--validate)
+  fi
+  if [[ "${SUBMIT_UNKNOWN_MPC}" -eq 1 ]]; then
+    ADES_ARGS+=(--submit)
+  fi
+  "${PYTHON_BIN}" "${ADES_ARGS[@]}"
+else
+  echo "[info] skip unknown ADES export for ${NIGHT} because EXPORT_UNKNOWN_ADES=0"
+fi
 
 # =============================
 # Step 7: visualize unknown fit_ok links
