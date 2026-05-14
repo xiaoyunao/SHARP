@@ -28,8 +28,8 @@ REQUIRE_UNKNOWN_REVIEW="${REQUIRE_UNKNOWN_REVIEW:-0}"
 VALIDATE_UNKNOWN_MPC="${VALIDATE_UNKNOWN_MPC:-0}"
 SUBMIT_UNKNOWN_MPC="${SUBMIT_UNKNOWN_MPC:-0}"
 MAX_TRACKLETS_PER_GROUP="${MAX_TRACKLETS_PER_GROUP:-100000}"
-MAX_ORBIT_FIT_OK_LINKS="${MAX_ORBIT_FIT_OK_LINKS:-200}"
-ORBIT_FIT_OK_SKIP_CODE=20
+MAX_UNKNOWN_LINKS_AFTER_KNOWN="${MAX_UNKNOWN_LINKS_AFTER_KNOWN:-200}"
+UNKNOWN_LINK_SKIP_CODE=20
 
 if [[ ! -x "${PYTHON_BIN}" ]]; then
   echo "[fatal] Python executable not found: ${PYTHON_BIN}"
@@ -244,26 +244,6 @@ rm -rf "${RR_NIGHT_DIR}/orbit_confirm"
   --cores 16 \
   --log-every 500
 
-ORBIT_FIT_OK_COUNT="$("${PYTHON_BIN}" - <<PY
-from astropy.table import Table
-t = Table.read("${RR_NIGHT_DIR}/orbit_confirm/orbit_links.fits")
-print(int(sum(bool(x) for x in t["fit_ok"])))
-PY
-)"
-echo "[info] orbit fit_ok links=${ORBIT_FIT_OK_COUNT} threshold=${MAX_ORBIT_FIT_OK_LINKS}"
-if [[ "${MAX_ORBIT_FIT_OK_LINKS}" -gt 0 && "${ORBIT_FIT_OK_COUNT}" -gt "${MAX_ORBIT_FIT_OK_LINKS}" ]]; then
-  echo "[skip] orbit fit_ok links ${ORBIT_FIT_OK_COUNT} exceeds MAX_ORBIT_FIT_OK_LINKS=${MAX_ORBIT_FIT_OK_LINKS}; skip ${NIGHT}"
-  rm -f "${SUMMARY_JSON}" \
-        "${ANALYSIS_DIR}/${NIGHT}_single_night_summary.txt" \
-        "${UNKNOWN_JSON}" \
-        "${UNKNOWN_FITS}" \
-        "${ROOT_RAW}/${NIGHT}/L4/${NIGHT}_unknown_links_ades.psv" \
-        "${ROOT_RAW}/${NIGHT}/L4/${NIGHT}_unknown_mpc_reply.txt" \
-        "${ROOT_RAW}/${NIGHT}/L4/${NIGHT}_unknown_mpc_validate_reply.txt" \
-        "${ROOT_RAW}/${NIGHT}/L4/${NIGHT}_unknown_validate_reply.txt"
-  exit "${ORBIT_FIT_OK_SKIP_CODE}"
-fi
-
 # =============================
 # Step 6: summarize
 # =============================
@@ -280,6 +260,25 @@ if [[ -n "${TRK_SUB_MAP}" ]]; then
   SUMMARY_ARGS+=(--trk-sub-map "${TRK_SUB_MAP}")
 fi
 "${PYTHON_BIN}" "${SUMMARY_ARGS[@]}"
+
+UNKNOWN_LINK_COUNT="$("${PYTHON_BIN}" - <<PY
+import json
+from pathlib import Path
+path = Path("${UNKNOWN_JSON}")
+print(len(json.loads(path.read_text(encoding="utf-8"))) if path.exists() else 0)
+PY
+)"
+echo "[info] unknown links after known subtraction=${UNKNOWN_LINK_COUNT} threshold=${MAX_UNKNOWN_LINKS_AFTER_KNOWN}"
+if [[ "${MAX_UNKNOWN_LINKS_AFTER_KNOWN}" -gt 0 && "${UNKNOWN_LINK_COUNT}" -gt "${MAX_UNKNOWN_LINKS_AFTER_KNOWN}" ]]; then
+  echo "[skip] unknown links ${UNKNOWN_LINK_COUNT} exceeds MAX_UNKNOWN_LINKS_AFTER_KNOWN=${MAX_UNKNOWN_LINKS_AFTER_KNOWN}; skip ${NIGHT}"
+  rm -f "${UNKNOWN_JSON}" \
+        "${UNKNOWN_FITS}" \
+        "${ROOT_RAW}/${NIGHT}/L4/${NIGHT}_unknown_links_ades.psv" \
+        "${ROOT_RAW}/${NIGHT}/L4/${NIGHT}_unknown_mpc_reply.txt" \
+        "${ROOT_RAW}/${NIGHT}/L4/${NIGHT}_unknown_mpc_validate_reply.txt" \
+        "${ROOT_RAW}/${NIGHT}/L4/${NIGHT}_unknown_validate_reply.txt"
+  exit "${UNKNOWN_LINK_SKIP_CODE}"
+fi
 
 # =============================
 # Step 6a: assign globally unique unknown trkSub IDs
