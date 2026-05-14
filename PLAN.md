@@ -2,7 +2,14 @@
 
 ## Current objective
 
-回到 `heliolincrr` 主线，先把单夜 unknown 搜索/提取自动化做稳。
+回到 `heliolincrr` 主线，先把单夜 unknown 搜索/提取自动化做稳；当前服务器正在续跑 unknown backfill 第 4/5 步。
+
+当前后台任务：
+
+- PID: `1597630`
+- log: `/pipeline/xiaoyunao/data/heliolincrr/batch_logs/unknown_backfill_continue_20260514_115014.log`
+- scope: 先补 `20251122, 20251201, 20260128, 20260224`，再跑 `20260411` 之后新夜次
+- submit policy: `EXPORT_UNKNOWN_ADES=0`, `VALIDATE_UNKNOWN_MPC=0`, `SUBMIT_UNKNOWN_MPC=0`
 
 短期目标：
 
@@ -27,6 +34,7 @@
 
 ## Outstanding issues
 
+- 服务器续跑任务 `1597630` 尚未完成，需要跟踪日志和产物审计
 - `20251116..20260410` 仍有 `48` 个日历夜没有 summary，需要区分缺原始数据、失败和未跑
 - 当前单夜自动化还没有“每日选择目标夜 + 防重复 + 日志 + 产物检查”的外层入口
 - GIF 可视化很慢，应在自动提取中默认可跳过或限量，避免拖慢主计算
@@ -50,8 +58,10 @@
 
 ## Next recommended steps
 
-1. 新增一个 `heliolincrr/run_daily_unknown.sh` 或 Python wrapper，负责每日选择目标夜并调用 `run_single_night.sh`
-2. 默认 `SKIP_PLOTS=1`，只做提取和 summary；必要时再单独补 GIF
-3. 增加产物检查：summary、unknown JSON/FITS、matched count、unknown count、ADES 行数
-4. 将 unknown GIF 打包和 review CSV 模板输出接入 daily wrapper
-5. 将未来 15 夜 unknown catalog 接入同一个 `assign_unknown_trksub.py`
+1. 跟踪服务器续跑日志，确认 `20251122, 20251201, 20260128, 20260224` 和新夜次的 exit code
+2. 续跑完成后审计 summary、unknown JSON/FITS、GIF、review package 和 `trkSub` history 增量
+3. 新增一个 `heliolincrr/run_daily_unknown.sh` 或 Python wrapper，负责每日选择目标夜并调用 `run_single_night.sh`
+4. 默认 `SKIP_PLOTS=1`，只做提取和 summary；必要时再单独补 GIF
+5. 增加产物检查：summary、unknown JSON/FITS、matched count、unknown count、ADES 行数
+6. 将 unknown GIF 打包和 review CSV 模板输出接入 daily wrapper
+7. 将未来 15 夜 unknown catalog 接入同一个 `assign_unknown_trksub.py`

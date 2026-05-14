@@ -2,6 +2,24 @@
 
 ## 2026-05-14
 
+- task: 恢复 unknown backfill 后台任务上下文，并从失败的第 3 步后继续补跑
+- files_changed: `WORKLOG.md`, `PLAN.md`
+- commands_run: 本地 `git status --short --branch`, `git fetch --all --prune`, `git log --oneline --decorate --graph -n 15 --all`, `sed -n '1,220p' WORKLOG.md`, `sed -n '1,220p' PLAN.md`; 服务器检查 `/pipeline/xiaoyunao/data/heliolincrr/batch_logs/unknown_backfill_20260514_114429.log`、`trksub_history.jsonl`、`review_packages`; 服务器启动 `/tmp/run_unknown_backfill_continue_20260514.sh`
+- key_findings:
+  - 本地 `main` 与 `origin/main` 对齐，恢复前无未提交改动
+  - 原后台任务 `1591907` 已退出；前两步实际完成：已有 summary 夜次完成 `trkSub` history 分配，history 当前为 `7225` 行
+  - 已有 GIF 的 `96` 个夜次 review package 已生成
+  - 原脚本在第 3 步空 GIF 补跑列表处误以空 night 调用 `plot_unknown_links.py`，报 `Missing L1 dir: /processed1/L1` 后退出，未进入第 4/5 步
+  - 已新启动续跑任务 PID `1597630`，日志 `/pipeline/xiaoyunao/data/heliolincrr/batch_logs/unknown_backfill_continue_20260514_115014.log`
+  - 续跑脚本保持 `EXPORT_UNKNOWN_ADES=0`, `SUBMIT_UNKNOWN_MPC=0`, `VALIDATE_UNKNOWN_MPC=0`
+- validation:
+  - 续跑日志确认已进入 `20251122` 的 `make_tracklet`
+- remaining_issues:
+  - 第 4/5 步仍在服务器后台运行，尚未完成
+  - 需要后续检查每个夜次的 exit code、summary、unknown catalog、GIF 和 review package
+- next_step:
+  - 持续跟踪 PID `1597630` 和续跑日志，完成后做产物审计
+
 - task: 审计 `20251115` 之后全部观测夜的 unknown 单夜处理阶段覆盖
 - files_changed: `WORKLOG.md`
 - commands_run: 服务器 Python 扫描 `/processed1/<night>/L2/L4`、`/pipeline/xiaoyunao/data/heliolincrr/<night>`、`/pipeline/xiaoyunao/heliolincrr/plots/<night>`、`/pipeline/xiaoyunao/data/heliolincrr/trksub_history.jsonl`，输出 `/tmp/heliolincrr_stage_audit_20251115_20260514.csv`
