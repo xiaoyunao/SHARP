@@ -2,6 +2,36 @@
 
 ## 2026-05-14
 
+- task: 推送修复、补齐空结果夜次、重建 `20260503` GIF，并审计 `20251115..20260514` 覆盖
+- files_changed: `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 本地 `git push origin main`
+  - 服务器 `assign_unknown_trksub.py 20260503 ...`
+  - 服务器 `plot_unknown_links.py 20260503 ...`
+  - 服务器 `package_unknown_review.py 20260503 --make-tar`
+  - 服务器 `SKIP_PLOTS=1 ASSIGN_UNKNOWN_TRKSUB=0 ... bash run_single_night.sh 20251128`
+  - 服务器 `SKIP_PLOTS=1 ASSIGN_UNKNOWN_TRKSUB=0 ... bash run_single_night.sh 20260412`
+  - 服务器 `SKIP_PLOTS=1 ASSIGN_UNKNOWN_TRKSUB=0 ... bash run_single_night.sh 20260430`
+  - 服务器 Python 审计 `/processed1/20*/L2` 和 `/pipeline/xiaoyunao/data/heliolincrr/20*`
+- key_findings:
+  - 已将本地 `main` 推送到 GitHub，远端从 `b1c39c5` 更新到 `a98e9e7`
+  - `20260503` 新 catalog 共 `95` 条，`assign_unknown_trksub.py` 全部复用已有 `trkSub`，`assigned_new=0`, `reused_existing=95`
+  - `20260503` 已重新生成 `95/95` 个 unknown GIF，review package manifest 显示 `n_gifs_copied=95`, `n_gifs_missing=0`
+  - `20251128`, `20260412`, `20260430` 已补齐 empty unknown FITS/JSON，其中 `20260412` 是 0-link 空结果，三晚均 rc=0
+  - `20251115..20260514` 有 MP L2 数据的夜次共 `122` 个；当前 `120` 个完成 compute 链路
+  - 未完成 compute 链路的夜次剩 `20251201` 和 `20260414`
+  - `20251201`: 有 known matched 和 `39/39` 个 mask_gaia 输出，但没有重复视场，`make_tracklet` 得到 `n_groups=0`，没有 `tracklets_ALL`
+  - `20260414`: 有 summary/unknown catalog，但缺 `/processed1/20260414/L4/20260414_matched_asteroids.fits`，summary 中 `matched_detections_total=0`，因此 unknown 扣已知小行星不可信
+- validation:
+  - `20260503`: `gif_count=95`, `summary_unknown_count=95`, `catalog_rows=95`, `trk_sub_empty=0`, review tar exists
+  - 覆盖审计 CSV 写到服务器 `/tmp/heliolincrr_stage_audit_20251115_20260514_after_repair.csv`
+- remaining_issues:
+  - 需要决定 `20251201` no-repeat-field 夜是否写成成功空 summary/empty unknown catalog
+  - 需要先补跑 `20260414` known_asteroid match，再重跑 heliolincrr summary/unknown 扣除
+- next_step:
+  - 补 `20260414` known matched 后重跑 unknown
+  - 给 no-tracklet/no-group 夜次增加正式空结果处理
+
 - task: 修复 0-link 空结果链路，并为异常 dense group 增加 tracklet 上限保护
 - files_changed: `heliolincrr/run_linear_links_from_tracklets.py`, `heliolincrr/orbit_confirm_links.py`, `heliolincrr/summarize_single_night.py`, `heliolincrr/make_tracklet_linreproj.py`, `heliolincrr/run_single_night.sh`, `heliolincrr/assign_unknown_trksub.py`, `heliolincrr/plot_unknown_links.py`, `WORKLOG.md`, `PLAN.md`, `CHANGELOG.md`
 - commands_run:

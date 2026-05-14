@@ -4,6 +4,15 @@
 
 回到 `heliolincrr` 主线，先把单夜 unknown 搜索/提取自动化做稳。`unknown_backfill_continue_20260514_115014.log` 对应的服务器续跑任务已完成；本轮已修复 0-link 空表链路，并给单个 dense group 增加 tracklet 数量上限。
 
+最新覆盖状态：
+
+- `20251115..20260514` 有 MP L2 数据的夜次共 `122` 个
+- 当前 `120/122` 个完成 compute 链路
+- 未完成：
+  - `20251201`: 无重复视场，`make_tracklet` 得到 `n_groups=0`，没有 `tracklets_ALL`
+  - `20260414`: 缺 known matched FITS，已有 unknown summary 不可信，需先补 known_asteroid match
+- `20260503` 已按新 dense-group 保护重跑，`unknown=95`，GIF/review package 已重建完成
+
 短期目标：
 
 - 自动选择一个可处理夜次
@@ -28,12 +37,15 @@
 9. 0-link 夜次现在应能生成 empty RR/orbit/summary/unknown JSON/FITS，并让 assign/plot 正常 0 行退出
 10. 真实 0-link 夜 `20260128` 和 `20260224` 已重跑成功，均生成 unknown=0 的 summary 和 empty unknown FITS/JSON
 11. `make_tracklet_linreproj.py` 已新增 `--max-tracklets-per-group`，默认 `100000`；`20260503` 重跑确认 group `073/075` 被跳过，unknown 从 `1591` 降到 `95`
+12. `20260503` 已重新生成 `95/95` 个 unknown GIF，并打包 review package，`n_gifs_missing=0`
+13. `20251128`, `20260412`, `20260430` 已补齐空 unknown FITS/JSON
 
 ## Outstanding issues
 
-- 服务器续跑任务 `1597630` 已完成，但仍需要做全量产物审计
+- 服务器续跑任务 `1597630` 已完成；全量产物审计显示 `120/122` 个有 L2 夜次完成 compute 链路
 - `20251116..20260410` 仍有 `48` 个日历夜没有 summary，需要区分缺原始数据、失败和未跑
 - `20251201` 这类没有重复视场、没有任何 group tracklet 文件的夜次仍会失败，尚未转成成功空结果
+- `20260414` 缺 known matched FITS，必须先补 known_asteroid match，再重跑 unknown 扣除
 - `20260503` 旧异常运行已写入 `1591` 条 `trkSub` history；本次重跑未清理 history，真实 export/review 前需决定是否清理或过滤旧记录
 - 当前单夜自动化还没有“每日选择目标夜 + 防重复 + 日志 + 产物检查”的外层入口
 - GIF 可视化很慢，应在自动提取中默认可跳过或限量，避免拖慢主计算
@@ -57,10 +69,11 @@
 
 ## Next recommended steps
 
-1. 单独处理 `20251201` no group/no tracklet files 场景，决定是否也记录为成功空结果
-2. 续跑完成后审计 summary、unknown JSON/FITS、GIF、review package 和 `trkSub` history 增量
-3. 新增一个 `heliolincrr/run_daily_unknown.sh` 或 Python wrapper，负责每日选择目标夜并调用 `run_single_night.sh`
-4. 默认 `SKIP_PLOTS=1`，只做提取和 summary；必要时再单独补 GIF
-5. 增加产物检查：summary、unknown JSON/FITS、matched count、unknown count、ADES 行数
-6. 将 unknown GIF 打包和 review CSV 模板输出接入 daily wrapper
-7. 将未来 15 夜 unknown catalog 接入同一个 `assign_unknown_trksub.py`
+1. 补跑 `20260414` known_asteroid match，确认生成 `/processed1/20260414/L4/20260414_matched_asteroids.fits`
+2. 重跑 `20260414` heliolincrr summary/unknown，确保 `matched_detections_total > 0`
+3. 单独处理 `20251201` no group/no tracklet files 场景，决定是否也记录为成功空结果
+4. 新增一个 `heliolincrr/run_daily_unknown.sh` 或 Python wrapper，负责每日选择目标夜并调用 `run_single_night.sh`
+5. 默认 `SKIP_PLOTS=1`，只做提取和 summary；必要时再单独补 GIF
+6. 增加产物检查：summary、unknown JSON/FITS、matched count、unknown count、ADES 行数
+7. 将 unknown GIF 打包和 review CSV 模板输出接入 daily wrapper
+8. 将未来 15 夜 unknown catalog 接入同一个 `assign_unknown_trksub.py`
