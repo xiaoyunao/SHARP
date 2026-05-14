@@ -2,6 +2,27 @@
 
 ## 2026-05-14
 
+- task: 审计 `20251115` 之后全部观测夜的 unknown 单夜处理阶段覆盖
+- files_changed: `WORKLOG.md`
+- commands_run: 服务器 Python 扫描 `/processed1/<night>/L2/L4`、`/pipeline/xiaoyunao/data/heliolincrr/<night>`、`/pipeline/xiaoyunao/heliolincrr/plots/<night>`、`/pipeline/xiaoyunao/data/heliolincrr/trksub_history.jsonl`，输出 `/tmp/heliolincrr_stage_audit_20251115_20260514.csv`
+- key_findings:
+  - `20251115..20260514` 中有 MP L2 原始数据的夜次共 `122`
+  - known matched 已完成 `121` 夜；`20260414` 有 MP L2 但缺 known matched
+  - Gaia mask 已完成 `103` 夜；tracklets ALL 完成 `101` 夜；link/orbit/summary/unknown 完成 `99` 夜
+  - unknown GIF 已存在 `96` 夜，总量此前统计为 `5053` 个
+  - 当前只有 `20260220` 分配了 `trkSub`，并生成 unknown ADES、MPC validate reply、MPC submit reply
+  - 有 L2 但还没跑 Gaia mask 的后续夜次主要是 `20260411,20260412,20260414,20260420,20260422,20260423,20260425,20260426,20260427,20260428,20260429,20260430,20260503,20260504,20260506,20260507,20260508,20260509,20260512`
+  - 已跑 Gaia mask 但没完成 tracklet/link/summary 的夜次包括 `20251122,20251201,20260128,20260224`
+  - 已有 summary 但缺 GIF 的夜次包括 `20251128,20251226,20260111`
+- validation:
+  - 审计 CSV 已写到服务器 `/tmp/heliolincrr_stage_audit_20251115_20260514.csv`
+- remaining_issues:
+  - 审计脚本目前是临时 Python；后续应沉淀为正式 stage-audit 工具
+  - 批量补处理前应先决定是否跳过异常高假源夜 `20251226`、`20260111`
+- next_step:
+  - 先对已有 summary 的 `98` 个未分配 `trkSub` 夜次批量分配编号并打包 review package，不做真实 submit
+  - 再补跑未完成 summary 的夜次
+
 - task: 确认 unknown GIF 覆盖情况，并新增观测助手复核包生成脚本
 - files_changed: `heliolincrr/package_unknown_review.py`, `heliolincrr/README.md`, `OUTPUTS.md`, `PLAN.md`, `WORKLOG.md`
 - commands_run: 服务器 `find /pipeline/xiaoyunao/heliolincrr/plots -mindepth 1 -maxdepth 1 -type d ...`, 本地 `python3 -m py_compile heliolincrr/package_unknown_review.py`; 服务器 `/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python /pipeline/xiaoyunao/heliolincrr/package_unknown_review.py 20260220 --make-tar`
