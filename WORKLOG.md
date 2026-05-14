@@ -2,6 +2,27 @@
 
 ## 2026-05-14
 
+- task: 追查 `20260414` 缺 known matched FITS 的原因
+- files_changed: `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 服务器检查 `/processed1/20260414/L4`
+  - 服务器查看 `/pipeline/xiaoyunao/known_asteroid/runtime/logs/20260414_daily.log` 和 `cron.log`
+  - 服务器读取 `/processed1/20260414/L2/*MP*` FITS 头的 `OBS_DATE`, `DATE-OBS`, `EXPSTA`, `MJD` 并按 known_asteroid manifest 规则重算 observing night
+- key_findings:
+  - `/processed1/20260414/L4/20260414_file_manifest.txt` 是 0 字节，`known_asteroid_parts/` 为空，因此没有 per-file match 产物可合并
+  - cron 日志显示 2026-04-15 09:00 提交 `20260414` known 流程，manifest 结果为 `total=105 kept=0 skipped_wrong_night=105 skipped_no_time=0`
+  - `20260414/L2` 的 105 个 MP catalog 全部按 FITS 头时间被分配到 observing night `20260413`
+  - 样例：`OBS_DATE=2026-04-13T16:35:03.116 UTC`，即北京时间 `2026-04-14T00:35:03+08:00`，按 12:00 换夜规则归属 `20260413`
+  - 2026-04-14 09:00 的 daily log 显示 target_night=`20260413`，但 `/processed1/20260413` 不存在，因此跳过
+  - 直接原因不是 matcher 失败，而是目录名 `20260414` 与 known_asteroid 的 observing-night 归属规则不一致，且实际应归属的 `/processed1/20260413` 目录不存在
+- validation:
+  - 服务器统计确认 `assigned_nights {'20260413': 105}`
+- remaining_issues:
+  - 需要决定是否按 observing night 建 `/processed1/20260413` 并迁移/软链接数据，或允许 known_asteroid 对这种目录错位夜做显式 override
+  - 在修正 known matched 前，`20260414` heliolincrr unknown summary 仍不可信
+- next_step:
+  - 设计最小安全补跑方案：优先不移动原始数据，使用 manifest override 或临时目标夜处理 `20260414/L2` 为 `20260413` 的 known matched，再决定 heliolincrr 是否应随 observing night 重算
+
 - task: 推送修复、补齐空结果夜次、重建 `20260503` GIF，并审计 `20251115..20260514` 覆盖
 - files_changed: `WORKLOG.md`, `PLAN.md`
 - commands_run:
