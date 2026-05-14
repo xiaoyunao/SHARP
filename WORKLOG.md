@@ -2,6 +2,23 @@
 
 ## 2026-05-14
 
+- task: 诊断并跳过 `20260503` 异常高 unknown GIF 生成
+- files_changed: `WORKLOG.md`
+- commands_run: 服务器暂停并终止 `plot_unknown_links.py 20260503`; 检查 `20260503_single_night_summary.json`, `20260503_unknown_links.json`, `make_tracklet.log`, `tracklets_20260503_ALL.fits`, `links_tracklets.fits`, `orbit_links.fits`
+- key_findings:
+  - `20260503` 主流程已写出 summary 和 unknown JSON/FITS，但 `unknown_fit_ok_catalog.count=1591`，明显异常
+  - 当晚生成 `688008` 条 2 点 tracklet、`2070` 条 links，其中 `1591` 条为 `all_non_asteroid fit_ok`
+  - 异常主要来自 group `073` 和 `075`: group `073` 在静止源扣除后仍有单曝光 `11515..107850` 个源，生成 `359926` 条 tracklet；group `075` 有 `9220..62322` 个源，生成 `274889` 条 tracklet
+  - `20260503` 的 GIF 进程已生成 `127` 个后被终止，避免继续生成剩余约 `1464` 个异常候选 GIF
+  - 外层 backfill 已继续到 `20260504`
+- validation:
+  - 进程树确认 `plot_unknown_links.py 20260503` 已退出，`run_single_night.sh 20260504` 已开始
+- remaining_issues:
+  - 需要后续给单夜流程增加异常保护，例如 unknown/link 数量上限、dense-field/group veto、GIF 生成上限或先审计再画图
+  - `20260503` 的已写 `trkSub` history 包含这 `1591` 个编号；后续真实提交前必须通过 review/过滤排除
+- next_step:
+  - 等本轮 backfill 完成后，修 0-link 空表处理，并增加异常夜/异常 group 的保护逻辑
+
 - task: 诊断 backfill 中 `20251201`, `20260128`, `20260224` 三个 `rc=1` 夜次
 - files_changed: `WORKLOG.md`
 - commands_run: 服务器按夜次截取 `/pipeline/xiaoyunao/data/heliolincrr/batch_logs/unknown_backfill_continue_20260514_115014.log`; 检查各夜 `mask_gaia.log`, `make_tracklet.log`, `tracklets_*_ALL.fits`, `rr_links/progress.log`; 本地查看 `make_tracklet_linreproj.py`, `run_single_night.sh`, `run_linear_links_from_tracklets.py`
