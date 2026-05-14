@@ -14,6 +14,42 @@ from astropy.table import Table
 
 
 TRK_SUB_RE = re.compile(r"^[-A-Za-z0-9_]{1,8}$")
+UNKNOWN_CATALOG_COLUMNS = [
+    ("trk_sub", "U8"),
+    ("linkage_id", np.int64),
+    ("n_tracklets", np.int64),
+    ("n_obs", np.int64),
+    ("fit_ok", bool),
+    ("is_good", bool),
+    ("rms_arcsec", np.float64),
+    ("med_arcsec", np.float64),
+    ("max_arcsec", np.float64),
+    ("a_au", np.float64),
+    ("ecc", np.float64),
+    ("inc_deg", np.float64),
+    ("raan_deg", np.float64),
+    ("argp_deg", np.float64),
+    ("nu_deg", np.float64),
+    ("best_v1_kms", np.float64),
+    ("lin_rms_arcsec", np.float64),
+    ("lin_speed_arcsec_per_day", np.float64),
+    ("lin_dir_deg", np.float64),
+    ("tracklet_ids", "U2048"),
+    ("image_names", "U4096"),
+    ("objids", "U2048"),
+    ("mjds", "U2048"),
+    ("ras_deg", "U2048"),
+    ("decs_deg", "U2048"),
+    ("groups", "U2048"),
+    ("exp_pairs", "U2048"),
+]
+
+
+def table_from_rows(rows, columns):
+    names = [name for name, _ in columns]
+    if rows:
+        return Table(rows=rows, names=names)
+    return Table({name: np.asarray([], dtype=dtype) for name, dtype in columns})
 
 
 def det_key(file_value, obj_id) -> str:
@@ -525,11 +561,7 @@ def main() -> None:
     unknown_rows = build_unknown_catalog_rows(link_info, tracklet_info, trk_sub_map=trk_sub_map)
     unknown_fits.parent.mkdir(parents=True, exist_ok=True)
     unknown_json.parent.mkdir(parents=True, exist_ok=True)
-    if unknown_rows:
-        Table(rows=unknown_rows).write(unknown_fits, overwrite=True)
-    else:
-        if unknown_fits.exists():
-            unknown_fits.unlink()
+    table_from_rows(unknown_rows, UNKNOWN_CATALOG_COLUMNS).write(unknown_fits, overwrite=True)
     unknown_json.write_text(json.dumps(unknown_rows, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
     orbit_fit_ok = int(np.sum(np.asarray(orbit_links["fit_ok"], dtype=bool)))
@@ -617,8 +649,7 @@ def main() -> None:
     print(f"[write] {summary_json}")
     print(f"[write] {summary_txt}")
     print(f"[write] {unknown_json}")
-    if unknown_rows:
-        print(f"[write] {unknown_fits}")
+    print(f"[write] {unknown_fits}")
 
 
 if __name__ == "__main__":

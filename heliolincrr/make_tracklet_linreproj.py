@@ -643,6 +643,7 @@ def process_one_group(payload):
 
         # --- pair consecutive exposures into 2-point tracklets ---
         all_trk = []
+        n_candidate_tracklets = 0
         for i in range(len(tabs) - 1):
             t = pair_two_exposures(
                     tabs[i], tabs[i + 1],
@@ -658,6 +659,20 @@ def process_one_group(payload):
                 t["exp_i"] = i
                 t["exp_j"] = i + 1
                 all_trk.append(t)
+                n_candidate_tracklets += len(t)
+                if ad["max_tracklets_per_group"] > 0 and n_candidate_tracklets > ad["max_tracklets_per_group"]:
+                    log(
+                        f"[group {gi:03d}] skip: candidate tracklets {n_candidate_tracklets} "
+                        f"exceeds max_tracklets_per_group={ad['max_tracklets_per_group']}"
+                    )
+                    return {
+                        "gi": gi,
+                        "status": "skip_too_many_tracklets",
+                        "ntrk": 0,
+                        "candidate_ntrk": int(n_candidate_tracklets),
+                        "used_fallback": used_fallback,
+                        "log": "\n".join(log_lines),
+                    }
 
         if not all_trk:
             log(f"[group {gi:03d}] skip: no tracklets")
@@ -678,6 +693,20 @@ def process_one_group(payload):
             log(f"[group {gi:03d}] skip: all tracklets filtered")
             return {"gi": gi, "status": "all_filtered", "ntrk": 0,
                     "used_fallback": used_fallback, "log": "\n".join(log_lines)}
+
+        if ad["max_tracklets_per_group"] > 0 and len(trk) > ad["max_tracklets_per_group"]:
+            log(
+                f"[group {gi:03d}] skip: tracklets {len(trk)} exceeds "
+                f"max_tracklets_per_group={ad['max_tracklets_per_group']}"
+            )
+            return {
+                "gi": gi,
+                "status": "skip_too_many_tracklets",
+                "ntrk": 0,
+                "candidate_ntrk": int(len(trk)),
+                "used_fallback": used_fallback,
+                "log": "\n".join(log_lines),
+            }
 
         # tracklet_id: yyyymmdd + group(4) + exp_i(2) + exp_j(2) + seq(4), seq within group
         group_id = gi + 1
@@ -751,6 +780,8 @@ def main():
                     help="lower bound of the bad-shell edge distance filter in pixels")
     ap.add_argument("--edge-shell-max", type=float, default=500.0,
                     help="upper bound of the bad-shell edge distance filter in pixels")
+    ap.add_argument("--max-tracklets-per-group", type=int, default=100000,
+                    help="skip one exposure group if it would produce more than this many tracklets; <=0 disables")
 
     args = ap.parse_args()
 
@@ -782,6 +813,7 @@ def main():
         skip_common_area=bool(args.skip_common_area),
         edge_shell_min=float(args.edge_shell_min),
         edge_shell_max=float(args.edge_shell_max),
+        max_tracklets_per_group=int(args.max_tracklets_per_group),
     )
 
     tasks = [(gi, g, ad, outdir) for gi, g in enumerate(groups) if len(g) >= 2]
@@ -802,7 +834,8 @@ def main():
                 f"min_repeat={args.min_repeat} erode_pix={args.erode_pix} "
                 f"edge_pix={args.edge_pix} fallback_margin={args.fallback_margin} "
                 f"hdu={args.hdu} skip_common_area={args.skip_common_area} "
-                f"edge_shell_min={args.edge_shell_min} edge_shell_max={args.edge_shell_max}\n")
+                f"edge_shell_min={args.edge_shell_min} edge_shell_max={args.edge_shell_max} "
+                f"max_tracklets_per_group={args.max_tracklets_per_group}\n")
         f.write("=" * 80 + "\n")
 
         for gi in sorted(results.keys()):

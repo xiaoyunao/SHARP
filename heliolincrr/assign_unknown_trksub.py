@@ -59,7 +59,7 @@ def write_unknown_rows(rows: list[dict[str, Any]], json_path: Path, fits_path: P
         if rows:
             Table(rows=rows).write(fits_path, overwrite=True)
         elif fits_path.exists():
-            fits_path.unlink()
+            Table.read(fits_path)[:0].write(fits_path, overwrite=True)
 
 
 def detection_signature(row: dict[str, Any]) -> str:

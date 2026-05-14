@@ -68,6 +68,13 @@ def summarize_int_column(arr) -> dict[str, object]:
     }
 
 
+def table_from_rows(rows, columns):
+    names = [name for name, _ in columns]
+    if rows:
+        return Table(rows=rows, names=names)
+    return Table({name: np.asarray([], dtype=dtype) for name, dtype in columns})
+
+
 def tracklet_nights(mjds: np.ndarray) -> int:
     if mjds.size == 0:
         return 0
@@ -261,7 +268,14 @@ def write_outputs(outdir: Path, tab: Table, rows, paths, edge_rows, speed_thresh
         ra3[lid] = float(last["ra1"]); dec3[lid] = float(last["dec1"]); mjd3[lid] = float(last["mjd1"])
         ra4[lid] = float(last["ra2"]); dec4[lid] = float(last["dec2"]); mjd4[lid] = float(last["mjd2"])
 
-    links_tab = Table(rows=link_rows, names=["linkage_id", "n_tracklets", "n_nights"])
+    links_tab = table_from_rows(
+        link_rows,
+        [
+            ("linkage_id", np.int64),
+            ("n_tracklets", np.int64),
+            ("n_nights", np.int64),
+        ],
+    )
     links_tab["ra1"] = ra1; links_tab["dec1"] = dec1; links_tab["ra2"] = ra2; links_tab["dec2"] = dec2
     links_tab["ra3"] = ra3; links_tab["dec3"] = dec3; links_tab["ra4"] = ra4; links_tab["dec4"] = dec4
     links_tab["mjd1"] = mjd1; links_tab["mjd2"] = mjd2; links_tab["mjd3"] = mjd3; links_tab["mjd4"] = mjd4
@@ -270,9 +284,15 @@ def write_outputs(outdir: Path, tab: Table, rows, paths, edge_rows, speed_thresh
         [np.asarray(member_linkage, dtype=np.int64), np.asarray(member_tracklet, dtype="U64")],
         names=["linkage_id", "tracklet_id"],
     )
-    edges_tab = Table(
-        rows=edge_rows,
-        names=["src_tracklet_id", "dst_tracklet_id", "shared_det_key", "speed_diff_arcsec_per_hour", "direction_diff_deg"],
+    edges_tab = table_from_rows(
+        edge_rows,
+        [
+            ("src_tracklet_id", "U64"),
+            ("dst_tracklet_id", "U64"),
+            ("shared_det_key", "U256"),
+            ("speed_diff_arcsec_per_hour", np.float64),
+            ("direction_diff_deg", np.float64),
+        ],
     )
 
     out_links = outdir / "links_tracklets.fits"

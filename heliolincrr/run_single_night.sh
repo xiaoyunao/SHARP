@@ -27,6 +27,7 @@ UNKNOWN_REVIEW_CSV="${UNKNOWN_REVIEW_CSV:-}"
 REQUIRE_UNKNOWN_REVIEW="${REQUIRE_UNKNOWN_REVIEW:-0}"
 VALIDATE_UNKNOWN_MPC="${VALIDATE_UNKNOWN_MPC:-0}"
 SUBMIT_UNKNOWN_MPC="${SUBMIT_UNKNOWN_MPC:-0}"
+MAX_TRACKLETS_PER_GROUP="${MAX_TRACKLETS_PER_GROUP:-100000}"
 
 if [[ ! -x "${PYTHON_BIN}" ]]; then
   echo "[fatal] Python executable not found: ${PYTHON_BIN}"
@@ -136,6 +137,7 @@ run_make_tracklets_step() {
     --nproc 16 \
     --edge-pix 500 \
     --skip-common-area \
+    --max-tracklets-per-group "${MAX_TRACKLETS_PER_GROUP}" \
     --log "${tracklet_dir}/make_tracklet.log"
 }
 

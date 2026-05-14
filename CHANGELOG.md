@@ -3,6 +3,24 @@
 本文件记录仓库中值得保留的版本级行为变化，重点覆盖服务器基线流程、
 调试中确认过的默认值变更，以及会影响结果解释的输出变化。
 
+## 2026-05-14
+
+### heliolincrr 空结果与异常 group 保护
+
+- 单夜 linear link、orbit confirm、summary 现在能写出 0 行但 schema 完整的 FITS
+  - `n_links=0` 不再触发 Astropy 空表无列错误
+  - unknown catalog 即使为空也保留 JSON `[]` 和 schema-only FITS
+  - unknown plot 对空 catalog 写空 summary，并以 `n_gifs=0` 正常退出
+- `make_tracklet_linreproj.py` 新增 `--max-tracklets-per-group`
+  - 默认值 `100000`
+  - 单个 exposure group 的候选 tracklet 超过阈值时直接跳过该 group，不写 group FITS
+  - `run_single_night.sh` 可用 `MAX_TRACKLETS_PER_GROUP` 覆盖默认值
+- 服务器验证：
+  - 临时 0-link 夜 `20990101` 成功跑完 linear link、orbit confirm、summary、assign、plot 的空结果链路
+  - 真实 0-link 夜 `20260128` 和 `20260224` 已成功生成 unknown=0 的 summary 和 empty unknown FITS/JSON
+  - 清理并重跑 `20260503` 后，group `073` 和 `075` 被阈值跳过
+  - `20260503` 从旧结果 `688008` 条 tracklet、`1591` 条 unknown 降为 `53193` 条 tracklet、`95` 条 unknown
+
 ## 2026-04-09
 
 ### known_asteroid 上报去重保护

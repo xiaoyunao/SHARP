@@ -1006,6 +1006,62 @@ def _choose_chunksize(n_links: int, cores: int) -> int:
     return min(cs, 500)
 
 
+ORBIT_LINK_COLUMNS = [
+    ("linkage_id", np.int64),
+    ("n_tracklets", np.int64),
+    ("n_nights", np.int64),
+    ("n_obs", np.int64),
+    ("fit_ok", bool),
+    ("hypo_r_au", np.float64),
+    ("hypo_rdot_au_day", np.float64),
+    ("hypo_rdd_au_day2", np.float64),
+    ("rms_arcsec", np.float64),
+    ("med_arcsec", np.float64),
+    ("max_arcsec", np.float64),
+    ("is_good", bool),
+    ("a_au", np.float64),
+    ("ecc", np.float64),
+    ("inc_deg", np.float64),
+    ("raan_deg", np.float64),
+    ("argp_deg", np.float64),
+    ("nu_deg", np.float64),
+    ("pred_ra_deg", np.float64),
+    ("pred_dec_deg", np.float64),
+    ("lin_rms_arcsec", np.float64),
+    ("lin_speed_arcsec_per_day", np.float64),
+    ("lin_dir_deg", np.float64),
+    ("best_v1_kms", np.float64),
+    ("min_rejected_max_v_kms", np.float64),
+    ("best_rejected_max_v_kms", np.float64),
+    ("fail_reason", "U128"),
+    ("fail_counts", "U512"),
+    ("seed_tracklets", "U1024"),
+    ("inlier_tracklets", "U1024"),
+    ("rejected_tracklets", "U1024"),
+    ("seed_max_v_kms", np.float64),
+    ("final_max_v_kms", np.float64),
+]
+
+
+ORBIT_RESIDUAL_COLUMNS = [
+    ("linkage_id", np.int64),
+    ("obs_key", "U128"),
+    ("tracklet_id", "U64"),
+    ("mjd", np.float64),
+    ("ra_deg", np.float64),
+    ("dec_deg", np.float64),
+    ("resid_arcsec", np.float64),
+    ("used", bool),
+]
+
+
+def table_from_rows(rows: list[tuple], columns: list[tuple[str, object]]) -> Table:
+    names = [name for name, _ in columns]
+    if rows:
+        return Table(rows=rows, names=names)
+    return Table({name: np.asarray([], dtype=dtype) for name, dtype in columns})
+
+
 # ---------------------- main ----------------------
 
 def main():
@@ -1189,44 +1245,7 @@ def main():
     if resid_rows:
         resid_rows.sort(key=lambda r: (int(r[0]), float(r[3])))
 
-    summary = Table(
-        rows=summary_rows,
-        names=[
-            "linkage_id",
-            "n_tracklets",
-            "n_nights",
-            "n_obs",
-            "fit_ok",
-            "hypo_r_au",
-            "hypo_rdot_au_day",
-            "hypo_rdd_au_day2",
-            "rms_arcsec",
-            "med_arcsec",
-            "max_arcsec",
-            "is_good",
-            "a_au",
-            "ecc",
-            "inc_deg",
-            "raan_deg",
-            "argp_deg",
-            "nu_deg",
-            "pred_ra_deg",
-            "pred_dec_deg",
-            "lin_rms_arcsec",
-            "lin_speed_arcsec_per_day",
-            "lin_dir_deg",
-            "best_v1_kms",
-            "min_rejected_max_v_kms",
-            "best_rejected_max_v_kms",
-            "fail_reason",
-            "fail_counts",
-            "seed_tracklets",
-            "inlier_tracklets",
-            "rejected_tracklets",
-            "seed_max_v_kms",
-            "final_max_v_kms",
-        ],
-    )
+    summary = table_from_rows(summary_rows, ORBIT_LINK_COLUMNS)
 
     summary.meta["rr_dir"] = rr_dir.name
     summary.meta["tracklets"] = tracklets_path.name
@@ -1246,23 +1265,10 @@ def main():
     summary.write(out_links, overwrite=True)
     log(f"[write] {out_links}  n_links={len(summary)}")
 
-    if resid_rows:
-        resid_tab = Table(
-            rows=resid_rows,
-            names=[
-                "linkage_id",
-                "obs_key",
-                "tracklet_id",
-                "mjd",
-                "ra_deg",
-                "dec_deg",
-                "resid_arcsec",
-                "used",
-            ],
-        )
-        out_resid = outdir / "orbit_obs_residuals.fits"
-        resid_tab.write(out_resid, overwrite=True)
-        log(f"[write] {out_resid}  n_rows={len(resid_tab)}")
+    resid_tab = table_from_rows(resid_rows, ORBIT_RESIDUAL_COLUMNS)
+    out_resid = outdir / "orbit_obs_residuals.fits"
+    resid_tab.write(out_resid, overwrite=True)
+    log(f"[write] {out_resid}  n_rows={len(resid_tab)}")
 
     try:
         (outdir / "provenance.txt").write_text(
@@ -1272,17 +1278,16 @@ def main():
     except Exception:
         pass
 
-    if len(summary) > 0:
-        n_ok = int(np.sum(np.asarray(summary["fit_ok"], dtype=bool)))
-        n_good = int(np.sum(np.asarray(summary["is_good"], dtype=bool)))
-        log(f"[done] fit_ok={n_ok}/{len(summary)}  is_good={n_good}/{len(summary)}")
-        fail_mask = ~np.asarray(summary["fit_ok"], dtype=bool)
-        if np.any(fail_mask):
-            reasons = np.asarray(summary["fail_reason"]).astype("U64")[fail_mask]
-            uniq, cnt = np.unique(reasons, return_counts=True)
-            pairs = sorted(zip(cnt, uniq), reverse=True)
-            joined = ", ".join(f"{reason}={int(n)}" for n, reason in pairs)
-            log(f"[done] fit_fail_reasons: {joined}")
+    n_ok = int(np.sum(np.asarray(summary["fit_ok"], dtype=bool)))
+    n_good = int(np.sum(np.asarray(summary["is_good"], dtype=bool)))
+    log(f"[done] fit_ok={n_ok}/{len(summary)}  is_good={n_good}/{len(summary)}")
+    fail_mask = ~np.asarray(summary["fit_ok"], dtype=bool)
+    if np.any(fail_mask):
+        reasons = np.asarray(summary["fail_reason"]).astype("U64")[fail_mask]
+        uniq, cnt = np.unique(reasons, return_counts=True)
+        pairs = sorted(zip(cnt, uniq), reverse=True)
+        joined = ", ".join(f"{reason}={int(n)}" for n, reason in pairs)
+        log(f"[done] fit_fail_reasons: {joined}")
 
 
 if __name__ == "__main__":

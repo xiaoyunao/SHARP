@@ -253,7 +253,10 @@ def main() -> None:
         limit_links=int(args.limit_links),
     )
     if not rows:
-        raise SystemExit("No fit_ok all_non_asteroid links found.")
+        summary_path = out_dir / f"{night}_unknown_link_summary.json"
+        summary_path.write_text("[]\n", encoding="utf-8")
+        print(f"[write] {out_dir}  n_gifs=0")
+        return
 
     n_written = build_gifs(
         rows=rows,

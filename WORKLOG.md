@@ -2,6 +2,36 @@
 
 ## 2026-05-14
 
+- task: 修复 0-link 空结果链路，并为异常 dense group 增加 tracklet 上限保护
+- files_changed: `heliolincrr/run_linear_links_from_tracklets.py`, `heliolincrr/orbit_confirm_links.py`, `heliolincrr/summarize_single_night.py`, `heliolincrr/make_tracklet_linreproj.py`, `heliolincrr/run_single_night.sh`, `heliolincrr/assign_unknown_trksub.py`, `heliolincrr/plot_unknown_links.py`, `WORKLOG.md`, `PLAN.md`, `CHANGELOG.md`
+- commands_run:
+  - 本地 `python3 -m py_compile ...`, `bash -n heliolincrr/run_single_night.sh`
+  - 本地构造 0-link tracklet FITS，运行 `run_linear_links_from_tracklets.py`
+  - 服务器同步脚本到 `/pipeline/xiaoyunao/heliolincrr/`
+  - 服务器构造 `20990101` 0-link 临时工作区，运行 linear link、orbit confirm、summary、assign、plot
+  - 服务器执行 `SKIP_PLOTS=1 ASSIGN_UNKNOWN_TRKSUB=0 ... bash run_single_night.sh 20260128` 和 `20260224`
+  - 服务器删除 `20260503` 旧 unknown/analysis/rr/tracklet/plot/review 产物，保留 L1/L2 和 mask_gaia，执行 `SKIP_PLOTS=1 ASSIGN_UNKNOWN_TRKSUB=0 ... bash run_single_night.sh 20260503`
+- key_findings:
+  - `run_linear_links_from_tracklets.py`、`orbit_confirm_links.py` 和 `summarize_single_night.py` 现在都用显式 schema 写 0 行 FITS，避免 Astropy 空表无列错误
+  - `plot_unknown_links.py` 对空 unknown catalog 写 `[]` summary 并以 `n_gifs=0` 正常退出
+  - `assign_unknown_trksub.py` 遇到空 catalog 时保留已有 schema-only unknown FITS，不再删除
+  - `make_tracklet_linreproj.py` 新增 `--max-tracklets-per-group`，默认 `100000`；`run_single_night.sh` 通过 `MAX_TRACKLETS_PER_GROUP` 传入
+  - `20260503` 重跑时 group `073` 在 `275488` 候选 tracklet、group `075` 在 `117802` 候选 tracklet 处被跳过，未写对应 group FITS
+  - `20260503` 新结果：`tracklets_ALL=53193`, `links=574`, `unknown_fit_ok_catalog.count=95`；旧异常结果为 `688008` tracklets 和 `1591` unknown
+- validation:
+  - 本地 py_compile、bash -n 通过
+  - 本地 0-link RR 输出 `links_tracklets.fits`, `linkage_members.fits`, `link_edges.fits` 均为 0 行但列完整
+  - 服务器 0-link 临时夜 `20990101` 成功生成 empty RR/orbit/summary/unknown FITS/JSON，assign 和 plot 以 0 行正常退出
+  - 服务器真实 0-link 夜 `20260128` 和 `20260224` 均 rc=0，已写 summary 和 unknown JSON/FITS，`unknown_fit_ok_catalog.count=0`
+  - 服务器 `20260503` 重跑完成，summary 和 unknown FITS/JSON 已重新生成，未生成 GIF，未触碰新 `trkSub` history
+- remaining_issues:
+  - `20260503` 旧异常运行此前已经向全局 `trksub_history.jsonl` 写入 `1591` 条历史记录，本次测试未清理 history
+  - `20260503` 新 unknown catalog 因测试使用 `ASSIGN_UNKNOWN_TRKSUB=0`，当前 `trk_sub` 为空；真实 review/export 前需重新分配或按策略清理旧 history
+  - `20251201` 仍属于 no-repeat-field / no tracklet files 场景，尚未改成成功空结果
+- next_step:
+  - 继续做 backfill 完成后的产物审计和 daily wrapper
+  - 单独处理 `20251201` no-repeat-field / no tracklet files 场景
+
 - task: 诊断并跳过 `20260503` 异常高 unknown GIF 生成
 - files_changed: `WORKLOG.md`
 - commands_run: 服务器暂停并终止 `plot_unknown_links.py 20260503`; 检查 `20260503_single_night_summary.json`, `20260503_unknown_links.json`, `make_tracklet.log`, `tracklets_20260503_ALL.fits`, `links_tracklets.fits`, `orbit_links.fits`
