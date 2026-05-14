@@ -2,6 +2,35 @@
 
 ## 2026-05-14
 
+- task: 用新 Gaia mask 规则清理并全量重跑 `20251115..20260514` unknown 链路
+- files_changed: `heliolincrr/mask_gaia.py`, `heliolincrr/merge_tracklets_night.py`, `heliolincrr/package_unknown_review.py`, `heliolincrr/run_single_night.sh`, `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 本地 `python3 -m py_compile heliolincrr/package_unknown_review.py heliolincrr/merge_tracklets_night.py ...`
+  - 本地 `bash -n heliolincrr/run_single_night.sh`
+  - 服务器同步 `mask_gaia.py`, `merge_tracklets_night.py`, `package_unknown_review.py`, `run_single_night.sh`
+  - 服务器验证 `package_unknown_review.py 20260220 --out-dir /tmp/review_pkg_full_test_20260220`
+  - 服务器启动 `/tmp/run_unknown_full_remask_20260514.sh`
+- key_findings:
+  - `mask_gaia.py` 已改为同时用 `RA_Win/DEC_Win` 和 `RA_PSF/DEC_PSF` 匹配 Gaia，任一坐标对在阈值内即删除静止源
+  - `run_single_night.sh` 使用 `--match-arcsec 1.5`
+  - `package_unknown_review.py` 现在除 GIF 和两列 review CSV 外，还写 `*_unknown_review_full.fits`，逐 detection 包含 `RA_Win/DEC_Win`, `RA_PSF/DEC_PSF`, `trk_sub`, `linkage_id`, detection 所属 tracklet、整条 link 的 tracklet 列表和轨道摘要
+  - `merge_tracklets_night.py --allow-empty` 可为无 group/no tracklet 夜写 schema-only `tracklets_ALL`
+  - `run_single_night.sh` 遇到 0 tracklet 会继续写 0-link/orbit/summary/unknown 空结果，不再 fatal
+  - 初始全量脚本从 `20251115` 启动；`20251115` 生成 `882` 个 unknown 后进入 GIF 阶段，用户判断该晚结果有问题
+  - 已终止 `20251115` 当前运行，清理 `20251115` 的 `mask_gaia`, `tracklets_linreproj`, `rr_links`, `analysis`, plots, review package, unknown JSON/FITS/ADES 和刚写入的 `trkSub` history
+  - 已重启全量脚本，改从 `20251116` 跑到 `20260514`
+  - 全量脚本会清理旧 unknown/heliolincrr 产物和 scoped `/tmp` 测试目录，保留 `/processed1/<night>/L1/L2` 和 known matched
+  - 全量步骤顺序为：mask Gaia -> tracklet/merge -> link -> orbit confirm -> summarize/扣 known -> assign `trkSub` -> GIF -> review package -> ADES PSV；不 validate、不 submit
+- validation:
+  - 服务器 `20260220` review package 测试成功：`n_catalog_rows=34`, `n_gifs_copied=34`, `review_ades_rows=102`, `review_full_rows=102`
+  - `20260220_unknown_review_full.fits` 可读，包含 `RA_Win`, `DEC_Win`, `RA_PSF`, `DEC_PSF`, `source_tracklet_ids`
+- remaining_issues:
+  - 新全量后台任务仍在运行，PID `1642747`
+  - 日志：`/pipeline/xiaoyunao/data/heliolincrr/batch_logs/unknown_full_remask_20260514_163411.log`
+  - 状态表：`/pipeline/xiaoyunao/data/heliolincrr/batch_logs/unknown_full_remask_20260514_163411_status.tsv`
+- next_step:
+  - 监控 `20251116` 是否完整通过；全量完成后审计每晚 `unknown_count`, `review_full_rows`, `ADES PSV` 行数和失败/跳过原因
+
 - task: 追查 `20260414` 缺 known matched FITS 的原因
 - files_changed: `WORKLOG.md`, `PLAN.md`
 - commands_run:

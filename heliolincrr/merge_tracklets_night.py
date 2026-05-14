@@ -20,6 +20,31 @@ from typing import List
 import numpy as np
 from astropy.table import Table, vstack
 
+TRACKLET_COLUMNS = [
+    ("ra1", np.float64),
+    ("dec1", np.float64),
+    ("ra2", np.float64),
+    ("dec2", np.float64),
+    ("v_arcsec_hr", np.float64),
+    ("objID1", np.int64),
+    ("objID2", np.int64),
+    ("mjd1", np.float64),
+    ("mjd2", np.float64),
+    ("file1", "U512"),
+    ("file2", "U512"),
+    ("fwhm1", np.float64),
+    ("fwhm2", np.float64),
+    ("mag_psf1", np.float64),
+    ("mag_psf2", np.float64),
+    ("magerr_psf1", np.float64),
+    ("magerr_psf2", np.float64),
+    ("dmag", np.float64),
+    ("group", np.int64),
+    ("exp_i", np.int64),
+    ("exp_j", np.int64),
+    ("tracklet_id", "U32"),
+]
+
 
 def read_one(fn: str) -> Table:
     """Read a single tracklet file. Returns an Astropy Table."""
@@ -33,6 +58,10 @@ def merge_tables(tabs: List[Table]) -> Table:
         return tabs[0]
     # vstack with exact column match
     return vstack(tabs, metadata_conflicts="silent")
+
+
+def empty_tracklet_table() -> Table:
+    return Table({name: np.asarray([], dtype=dtype) for name, dtype in TRACKLET_COLUMNS})
 
 
 def main():
@@ -79,6 +108,11 @@ def main():
             "<out>.inputs.txt"
         ),
     )
+    ap.add_argument(
+        "--allow-empty",
+        action="store_true",
+        help="Write a schema-only nightly tracklet FITS when no per-group files exist.",
+    )
 
     args = ap.parse_args()
 
@@ -106,21 +140,23 @@ def main():
 
     fns = sorted(glob.glob(pattern))
     if len(fns) == 0:
-        raise FileNotFoundError(
-            f"No tracklet files matched pattern: {pattern}. "
-            f"Check --tracklet-dir / --pattern."
-        )
+        if not args.allow_empty:
+            raise FileNotFoundError(
+                f"No tracklet files matched pattern: {pattern}. "
+                f"Check --tracklet-dir / --pattern."
+            )
+        merged = empty_tracklet_table()
+    else:
+        tabs = []
+        for fn in fns:
+            t = read_one(fn)
+            if args.add_source_col:
+                # create as fixed-length string for FITS compatibility
+                src = os.path.basename(fn)
+                t["srcfile"] = np.array([src] * len(t), dtype=f"U{max(1, len(src))}")
+            tabs.append(t)
 
-    tabs = []
-    for fn in fns:
-        t = read_one(fn)
-        if args.add_source_col:
-            # create as fixed-length string for FITS compatibility
-            src = os.path.basename(fn)
-            t["srcfile"] = np.array([src] * len(t), dtype=f"U{max(1, len(src))}")
-        tabs.append(t)
-
-    merged = merge_tables(tabs)
+        merged = merge_tables(tabs)
 
     # record provenance in metadata
     merged.meta["night"] = night

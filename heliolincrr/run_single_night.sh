@@ -105,7 +105,7 @@ run_mask_gaia_step() {
     --gaia-dir "/pipeline/ref/healpix" \
     --out-root "${ROOT_OUT}" \
     --gaia-cone-deg 5.0 \
-    --match-arcsec 1.0 \
+    --match-arcsec 1.5 \
     --pm-zp 2016.0 \
     --hdu-header 1 \
     --mag-psf-max 21.0 \
@@ -153,7 +153,8 @@ run_merge_tracklets_step() {
     --tracklet-dir "${tracklet_dir}" \
     --out "${nightly_all}" \
     --overwrite \
-    --write-index
+    --write-index \
+    --allow-empty
 }
 
 ensure_nightly_all() {
@@ -215,8 +216,7 @@ PY
 )"
 
 if [[ "${N_TRK_NIGHT}" -le 0 ]]; then
-  echo "[fatal] nightly ALL has 0 tracklets: ${NIGHTLY_ALL}"
-  exit 1
+  echo "[info] nightly ALL has 0 tracklets; continue to write empty link/orbit/unknown outputs: ${NIGHTLY_ALL}"
 fi
 
 # =============================

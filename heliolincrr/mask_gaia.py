@@ -61,6 +61,19 @@ def get_radec_cols(tab: Table):
     raise KeyError("No recognized RA/Dec columns in L2 catalog (RA_Win/DEC_Win, RA_PSF/DEC_PSF, or A/B).")
 
 
+def get_radec_col_pairs(tab: Table):
+    """Return sky-coordinate column pairs to test against Gaia."""
+    pairs = []
+    for ra_col, dec_col in (("RA_Win", "DEC_Win"), ("RA_PSF", "DEC_PSF")):
+        if ra_col in tab.colnames and dec_col in tab.colnames:
+            pairs.append((ra_col, dec_col))
+    if pairs:
+        return pairs
+    if "A" in tab.colnames and "B" in tab.colnames:
+        return [("A", "B")]
+    raise KeyError("No recognized RA/Dec columns in L2 catalog (RA_Win/DEC_Win, RA_PSF/DEC_PSF, or A/B).")
+
+
 def prefilter_l2(tab: Table, mag_psf_max=21.0, require_flag0=True) -> Table:
     """Prefilter L2 sources before Gaia matching."""
     if len(tab) == 0:
@@ -194,7 +207,7 @@ def mask_gaia_from_l2_file(
         return {"file": l2_fn, "status": "empty_after_prefilter", "n_in": 0, "n_out": 0,
                 "n_gaia": 0, "n_match": 0}
 
-    ra_col, dec_col = get_radec_cols(tab)
+    radec_pairs = get_radec_col_pairs(tab)
 
     # Header info for cone + epoch
     ra0, dec0, dateobs = parse_obsinfo_from_header(l2_fn, hdu_header=hdu_header)
@@ -218,14 +231,18 @@ def mask_gaia_from_l2_file(
     # Proper-motion propagation (if pm columns exist)
     c_gaia = propagate_gaia_to_epoch(gaia, obstime, pm_zp=pm_zp)
 
-    # L2 coords
-    c_l2 = SkyCoord(np.array(tab[ra_col], dtype=float) * u.deg,
-                    np.array(tab[dec_col], dtype=float) * u.deg,
-                    frame="icrs")
-
-    # Match L2 -> Gaia and drop hits
-    idx, sep, _ = c_l2.match_to_catalog_sky(c_gaia)
-    hit = (sep.arcsec <= float(match_radius_arcsec))
+    # Match L2 -> Gaia and drop hits.  Some static-source centroids are
+    # materially closer to Gaia in PSF coordinates than in window coordinates,
+    # so test all available sky-coordinate estimates.
+    hit = np.zeros(len(tab), dtype=bool)
+    for ra_col, dec_col in radec_pairs:
+        c_l2 = SkyCoord(
+            np.array(tab[ra_col], dtype=float) * u.deg,
+            np.array(tab[dec_col], dtype=float) * u.deg,
+            frame="icrs",
+        )
+        idx, sep, _ = c_l2.match_to_catalog_sky(c_gaia)
+        hit |= (sep.arcsec <= float(match_radius_arcsec))
     n_match = int(np.sum(hit))
 
     out_tab = tab[~hit]
@@ -234,8 +251,15 @@ def mask_gaia_from_l2_file(
     os.makedirs(os.path.dirname(out_fn), exist_ok=True)
     out_tab.write(out_fn, overwrite=True)
 
-    return {"file": l2_fn, "status": "ok", "n_in": n_in, "n_out": n_out,
-            "n_gaia": n_gaia, "n_match": n_match}
+    return {
+        "file": l2_fn,
+        "status": "ok",
+        "n_in": n_in,
+        "n_out": n_out,
+        "n_gaia": n_gaia,
+        "n_match": n_match,
+        "coord_pairs": ",".join(f"{ra}/{dec}" for ra, dec in radec_pairs),
+    }
 
 
 # -----------------------------
@@ -322,10 +346,13 @@ def main():
         f.write(f"prefilter: Flag==0={args.require_flag0} (if exists), Mag_PSF<={args.mag_psf_max} (if exists)\n")
         f.write(f"nproc={args.nproc}\n")
         f.write("=" * 120 + "\n")
-        f.write("status\tin\tout\tgaia\tmatch\tfile\n")
+        f.write("status\tin\tout\tgaia\tmatch\tcoord_pairs\tfile\n")
         f.write("-" * 120 + "\n")
         for r in results:
-            f.write(f"{r['status']}\t{r['n_in']}\t{r['n_out']}\t{r['n_gaia']}\t{r['n_match']}\t{r['file']}\n")
+            f.write(
+                f"{r['status']}\t{r['n_in']}\t{r['n_out']}\t{r['n_gaia']}\t{r['n_match']}\t"
+                f"{r.get('coord_pairs', '')}\t{r['file']}\n"
+            )
 
 
 if __name__ == "__main__":

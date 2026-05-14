@@ -2,15 +2,24 @@
 
 ## Current objective
 
-回到 `heliolincrr` 主线，先把单夜 unknown 搜索/提取自动化做稳。`unknown_backfill_continue_20260514_115014.log` 对应的服务器续跑任务已完成；本轮已修复 0-link 空表链路，并给单个 dense group 增加 tracklet 数量上限。
+回到 `heliolincrr` 主线，先把单夜 unknown 搜索/提取自动化做稳。当前正在用新 Gaia mask 规则全量重跑 `20251116..20260514`，服务器后台 PID `1642747`。
+
+本轮全量任务：
+
+- 日志：`/pipeline/xiaoyunao/data/heliolincrr/batch_logs/unknown_full_remask_20260514_163411.log`
+- 状态表：`/pipeline/xiaoyunao/data/heliolincrr/batch_logs/unknown_full_remask_20260514_163411_status.tsv`
+- `20251115` 的本轮中间产物已按用户要求清理，本轮不继续处理该晚
+- 已清理旧 unknown/heliolincrr 产物和 scoped `/tmp` 测试目录
+- 保留 `/processed1/<night>/L1/L2` 和 known matched
+- 顺序：link 完成 -> 轨道确认 -> summarize/扣 known 并生成 unknown catalog -> 分配 `trkSub` -> 生成 GIF/review package -> 跳过观测助手外部检查 -> 生成 ADES PSV
+- 本轮不 validate、不 submit
 
 最新覆盖状态：
 
 - `20251115..20260514` 有 MP L2 数据的夜次共 `122` 个
-- 当前 `120/122` 个完成 compute 链路
-- 未完成：
-  - `20251201`: 无重复视场，`make_tracklet` 得到 `n_groups=0`，没有 `tracklets_ALL`
-  - `20260414`: `L2` 文件按 FITS 头时间全部归属 observing night `20260413`，但 `/processed1/20260413` 不存在；known_asteroid 对 `20260414` 生成空 manifest，已有 unknown summary 不可信
+- 全量重跑前 `120/122` 个完成 compute 链路
+- 全量重跑会跳过缺 known matched 的夜次，例如 `20260414`
+- `20251201` no-repeat-field / no tracklet 场景已改为可生成 schema-only `tracklets_ALL` 并继续写 empty unknown 结果
 - `20260503` 已按新 dense-group 保护重跑，`unknown=95`，GIF/review package 已重建完成
 
 短期目标：
@@ -39,14 +48,16 @@
 11. `make_tracklet_linreproj.py` 已新增 `--max-tracklets-per-group`，默认 `100000`；`20260503` 重跑确认 group `073/075` 被跳过，unknown 从 `1591` 降到 `95`
 12. `20260503` 已重新生成 `95/95` 个 unknown GIF，并打包 review package，`n_gifs_missing=0`
 13. `20251128`, `20260412`, `20260430` 已补齐空 unknown FITS/JSON
+14. `mask_gaia.py` 已改为同时使用 `RA_Win/DEC_Win` 和 `RA_PSF/DEC_PSF` 匹配 Gaia，`run_single_night.sh` 使用 `--match-arcsec 1.5`
+15. `package_unknown_review.py` 已新增 `*_unknown_review_full.fits`，逐 detection 记录 `RA_Win/DEC_Win`, `RA_PSF/DEC_PSF`, `trk_sub`, `linkage_id`, detection 所属 tracklet、整条 link 的 tracklet 列表和轨道摘要
+16. `merge_tracklets_night.py --allow-empty` 和 `run_single_night.sh` 已支持 no-group/no-tracklet 夜生成 empty unknown 结果
 
 ## Outstanding issues
 
-- 服务器续跑任务 `1597630` 已完成；全量产物审计显示 `120/122` 个有 L2 夜次完成 compute 链路
+- 服务器全量重跑任务 `1642747` 正在运行；完成后需要审计状态表和每晚产物
 - `20251116..20260410` 仍有 `48` 个日历夜没有 summary，需要区分缺原始数据、失败和未跑
-- `20251201` 这类没有重复视场、没有任何 group tracklet 文件的夜次仍会失败，尚未转成成功空结果
-- `20260414` 目录名与 observing-night 归属不一致，必须先决定按 `20260413` 还是目录夜 `20260414` 处理，再补 known matched 并重跑 unknown 扣除
-- `20260503` 旧异常运行已写入 `1591` 条 `trkSub` history；本次重跑未清理 history，真实 export/review 前需决定是否清理或过滤旧记录
+- `20260414` 目录名与 observing-night 归属不一致；用户判断 `0414` 实际应无这些观测，本轮按缺 known matched 跳过
+- 本轮全量重跑已清空旧 unknown `trkSub` history；历史编号会随新 catalog 重新分配，且本轮不 submit
 - 当前单夜自动化还没有“每日选择目标夜 + 防重复 + 日志 + 产物检查”的外层入口
 - GIF 可视化很慢，应在自动提取中默认可跳过或限量，避免拖慢主计算
 - 15 夜流程尚未接入同一个 `trkSub` history
@@ -69,12 +80,12 @@
 
 ## Next recommended steps
 
-1. 为 `20260414/L2` 的 observing-night 错位制定补跑方案：105 个 MP catalog 按 header 均属 `20260413`，但 `/processed1/20260413` 不存在
-2. 补跑对应 known_asteroid match，确认生成可信 matched FITS
-3. 按同一夜次口径重跑 heliolincrr summary/unknown，确保 `matched_detections_total > 0`
-4. 单独处理 `20251201` no group/no tracklet files 场景，决定是否也记录为成功空结果
-5. 新增一个 `heliolincrr/run_daily_unknown.sh` 或 Python wrapper，负责每日选择目标夜并调用 `run_single_night.sh`
+1. 监控 `unknown_full_remask_20260514_163411.log` 和 status TSV，确认 `20251116` 和后续夜次通过
+2. 全量完成后审计 done/fail/skip 数量、unknown count、review full FITS 行数和 ADES 行数
+3. 抽查若干 review package tar，确认 GIF、review CSV、`*_unknown_review_full.fits`、`*_unknown_review_ades.fits` 均包含在包内
+4. 对失败夜按 status note 分类修复或记录跳过原因
+5. 新增一个正式 `heliolincrr/run_daily_unknown.sh` 或 Python wrapper，负责每日选择目标夜并调用 `run_single_night.sh`
 6. 默认 `SKIP_PLOTS=1`，只做提取和 summary；必要时再单独补 GIF
-7. 增加产物检查：summary、unknown JSON/FITS、matched count、unknown count、ADES 行数
+7. 增加产物检查：summary、unknown JSON/FITS、matched count、unknown count、review full FITS 行数、ADES 行数
 8. 将 unknown GIF 打包和 review CSV 模板输出接入 daily wrapper
 9. 将未来 15 夜 unknown catalog 接入同一个 `assign_unknown_trksub.py`
