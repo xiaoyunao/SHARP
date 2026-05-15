@@ -95,9 +95,16 @@ unknown 人工复核包：
   gifs/
     <trkSub>_linkXXXX_<night>.gif
   <night>_unknown_review.csv
+  <night>_unknown_review_full.fits
+  <night>_unknown_review_ades.fits
   <night>_unknown_review_manifest.json
 /pipeline/xiaoyunao/heliolincrr/review_packages/<night>_unknown_review.tar.gz
 ```
+
+其中 `<night>_unknown_review.csv` 是人工标注模板，保留 `tracklet_id,is_real`
+两列；`*_unknown_review_full.fits` 是逐 detection 复核表，包含
+`RA_Win/DEC_Win`、`RA_PSF/DEC_PSF`、`trk_sub`、`linkage_id`、tracklet
+来源和轨道摘要；`*_unknown_review_ades.fits` 是复核包内用于核对 ADES 行的表。
 
 ## known_asteroid Plots
 

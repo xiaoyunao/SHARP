@@ -1,6 +1,75 @@
 # WORKLOG
 
+## 2026-05-15
+
+- task: 更新 unknown 人工复核包输出文档
+- files_changed: `OUTPUTS.md`, `WORKLOG.md`
+- commands_run:
+  - 本地 `rg -n "review|unknown|复核|package|人工" OUTPUTS.md`
+  - 本地 `sed -n '1,240p' OUTPUTS.md`
+  - 服务器检查 `/pipeline/xiaoyunao/heliolincrr/review_packages/20251116/`
+- key_findings:
+  - 服务器实际复核包除 GIF、CSV、manifest 外，还包含 `*_unknown_review_full.fits` 和 `*_unknown_review_ades.fits`
+  - 原 `OUTPUTS.md` 的 unknown 人工复核包段落漏记这两个 FITS
+- validation:
+  - 以 `20251116` 复核包目录和 tar 内容确认文件结构
+- remaining_issues:
+  - 无
+- next_step:
+  - 后续若 review package 再增加产物，同步更新 `OUTPUTS.md`
+
+- task: 查看服务器 unknown full remask 进度
+- files_changed: `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 本地 `git status --short --branch`, `git branch --show-current`, `git fetch --all --prune`, `git log --oneline --decorate --graph -n 15 --all`
+  - 本地读取 `WORKLOG.md`, `PLAN.md`
+  - 服务器检查最新 `/pipeline/xiaoyunao/data/heliolincrr/batch_logs/unknown_full_remask_*.log`
+  - 服务器读取 `/pipeline/xiaoyunao/data/heliolincrr/batch_logs/unknown_full_remask_20260514_171651_status.tsv`
+  - 服务器检查 `pgrep -af 'run_unknown_full_remask|run_single_night|plot_unknown_links|package_unknown_review|export_unknown_ades'`
+  - 服务器统计 `/pipeline/xiaoyunao/heliolincrr/plots/20260218/*.gif`
+- key_findings:
+  - 本地 `main` 与 `origin/main` 对齐；`WORKLOG.md` 和 `PLAN.md` 有未提交的进度记录改动
+  - 全量任务仍为 `/tmp/run_unknown_full_remask_from_20251119.sh`，PID `1653862`
+  - 最新日志仍为 `/pipeline/xiaoyunao/data/heliolincrr/batch_logs/unknown_full_remask_20260514_171651.log`
+  - 状态表当前累计 `done=73`, `skip=18`
+  - skip 原因：`no_l2=14`, `no_mp_l2=1`, `unknown_links_after_known_gt_200=3`
+  - 状态表最后完成/跳过行是 `20260217 skip rc=20 unknown_links_after_known_gt_200`
+  - 当前正在跑 `20260218` 的 `plot_unknown_links.py`
+  - `20260218` 已写出 unknown JSON/FITS，扣 known 后 `unknown=124`
+  - `20260218` `trkSub` 分配 `assigned_new=124`, `history_records_before=3596`
+  - `20260218` 当前 GIF 进度为 `18/124`
+- validation:
+  - 服务器确认 `/processed1/20260218/L4/20260218_unknown_links.{json,fits}` 已存在
+- remaining_issues:
+  - `20260218` 仍未完成 GIF/review package/状态表收尾
+  - 需要继续监控是否顺利进入 `20260219` 及后续夜次
+- next_step:
+  - 等 `20260218` 完成后检查 status 行、review full rows、ADES rows 和 review package tar
+
 ## 2026-05-14
+
+- task: 恢复会话并查看服务器 unknown full remask 进度
+- files_changed: `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 本地 `git status --short --branch`, `git fetch --all --prune`, `git log --oneline --decorate --graph -n 15 --all`
+  - 本地读取 `WORKLOG.md`, `PLAN.md`
+  - 服务器检查最新 `/pipeline/xiaoyunao/data/heliolincrr/batch_logs/unknown_full_remask_*.log`
+  - 服务器检查进程 `ps -fp 1653862,1654354,1655084`
+  - 服务器统计 `/pipeline/xiaoyunao/heliolincrr/plots/20251119/*.gif`
+- key_findings:
+  - 本地 `main` 与 `origin/main` 对齐，恢复前无未提交改动
+  - 旧记录中的 PID `1652847` 已不在；当前全量任务为 `/tmp/run_unknown_full_remask_from_20251119.sh`，PID `1653862`
+  - 最新日志为 `/pipeline/xiaoyunao/data/heliolincrr/batch_logs/unknown_full_remask_20260514_171651.log`
+  - 用户更正：`20251119` 应继续处理，不再视为跳过夜次
+  - `20251119` 已写出 unknown JSON/FITS，扣 known 后 `unknown=67`，低于 `MAX_UNKNOWN_LINKS_AFTER_KNOWN=200`
+  - `20251119` 正在运行 `plot_unknown_links.py` 生成 GIF，最近检查为 `14/67`
+  - 状态表 `/pipeline/xiaoyunao/data/heliolincrr/batch_logs/unknown_full_remask_20260514_171651_status.tsv` 当前仍只有表头，说明该夜还未收尾
+- validation:
+  - 服务器进程确认主脚本、`run_single_night.sh 20251119` 和 `plot_unknown_links.py 20251119` 均在运行
+- remaining_issues:
+  - GIF 生成较慢，需继续监控 `20251119` 是否完成 review package/ADES 导出并进入下一夜
+- next_step:
+  - 继续 tail 最新日志和 status TSV；待 `20251119` 完成后检查 `unknown_count`, `review_full_rows`, `ADES PSV` 行数
 
 - task: 用新 Gaia mask 规则清理并全量重跑 `20251115..20260514` unknown 链路
 - files_changed: `heliolincrr/mask_gaia.py`, `heliolincrr/merge_tracklets_night.py`, `heliolincrr/package_unknown_review.py`, `heliolincrr/run_single_night.sh`, `WORKLOG.md`, `PLAN.md`

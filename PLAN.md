@@ -2,19 +2,21 @@
 
 ## Current objective
 
-回到 `heliolincrr` 主线，先把单夜 unknown 搜索/提取自动化做稳。当前正在用新 Gaia mask 规则全量重跑 `20251120..20260514`，服务器后台 PID `1652847`。
+回到 `heliolincrr` 主线，先把单夜 unknown 搜索/提取自动化做稳。当前正在用新 Gaia mask 规则全量重跑，服务器后台任务为 `/tmp/run_unknown_full_remask_from_20251119.sh`，PID `1653862`；最新处理到 `20260218` 的 GIF 阶段。
 
 本轮全量任务：
 
 - 最新日志/状态表用 `ls -t /pipeline/xiaoyunao/data/heliolincrr/batch_logs/unknown_full_remask_*.log` 查找
 - `20251115` 的本轮中间产物已按用户要求清理，本轮不继续处理该晚
-- `20251119` orbit fit_ok=`1481/1493`，已按用户要求清理并跳过
+- `20251119` 应继续处理；当前扣 known 后 `unknown=67`，低于 `MAX_UNKNOWN_LINKS_AFTER_KNOWN=200`
 - 已撤销按 orbit fit_ok 总数跳过的规则
 - `run_single_night.sh` 已新增 `MAX_UNKNOWN_LINKS_AFTER_KNOWN=200` 默认阈值；summarize/扣 known 后 unknown catalog 行数超过阈值才返回 skip code `20` 并清理 unknown/ADES 输出
 - 已清理旧 unknown/heliolincrr 产物和 scoped `/tmp` 测试目录
 - 保留 `/processed1/<night>/L1/L2` 和 known matched
 - 顺序：link 完成 -> 轨道确认 -> summarize/扣 known 并生成 unknown catalog -> 分配 `trkSub` -> 生成 GIF/review package -> 跳过观测助手外部检查 -> 生成 ADES PSV
 - 本轮不 validate、不 submit
+- 当前状态表累计 `done=73`, `skip=18`；最后状态行是 `20260217 skip rc=20 unknown_links_after_known_gt_200`
+- `20260218` 已写 unknown JSON/FITS，扣 known 后 `unknown=124`，当前正在生成 GIF，最近进度 `18/124`
 
 最新覆盖状态：
 
@@ -57,7 +59,7 @@
 
 ## Outstanding issues
 
-- 服务器全量重跑任务 `1652847` 正在运行；完成后需要审计状态表和每晚产物
+- 服务器全量重跑任务 `1653862` 正在运行；当前 `20260218` 已写 unknown JSON/FITS，正在生成 GIF，完成后需要审计状态表和每晚产物
 - `20251116..20260410` 仍有 `48` 个日历夜没有 summary，需要区分缺原始数据、失败和未跑
 - `20260414` 目录名与 observing-night 归属不一致；用户判断 `0414` 实际应无这些观测，本轮按缺 known matched 跳过
 - 本轮全量重跑已清空旧 unknown `trkSub` history；历史编号会随新 catalog 重新分配，且本轮不 submit
@@ -83,7 +85,7 @@
 
 ## Next recommended steps
 
-1. 监控最新 `unknown_full_remask_*.log` 和 status TSV，确认 `20251120` 和后续夜次通过
+1. 监控最新 `unknown_full_remask_*.log` 和 status TSV，确认 `20260218` 完成并进入后续夜次
 2. 全量完成后审计 done/fail/skip 数量、unknown count、review full FITS 行数和 ADES 行数
 3. 抽查若干 review package tar，确认 GIF、review CSV、`*_unknown_review_full.fits`、`*_unknown_review_ades.fits` 均包含在包内
 4. 对失败夜按 status note 分类修复或记录跳过原因
