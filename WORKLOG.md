@@ -1,5 +1,34 @@
 # WORKLOG
 
+## 2026-05-16
+
+- task: 同步本地 `main` 到 `origin/main`，恢复 PPT 本地改动，并记录 unknown full remask 完成统计
+- files_changed: `known_asteroid/make_ppt_known_object_plots.py`, `heliolincrr/plot_orbit_fit_diagnostic.py`, `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 本地 `git stash push -u -m "preserve ppt local changes before syncing main"`
+  - 本地 `git merge --ff-only origin/main`
+  - 本地 `git stash apply stash@{0}`
+  - 本地 `python3 -m py_compile known_asteroid/make_ppt_known_object_plots.py heliolincrr/plot_orbit_fit_diagnostic.py`
+  - 服务器读取 `/pipeline/xiaoyunao/data/heliolincrr/batch_logs/unknown_full_remask_20260514_171651.log`
+  - 服务器统计 `/pipeline/xiaoyunao/data/heliolincrr/batch_logs/unknown_full_remask_20260514_171651_status.tsv`
+- key_findings:
+  - 本地 `main` 已从 `492fcc6` 快进到 `013b4da`
+  - PPT 本地改动已应用回当前 `main`
+  - `PLAN.md` 冲突已按远端 `heliolincrr` 主线为基础解决，并保留 PPT 素材旁支状态
+  - `unknown_full_remask_20260514_171651` 已在服务器完成，完成时间为 `2026-05-15T16:41:11+08:00`
+  - 状态表共 `177` 行：`done=115`, `skip=62`
+  - skip 原因为：`no_l2=56`, `unknown_links_after_known_gt_200=3`, `no_mp_l2=2`, `missing_known_matched=1`
+  - 完成夜次累计 unknown link 数为 `4764`
+  - 状态表最后一行为 `20260514 skip rc=0 no_l2`
+- validation:
+  - 已确认当前没有仍在运行的 `run_unknown_full_remask` / `run_single_night` / `plot_unknown_links` / `package_unknown_review` / `export_unknown_ades` 任务
+  - `python3 -m py_compile known_asteroid/make_ppt_known_object_plots.py heliolincrr/plot_orbit_fit_diagnostic.py`
+- remaining_issues:
+  - 还需系统审计全量重跑的 review package、ADES 行数和 skip 夜次
+  - 还需新增正式 daily unknown wrapper
+- next_step:
+  - 提交并推送本次同步后的 PPT 改动和状态表统计记录
+
 ## 2026-05-15
 
 - task: 更新 unknown 人工复核包输出文档
@@ -350,6 +379,45 @@
   - 设计并实现单夜 unknown 自动入口：自动选择目标夜、运行 `run_single_night.sh`、生成候选清单/summary、记录日志，默认不自动上报
 
 ## 2026-04-14
+
+- task: 为 PPT 补充已知小行星“每颗目标探测次数”直方图，并统计 unique 小行星数量
+- files_changed: `known_asteroid/make_ppt_known_object_plots.py`, `WORKLOG.md`, `PLAN.md`
+- commands_run: 本地 `python3 -m py_compile known_asteroid/make_ppt_known_object_plots.py`; 服务器 `/home/smtpipeline/Softwares/miniconda3/bin/python /pipeline/xiaoyunao/ppt_assets_20260414/scripts/make_ppt_known_object_plots.py --outdir /pipeline/xiaoyunao/ppt_assets_20260414/outputs/known_object_test --max-sbdb 0`; 服务器 `/home/smtpipeline/Softwares/miniconda3/bin/python - <<'PY' ... import plot_detection_histogram ... PY`; 本地 `scp -P 20093 smtpipeline@www.xinglong-naoc.cn:/pipeline/xiaoyunao/ppt_assets_20260414/outputs/known_object_test/known_object_detection_histogram.png /Users/island/Desktop/plot/`
+- key_findings:
+  - 当前总历史表 `/pipeline/xiaoyunao/known_asteroid/runtime/history/all_matched_asteroids.fits` 共 `476139` 条 detection，对应 `52890` 颗 unique 小行星
+  - 已在 `make_ppt_known_object_plots.py` 新增 `plot_detection_histogram()`，按每颗小行星在历史表中的 detection 次数绘制独立直方图
+  - 当前分布统计为：中位数 `4` 次、平均值 `9.0` 次、90 分位 `25` 次、最大 `75` 次
+  - 新图采用对数 x 轴，适合同时展示“一次性少量检测目标”和“被多次重复探测目标”的长尾分布
+- validation:
+  - `python3 -m py_compile known_asteroid/make_ppt_known_object_plots.py`
+  - 服务器成功写出 `/pipeline/xiaoyunao/ppt_assets_20260414/outputs/known_object_test/known_object_detection_histogram.png`
+  - 本机成功收到 `/Users/island/Desktop/plot/known_object_detection_histogram.png`
+- remaining_issues:
+  - 当前 `known_object_plot_summary.json` 还没有稳定带上 `detection_histogram` 字段，后续若要把这套统计自动汇总，需要再单独排查一次脚本主入口执行结果
+  - 若用户更偏好线性坐标或 cumulative 曲线，可再补一版更偏汇报风格的图
+- next_step:
+  - 如需配合 PPT 文案，可直接在图注里写 `52,890 unique asteroids from 476,139 detections`
+  - 若需要更强调头部长尾结构，可再加 inset 或 cumulative fraction 曲线
+
+- task: 为 PPT 新增 orbit confirm 阶段单页诊断图，组合 `residual-versus-time` 与 sky-plane track
+- files_changed: `heliolincrr/plot_orbit_fit_diagnostic.py`, `WORKLOG.md`, `PLAN.md`
+- commands_run: 本地 `python3 -m py_compile heliolincrr/plot_orbit_fit_diagnostic.py`; 服务器 `/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python /pipeline/xiaoyunao/ppt_assets_20260414/scripts/plot_orbit_fit_diagnostic.py 20260220 --outdir /pipeline/xiaoyunao/ppt_assets_20260414/outputs/orbit_confirm_diag`; 本地 `scp -P 20093 smtpipeline@www.xinglong-naoc.cn:/pipeline/xiaoyunao/ppt_assets_20260414/outputs/orbit_confirm_diag/20260220_link234_orbit_fit_diagnostic_v2.png /Users/island/Desktop/plot/`
+- key_findings:
+  - 与只画单一 `residual-vs-time` 相比，PPT 更适合单页 `orbit-fit diagnostic card`：左侧显示残差随时间变化，右侧显示天空轨迹与核心轨道参数
+  - `20260220` 中自动挑选的代表性目标为 `linkage_id=234`，该 link 有 `5` 个观测、`4` 个 tracklet，`rms_arcsec=0.038`
+  - 新脚本默认从 `orbit_links.fits` 和 `orbit_obs_residuals.fits` 自动选取 `fit_ok && is_good` 且 `n_obs` 最大的 link，可直接复用到其他夜次
+  - 当前图面风格采用暖色浅底、绿色“good fit”区、时间着色 sky-plane points，适合作为汇报页示意图
+- validation:
+  - `python3 -m py_compile heliolincrr/plot_orbit_fit_diagnostic.py`
+  - 服务器成功写出 `/pipeline/xiaoyunao/ppt_assets_20260414/outputs/orbit_confirm_diag/20260220_link234_orbit_fit_diagnostic.png`
+  - 服务器成功保留 `/pipeline/xiaoyunao/ppt_assets_20260414/outputs/orbit_confirm_diag/20260220_link234_orbit_fit_diagnostic_v2.png`
+  - 本机成功收到 `/Users/island/Desktop/plot/20260220_link234_orbit_fit_diagnostic_v2.png`
+- remaining_issues:
+  - 当前仍是单 link 示意图；若需要更强“诊断感”，后续可加拟合/拒绝两类样本对照页
+  - 若用户更偏好极简版 PPT，可继续减少右侧文字，只保留 `RMS / a / e / i`
+- next_step:
+  - 若用户认可这个方向，可再对其他夜次或其他代表性 link 批量导出同风格诊断图
+  - 如需一页对比 “good orbit fit vs rejected candidate”，可在现脚本基础上再加双栏模板
 
 - task: 按用户 `sitian_stats.ipynb` 原代码复现 `known_asteroid` 两张图，并新增 Gaia mask + 静止源剔除流程图
 - files_changed: `known_asteroid/make_ppt_known_object_plots.py`, `heliolincrr/plot_masking_static_flow.py`, `resources/sitian_stats_cell_0.py`, `resources/sitian_stats_cell_1.py`, `WORKLOG.md`, `PLAN.md`

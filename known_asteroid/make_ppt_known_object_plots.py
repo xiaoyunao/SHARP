@@ -203,6 +203,17 @@ def make_unique_objects(table: Table) -> list[dict[str, object]]:
     return list(rows.values())
 
 
+def detection_count_array(table: Table) -> np.ndarray:
+    names = np.asarray(table["name"])
+    numbers = np.asarray(table["number"], dtype=float)
+    counts: Counter[str] = Counter()
+    for idx in range(len(table)):
+        name = normalize_name(names[idx])
+        number = float(numbers[idx])
+        counts[object_key(number, name)] += 1
+    return np.asarray(sorted(counts.values()), dtype=int)
+
+
 def plot_orbits(enriched: list[dict[str, object]], outdir: Path) -> None:
     classes = [
         "Atira",
@@ -288,6 +299,56 @@ def plot_healpix_counts(table: Table, nside: int, outdir: Path) -> None:
     table_out.write(outdir / f"known_object_nside{nside}_counts.fits", overwrite=True)
 
 
+def plot_detection_histogram(table: Table, outdir: Path) -> dict[str, float]:
+    det_counts = detection_count_array(table)
+    unique_count = int(len(det_counts))
+    total_detections = int(np.sum(det_counts))
+    median_det = float(np.median(det_counts))
+    mean_det = float(np.mean(det_counts))
+    p90_det = float(np.percentile(det_counts, 90))
+    max_det = int(np.max(det_counts))
+
+    bins = np.geomspace(1, max_det + 1, 28)
+    fig, ax = plt.subplots(figsize=(11, 7))
+    ax.hist(det_counts, bins=bins, color="#577590", alpha=0.9, edgecolor="white", linewidth=1.0)
+    ax.set_xscale("log")
+    ax.set_xlabel("Detections per unique asteroid")
+    ax.set_ylabel("Number of asteroids")
+    ax.set_title("Known-asteroid detection count distribution")
+    ax.grid(True, which="both", color="#d9d9d9", alpha=0.55, linewidth=0.8)
+    ax.axvline(median_det, color="#e76f51", linestyle="--", linewidth=2.2, label=f"median = {median_det:.0f}")
+    ax.axvline(p90_det, color="#2a9d8f", linestyle=":", linewidth=2.2, label=f"90th pct = {p90_det:.0f}")
+    ax.legend(frameon=False, loc="upper left")
+    ax.text(
+        0.97,
+        0.82,
+        "\n".join(
+            [
+                f"Unique asteroids: {unique_count:,}",
+                f"Total detections: {total_detections:,}",
+                f"Mean detections: {mean_det:.1f}",
+                f"Max detections: {max_det:,}",
+            ]
+        ),
+        transform=ax.transAxes,
+        ha="right",
+        va="top",
+        fontsize=12,
+        bbox={"boxstyle": "round,pad=0.4", "facecolor": "white", "edgecolor": "#cccccc", "alpha": 0.92},
+    )
+    fig.savefig(outdir / "known_object_detection_histogram.png", dpi=180, bbox_inches="tight")
+    plt.close(fig)
+
+    return {
+        "unique_objects": unique_count,
+        "total_detections": total_detections,
+        "median_detections": median_det,
+        "mean_detections": mean_det,
+        "p90_detections": p90_det,
+        "max_detections": max_det,
+    }
+
+
 def main() -> None:
     args = parse_args()
     outdir = Path(args.outdir)
@@ -305,11 +366,13 @@ def main() -> None:
     enriched_table.write(outdir / "known_object_orbits_enriched.fits", overwrite=True)
     plot_orbits(enriched, outdir)
     plot_healpix_counts(table, args.nside, outdir)
+    detection_hist_summary = plot_detection_histogram(table, outdir)
 
     summary = {
         "all_matched_rows": int(len(table)),
         "unique_objects": int(len(unique_rows)),
         "enriched_objects": int(len(enriched)),
+        "detection_histogram": detection_hist_summary,
         "class_counts": Counter([row["object_orbit_class_name"] for row in enriched]),
         "enrichment_stats": dict(stats),
     }
