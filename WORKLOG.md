@@ -2,6 +2,27 @@
 
 ## 2026-05-16
 
+- task: 合并全量 unknown 人工复核包 FITS，生成 `4764` 条 link 的总表并传到桌面
+- files_changed: `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 服务器读取 `/pipeline/xiaoyunao/data/heliolincrr/batch_logs/unknown_full_remask_20260514_171651_status.tsv`
+  - 服务器按状态表 `done` 夜次合并 `/pipeline/xiaoyunao/heliolincrr/review_packages/<night>/<night>_unknown_review_full.fits`
+  - 本地 `scp -P 20093 smtpipeline@www.xinglong-naoc.cn:/pipeline/xiaoyunao/heliolincrr/review_packages/combined/unknown_full_remask_20260514_171651_* /Users/island/Desktop/unknown_review_combined_20260516/`
+  - 本地 `wc -l /Users/island/Desktop/unknown_review_combined_20260516/unknown_full_remask_20260514_171651_unknown_review_links_4764.csv`
+- key_findings:
+  - 按状态表 `done` 夜次合并，不混入旧 review package
+  - 状态表期望 unknown link 数为 `4764`，生成 link-level FITS 共 `4764` 行
+  - 状态表期望 review full detection 行数为 `14325`，生成 detection-level FITS 共 `14325` 行
+  - 每夜 link 数与状态表逐夜核对无差异：`per_night_mismatches=0`
+  - `done` 夜次共 `115` 个，其中 `6` 个为 zero-unknown done night
+- validation:
+  - 本地 CSV 为 `4765` 行，扣除表头后为 `4764` 条 unknown link
+  - 本地目录 `/Users/island/Desktop/unknown_review_combined_20260516/` 已包含 link FITS、link CSV、detection FITS 和 summary
+- remaining_issues:
+  - 该合并表尚未加入长期自动产物生成流程
+- next_step:
+  - 后续若 daily wrapper 固化，可把这类全量合并表作为审计产物自动生成
+
 - task: 同步本地 `main` 到 `origin/main`，恢复 PPT 本地改动，并记录 unknown full remask 完成统计
 - files_changed: `known_asteroid/make_ppt_known_object_plots.py`, `heliolincrr/plot_orbit_fit_diagnostic.py`, `WORKLOG.md`, `PLAN.md`
 - commands_run:

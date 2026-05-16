@@ -46,6 +46,7 @@ PPT 素材旁支已完成一批图件，统一在服务器
 15. `run_single_night.sh` 已支持 `MAX_UNKNOWN_LINKS_AFTER_KNOWN`，默认 `200`
 16. `unknown_full_remask_20260514_171651` 已跑完整个区间，状态表统计为 `done=115`, `skip=62`
 17. PPT 素材已新增已知小行星 detection histogram 和 orbit confirm diagnostic card 脚本
+18. 已按人工复核包 `*_unknown_review_full.fits` 合并出全量 unknown link 表，桌面副本在 `/Users/island/Desktop/unknown_review_combined_20260516/`
 
 ## Outstanding issues
 
@@ -72,6 +73,7 @@ PPT 素材旁支已完成一批图件，统一在服务器
 - 自动入口日志需记录 target night、skip/run reason、exit code、核心产物路径和 unknown count
 - PPT 已知小行星图可稳定写出 `known_object_detection_histogram.png`
 - PPT orbit confirm 图可稳定写出 `20260220_link234_orbit_fit_diagnostic*.png`
+- 全量人工复核包合并表应满足 link-level 行数 `4764`、detection-level 行数 `14325`、逐夜 link 数与状态表无差异
 
 ## Next recommended steps
 
