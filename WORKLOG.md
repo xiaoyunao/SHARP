@@ -2,6 +2,34 @@
 
 ## 2026-06-03
 
+- task: 启动 `20260514` 之后新观测夜次的 unknown 处理，先产出结果但不上报
+- files_changed: `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 服务器审计 `/processed1` 中 `20260514` 之后夜次的 L2、MP L2、known matched、unknown/review 产物
+  - 服务器后台启动 `unknown_after_20260514_20260603_162313`
+  - 服务器检查 `/pipeline/xiaoyunao/data/heliolincrr/batch_logs/unknown_after_20260514_20260603_162313.log`
+  - 服务器检查 `/pipeline/xiaoyunao/data/heliolincrr/batch_logs/unknown_after_20260514_20260603_162313_status.tsv`
+- key_findings:
+  - 可处理新夜次为 `20260528`, `20260529`, `20260530`, `20260601`
+  - `20260515`, `20260531`, `20260602` 无 L2，未纳入本轮处理
+  - 四个目标夜均有 MP L2 和 `/processed1/<night>/L4/<night>_matched_asteroids.fits`
+  - 启动时四个目标夜均无 unknown JSON/ADES/review manifest/tar
+  - 后台 PID 为 `388129`
+  - 日志：`/pipeline/xiaoyunao/data/heliolincrr/batch_logs/unknown_after_20260514_20260603_162313.log`
+  - 状态表：`/pipeline/xiaoyunao/data/heliolincrr/batch_logs/unknown_after_20260514_20260603_162313_status.tsv`
+  - 处理策略：`EXPORT_UNKNOWN_ADES=0`, `VALIDATE_UNKNOWN_MPC=0`, `SUBMIT_UNKNOWN_MPC=0` 跑 `run_single_night.sh`；随后打 review package 并导出 ADES PSV，但不 validate/submit
+  - 最后一次成功检查时 `20260528` 正在 `mask_gaia`，已写出 `46/279` 个 masked MP catalog
+  - 随后 SSH 连接经本地 `127.0.0.1:7890` 代理多次 reset/timeout，未能继续确认进度
+- validation:
+  - 已确认后台任务启动，`20260528` 的 `run_single_night.sh` 和 `mask_gaia.py` 进程存在
+  - 状态表当时仍只有表头，尚无完成夜次
+- remaining_issues:
+  - 需要网络恢复后继续检查 PID、状态表和日志
+  - 若 `20260528` 长时间卡在 `mask_gaia`，需停止本轮后台任务并改用较小 `nproc` 或单文件定位
+- next_step:
+  - 重新连接服务器后执行 `cat /pipeline/xiaoyunao/data/heliolincrr/batch_logs/unknown_after_20260514_20260603_162313_status.tsv`
+  - 检查是否存在 `/processed1/20260528/L4/20260528_unknown_links.json` 和 review package manifest/tar
+
 - task: 查看服务器小行星盲搜、人工复核和 unknown 上报进展
 - files_changed: `WORKLOG.md`, `PLAN.md`
 - commands_run:

@@ -27,6 +27,17 @@
 - crontab 目前只有 known asteroid daily，没有 unknown daily wrapper
 - 未发现 `*_unknown_mpc_reply.txt` 或 `*_unknown_validate_reply.txt`，人工筛选后的 unknown 上报尚无完成证据
 
+`20260514` 之后新夜次处理：
+
+- `2026-06-03` 已启动后台任务 `unknown_after_20260514_20260603_162313`
+- 目标夜次：`20260528`, `20260529`, `20260530`, `20260601`
+- 跳过未纳入夜次：`20260515`, `20260531`, `20260602` 无 L2
+- PID：`388129`
+- 日志：`/pipeline/xiaoyunao/data/heliolincrr/batch_logs/unknown_after_20260514_20260603_162313.log`
+- 状态表：`/pipeline/xiaoyunao/data/heliolincrr/batch_logs/unknown_after_20260514_20260603_162313_status.tsv`
+- 策略：生成 single-night unknown、review package 和 ADES PSV；不 validate、不 submit
+- 最后成功检查：`20260528` 正在 `mask_gaia`，已写 `46/279` 个 masked MP catalog；之后 SSH 代理 reset/timeout，需恢复后继续确认
+
 短期目标：
 
 - 审计全量重跑的 done/fail/skip 分布、unknown count、review full FITS 行数和 ADES 行数（状态表和 combined 表已初步核对通过）
@@ -70,6 +81,7 @@ PPT 素材旁支已完成一批图件，统一在服务器
 - 15 夜流程尚未接入同一个 `trkSub` history
 - unknown 真实提交策略仍需收紧；后续 daily wrapper 默认不应自动 submit，人工筛选后需先 validate 再显式 submit
 - 人工复核目前只填写少量条目；已筛选的 `is_real=1` 还未重新导出为 filtered unknown ADES
+- `unknown_after_20260514_20260603_162313` 已启动但尚未确认完成；若 `20260528` 卡在 `mask_gaia`，需要降并发或定位单个输入
 - PPT 侧 `known_object_detection_histogram` 已可出图，但 summary JSON 是否稳定记录该字段仍需补查
 
 ## Validation criteria
@@ -90,12 +102,14 @@ PPT 素材旁支已完成一批图件，统一在服务器
 
 ## Next recommended steps
 
-1. 对已填写 review 的夜次用 `export_unknown_ades.py --review-csv --require-review --validate` 生成筛选后 PSV 并做 MPC test validation
-2. 抽查若干 review package tar，确认 GIF、review CSV、`*_unknown_review_full.fits`、`*_unknown_review_ades.fits` 均包含在包内
-3. 对 `unknown_links_after_known_gt_200` 的夜次单独复盘 dense group 或 known subtraction 情况
-4. 新增正式 `heliolincrr/run_daily_unknown.sh` 或 Python wrapper，负责每日选择目标夜并调用 `run_single_night.sh`
-5. 默认 `SKIP_PLOTS=1`，只做提取和 summary；必要时再单独补 GIF
-6. 增加产物检查：summary、unknown JSON/FITS、matched count、unknown count、review full FITS 行数、ADES 行数
-7. 将 unknown GIF 打包和 review CSV 模板输出接入 daily wrapper
-8. 将未来 15 夜 unknown catalog 接入同一个 `assign_unknown_trksub.py`
-9. 如 PPT 还要继续打磨，再补 detection histogram 的 cumulative 版或 orbit confirm 的 good/rejected 双栏对照图
+1. 网络恢复后检查 `unknown_after_20260514_20260603_162313` 状态表、日志和 PID
+2. 若新夜次处理完成，核对四个目标夜的 unknown JSON/FITS、review package、ADES PSV 行数；若卡住，先处理 `20260528 mask_gaia`
+3. 对已填写 review 的夜次用 `export_unknown_ades.py --review-csv --require-review --validate` 生成筛选后 PSV 并做 MPC test validation
+4. 抽查若干 review package tar，确认 GIF、review CSV、`*_unknown_review_full.fits`、`*_unknown_review_ades.fits` 均包含在包内
+5. 对 `unknown_links_after_known_gt_200` 的夜次单独复盘 dense group 或 known subtraction 情况
+6. 新增正式 `heliolincrr/run_daily_unknown.sh` 或 Python wrapper，负责每日选择目标夜并调用 `run_single_night.sh`
+7. 默认 `SKIP_PLOTS=1`，只做提取和 summary；必要时再单独补 GIF
+8. 增加产物检查：summary、unknown JSON/FITS、matched count、unknown count、review full FITS 行数、ADES 行数
+9. 将 unknown GIF 打包和 review CSV 模板输出接入 daily wrapper
+10. 将未来 15 夜 unknown catalog 接入同一个 `assign_unknown_trksub.py`
+11. 如 PPT 还要继续打磨，再补 detection histogram 的 cumulative 版或 orbit confirm 的 good/rejected 双栏对照图
