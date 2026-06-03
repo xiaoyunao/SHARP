@@ -9,15 +9,27 @@
 
 - 日志：`/pipeline/xiaoyunao/data/heliolincrr/batch_logs/unknown_full_remask_20260514_171651.log`
 - 状态表：`/pipeline/xiaoyunao/data/heliolincrr/batch_logs/unknown_full_remask_20260514_171651_status.tsv`
+- 范围：`20251119..20260514`
 - 已完成时间：`2026-05-15T16:41:11+08:00`
 - 状态表共 `177` 行：`done=115`, `skip=62`
 - skip 原因：`no_l2=56`, `unknown_links_after_known_gt_200=3`, `no_mp_l2=2`, `missing_known_matched=1`
 - 完成夜次累计 unknown link 数：`4764`
 - 最后一行：`20260514 skip rc=0 no_l2`
+- `2026-06-03` 复查：当前无 unknown 相关后台进程；combined link/detection 表仍与状态表一致
+
+人工复核和上报状态：
+
+- review package manifest/tar 共 `117` 个，包含早期 `20251116` 和 `20251118`
+- review CSV 合计 `4848` 行，其中 `52` 行已填写 `is_real`，分布为 `1=4`, `0=48`
+- 已填写 review 的夜次：`20260309`, `20260504`, `20260507`, `20260508`, `20260509`, `20260512`
+- `export_unknown_ades.py` 已支持 `--review-csv`, `--require-review`, `--validate`, `--submit`
+- `run_single_night.sh` 默认关闭 unknown ADES export/validate/submit
+- crontab 目前只有 known asteroid daily，没有 unknown daily wrapper
+- 未发现 `*_unknown_mpc_reply.txt` 或 `*_unknown_validate_reply.txt`，人工筛选后的 unknown 上报尚无完成证据
 
 短期目标：
 
-- 审计全量重跑的 done/fail/skip 分布、unknown count、review full FITS 行数和 ADES 行数
+- 审计全量重跑的 done/fail/skip 分布、unknown count、review full FITS 行数和 ADES 行数（状态表和 combined 表已初步核对通过）
 - 抽查 review package tar 是否包含 GIF、review CSV、`*_unknown_review_full.fits`、`*_unknown_review_ades.fits`
 - 对 skip 夜按原因分类记录，尤其是 `unknown_links_after_known_gt_200` 和 `missing_known_matched`
 - 新增正式 daily unknown 入口，负责选择目标夜、防重复运行、日志记录和产物检查
@@ -50,13 +62,14 @@ PPT 素材旁支已完成一批图件，统一在服务器
 
 ## Outstanding issues
 
-- 全量重跑完成后还未做系统产物审计
+- 全量重跑完成后只做了状态表、combined 表和 manifest required outputs 的初步审计；还未逐夜深审 GIF/ADES/review full 内容
 - `20260414` 目录名与 observing-night 归属不一致；本轮因 `missing_known_matched` 跳过
 - `unknown_links_after_known_gt_200` 的 3 个 skip 夜需要记录具体 night 并决定是否人工排除或调参重跑
 - 当前单夜自动化还没有“每日选择目标夜 + 防重复 + 日志 + 产物检查”的外层入口
 - GIF 可视化很慢，应在自动提取中默认可跳过或限量
 - 15 夜流程尚未接入同一个 `trkSub` history
-- unknown 真实提交策略仍需收紧；后续 daily wrapper 默认不应自动 submit
+- unknown 真实提交策略仍需收紧；后续 daily wrapper 默认不应自动 submit，人工筛选后需先 validate 再显式 submit
+- 人工复核目前只填写少量条目；已筛选的 `is_real=1` 还未重新导出为 filtered unknown ADES
 - PPT 侧 `known_object_detection_histogram` 已可出图，但 summary JSON 是否稳定记录该字段仍需补查
 
 ## Validation criteria
@@ -77,7 +90,7 @@ PPT 素材旁支已完成一批图件，统一在服务器
 
 ## Next recommended steps
 
-1. 审计 `unknown_full_remask_20260514_171651_status.tsv`，列出所有 skip 夜和原因
+1. 对已填写 review 的夜次用 `export_unknown_ades.py --review-csv --require-review --validate` 生成筛选后 PSV 并做 MPC test validation
 2. 抽查若干 review package tar，确认 GIF、review CSV、`*_unknown_review_full.fits`、`*_unknown_review_ades.fits` 均包含在包内
 3. 对 `unknown_links_after_known_gt_200` 的夜次单独复盘 dense group 或 known subtraction 情况
 4. 新增正式 `heliolincrr/run_daily_unknown.sh` 或 Python wrapper，负责每日选择目标夜并调用 `run_single_night.sh`

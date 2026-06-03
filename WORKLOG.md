@@ -1,5 +1,37 @@
 # WORKLOG
 
+## 2026-06-03
+
+- task: 查看服务器小行星盲搜、人工复核和 unknown 上报进展
+- files_changed: `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 本地 `git status --short --branch`, `git branch --show-current`, `git fetch --all --prune`, `git log --oneline --decorate --graph -n 15 --all`
+  - 本地读取 `WORKLOG.md`, `PLAN.md`
+  - 服务器检查 `pgrep -af 'run_unknown_full_remask|run_single_night|run_daily_unknown|plot_unknown_links|package_unknown_review|export_unknown_ades|submit'`
+  - 服务器统计 `/pipeline/xiaoyunao/data/heliolincrr/batch_logs/unknown_full_remask_20260514_171651_status.tsv`
+  - 服务器检查 review package、combined summary、review CSV 人工填写情况、crontab 和 unknown MPC reply 文件
+- key_findings:
+  - 当前无 unknown full remask、单夜 unknown、review package、ADES export 或 unknown submit 进程在跑
+  - 最新完成全量为 `unknown_full_remask_20260514_171651`，范围 `20251119..20260514`，完成时间 `2026-05-15T16:41:11+08:00`
+  - 状态表共 `177` 行：`done=115`, `skip=62`
+  - done 夜累计 `unknown_count=4764`, `review_full_rows=14325`, `ades_rows=14325`
+  - skip 原因：`no_l2=56`, `no_mp_l2=2`, `missing_known_matched=1`, `unknown_links_after_known_gt_200=3`
+  - combined 产物校验通过：link rows `4764`, detection rows `14325`, per-night mismatches `0`
+  - review packages 共 `117` 个 manifest/tar，包含早期 `20251116` 和 `20251118`；合计 review CSV 行 `4848`
+  - 已有人在 6 个 review CSV 中填写 `is_real`：总计 `52` 条已判定，其中 `4` 条为 `1`，`48` 条为 `0`
+  - `run_single_night.sh` 和 `export_unknown_ades.py` 已有 review CSV 过滤、validate 和 submit 开关，但默认 `EXPORT_UNKNOWN_ADES=0`, `VALIDATE_UNKNOWN_MPC=0`, `SUBMIT_UNKNOWN_MPC=0`
+  - crontab 目前只有 `known_asteroid/run_daily.sh`，没有 unknown daily wrapper
+  - 未发现 `*_unknown_mpc_reply.txt` 或 `*_unknown_validate_reply.txt`，只有常规 known-object MPC reply
+- validation:
+  - 服务器 combined summary 显示 `per_night_mismatches=0`
+  - review package manifest required outputs 缺失数为 `0`
+- remaining_issues:
+  - 人工复核只完成少量夜次的一部分条目，尚未形成全量筛选结果
+  - 人工筛选后的 unknown ADES 未重新导出/validate/submit
+  - 正式 daily unknown wrapper 和 crontab 尚未接入
+- next_step:
+  - 先完成人工复核目标夜次，再用 `export_unknown_ades.py --review-csv --require-review --validate` 做测试验证；确认无误后才显式 `--submit`
+
 ## 2026-05-16
 
 - task: 合并全量 unknown 人工复核包 FITS，生成 `4764` 条 link 的总表并传到桌面
