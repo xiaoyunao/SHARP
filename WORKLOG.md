@@ -2,6 +2,38 @@
 
 ## 2026-06-17
 
+- task: 恢复服务器连接后处理 `20260514` 之后新增 unknown 夜次
+- files_changed: `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 服务器检查旧批次 `/pipeline/xiaoyunao/data/heliolincrr/batch_logs/unknown_after_20260514_20260603_162313_status.tsv`
+  - 服务器审计 `/processed1` 中 `20260514` 之后 L2、MP L2、known matched、unknown/review 产物
+  - 服务器启动 `/pipeline/xiaoyunao/data/heliolincrr/batch_logs/unknown_after_20260514_20260617_161428.log`
+  - 服务器运行 `known_asteroid/submit_pipeline_slurm.sh --batch false --submit-mpc false --max-parallel 2 20260605`
+  - 服务器修正 `unknown_after_20260514_20260617_161428_status.tsv` 中临时 PSV 表头多计的 `ades_rows`
+- key_findings:
+  - 旧批次 `unknown_after_20260514_20260603_162313` 已不在运行，状态表只有表头，日志停在 `20260528 mask_gaia`
+  - 新批次 `unknown_after_20260514_20260617_161428` 已完成，未 validate，未 submit
+  - `20260528` 完整跑到 summary 后因 `unknown_count=1168 > 200` 被保护性 skip
+  - `20260529` 完成：`unknown=29`, `review_full_rows=87`, `ades_rows=87`, GIF 缺失 `0`
+  - `20260530` 完成：`unknown=21`, `review_full_rows=63`, `ades_rows=63`, GIF 缺失 `0`
+  - `20260601` 完成：`unknown=19`, `review_full_rows=57`, `ades_rows=57`, GIF 缺失 `0`
+  - `20260605` 初始缺 known matched；补跑 known-only 后两个 MP 文件均无 matched detections，只生成 `20260605_all_asteroids.fits`，仍不进入 unknown
+  - `20260611` 完整跑到 summary 后因 `unknown_count=653 > 200` 被保护性 skip
+  - 成功夜均写出 unknown JSON/FITS、ADES PSV、review package manifest/tar
+- validation:
+  - 状态表：`/pipeline/xiaoyunao/data/heliolincrr/batch_logs/unknown_after_20260514_20260617_161428_status.tsv`
+  - 日志：`/pipeline/xiaoyunao/data/heliolincrr/batch_logs/unknown_after_20260514_20260617_161428.log`
+  - `pgrep` 确认本轮 unknown 相关后台进程已退出
+  - 抽查 manifest：`20260529`, `20260530`, `20260601` 的 `n_gifs_missing=0`，tar/JSON/FITS/PSV 均存在
+- remaining_issues:
+  - `20260528` 和 `20260611` unknown 数过高，需要单独复盘是否是数据/known subtraction/mask/场区问题
+  - `20260605` 只有 2 个 MP 文件且无 known matched，当前未形成 unknown 产物
+  - 本轮仍是手动批处理，正式 daily unknown wrapper 尚未实现
+- next_step:
+  - 抽查 `20260529`, `20260530`, `20260601` review package 内容并交给网页筛选
+  - 单独复盘 `20260528`、`20260611` 的高 unknown 原因
+  - 若 `20260605` 后续需要处理，先决定是否允许 no matched detections 写 schema-only matched 文件
+
 - task: 尝试检查服务器 unknown 新夜次处理进度并纳入新增观测
 - files_changed: `WORKLOG.md`, `PLAN.md`
 - commands_run:
