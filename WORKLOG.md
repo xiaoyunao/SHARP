@@ -2,6 +2,29 @@
 
 ## 2026-06-17
 
+- task: 统计 2025 年 unknown/review 产物并调整短期优先级到人工 check
+- files_changed: `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 服务器统计 `/processed1/2025*/L4/*_unknown_links.json`
+  - 服务器统计 `/pipeline/xiaoyunao/heliolincrr/review_packages/<night>/<night>_unknown_review.csv`
+  - 服务器检查 2025 年 review manifest、GIF 缺失和 `*_unknown_review.tar.gz`
+- key_findings:
+  - 2025 年共有 `37` 个夜次有 unknown/review 产物
+  - 其中 `35` 个夜次 `unknown_count > 0`，`2` 个夜次为 zero unknown
+  - 2025 年 unknown link/review CSV 行合计 `1948`
+  - 2025 年 review CSV 当前未填写：`filled=0`, `is_real=1` 为 `0`, `is_real=0` 为 `0`
+  - 2025 年 review manifest 和 CSV 均完整，GIF 缺失合计 `0`
+  - 2025 年 `*_unknown_review.tar.gz` 共 `37` 个，均在 `/pipeline/xiaoyunao/heliolincrr/review_packages/` 根目录
+  - 用户确认 daily recovery/monitor 等 unknown 自动化稳定后再做；当前重点转回人工 check
+- validation:
+  - 服务器逐夜输出 `night, unknown, filled, real, false, blank`
+  - 抽查 `20251116` per-night review 目录，确认 CSV/FITS/manifest/GIF 目录存在
+- remaining_issues:
+  - 2025 年 `1948` 条 review CSV 尚未人工填写
+  - 需要确定网页人工 check 的分发顺序和完成判定
+- next_step:
+  - 优先推进 2025 年 review CSV 人工 check，尤其跳过 zero unknown 夜 `20251128`, `20251201`
+
 - task: 排查高 unknown 夜次、`20260605` known-only 自动触发缺失和服务器重启后的 daily 补跑
 - files_changed: `WORKLOG.md`, `PLAN.md`
 - commands_run:

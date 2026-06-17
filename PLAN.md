@@ -48,20 +48,26 @@
 - 当前有 unknown JSON/review manifest 的夜次共 `120` 个
 - 其中 positive unknown 夜次 `114` 个，zero unknown 夜次 `6` 个，unknown link 合计 `4917`
 - review CSV 共 `120` 个，`4917` 行；已填写 `110` 行，其中 `is_real=1` 为 `15` 条，`is_real=0` 为 `95` 条
+- 2025 年子集共有 `37` 个夜次，其中 `35` 个 positive unknown、`2` 个 zero unknown，unknown link/review CSV 行合计 `1948`
+- 2025 年 review CSV 尚未开始填写：`filled=0`, `is_real=1` 为 `0`, `is_real=0` 为 `0`
+- 2025 年 review manifest、CSV、`*_unknown_review.tar.gz` 和 GIF 均完整，GIF 缺失合计 `0`
 - `20260528` 高 unknown 主要来自异常密集 tracklet/link：`tracklets_total=92792`, `links_total=1170`, `unknown_count=1168`，集中在 group `47` 和 `OBJ_MP_1428_0236/0287/0309`
 - `20260611` 高 unknown 同样来自密集场/文件组：`tracklets_total=267450`, `links_total=1319`, `unknown_count=653`；同时识别出 `all_same_asteroid=636` 个 known links
 - `20260605` 未自动触发是因为缺少应在 `2026-06-06 09:00` 运行的 daily log；手动补跑后两个 MP 文件均无 matched detections，仍不能进入当前 unknown 流程
 - 服务器 `2026-06-17 16:00:12` 重启，普通 cron 不会补跑当天 `09:00` 已错过的任务
 - 已手动补跑 `2026-06-17` survey daily，生成并发布 `20260617_plan`
 - 已手动补跑 `2026-06-17` known daily；target night `20260616` 因 `/processed1/20260616` 缺失而 skip
+- 用户已确认 recovery/monitor 暂缓，待 unknown 人工 check 与上报链路稳定后再实现；当前重点是人工 check
 
 短期目标：
 
-- 审计全量重跑的 done/fail/skip 分布、unknown count、review full FITS 行数和 ADES 行数（状态表和 combined 表已初步核对通过）
+- 推进 unknown 人工 check，先按年份/夜次分批完成 review CSV 的 `is_real` 判定
+- 明确人工 check 完成判定：每个正 unknown 夜次 CSV 的 `is_real` 全部非空，zero unknown 夜次可直接视为完成
+- 对已完成 check 的夜次用 review CSV 重新导出 filtered ADES，并先 validate，不自动 submit
 - 抽查 review package tar 是否包含 GIF、review CSV、`*_unknown_review_full.fits`、`*_unknown_review_ades.fits`
 - 对 skip 夜按原因分类记录，尤其是 `unknown_links_after_known_gt_200` 和 `missing_known_matched`
 - 新增正式 daily unknown 入口，负责选择目标夜、防重复运行、日志记录和产物检查
-- 新增 daily recovery/monitor 入口，负责在服务器重启或 cron miss 后补查 survey plan、known daily、unknown/review 产物和 submit request 状态
+- daily recovery/monitor 入口暂缓，等 unknown 人工 check 与上报链路稳定后再做
 - 上报链路默认关闭；导出/提交必须显式打开
 - GIF 可视化默认可跳过或限量，避免拖慢主计算
 
@@ -122,15 +128,16 @@ PPT 素材旁支已完成一批图件，统一在服务器
 
 ## Next recommended steps
 
-1. 抽查 `20260529`, `20260530`, `20260601` review package 内容并交给网页筛选
-2. 对 `20260528`、`20260611` 单独复盘 high unknown 原因，重点查 known subtraction、mask 后源密度、dense group 和观测场区
-3. 决定 `20260605` 这种 known-only 无 matched detections 的夜次是否要写 schema-only matched 文件再跑 unknown
-4. 对已填写 review 的夜次用 `export_unknown_ades.py --review-csv --require-review --validate` 生成筛选后 PSV 并做 MPC test validation
-5. 抽查若干 review package tar，确认 GIF、review CSV、`*_unknown_review_full.fits`、`*_unknown_review_ades.fits` 均包含在包内
-6. 新增正式 `heliolincrr/run_daily_unknown.sh` 或 Python wrapper，负责每日选择目标夜并调用 `run_single_night.sh`
-7. 新增 `daily_monitor`/recovery 脚本：每天或开机后幂等检查当天 survey plan、known daily log、target night known/unknown/review 产物，缺失则补跑或报警
+1. 把 2025 年 `35` 个 positive unknown 夜次交给网页筛选；`20251128` 和 `20251201` 为 zero unknown，可直接标记完成
+2. 建立人工 check 完成检查脚本或命令：统计每个 review CSV 的空 `is_real` 数，输出已完成/未完成夜次
+3. 对已完成 review 的夜次用 `export_unknown_ades.py --review-csv --require-review --validate` 生成筛选后 PSV 并做 MPC test validation
+4. 抽查 `20260529`, `20260530`, `20260601` review package 内容并交给网页筛选
+5. 对 `20260528`、`20260611` 单独复盘 high unknown 原因，重点查 known subtraction、mask 后源密度、dense group 和观测场区
+6. 决定 `20260605` 这种 known-only 无 matched detections 的夜次是否要写 schema-only matched 文件再跑 unknown
+7. 新增正式 `heliolincrr/run_daily_unknown.sh` 或 Python wrapper，负责每日选择目标夜并调用 `run_single_night.sh`
 8. 默认 `SKIP_PLOTS=1`，只做提取和 summary；必要时再单独补 GIF
 9. 增加产物检查：summary、unknown JSON/FITS、matched count、unknown count、review full FITS 行数、ADES 行数
 10. 将 unknown GIF 打包和 review CSV 模板输出接入 daily wrapper
-11. 将未来 15 夜 unknown catalog 接入同一个 `assign_unknown_trksub.py`
-12. 如 PPT 还要继续打磨，再补 detection histogram 的 cumulative 版或 orbit confirm 的 good/rejected 双栏对照图
+11. 待 unknown 人工 check 与上报链路稳定后，再新增 `daily_monitor`/recovery 脚本
+12. 将未来 15 夜 unknown catalog 接入同一个 `assign_unknown_trksub.py`
+13. 如 PPT 还要继续打磨，再补 detection histogram 的 cumulative 版或 orbit confirm 的 good/rejected 双栏对照图
