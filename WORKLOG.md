@@ -1,5 +1,32 @@
 # WORKLOG
 
+## 2026-06-17
+
+- task: 尝试检查服务器 unknown 新夜次处理进度并纳入新增观测
+- files_changed: `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 本地 `git status --short --branch`, `git branch --show-current`, `git fetch --all --prune`, `git log --oneline --decorate --graph -n 15 --all`
+  - 本地读取 `WORKLOG.md`, `PLAN.md`
+  - 本地尝试 `ssh -p 20093 smtpipeline@www.xinglong-naoc.cn`
+  - 本地尝试 `nc -vz -w 10 www.xinglong-naoc.cn 20093`
+  - 本地尝试 `ping -c 3 www.xinglong-naoc.cn`
+- key_findings:
+  - 本地 `main` 仍比 `origin/main` ahead 2，未发现本地未提交代码改动
+  - `www.xinglong-naoc.cn` 可 ping 通，解析到 `121.26.32.218`，3 次 ping 均成功
+  - SSH 端口 `20093` 连接超时：`nc` 返回 `Operation timed out`
+  - 默认 SSH 连接最终被本地 `127.0.0.1:7890` 代理关闭
+  - 未能进入服务器，无法确认 `unknown_after_20260514_20260603_162313` 是否完成，也无法审计或启动新增观测夜次处理
+- validation:
+  - 仅完成本地网络连通性检查；服务器端无可验证结果
+- remaining_issues:
+  - 需要服务器 SSH 端口或本地代理恢复后再继续
+  - 恢复后第一步应检查旧 PID/状态表，再审计 `/processed1` 中新增夜次
+- next_step:
+  - 连接恢复后运行：
+    - `cat /pipeline/xiaoyunao/data/heliolincrr/batch_logs/unknown_after_20260514_20260603_162313_status.tsv`
+    - `pgrep -af 'unknown_after_20260514|run_single_night|mask_gaia.py|plot_unknown_links|package_unknown_review|export_unknown_ades'`
+    - 审计 `/processed1` 中 `20260601` 之后有 L2、MP L2、known matched 但缺 unknown/review 产物的夜次
+
 ## 2026-06-03
 
 - task: 启动 `20260514` 之后新观测夜次的 unknown 处理，先产出结果但不上报
