@@ -40,9 +40,17 @@ def validate_trk_sub(value: object) -> str:
     return trk_sub
 
 
-def read_review_csv(path: str | None, require_review: bool) -> tuple[dict[str, int], bool]:
+def read_review_csv(path: str | None, require_values: bool = False) -> tuple[dict[str, int], dict[str, object]]:
+    meta: dict[str, object] = {
+        "path": str(path or ""),
+        "rows": 0,
+        "decisions": 0,
+        "blank_values": 0,
+        "duplicate_keys": 0,
+        "blank_samples": [],
+    }
     if not path:
-        return {}, require_review
+        return {}, meta
     review_path = Path(path)
     text = review_path.read_text(encoding="utf-8")
     sample = text[:2048]
@@ -50,6 +58,7 @@ def read_review_csv(path: str | None, require_review: bool) -> tuple[dict[str, i
     rows = list(csv.DictReader(text.splitlines(), dialect=dialect))
     out: dict[str, int] = {}
     for row in rows:
+        meta["rows"] = int(meta["rows"]) + 1
         key = (
             row.get("trk_sub")
             or row.get("trkSub")
@@ -61,11 +70,31 @@ def read_review_csv(path: str | None, require_review: bool) -> tuple[dict[str, i
         if not key:
             continue
         value = row.get("is_real") or row.get("real") or row.get("truth") or row.get("valid") or ""
+        value_text = str(value).strip()
+        if value_text == "":
+            meta["blank_values"] = int(meta["blank_values"]) + 1
+            samples = meta["blank_samples"]
+            if isinstance(samples, list) and len(samples) < 10:
+                samples.append(key)
+            continue
         try:
-            out[key] = 1 if int(str(value).strip()) == 1 else 0
+            decision = int(value_text)
         except ValueError as exc:
             raise ValueError(f"Invalid review value for {key!r}: {value!r}; expected 0 or 1") from exc
-    return out, require_review
+        if decision not in (0, 1):
+            raise ValueError(f"Invalid review value for {key!r}: {value!r}; expected 0 or 1")
+        if key in out:
+            meta["duplicate_keys"] = int(meta["duplicate_keys"]) + 1
+            if out[key] != decision:
+                raise ValueError(f"Conflicting duplicate review decision for {key!r}")
+        out[key] = decision
+    meta["decisions"] = len(out)
+    if require_values and int(meta["blank_values"]) > 0:
+        raise ValueError(
+            f"Review CSV {review_path} has {meta['blank_values']} blank is_real values; "
+            f"sample keys: {meta['blank_samples']}"
+        )
+    return out, meta
 
 
 def build_header(args: argparse.Namespace) -> str:
@@ -158,16 +187,100 @@ def load_unknown_rows(path: Path) -> list[dict[str, object]]:
     return rows
 
 
-def should_keep(row: dict[str, object], review: dict[str, int], require_review: bool) -> bool:
-    if not review and not require_review:
-        return True
+def review_keys_for_row(row: dict[str, object]) -> list[str]:
     keys = [
         str(row.get("trk_sub", "")).strip(),
         str(row.get("trkSub", "")).strip(),
         str(row.get("linkage_id", "")).strip(),
     ]
     keys.extend(split_semicolon(row.get("tracklet_ids", "")))
-    keys = [key for key in keys if key]
+    return [key for key in keys if key]
+
+
+def review_decision_for_row(row: dict[str, object], review: dict[str, int]) -> int | None:
+    for key in review_keys_for_row(row):
+        if key in review:
+            return review[key]
+    return None
+
+
+def should_keep(row: dict[str, object], review: dict[str, int], require_review: bool) -> bool:
+    if not review and not require_review:
+        return True
+    decision = review_decision_for_row(row, review)
+    if decision is None:
+        return not require_review
+    return decision == 1
+
+
+def filter_catalog_rows(
+    rows: list[dict[str, object]],
+    review: dict[str, int],
+    require_review: bool,
+    require_complete_review: bool,
+) -> tuple[list[dict[str, object]], dict[str, object]]:
+    kept: list[dict[str, object]] = []
+    missing_samples: list[str] = []
+    stats: dict[str, object] = {
+        "catalog_links": len(rows),
+        "review_accepted_links": 0,
+        "review_rejected_links": 0,
+        "review_missing_links": 0,
+        "review_missing_samples": missing_samples,
+    }
+    for row in rows:
+        decision = review_decision_for_row(row, review)
+        if decision is None:
+            if review or require_review or require_complete_review:
+                stats["review_missing_links"] = int(stats["review_missing_links"]) + 1
+                if len(missing_samples) < 10:
+                    keys = review_keys_for_row(row)
+                    missing_samples.append(keys[0] if keys else str(row.get("linkage_id", "")))
+            if require_review or require_complete_review:
+                continue
+            kept.append(row)
+            continue
+        if decision == 1:
+            stats["review_accepted_links"] = int(stats["review_accepted_links"]) + 1
+            kept.append(row)
+        else:
+            stats["review_rejected_links"] = int(stats["review_rejected_links"]) + 1
+    if require_complete_review and int(stats["review_missing_links"]) > 0:
+        raise ValueError(
+            f"Review CSV is incomplete: {stats['review_missing_links']} catalog links have no 0/1 decision; "
+            f"sample keys: {missing_samples}"
+        )
+    return kept, stats
+
+
+def write_filtered_catalog(path: str, rows: list[dict[str, object]]) -> None:
+    out = Path(path)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(rows, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
+def write_filtered_fits(path: str, source_fits: str, kept_rows: list[dict[str, object]]) -> None:
+    out = Path(path)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    keep_keys = {
+        key
+        for row in kept_rows
+        for key in (
+            str(row.get("trk_sub", "")).strip(),
+            str(row.get("trkSub", "")).strip(),
+            str(row.get("linkage_id", "")).strip(),
+        )
+        if key
+    }
+    src = Path(source_fits)
+    if src.exists():
+        table = Table.read(src)
+        key_col = next((col for col in ("trk_sub", "trkSub", "linkage_id") if col in table.colnames), "")
+        if key_col:
+            mask = np.asarray([str(value).strip() in keep_keys for value in table[key_col]], dtype=bool)
+            table[mask].write(out, overwrite=True)
+            return
+    Table(rows=kept_rows).write(out, overwrite=True)
     for key in keys:
         if key in review:
             return review[key] == 1
@@ -196,28 +309,34 @@ def load_detection_row(processed_root: Path, night: str, image_name: str, obj_id
     return out
 
 
-def build_obs_rows(args: argparse.Namespace) -> tuple[list[dict[str, object]], dict[str, int]]:
+def build_obs_rows(
+    args: argparse.Namespace,
+    return_catalog: bool = False,
+) -> tuple[list[dict[str, object]], dict[str, object]] | tuple[list[dict[str, object]], dict[str, object], list[dict[str, object]]]:
     catalog_path = Path(args.catalog)
     processed_root = Path(args.processed_root)
-    review, require_review = read_review_csv(args.review_csv, bool(args.require_review))
+    require_complete_review = bool(getattr(args, "require_complete_review", False))
+    review, review_meta = read_review_csv(args.review_csv, require_values=require_complete_review)
+    require_review = bool(args.require_review)
     rows = load_unknown_rows(catalog_path)
+    export_rows, review_stats = filter_catalog_rows(rows, review, require_review, require_complete_review)
 
     obs_rows: list[dict[str, object]] = []
-    stats = {
-        "catalog_links": len(rows),
-        "review_rejected_links": 0,
+    stats: dict[str, object] = {
+        **review_stats,
+        "review_csv": str(args.review_csv or ""),
+        "review_csv_rows": review_meta["rows"],
+        "review_csv_decisions": review_meta["decisions"],
+        "review_csv_blank_values": review_meta["blank_values"],
         "missing_trk_sub_links": 0,
         "missing_detection_rows": 0,
         "exported_observations": 0,
     }
 
-    for row in rows:
-        if not should_keep(row, review, require_review):
-            stats["review_rejected_links"] += 1
-            continue
+    for row in export_rows:
         trk_sub = validate_trk_sub(row.get("trk_sub") or row.get("trkSub"))
         if not trk_sub:
-            stats["missing_trk_sub_links"] += 1
+            stats["missing_trk_sub_links"] = int(stats["missing_trk_sub_links"]) + 1
             continue
         image_names = split_semicolon(row.get("image_names"))
         objids = [int(x) for x in split_semicolon(row.get("objids"))]
@@ -226,11 +345,11 @@ def build_obs_rows(args: argparse.Namespace) -> tuple[list[dict[str, object]], d
         fallback_decs = [float(x) for x in split_semicolon(row.get("decs_deg"))]
         for idx, image_name in enumerate(image_names):
             if idx >= len(objids):
-                stats["missing_detection_rows"] += 1
+                stats["missing_detection_rows"] = int(stats["missing_detection_rows"]) + 1
                 continue
             det = load_detection_row(processed_root, args.night, image_name, objids[idx])
             if det is None:
-                stats["missing_detection_rows"] += 1
+                stats["missing_detection_rows"] = int(stats["missing_detection_rows"]) + 1
                 continue
             mjd = det.get("MJD", fallback_mjds[idx] if idx < len(fallback_mjds) else np.nan)
             ra = det.get("RA_Win", fallback_ras[idx] if idx < len(fallback_ras) else np.nan)
@@ -249,7 +368,7 @@ def build_obs_rows(args: argparse.Namespace) -> tuple[list[dict[str, object]], d
             rms_mag = det["MagErr_Aper4"]
             finite = np.all(np.isfinite([mjd, ra, dec, rms_ra, rms_dec, mag, rms_mag]))
             if not finite or rms_mag <= 0:
-                stats["missing_detection_rows"] += 1
+                stats["missing_detection_rows"] = int(stats["missing_detection_rows"]) + 1
                 continue
             obs_rows.append(
                 {
@@ -271,6 +390,9 @@ def build_obs_rows(args: argparse.Namespace) -> tuple[list[dict[str, object]], d
                 }
             )
     stats["exported_observations"] = len(obs_rows)
+    stats["exported_links"] = len(export_rows)
+    if return_catalog:
+        return obs_rows, stats, export_rows
     return obs_rows, stats
 
 
@@ -322,10 +444,23 @@ def build_argparser() -> argparse.ArgumentParser:
     ap = argparse.ArgumentParser(description="Export fit_ok unknown single-night links to ADES PSV using trkSub.")
     ap.add_argument("night", help="Target night in YYYYMMDD format")
     ap.add_argument("--processed-root", default="/processed1")
+    ap.add_argument("--review-root", default="/pipeline/xiaoyunao/heliolincrr/review_packages")
     ap.add_argument("--catalog", default=None, help="Default: /processed1/<night>/L4/<night>_unknown_links.json")
+    ap.add_argument("--unknown-fits", default=None, help="Default: /processed1/<night>/L4/<night>_unknown_links.fits")
     ap.add_argument("--out", default=None, help="Default: /processed1/<night>/L4/<night>_unknown_links_ades.psv")
     ap.add_argument("--review-csv", default="", help="Optional CSV with tracklet_id/trk_sub/linkage_id and is_real columns")
     ap.add_argument("--require-review", action="store_true", help="Only export links explicitly marked is_real=1")
+    ap.add_argument(
+        "--submit-csv",
+        nargs="?",
+        const="auto",
+        default="",
+        help="Use final web-submit CSV. With no value, defaults to <review-root>/<night>/<night>_submit.csv. Implies --require-review and --require-complete-review.",
+    )
+    ap.add_argument("--require-complete-review", action="store_true", help="Fail unless every catalog link has an explicit 0/1 decision")
+    ap.add_argument("--filtered-catalog", default=None, help="Optional reviewed/masked unknown JSON output")
+    ap.add_argument("--filtered-fits", default=None, help="Optional reviewed/masked unknown FITS output")
+    ap.add_argument("--stats-out", default=None, help="Optional JSON stats output")
 
     ap.add_argument("--mode", default="CCD")
     ap.add_argument("--obs-code", default="327")
@@ -366,14 +501,44 @@ def build_argparser() -> argparse.ArgumentParser:
 
 def main() -> None:
     args = build_argparser().parse_args()
+    l4_dir = Path(args.processed_root) / args.night / "L4"
     if args.catalog is None:
-        args.catalog = str(Path(args.processed_root) / args.night / "L4" / f"{args.night}_unknown_links.json")
+        args.catalog = str(l4_dir / f"{args.night}_unknown_links.json")
+    if args.unknown_fits is None:
+        args.unknown_fits = str(l4_dir / f"{args.night}_unknown_links.fits")
+    using_submit_csv = bool(args.submit_csv)
+    if using_submit_csv:
+        if args.review_csv:
+            raise ValueError("Use either --submit-csv or --review-csv, not both.")
+        if args.submit_csv == "auto":
+            args.submit_csv = str(Path(args.review_root) / args.night / f"{args.night}_submit.csv")
+        args.review_csv = args.submit_csv
+        args.require_review = True
+        args.require_complete_review = True
     if args.out is None:
-        args.out = str(Path(args.processed_root) / args.night / "L4" / f"{args.night}_unknown_links_ades.psv")
+        suffix = "unknown_links_submit_ades.psv" if using_submit_csv else "unknown_links_ades.psv"
+        args.out = str(l4_dir / f"{args.night}_{suffix}")
+    if using_submit_csv:
+        if args.filtered_catalog is None:
+            args.filtered_catalog = str(l4_dir / f"{args.night}_unknown_links_submit_masked.json")
+        if args.filtered_fits is None:
+            args.filtered_fits = str(l4_dir / f"{args.night}_unknown_links_submit_masked.fits")
+        if args.stats_out is None:
+            args.stats_out = str(l4_dir / f"{args.night}_unknown_links_submit_stats.json")
 
-    obs_rows, stats = build_obs_rows(args)
+    obs_rows, stats, kept_rows = build_obs_rows(args, return_catalog=True)
+    if args.filtered_catalog:
+        write_filtered_catalog(args.filtered_catalog, kept_rows)
+        stats["filtered_catalog"] = args.filtered_catalog
+    if args.filtered_fits:
+        write_filtered_fits(args.filtered_fits, args.unknown_fits, kept_rows)
+        stats["filtered_fits"] = args.filtered_fits
     write_psv(args, obs_rows)
     print(f"[OK] Wrote PSV: {args.out}")
+    if args.stats_out:
+        Path(args.stats_out).parent.mkdir(parents=True, exist_ok=True)
+        Path(args.stats_out).write_text(json.dumps(stats, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        print(f"[OK] Wrote stats: {args.stats_out}")
     print(json.dumps(stats, indent=2, sort_keys=True))
     if not obs_rows:
         print("[SKIP] No unknown ADES obsData rows exported; skip validate/submit")

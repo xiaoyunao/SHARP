@@ -2,6 +2,36 @@
 
 ## 2026-06-17
 
+- task: 接入网页 `<night>_submit.csv` 到 unknown 人工筛选后导出/上报链路
+- files_changed: `heliolincrr/export_unknown_ades.py`, `heliolincrr/submit_reviewed_unknown.py`, `heliolincrr/README.md`, `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 服务器查找 `/pipeline/xiaoyunao/heliolincrr/review_packages/*/*_submit.csv`
+  - 服务器抽查 `/pipeline/xiaoyunao/heliolincrr/review_packages/20260512/20260512_submit.csv`
+  - 本地 `python3 -m py_compile heliolincrr/export_unknown_ades.py heliolincrr/submit_reviewed_unknown.py heliolincrr/package_unknown_review.py`
+  - 本地 `scp -P 20093 heliolincrr/export_unknown_ades.py heliolincrr/submit_reviewed_unknown.py heliolincrr/README.md smtpipeline@www.xinglong-naoc.cn:/pipeline/xiaoyunao/heliolincrr/`
+  - 服务器 `/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python submit_reviewed_unknown.py 20260512`
+  - 服务器 `/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python -m py_compile export_unknown_ades.py submit_reviewed_unknown.py package_unknown_review.py`
+- key_findings:
+  - 服务器当前已有一个 submit CSV：`/pipeline/xiaoyunao/heliolincrr/review_packages/20260512/20260512_submit.csv`
+  - 该文件表头为 `tracklet_id,is_real`，共 `28` 条判定，其中 `1` 条为真源、`27` 条为假源
+  - `export_unknown_ades.py` 新增 `--submit-csv` 模式，默认读取 `<review-root>/<night>/<night>_submit.csv`
+  - `--submit-csv` 模式会强制要求每个 unknown link 都有明确 `0/1`，并只保留 `is_real=1`
+  - 新增 `submit_reviewed_unknown.py` 作为人工 check 完成后的单夜入口；默认只生成 masked 产物和 ADES PSV，不 validate、不 submit
+  - `20260512` dry run 生成 `1` 个 masked unknown link 和 `3` 行 ADES obsData
+- validation:
+  - 本地和服务器 `py_compile` 均通过
+  - 服务器 dry run 产物存在：
+    - `/processed1/20260512/L4/20260512_unknown_links_submit_masked.json`
+    - `/processed1/20260512/L4/20260512_unknown_links_submit_masked.fits`
+    - `/processed1/20260512/L4/20260512_unknown_links_submit_ades.psv`
+    - `/processed1/20260512/L4/20260512_unknown_links_submit_stats.json`
+  - 未运行 MPC validate，未正式 submit
+- remaining_issues:
+  - 需要选定第一批人工 check 夜次，批量生成 `<night>_submit.csv`
+  - 真正提交前应先对目标夜运行 `submit_reviewed_unknown.py <night> --validate`
+- next_step:
+  - 对已生成 submit CSV 的夜次先 dry run，再 validate；确认 reply 正常后才显式 `--submit`
+
 - task: 统计 2025 年 unknown/review 产物并调整短期优先级到人工 check
 - files_changed: `WORKLOG.md`, `PLAN.md`
 - commands_run:

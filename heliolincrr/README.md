@@ -94,6 +94,31 @@ XA000002,0
 - `1`: 真源，允许进入 unknown ADES
 - `0`: 假源，导出和上报时过滤
 
+网页人工 check 的最终提交文件约定为：
+
+```text
+/pipeline/xiaoyunao/heliolincrr/review_packages/<night>/<night>_submit.csv
+```
+
+格式仍为两列：
+
+```text
+tracklet_id,is_real
+000001fU,1
+000001fV,0
+```
+
+`<night>_submit.csv` 表示该夜已经完成最终判定。程序会要求每个 unknown
+`tracklet_id` 都有明确的 `0/1`，然后只保留 `is_real=1` 的条目生成 reviewed/masked
+产物和 ADES PSV。默认输出：
+
+```text
+/processed1/<night>/L4/<night>_unknown_links_submit_masked.json
+/processed1/<night>/L4/<night>_unknown_links_submit_masked.fits
+/processed1/<night>/L4/<night>_unknown_links_submit_ades.psv
+/processed1/<night>/L4/<night>_unknown_links_submit_stats.json
+```
+
 单独导出 unknown ADES PSV：
 
 ```bash
@@ -103,6 +128,24 @@ XA000002,0
   --review-csv /path/to/review.csv \
   --require-review \
   --out /processed1/20260220/L4/20260220_unknown_links_ades.psv
+```
+
+网页 submit CSV 完成后，先生成 reviewed/masked 产物和 PSV，不 validate、不上报：
+
+```bash
+/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python submit_reviewed_unknown.py 20260512
+```
+
+做 MPC test validation：
+
+```bash
+/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python submit_reviewed_unknown.py 20260512 --validate
+```
+
+正式上报必须显式打开：
+
+```bash
+/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python submit_reviewed_unknown.py 20260512 --validate --submit
 ```
 
 在 `run_single_night.sh` 里启用导出：

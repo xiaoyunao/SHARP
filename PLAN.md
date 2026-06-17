@@ -23,6 +23,8 @@
 - review CSV 合计 `4848` 行，其中 `52` 行已填写 `is_real`，分布为 `1=4`, `0=48`
 - 已填写 review 的夜次：`20260309`, `20260504`, `20260507`, `20260508`, `20260509`, `20260512`
 - `export_unknown_ades.py` 已支持 `--review-csv`, `--require-review`, `--validate`, `--submit`
+- `export_unknown_ades.py` 已支持网页最终提交文件 `--submit-csv`，默认读取 `/pipeline/xiaoyunao/heliolincrr/review_packages/<night>/<night>_submit.csv`
+- `submit_reviewed_unknown.py` 已作为人工 check 完成后的单夜入口，默认生成 masked JSON/FITS、ADES PSV 和 stats，不自动 validate/submit
 - `run_single_night.sh` 默认关闭 unknown ADES export/validate/submit
 - crontab 目前只有 known asteroid daily，没有 unknown daily wrapper
 - 未发现 `*_unknown_mpc_reply.txt` 或 `*_unknown_validate_reply.txt`，人工筛选后的 unknown 上报尚无完成证据
@@ -58,12 +60,13 @@
 - 已手动补跑 `2026-06-17` survey daily，生成并发布 `20260617_plan`
 - 已手动补跑 `2026-06-17` known daily；target night `20260616` 因 `/processed1/20260616` 缺失而 skip
 - 用户已确认 recovery/monitor 暂缓，待 unknown 人工 check 与上报链路稳定后再实现；当前重点是人工 check
+- `20260512` 已存在网页生成的 `20260512_submit.csv`；dry run 成功生成 `1` 个 masked unknown link 和 `3` 行 ADES obsData，未 validate，未 submit
 
 短期目标：
 
-- 推进 unknown 人工 check，先按年份/夜次分批完成 review CSV 的 `is_real` 判定
-- 明确人工 check 完成判定：每个正 unknown 夜次 CSV 的 `is_real` 全部非空，zero unknown 夜次可直接视为完成
-- 对已完成 check 的夜次用 review CSV 重新导出 filtered ADES，并先 validate，不自动 submit
+- 推进 unknown 人工 check，先按年份/夜次分批生成 `<night>_submit.csv`
+- 明确人工 check 完成判定：每个正 unknown 夜次存在 `<night>_submit.csv`，且每个 unknown `tracklet_id` 都有明确 `0/1`；zero unknown 夜次可直接视为完成
+- 对已完成 check 的夜次用 `submit_reviewed_unknown.py <night>` 重新导出 filtered/masked 产物和 ADES，并先 validate，不自动 submit
 - 抽查 review package tar 是否包含 GIF、review CSV、`*_unknown_review_full.fits`、`*_unknown_review_ades.fits`
 - 对 skip 夜按原因分类记录，尤其是 `unknown_links_after_known_gt_200` 和 `missing_known_matched`
 - 新增正式 daily unknown 入口，负责选择目标夜、防重复运行、日志记录和产物检查
@@ -120,7 +123,8 @@ PPT 素材旁支已完成一批图件，统一在服务器
 - summary 中 `counts.matched_detections_total > 0`，否则不能认为已完成已知小行星扣除
 - 若启用 `trkSub`，每个 unknown link 的 `trk_sub` 必须符合 8 位 `[0-9a-zA-Z]`
 - `trkSub` 分配必须写入全局 history，并且重复运行同一 catalog 不新增重复记录
-- 若启用人工复核，`is_real=0` 的 `trk_sub` 不得进入 ADES PSV
+- 若启用人工复核或网页 submit CSV，`is_real=0` 的 `trk_sub` 不得进入 ADES PSV
+- 网页 submit CSV 模式必须在导出前检查所有 unknown `tracklet_id` 都有明确 `0/1`
 - 自动入口日志需记录 target night、skip/run reason、exit code、核心产物路径和 unknown count
 - PPT 已知小行星图可稳定写出 `known_object_detection_histogram.png`
 - PPT orbit confirm 图可稳定写出 `20260220_link234_orbit_fit_diagnostic*.png`
@@ -129,8 +133,8 @@ PPT 素材旁支已完成一批图件，统一在服务器
 ## Next recommended steps
 
 1. 把 2025 年 `35` 个 positive unknown 夜次交给网页筛选；`20251128` 和 `20251201` 为 zero unknown，可直接标记完成
-2. 建立人工 check 完成检查脚本或命令：统计每个 review CSV 的空 `is_real` 数，输出已完成/未完成夜次
-3. 对已完成 review 的夜次用 `export_unknown_ades.py --review-csv --require-review --validate` 生成筛选后 PSV 并做 MPC test validation
+2. 建立人工 check 完成检查脚本或命令：查找 `<night>_submit.csv`，校验每个 unknown `tracklet_id` 都有明确 `0/1`
+3. 对已完成 submit CSV 的夜次用 `submit_reviewed_unknown.py <night> --validate` 生成筛选后 PSV 并做 MPC test validation
 4. 抽查 `20260529`, `20260530`, `20260601` review package 内容并交给网页筛选
 5. 对 `20260528`、`20260611` 单独复盘 high unknown 原因，重点查 known subtraction、mask 后源密度、dense group 和观测场区
 6. 决定 `20260605` 这种 known-only 无 matched detections 的夜次是否要写 schema-only matched 文件再跑 unknown
