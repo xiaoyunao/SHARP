@@ -2,6 +2,41 @@
 
 ## 2026-06-17
 
+- task: 排查高 unknown 夜次、`20260605` known-only 自动触发缺失和服务器重启后的 daily 补跑
+- files_changed: `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 服务器统计 `20260528`, `20260611` 及正常对照夜的 summary、tracklet/link classification、unknown group/file 分布
+  - 服务器统计 `/processed1/20*/L4/*_unknown_links.json` 和 review package manifest 覆盖夜次
+  - 服务器检查 `crontab -l`、`known_asteroid/run_daily.sh`、`known_asteroid/runtime/logs/20260605_daily.log`
+  - 服务器补跑 `known_asteroid/submit_pipeline_slurm.sh --batch false --submit-mpc false --max-parallel 2 20260605`
+  - 服务器检查 `uptime -s`, `who -b`, `last -x reboot shutdown`
+  - 服务器手动补跑 `/pipeline/xiaoyunao/survey/run_daily.sh 2026-06-17`
+  - 服务器手动补跑 `/pipeline/xiaoyunao/known_asteroid/run_daily.sh 2026-06-17`
+- key_findings:
+  - `20260528` 高 unknown 不是单纯 known catalog 缺失；`tracklets_total=92792`, `links_total=1170`, `unknown_count=1168`，link class 主要为 `all_non_asteroid`
+  - `20260528` 异常集中在 group `47` 及 `OBJ_MP_1428_0236/0287/0309`，少数文件组合生成极大量 tracklets
+  - `20260611` 有大量 known link 被识别；`tracklets_total=267450`, `links_total=1319`, `unknown_count=653`，其中 `all_same_asteroid=636`, `all_non_asteroid=653`
+  - `20260611` unknown 集中在 groups `57`, `59`, `61` 及 `OBJ_MP_1698`, `OBJ_MP_1434`, `OBJ_MP_1828` 对应文件组
+  - 当前有 unknown JSON 的夜次共 `120` 个，其中 `114` 个 positive unknown、`6` 个 zero unknown，unknown link 合计 `4917`
+  - review manifest 覆盖同样为 `120` 夜，manifest detection/ADES 行合计 `14784`，GIF 缺失合计 `0`
+  - review CSV 共 `120` 个，`4917` 行；已填写 `110` 行，其中 `is_real=1` 有 `15` 条，`is_real=0` 有 `95` 条
+  - `20260605` 未自动跑 known-only 的直接原因是缺少 `20260606_daily.log`；按 `run_daily.sh` 逻辑应由 `2026-06-06 09:00` 的 cron 处理 target night `20260605`
+  - 手动补跑 `20260605` known-only 后仅生成 `20260605_all_asteroids.fits`；两个 MP 文件均无 matched detections，因此仍无 matched FITS，unknown wrapper 会继续按 `missing_known_matched` 跳过
+  - 服务器 `2026-06-17 16:00:12` 重启，早于重启的 `09:00` cron 不会由普通 cron 自动补跑
+  - 已手动补跑 `2026-06-17` survey daily，生成 `/pipeline/xiaoyunao/survey/runtime/plans/20260617_plan.json/.txt` 和发布版 `/pipeline/xiaoyunao/script/20260617_plan.txt`
+  - 已手动补跑 `2026-06-17` known daily；target night 为 `20260616`，因 `/processed1/20260616` 缺失而安全 skip
+- validation:
+  - 服务器确认 `/pipeline/xiaoyunao/script/current_plan.txt` 已更新为 `20260617` 计划
+  - 服务器确认 `/pipeline/xiaoyunao/known_asteroid/runtime/logs/20260617_daily.log` 存在且记录 `target_night=20260616`
+  - 未对 unknown 做 validate 或 submit
+- remaining_issues:
+  - `20260528`、`20260611` 需要进一步决定是人工排除异常场、加 dense group 策略，还是按更严格源密度/tracklet 限制重跑
+  - 需要新增 daily recovery/check wrapper，避免服务器 09:00 关机或 cron miss 后无人发现
+  - unknown daily、review package、人工筛选完成后的上报 watcher 仍未正式接入 crontab/recovery
+- next_step:
+  - 实现一个幂等的 daily monitor/recovery 脚本，检查 survey plan、known daily、unknown/review/submit request 的缺口并按策略补跑
+  - 将高 unknown 夜次纳入单独异常夜清单，避免自动流程误上报
+
 - task: 恢复服务器连接后处理 `20260514` 之后新增 unknown 夜次
 - files_changed: `WORKLOG.md`, `PLAN.md`
 - commands_run:
