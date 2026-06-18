@@ -2,6 +2,25 @@
 
 ## 2026-06-18
 
+- task: 续跑 known/mask15 driver，并让 batch 遇到缺 L2 夜次时跳过而不是退出
+- files_changed: `known_asteroid/submit_pipeline_slurm.sh`, `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 服务器按三分类口径检查 known/mask15 进度
+  - 服务器从 `20260205` 启动 `RUN_ID=known_rematch_20260618_111935` driver
+  - 本地 `bash -n known_asteroid/submit_pipeline_slurm.sh known_asteroid/run_known_rematch_then_unknown_remask.sh`
+  - 同步 `submit_pipeline_slurm.sh` 到服务器并运行 `bash -n`
+- key_findings:
+  - 上一轮 driver 已退出，原因是 batch 走到缺 L2 的 `/processed1/20260203/L2` 时 fatal
+  - 这种无 L2 夜次属于不适用/跳过，不应终止整个批处理
+  - 已改为遇到缺 L2 时输出 `[SKIP] <night> missing L2 dir` 并继续后续夜次
+- validation:
+  - 本地和服务器 `bash -n` 均通过
+  - 旧 driver 停止后，已从 `20260205..20260617` 重启新 driver
+- remaining_issues:
+  - 新 driver 启动后仍需确认 `20260205` 之后是否成功写入 manifest/array/finalize
+- next_step:
+  - 确认新 driver 成功越过缺 L2 夜次后，继续监控 known/mask15 完成夜次和最终 unknown remask 启动
+
 - task: 修复 `sbatch` warning 污染 job id 导致的 20260106 finalize dependency 失败
 - files_changed: `known_asteroid/submit_pipeline_slurm.sh`, `known_asteroid/run_known_rematch_then_unknown_remask.sh`, `WORKLOG.md`, `PLAN.md`
 - commands_run:

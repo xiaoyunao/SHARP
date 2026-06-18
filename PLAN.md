@@ -76,6 +76,7 @@
   - 当前应跑夜次 `128`，跳过/不适用 `22`；普通 known 和 mask15 本轮均已完成 `29` 夜，完成范围到 `20251217` 且包含 `20251221`
   - retry 后 `20251228` 已成功提交 array `190635` / finalize `190636`
   - `20260106` 曾因 `sbatch` stderr warning 污染 array job id，导致 finalize dependency 非法并停住；已修复 stdout/stderr 分离与 job id 解析，取消坏 array `191015`，并从 `20260106` 续跑成功，新 job 为 array `195437` / finalize `195438`
+  - 后续 driver 因缺 L2 夜 `/processed1/20260203/L2` 退出；已改为缺 L2 时 skip 并继续，当前从 `20260205` 续跑
   - duplicate cleanup：并发残留导致的重复/坏 job `185697..185706` 已取消
   - unknown remask 尚未开始
   - unknown remask：driver 完成 known 提交并轮询全部 finalize job 离队后提交 `20251116..20260616`，不处理 `20260617` unknown

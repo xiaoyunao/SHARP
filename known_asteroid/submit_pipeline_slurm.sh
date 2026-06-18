@@ -122,6 +122,11 @@ for NIGHT in "${NIGHTS[@]}"; do
   REPLY_TXT="${L4_DIR}/${NIGHT}_mpc_reply.txt"
   MANIFEST="${L4_DIR}/${NIGHT}_file_manifest.txt"
 
+  if [[ ! -d "${L2_DIR}" ]]; then
+    echo "[SKIP] ${NIGHT} missing L2 dir: ${L2_DIR}"
+    continue
+  fi
+
   mkdir -p "${L4_DIR}" "${PARTS_DIR}"
 
   if [[ "${SUBMIT_MPC}" == "true" && -s "${OUT_PSV}" && -s "${REPLY_TXT}" ]]; then
