@@ -22,6 +22,24 @@ from astropy.wcs import WCS
 warnings.filterwarnings("ignore")
 
 
+def image_dimensions(header, hdu, fallback_nx: int, fallback_ny: int) -> tuple[int, int]:
+    if isinstance(hdu, (fits.BinTableHDU, fits.TableHDU)):
+        return int(fallback_nx), int(fallback_ny)
+    return int(header.get("NAXIS1", fallback_nx)), int(header.get("NAXIS2", fallback_ny))
+
+
+def query_geometry(
+    field_center: SkyCoord,
+    corner_coords: SkyCoord,
+    ra_vals: np.ndarray,
+    corner_pad_deg: float,
+) -> tuple[SkyCoord, u.Quantity]:
+    if np.nanmax(ra_vals) - np.nanmin(ra_vals) > 180.0:
+        field_center = SkyCoord(ra=0.0 * u.deg, dec=field_center.dec)
+    field_radius = field_center.separation(corner_coords).max() + corner_pad_deg * u.deg
+    return field_center, field_radius
+
+
 def query_asteroids(
     q: Query,
     field_center: SkyCoord,
@@ -115,7 +133,7 @@ def build_argparser() -> argparse.ArgumentParser:
     )
     p.add_argument("--hdu", type=int, default=1, help="HDU containing catalog table")
 
-    p.add_argument("--sep-arcsec", type=float, default=1.0, help="Sky match radius in arcsec")
+    p.add_argument("--sep-arcsec", type=float, default=1.5, help="Sky match radius in arcsec")
     p.add_argument("--mag-limit", type=float, default=22.5, help="Predicted V magnitude limit")
     p.add_argument(
         "--magdiff",
@@ -206,8 +224,7 @@ def run_match(args: argparse.Namespace) -> tuple[str | None, str | None]:
                 cat = Table(hdul[args.hdu].data)
                 w = WCS(header)
 
-                nx = int(header.get("NAXIS1", args.nx))
-                ny = int(header.get("NAXIS2", args.ny))
+                nx, ny = image_dimensions(header, hdul[args.hdu], args.nx, args.ny)
                 pix_corners = np.array([[1, 1], [1, ny], [nx, 1], [nx, ny]], dtype=float)
                 world = w.all_pix2world(pix_corners, 1)
                 ra_vals, dec_vals = world[:, 0], world[:, 1]
@@ -215,8 +232,13 @@ def run_match(args: argparse.Namespace) -> tuple[str | None, str | None]:
                 corner_coords = SkyCoord(ra=ra_vals * u.deg, dec=dec_vals * u.deg)
                 center_world = w.pixel_to_world((nx + 1) / 2.0, (ny + 1) / 2.0)
                 field_center = SkyCoord(ra=center_world.ra, dec=center_world.dec)
-                max_diff = field_center.separation(corner_coords).max() + args.corner_pad_deg * u.deg
-                confidence_radius = (max_diff.to(u.deg).value + args.confidence_pad_deg) * u.deg
+                query_center, query_radius = query_geometry(
+                    field_center,
+                    corner_coords,
+                    ra_vals,
+                    args.corner_pad_deg,
+                )
+                confidence_radius = (query_radius.to(u.deg).value + args.confidence_pad_deg) * u.deg
 
                 epoch, mjd = parse_epoch(
                     header,
@@ -236,8 +258,8 @@ def run_match(args: argparse.Namespace) -> tuple[str | None, str | None]:
         try:
             ephs = query_asteroids(
                 q=q,
-                field_center=field_center,
-                field_radius=max_diff,
+                field_center=query_center,
+                field_radius=query_radius,
                 epoch=epoch,
                 observer=observer,
                 mag_limit=args.mag_limit,

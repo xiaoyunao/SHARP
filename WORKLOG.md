@@ -2,6 +2,41 @@
 
 ## 2026-06-18
 
+- task: 排查人工真源与 JPL 已知小行星重合导致的 known 提取漏检
+- files_changed: `known_asteroid/match_single_night.py`, `known_asteroid/slurm_match_one_file.sh`, `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 本地参考 `/Users/yunaoxiao/Desktop/fast_move_gotta/refine_with_horizons.py` 的 JPL/Horizons API 调用方式
+  - 从服务器抽取 `20260101..20260107` submit CSV 中 `is_real=1` 的 unknown link，并按用户要求追加 `20260110 00000BM`
+  - 本地用 JPL Small-Body Identification API 对人工真源做临时交叉检查，中途按用户要求停止
+  - 服务器检查 `/processed1/<night>/L4/known_asteroid_parts/*_all_asteroids.fits` 与 `*_matched_asteroids.fits`
+  - 服务器临时重跑部分 known match 到 `/tmp/known_fix_check_20260102` 和 `/tmp/known_fix_check_20260103`，检查后删除
+  - 本地和服务器 `python -m py_compile known_asteroid/match_single_night.py`
+  - 同步修复到服务器 `/pipeline/xiaoyunao/known_asteroid/`
+- key_findings:
+  - JPL 临时检查确认至少 `6` 条人工真源实际为已知小行星：
+    `20260102 00000wn -> 3331 Kvistaberg`,
+    `20260103 00000wE -> 1522 Kokkola`,
+    `20260103 00000wF -> 2220 Hicks`,
+    `20260103 00000wG -> 168 Sibylla`,
+    `20260103 00000wH -> 1795 Woltjer`,
+    `20260103 00000wI -> 8219 (1996 JL)`
+  - `20260103 00000wD` 与 `20260104 00000wK` 在已完成的临时 JPL 查询中未见匹配；其余目标未继续查询
+  - 根因 1：`match_single_night.py` 对 L2 catalog BINTABLE 使用 `NAXIS1/NAXIS2` 作为图像尺寸；实际这是表行字节数和表行数，导致视场中心/半径错误
+  - 根因 2：Lowell/aleph 查询中心接近 `360 deg` 且视场跨 RA=0 时会漏掉 0 度另一侧对象；`20260103` 的 `Kokkola/Hicks/Sibylla/Woltjer/8219` 属于这一类
+  - 根因 3：默认匹配半径 `1.0"` 太紧，`3331 Kvistaberg` 在当前 Lowell/aleph 预测下距实际检测点约 `1.03..1.30"`，被过滤掉
+  - 修复：BINTABLE 使用传入的 `--nx/--ny`；跨 RA=0 视场改用 `RA=0` 查询中心并重算查询半径；Slurm 默认 `SEP_ARCSEC=1.5`
+- validation:
+  - 修复后临时重跑 `20260102` 三张 `OBJ_MP_0682` 曝光，`3331 Kvistaberg` 均进入 matched
+  - 修复后临时重跑 `20260103` 的 `OBJ_MP_0925_0081` 和 `OBJ_MP_1060_0083`，`1522/2220/168/1795/8219` 均进入 matched
+  - 本地和服务器 `py_compile` 均通过
+  - 本地与服务器 `/tmp` 未保留临时 JPL/known 验证脚本或结果目录
+- remaining_issues:
+  - 已有 known matched、unknown links、review package 均是在修复前生成的，受影响夜次需要重跑 known 提取和后续 unknown 扣除/打包
+  - 需要评估全量历史中跨 RA=0 视场和 `1.0"` 半径漏检造成的 unknown 污染范围
+- next_step:
+  - 先重跑用户已人工检查的 `20260101..20260107` 和 `20260110` 的 known/unknown 链路，确认人工真源中已知小行星被扣除
+  - 再决定是否全量重跑 known extraction 后重建 unknown review packages
+
 - task: 确认早期 MPC unknown submit 来源并删除 8 位 trkSub 备份
 - files_changed: `README.md`, `WORKLOG.md`, `PLAN.md`
 - commands_run:

@@ -62,14 +62,20 @@
 - 已手动补跑 `2026-06-17` known daily；target night `20260616` 因 `/processed1/20260616` 缺失而 skip
 - 用户已确认 recovery/monitor 暂缓，待 unknown 人工 check 与上报链路稳定后再实现；当前重点是人工 check
 - `20260512` 已存在网页生成的 `20260512_submit.csv`；dry run 成功生成 `1` 个 masked unknown link 和 `3` 行 ADES obsData，未 validate，未 submit
-- `20260103` 的 6 条 unknown link 均被人工判为真源；该夜 `tracklets_total=718`, `links_total=79`, `fit_ok all_non_asteroid=6`，5 条非已知候选已在 orbit 阶段因 `max_v` 被剔除，可作为 submit CSV/validate 的正例夜次
+- `20260103` 的 6 条旧 unknown link 虽均被人工判为真源，但 JPL 临时检查确认其中至少 `5` 条为已知小行星；该夜应作为 known 提取漏检回归样本，不再作为 unknown submit 正例
 - `2026-06-18` 迁移后 `trkSub` history 为 `4917` 条、全部 7 位，范围 `0000001..00001hj`；postcheck dry-run 无 8 位残留
 - 早期 MPC unknown 正式 submit 为 `20260220`，submission ID `2026-05-14T03:00:19.564_0000Bx4c`；当时未经过人工 check，提交版本为 `34` 条 link、`102` 行 obsData。当前服务器 remask 后 `20260220` 版本为 `29` 条 link、`87` 行 obsData
 - 8 位 trkSub 迁移备份 `/pipeline/xiaoyunao/data/heliolincrr/backups/trksub_8char_20260618_094807` 已按用户确认删除
+- `2026-06-18` JPL 临时检查发现人工真源中至少 `6` 条实际为已知小行星；known 提取存在系统性漏检
+- known 提取根因已修复：L2 catalog BINTABLE 不再用 `NAXIS1/NAXIS2` 当图像尺寸，跨 RA=0 视场改用 `RA=0` 查询中心，Slurm 默认 known 匹配半径改为 `1.5"`
+- 修复后临时验证：`3331 Kvistaberg`, `1522 Kokkola`, `2220 Hicks`, `168 Sibylla`, `1795 Woltjer`, `8219 (1996 JL)` 均可进入 known matched；临时验证目录已删除
+- 修复前生成的 known matched、unknown links 和 review packages 需要重跑后才能用于人工 check 后上报
 
 短期目标：
 
-- 推进 unknown 人工 check，先按年份/夜次分批生成 `<night>_submit.csv`
+- 暂停基于旧 unknown 产物的上报，先重跑受影响夜次的 known 提取和 unknown 扣除
+- 先重跑用户已人工检查的 `20260101..20260107` 和追加检查的 `20260110`，确认已知小行星不再进入 unknown
+- 推进 unknown 人工 check 时，以修复后重建的 review package 为准
 - 明确人工 check 完成判定：每个正 unknown 夜次存在 `<night>_submit.csv`，且每个 unknown `tracklet_id` 都有明确 `0/1`；zero unknown 夜次可直接视为完成
 - 对已完成 check 的夜次用 `submit_reviewed_unknown.py <night>` 重新导出 filtered/masked 产物和 ADES，并先 validate，不自动 submit
 - 抽查 review package tar 是否包含 GIF、review CSV、`*_unknown_review_full.fits`、`*_unknown_review_ades.fits`
@@ -113,7 +119,8 @@ PPT 素材旁支已完成一批图件，统一在服务器
 - GIF 可视化很慢，应在自动提取中默认可跳过或限量
 - 15 夜流程尚未接入同一个 `trkSub` history
 - unknown 真实提交策略仍需收紧；后续 daily wrapper 默认不应自动 submit，人工筛选后需先 validate 再显式 submit
-- 人工复核目前只填写少量条目；已筛选的 `is_real=1` 还未重新导出为 filtered unknown ADES
+- 人工复核目前只填写少量条目；修复 known 提取并重建对应 unknown/review 产物前，已筛选的 `is_real=1` 不应导出为正式 unknown ADES
+- 修复前的 known 提取可能在 L2 BINTABLE 尺寸、RA=0 跨界、`1.0"` 半径三方面漏检已知小行星，需要确定重跑范围
 - `20260528` 和 `20260611` unknown 数过高，需要单独复盘
 - `20260605` known-only 补跑无 matched detections，是否允许 no matched 夜继续 unknown 需要决定
 - PPT 侧 `known_object_detection_histogram` 已可出图，但 summary JSON 是否稳定记录该字段仍需补查
@@ -137,16 +144,19 @@ PPT 素材旁支已完成一批图件，统一在服务器
 
 ## Next recommended steps
 
-1. 把 2025 年 `35` 个 positive unknown 夜次交给网页筛选；`20251128` 和 `20251201` 为 zero unknown，可直接标记完成
-2. 建立人工 check 完成检查脚本或命令：查找 `<night>_submit.csv`，校验每个 unknown `tracklet_id` 都有明确 `0/1`
-3. 对已完成 submit CSV 的夜次用 `submit_reviewed_unknown.py <night> --validate` 生成筛选后 PSV 并做 MPC test validation，可先用正例夜 `20260103`
-4. 抽查 `20260529`, `20260530`, `20260601` review package 内容并交给网页筛选
-5. 对 `20260528`、`20260611` 单独复盘 high unknown 原因，重点查 known subtraction、mask 后源密度、dense group 和观测场区
-6. 决定 `20260605` 这种 known-only 无 matched detections 的夜次是否要写 schema-only matched 文件再跑 unknown
-7. 新增正式 `heliolincrr/run_daily_unknown.sh` 或 Python wrapper，负责每日选择目标夜并调用 `run_single_night.sh`
-8. 默认 `SKIP_PLOTS=1`，只做提取和 summary；必要时再单独补 GIF
-9. 增加产物检查：summary、unknown JSON/FITS、matched count、unknown count、review full FITS 行数、ADES 行数
-10. 将 unknown GIF 打包和 review CSV 模板输出接入 daily wrapper
-11. 待 unknown 人工 check 与上报链路稳定后，再新增 `daily_monitor`/recovery 脚本
-12. 将未来 15 夜 unknown catalog 接入同一个 `assign_unknown_trksub.py`
-13. 如 PPT 还要继续打磨，再补 detection histogram 的 cumulative 版或 orbit confirm 的 good/rejected 双栏对照图
+1. 重跑 `20260101..20260107` 和 `20260110` 的 known extraction，再重跑对应 unknown 扣除和 review package
+2. 抽查修复后 `20260102/20260103` 中 JPL 命中的已知小行星是否从 unknown 中消失
+3. 评估全量历史是否需要重跑：优先统计跨 RA=0 视场、known matched 过低夜次、人工真源中 JPL 命中夜次
+4. 以修复后产物重新交给网页筛选；旧 submit CSV 只能作为人工判断参考，不能直接上报
+5. 建立人工 check 完成检查脚本或命令：查找 `<night>_submit.csv`，校验每个 unknown `tracklet_id` 都有明确 `0/1`
+6. 对已完成 submit CSV 的夜次用 `submit_reviewed_unknown.py <night> --validate` 生成筛选后 PSV 并做 MPC test validation，不能再用旧 `20260103` 作为正例
+7. 抽查 `20260529`, `20260530`, `20260601` review package 内容并交给网页筛选
+8. 对 `20260528`、`20260611` 单独复盘 high unknown 原因，重点查 known subtraction、mask 后源密度、dense group 和观测场区
+9. 决定 `20260605` 这种 known-only 无 matched detections 的夜次是否要写 schema-only matched 文件再跑 unknown
+10. 新增正式 `heliolincrr/run_daily_unknown.sh` 或 Python wrapper，负责每日选择目标夜并调用 `run_single_night.sh`
+11. 默认 `SKIP_PLOTS=1`，只做提取和 summary；必要时再单独补 GIF
+12. 增加产物检查：summary、unknown JSON/FITS、matched count、unknown count、review full FITS 行数、ADES 行数
+13. 将 unknown GIF 打包和 review CSV 模板输出接入 daily wrapper
+14. 待 unknown 人工 check 与上报链路稳定后，再新增 `daily_monitor`/recovery 脚本
+15. 将未来 15 夜 unknown catalog 接入同一个 `assign_unknown_trksub.py`
+16. 如 PPT 还要继续打磨，再补 detection histogram 的 cumulative 版或 orbit confirm 的 good/rejected 双栏对照图
