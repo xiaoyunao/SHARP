@@ -67,14 +67,20 @@
 - 早期 MPC unknown 正式 submit 为 `20260220`，submission ID `2026-05-14T03:00:19.564_0000Bx4c`；当时未经过人工 check，提交版本为 `34` 条 link、`102` 行 obsData。当前服务器 remask 后 `20260220` 版本为 `29` 条 link、`87` 行 obsData
 - 8 位 trkSub 迁移备份 `/pipeline/xiaoyunao/data/heliolincrr/backups/trksub_8char_20260618_094807` 已按用户确认删除
 - `2026-06-18` JPL 临时检查发现人工真源中至少 `6` 条实际为已知小行星；known 提取存在系统性漏检
-- known 提取根因已修复：L2 catalog BINTABLE 不再用 `NAXIS1/NAXIS2` 当图像尺寸，跨 RA=0 视场改用 `RA=0` 查询中心，Slurm 默认 known 匹配半径改为 `1.5"`
+- known 提取根因已修复：L2 catalog BINTABLE 不再用 `NAXIS1/NAXIS2` 当图像尺寸，跨 RA=0 视场改用 `RA=0` 查询中心；official known matched 保持 `1.0"` 用于 ADES/MPC，上游另写 `*_matched_asteroids_mask15.fits` 用 `1.5"` 给 unknown 扣除
 - 修复后临时验证：`3331 Kvistaberg`, `1522 Kokkola`, `2220 Hicks`, `168 Sibylla`, `1795 Woltjer`, `8219 (1996 JL)` 均可进入 known matched；临时验证目录已删除
 - 修复前生成的 known matched、unknown links 和 review packages 需要重跑后才能用于人工 check 后上报
+- 已启动批量重跑：`RUN_ID=known_rematch_20260618_111935`
+  - known forced rematch：已提交 `20251116..20251204` 的正常 job；新版后台 driver 从 `20251203..20260617` 续跑
+  - duplicate cleanup：并发残留导致的重复/坏 job `185697..185706` 已取消
+  - unknown remask：driver 完成 known 提交并轮询全部 finalize job 离队后提交 `20251116..20260616`，不处理 `20260617` unknown
+  - logs: `/pipeline/xiaoyunao/known_asteroid/runtime/logs/known_rematch_20260618_111935.log`, `/pipeline/xiaoyunao/known_asteroid/runtime/logs/known_rematch_20260618_111935_driver.log`
+  - remask status: `/pipeline/xiaoyunao/data/heliolincrr/batch_logs/known_rematch_20260618_111935_unknown_remask_status.tsv`
 
 短期目标：
 
-- 暂停基于旧 unknown 产物的上报，先重跑受影响夜次的 known 提取和 unknown 扣除
-- 先重跑用户已人工检查的 `20260101..20260107` 和追加检查的 `20260110`，确认已知小行星不再进入 unknown
+- 暂停基于旧 unknown 产物的上报，等待 `known_rematch_20260618_111935` 的 known/remask 批处理完成
+- 批处理完成后先抽查用户已人工检查的 `20260101..20260107` 和追加检查的 `20260110`，确认已知小行星不再进入 unknown
 - 推进 unknown 人工 check 时，以修复后重建的 review package 为准
 - 明确人工 check 完成判定：每个正 unknown 夜次存在 `<night>_submit.csv`，且每个 unknown `tracklet_id` 都有明确 `0/1`；zero unknown 夜次可直接视为完成
 - 对已完成 check 的夜次用 `submit_reviewed_unknown.py <night>` 重新导出 filtered/masked 产物和 ADES，并先 validate，不自动 submit
@@ -144,9 +150,9 @@ PPT 素材旁支已完成一批图件，统一在服务器
 
 ## Next recommended steps
 
-1. 重跑 `20260101..20260107` 和 `20260110` 的 known extraction，再重跑对应 unknown 扣除和 review package
+1. 监控 `known_rematch_20260618_111935`：确认 known submit driver 完成、dependent remask job 已提交并完成
 2. 抽查修复后 `20260102/20260103` 中 JPL 命中的已知小行星是否从 unknown 中消失
-3. 评估全量历史是否需要重跑：优先统计跨 RA=0 视场、known matched 过低夜次、人工真源中 JPL 命中夜次
+3. 汇总 remask status TSV：done/skip/error、unknown_count、review_full_rows、n_gifs_missing
 4. 以修复后产物重新交给网页筛选；旧 submit CSV 只能作为人工判断参考，不能直接上报
 5. 建立人工 check 完成检查脚本或命令：查找 `<night>_submit.csv`，校验每个 unknown `tracklet_id` 都有明确 `0/1`
 6. 对已完成 submit CSV 的夜次用 `submit_reviewed_unknown.py <night> --validate` 生成筛选后 PSV 并做 MPC test validation，不能再用旧 `20260103` 作为正例

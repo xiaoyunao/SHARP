@@ -27,6 +27,7 @@ object submission workflow.
 - `slurm_match_one_file.sh`: one `*MP*` file per slurm task
 - `slurm_merge_submit.sh`: merge night-level outputs and optionally submit
 - `submit_pipeline_slurm.sh`: submit slurm jobs for one night or a date range
+- `run_known_rematch_then_unknown_remask.sh`: submit a forced known rematch range, then a dependent unknown remask job
 - `cron.example`: daily 09:00 cron entry
 - `cron_visual.example`: daily visualization cron entry
 
@@ -82,12 +83,14 @@ The funding source is intentionally truncated to the first sentence only.
 ## Skip rules
 
 - if `L4/YYYYMMDD_all_asteroids.fits` and
-  `L4/YYYYMMDD_matched_asteroids.fits` already exist, extraction is skipped
+  `L4/YYYYMMDD_matched_asteroids.fits` and
+  `L4/YYYYMMDD_matched_asteroids_mask15.fits` already exist, extraction is skipped
 - if `L4/YYYYMMDD_matched_asteroids_ades.psv` and
   `L4/YYYYMMDD_mpc_reply.txt` already exist, the whole reporting stage is
   skipped
 - file-level reruns also skip any `*MP*` file whose part FITS already exist in
   `L4/known_asteroid_parts`
+- set `FORCE_EXTRACT=1` to resubmit all files in the requested range
 
 ## Slurm runner
 
@@ -124,6 +127,14 @@ The slurm flow is:
 `submit-mpc` is still serial even in the slurm flow. It runs as a single
 dependent finalize job after extraction is complete, so it does not create
 extra parallel pressure on the server.
+
+## Match Products
+
+- `*_matched_asteroids.fits` is the official known-object matched table used for
+  ADES export and MPC submission. Its default sky-match radius is `1.0 arcsec`.
+- `*_matched_asteroids_mask15.fits` is a wider auxiliary table for unknown-object
+  subtraction only. Its default sky-match radius is `1.5 arcsec`.
+- Do not use the `mask15` product for known-object MPC submission.
 
 ## Resource control
 

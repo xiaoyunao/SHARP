@@ -481,6 +481,15 @@ def main() -> None:
     ap.add_argument("--unknown-fits", default=None)
     ap.add_argument("--unknown-json", default=None)
     ap.add_argument(
+        "--matched",
+        default=None,
+        help=(
+            "Known-asteroid matched FITS used for unknown masking. Default: "
+            "/processed1/<night>/L4/<night>_matched_asteroids_mask15.fits if present, "
+            "otherwise /processed1/<night>/L4/<night>_matched_asteroids.fits."
+        ),
+    )
+    ap.add_argument(
         "--trk-sub-map",
         default=None,
         help=(
@@ -502,12 +511,16 @@ def main() -> None:
     summary_txt = Path(args.summary_txt) if args.summary_txt else (analysis_outdir / f"{night}_single_night_summary.txt")
     unknown_fits = Path(args.unknown_fits) if args.unknown_fits else (processed_root / night / "L4" / f"{night}_unknown_links.fits")
     unknown_json = Path(args.unknown_json) if args.unknown_json else (processed_root / night / "L4" / f"{night}_unknown_links.json")
+    default_mask_matched = processed_root / night / "L4" / f"{night}_matched_asteroids_mask15.fits"
+    default_official_matched = processed_root / night / "L4" / f"{night}_matched_asteroids.fits"
+    matched_path = Path(args.matched) if args.matched else (
+        default_mask_matched if default_mask_matched.exists() else default_official_matched
+    )
 
     links = Table.read(rr_dir / "links_tracklets.fits")
     members = Table.read(rr_dir / "linkage_members.fits")
     tracklets = Table.read(tracklets_path)
     orbit_links = Table.read(rr_dir / "orbit_confirm" / "orbit_links.fits")
-    matched_path = processed_root / night / "L4" / f"{night}_matched_asteroids.fits"
     matched = Table.read(matched_path) if matched_path.exists() else Table()
     mask_dir = root_out / night / "mask_gaia"
     mask_keys, mask_total_rows = load_mask_stats(mask_dir)

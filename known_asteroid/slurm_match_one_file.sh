@@ -30,7 +30,9 @@ NY="${NY:-9232}"
 OBS_DATE_KEY="${OBS_DATE_KEY:-OBS_DATE}"
 EXPTIME_KEY="${EXPTIME_KEY:-}"
 EXPTIME_SEC="${EXPTIME_SEC:-30.0}"
-SEP_ARCSEC="${SEP_ARCSEC:-1.5}"
+SEP_ARCSEC="${SEP_ARCSEC:-1.0}"
+MASK_SEP_ARCSEC="${MASK_SEP_ARCSEC:-1.5}"
+MASK_MATCHED_SUFFIX="${MASK_MATCHED_SUFFIX:-_mask15}"
 MAG_LIMIT="${MAG_LIMIT:-22.5}"
 MAGDIFF="${MAGDIFF:-99.0}"
 CAT_MAG_COL="${CAT_MAG_COL:-Mag_Kron}"
@@ -79,6 +81,9 @@ CMD=(
   --log "${MATCH_LOG}"
 )
 
+if [[ -n "${MASK_SEP_ARCSEC}" ]]; then
+  CMD+=(--mask-sep-arcsec "${MASK_SEP_ARCSEC}" --mask-matched-suffix "${MASK_MATCHED_SUFFIX}")
+fi
 if [[ -n "${EXPTIME_KEY}" ]]; then
   CMD+=(--exptime-key "${EXPTIME_KEY}")
 fi

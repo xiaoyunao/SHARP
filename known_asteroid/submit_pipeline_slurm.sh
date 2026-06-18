@@ -26,6 +26,7 @@ MATCH_CPUS="${MATCH_CPUS:-1}"
 MATCH_MEM="${MATCH_MEM:-10G}"
 FINALIZE_CPUS="${FINALIZE_CPUS:-1}"
 FINALIZE_MEM="${FINALIZE_MEM:-10G}"
+FORCE_EXTRACT="${FORCE_EXTRACT:-0}"
 POSITIONAL=()
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -46,6 +47,7 @@ HDU="${HDU:-1}"
 OBS_DATE_KEY="${OBS_DATE_KEY:-OBS_DATE}"
 OBS_TIMEZONE="${OBS_TIMEZONE:-Asia/Shanghai}"
 NIGHT_ROLLOVER_HOUR="${NIGHT_ROLLOVER_HOUR:-12}"
+MASK_MATCHED_SUFFIX="${MASK_MATCHED_SUFFIX:-_mask15}"
 
 if [[ ! "${MAX_PARALLEL}" =~ ^[1-9][0-9]*$ ]]; then
   echo "[FATAL] --max-parallel must be a positive integer" >&2
@@ -78,6 +80,7 @@ for NIGHT in "${NIGHTS[@]}"; do
   PARTS_DIR="${L4_DIR}/known_asteroid_parts"
   ALL_FITS="${L4_DIR}/${NIGHT}_all_asteroids.fits"
   MATCHED_FITS="${L4_DIR}/${NIGHT}_matched_asteroids.fits"
+  MASK_MATCHED_FITS="${L4_DIR}/${NIGHT}_matched_asteroids${MASK_MATCHED_SUFFIX}.fits"
   OUT_PSV="${L4_DIR}/${NIGHT}_matched_asteroids_ades.psv"
   REPLY_TXT="${L4_DIR}/${NIGHT}_mpc_reply.txt"
   MANIFEST="${L4_DIR}/${NIGHT}_file_manifest.txt"
@@ -90,7 +93,7 @@ for NIGHT in "${NIGHTS[@]}"; do
   fi
 
   ARRAY_JOB=""
-  if [[ -s "${ALL_FITS}" && -s "${MATCHED_FITS}" ]]; then
+  if [[ "${FORCE_EXTRACT}" != "1" && -s "${ALL_FITS}" && -s "${MATCHED_FITS}" && -s "${MASK_MATCHED_FITS}" ]]; then
     echo "[SKIP] ${NIGHT} extraction already complete"
   else
     "${PYTHON}" "${SCRIPT_DIR}/build_file_manifest.py" "${NIGHT}" \
@@ -110,7 +113,8 @@ for NIGHT in "${NIGHTS[@]}"; do
       STEM="${STEM%.fits}"
       PART_ALL="${PARTS_DIR}/${STEM}_all_asteroids.fits"
       PART_MATCHED="${PARTS_DIR}/${STEM}_matched_asteroids.fits"
-      if [[ -s "${PART_ALL}" || -s "${PART_MATCHED}" ]]; then
+      PART_MASK_MATCHED="${PARTS_DIR}/${STEM}_matched_asteroids${MASK_MATCHED_SUFFIX}.fits"
+      if [[ "${FORCE_EXTRACT}" != "1" && -s "${PART_ALL}" && -s "${PART_MATCHED}" && -s "${PART_MASK_MATCHED}" ]]; then
         continue
       fi
       echo "${FILE}" >> "${FILTERED_MANIFEST}"

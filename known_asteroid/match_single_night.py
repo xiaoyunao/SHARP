@@ -82,6 +82,12 @@ def log(msg: str, log_path: str | None) -> None:
             f.write(msg.rstrip() + "\n")
 
 
+def remove_stale(path: str, log_path: str | None) -> None:
+    if os.path.exists(path):
+        os.remove(path)
+        log(f"[REMOVE] stale {path}", log_path)
+
+
 def parse_epoch(
     header,
     obs_date_key: str,
@@ -133,7 +139,18 @@ def build_argparser() -> argparse.ArgumentParser:
     )
     p.add_argument("--hdu", type=int, default=1, help="HDU containing catalog table")
 
-    p.add_argument("--sep-arcsec", type=float, default=1.5, help="Sky match radius in arcsec")
+    p.add_argument("--sep-arcsec", type=float, default=1.0, help="Sky match radius in arcsec")
+    p.add_argument(
+        "--mask-sep-arcsec",
+        type=float,
+        default=None,
+        help="Optional wider sky match radius in arcsec for unknown masking outputs.",
+    )
+    p.add_argument(
+        "--mask-matched-suffix",
+        default="_mask15",
+        help="Suffix inserted before .fits for the optional wider matched output.",
+    )
     p.add_argument("--mag-limit", type=float, default=22.5, help="Predicted V magnitude limit")
     p.add_argument(
         "--magdiff",
@@ -208,8 +225,10 @@ def run_match(args: argparse.Namespace) -> tuple[str | None, str | None]:
         return None, None
 
     sep_limit = args.sep_arcsec * u.arcsec
+    mask_sep_limit = args.mask_sep_arcsec * u.arcsec if args.mask_sep_arcsec is not None else None
     all_asteroids: list[Table] = []
     all_matches: list[Table] = []
+    all_mask_matches: list[Table] = []
 
     log(f"[START] night={night} n_files={len(files)} l2={l2_dir}", args.log)
 
@@ -284,24 +303,33 @@ def run_match(args: argparse.Namespace) -> tuple[str | None, str | None]:
             idx, sep2d, _ = match_coordinates_sky(asteroid_coords, cat_coords)
 
             matched = sep2d < sep_limit
+            mask_matched = sep2d < mask_sep_limit if mask_sep_limit is not None else None
             if args.cat_mag_col not in cat.colnames:
                 log(
                     f"[WARN] catalog missing {args.cat_mag_col} in {fname}; skip matches for this frame",
                     args.log,
                 )
                 matched &= False
+                if mask_matched is not None:
+                    mask_matched &= False
             else:
                 det_mag = np.array(cat[args.cat_mag_col][idx], dtype="f4")
                 pred_mag = np.array(ephs["mag"], dtype="f4")
-                matched &= (
+                mag_ok = (
                     np.isfinite(det_mag)
                     & np.isfinite(pred_mag)
                     & (np.abs(pred_mag - det_mag) < float(args.magdiff))
                 )
+                matched &= mag_ok
+                if mask_matched is not None:
+                    mask_matched &= mag_ok
 
             if np.any(matched):
                 combined = hstack([ephs[matched], cat[idx[matched]]], join_type="exact")
                 all_matches.append(combined)
+            if mask_matched is not None and np.any(mask_matched):
+                combined = hstack([ephs[mask_matched], cat[idx[mask_matched]]], join_type="exact")
+                all_mask_matches.append(combined)
         except Exception as exc:
             log(f"[ERROR] query/match failed on {fname}: {exc}", args.log)
             if args.verbose:
@@ -313,15 +341,24 @@ def run_match(args: argparse.Namespace) -> tuple[str | None, str | None]:
         stem = file_tag(args.file)
         out_all = os.path.join(args.parts_dir, f"{stem}_all_asteroids.fits")
         out_matched = os.path.join(args.parts_dir, f"{stem}_matched_asteroids.fits")
+        out_mask_matched = os.path.join(
+            args.parts_dir,
+            f"{stem}_matched_asteroids{args.mask_matched_suffix}.fits",
+        )
     else:
         out_all = os.path.join(args.outdir, f"{night}_all_asteroids.fits")
         out_matched = os.path.join(args.outdir, f"{night}_matched_asteroids.fits")
+        out_mask_matched = os.path.join(
+            args.outdir,
+            f"{night}_matched_asteroids{args.mask_matched_suffix}.fits",
+        )
 
     if all_asteroids:
         total_ast = vstack(all_asteroids)
         total_ast.write(out_all, overwrite=True)
         log(f"[WRITE] {out_all} (n={len(total_ast)})", args.log)
     else:
+        remove_stale(out_all, args.log)
         out_all = None
         log("[WRITE] skipped all_asteroids (no results)", args.log)
 
@@ -330,8 +367,18 @@ def run_match(args: argparse.Namespace) -> tuple[str | None, str | None]:
         total_match.write(out_matched, overwrite=True)
         log(f"[WRITE] {out_matched} (n={len(total_match)})", args.log)
     else:
+        remove_stale(out_matched, args.log)
         out_matched = None
         log("[WRITE] skipped matched_asteroids (no matches)", args.log)
+
+    if mask_sep_limit is not None:
+        if all_mask_matches:
+            total_mask_match = vstack(all_mask_matches)
+            total_mask_match.write(out_mask_matched, overwrite=True)
+            log(f"[WRITE] {out_mask_matched} (n={len(total_mask_match)})", args.log)
+        else:
+            remove_stale(out_mask_matched, args.log)
+            log("[WRITE] skipped mask matched_asteroids (no matches)", args.log)
 
     log(
         f"[DONE] night={night} ast_frames={len(all_asteroids)} match_frames={len(all_matches)}",

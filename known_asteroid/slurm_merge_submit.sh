@@ -54,6 +54,8 @@ L4_DIR="${ROOT_DIR}/${NIGHT}/L4"
 PARTS_DIR="${L4_DIR}/known_asteroid_parts"
 ALL_FITS="${L4_DIR}/${NIGHT}_all_asteroids.fits"
 MATCHED_FITS="${L4_DIR}/${NIGHT}_matched_asteroids.fits"
+MASK_MATCHED_SUFFIX="${MASK_MATCHED_SUFFIX:-_mask15}"
+MASK_MATCHED_FITS="${L4_DIR}/${NIGHT}_matched_asteroids${MASK_MATCHED_SUFFIX}.fits"
 OUT_PSV="${L4_DIR}/${NIGHT}_matched_asteroids_ades.psv"
 REPLY_TXT="${L4_DIR}/${NIGHT}_mpc_reply.txt"
 
@@ -63,8 +65,11 @@ run_visual_after_finalize() {
   TARGET_NIGHT="${NIGHT}" "${SCRIPT_DIR}/run_visual_daily.sh"
 }
 
-if [[ ! -s "${ALL_FITS}" || ! -s "${MATCHED_FITS}" ]]; then
-  "${PYTHON}" "${SCRIPT_DIR}/merge_night_parts.py" "${NIGHT}" --parts-dir "${PARTS_DIR}" --outdir "${L4_DIR}"
+if [[ ! -s "${ALL_FITS}" || ! -s "${MATCHED_FITS}" || ! -s "${MASK_MATCHED_FITS}" ]]; then
+  "${PYTHON}" "${SCRIPT_DIR}/merge_night_parts.py" "${NIGHT}" \
+    --parts-dir "${PARTS_DIR}" \
+    --outdir "${L4_DIR}" \
+    --mask-matched-suffix "${MASK_MATCHED_SUFFIX}"
 fi
 
 if [[ "${SUBMIT_MPC}" != "true" ]]; then

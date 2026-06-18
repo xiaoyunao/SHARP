@@ -2,6 +2,41 @@
 
 ## 2026-06-18
 
+- task: 分离 known 官方上报匹配与 unknown 1.5 角秒扣除，并启动批量重跑
+- files_changed: `known_asteroid/match_single_night.py`, `known_asteroid/merge_night_parts.py`, `known_asteroid/slurm_match_one_file.sh`, `known_asteroid/submit_pipeline_slurm.sh`, `known_asteroid/slurm_merge_submit.sh`, `known_asteroid/run_known_rematch_then_unknown_remask.sh`, `known_asteroid/README.md`, `heliolincrr/summarize_single_night.py`, `heliolincrr/remask_unknown_with_known.py`, `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 本地 `python -m py_compile known_asteroid/match_single_night.py known_asteroid/merge_night_parts.py heliolincrr/summarize_single_night.py heliolincrr/remask_unknown_with_known.py`
+  - 本地 `bash -n known_asteroid/slurm_match_one_file.sh known_asteroid/submit_pipeline_slurm.sh known_asteroid/slurm_merge_submit.sh known_asteroid/run_known_rematch_then_unknown_remask.sh`
+  - 同步 known 和 heliolincrr 修改到服务器并运行同等语法检查
+  - 服务器临时重跑 `20260102 OBJ_MP_0682_0283_cat.fits.gz` 到 `/tmp/known_dual_check`，检查后删除
+  - 服务器启动 known/remask 批处理 driver：`RUN_ID=known_rematch_20260618_111935`
+- key_findings:
+  - 已按用户要求分离两套 known matched 产物：`*_matched_asteroids.fits` 保持官方上报 `1.0"`；`*_matched_asteroids_mask15.fits` 用于 unknown 扣除 `1.5"`
+  - `match_single_night.py` 一次 aleph 查询同时写 official 和 mask15，避免重复查询
+  - `merge_night_parts.py` 和 Slurm finalize 会合并 official 与 mask15；`export_ades.py` 仍只使用 official `*_matched_asteroids.fits`
+  - `summarize_single_night.py` 默认优先使用 `*_matched_asteroids_mask15.fits`，不存在时才回退 official
+  - 新增 `remask_unknown_with_known.py`：复用既有 RR/orbit 产物，只用新的 mask15 known 表重建 unknown JSON/FITS、复用/分配 7 位 `trkSub`，并重打 review package
+  - 新增 `run_known_rematch_then_unknown_remask.sh`：先提交 forced known batch，再以所有 finalize job 为依赖提交 unknown remask
+- validation:
+  - 临时验证中 `OBJ_MP_0682_0283` official `1.0"` matched 为 `5` 行且不含 `3331 Kvistaberg`；mask15 为 `9` 行且包含 `3331 Kvistaberg`
+  - 本地和服务器 Python/bash 语法检查均通过
+  - 临时目录 `/tmp/known_dual_check` 已删除
+  - 初版后台 driver 与残留 submit 进程发生并发，重复提交了 `20251130..20251203` 的部分 job；已停止残留进程并取消重复/坏 job `185697..185706`
+  - 修正 driver 为轮询 finalize job 队列、全部离队后再提交 remask，不再用旧 job id dependency
+  - 新版 driver 从 `20251203` 干净续跑，`20251203` 正常 job 为 array `185799` / finalize `185800`，`20251204` 正常 job 为 array `185847` / finalize `185848`
+- running_jobs:
+  - 已提交首段 known：`20251116..20251120`
+  - 后台 driver 继续提交 known：当前新版 driver 从 `20251203..20260617` 续跑
+  - driver 完成提交并轮询全部 known finalize job 离队后，会提交 remask：`20251116..20260616`
+  - logs: `/pipeline/xiaoyunao/known_asteroid/runtime/logs/known_rematch_20260618_111935.log`, `/pipeline/xiaoyunao/known_asteroid/runtime/logs/known_rematch_20260618_111935_driver.log`
+  - remask outputs: `/pipeline/xiaoyunao/data/heliolincrr/batch_logs/known_rematch_20260618_111935_unknown_remask.log`, `/pipeline/xiaoyunao/data/heliolincrr/batch_logs/known_rematch_20260618_111935_unknown_remask_status.tsv`
+- remaining_issues:
+  - 批处理仍在运行，需后续检查 driver 是否完成、remask job id、remask status TSV 和高 unknown skip 夜次
+  - 旧 submit CSV 只能作为人工判断参考；修复后 review package 需要重新交给网页筛选或映射旧标签
+- next_step:
+  - 等 known finalize 和 dependent remask 完成后，抽查 `20260102/20260103` 的旧 JPL 命中对象是否从 unknown 中消失
+  - 汇总 remask 后各夜 unknown_count 和 review package 完整性
+
 - task: 排查人工真源与 JPL 已知小行星重合导致的 known 提取漏检
 - files_changed: `known_asteroid/match_single_night.py`, `known_asteroid/slurm_match_one_file.sh`, `WORKLOG.md`, `PLAN.md`
 - commands_run:
@@ -24,7 +59,7 @@
   - 根因 1：`match_single_night.py` 对 L2 catalog BINTABLE 使用 `NAXIS1/NAXIS2` 作为图像尺寸；实际这是表行字节数和表行数，导致视场中心/半径错误
   - 根因 2：Lowell/aleph 查询中心接近 `360 deg` 且视场跨 RA=0 时会漏掉 0 度另一侧对象；`20260103` 的 `Kokkola/Hicks/Sibylla/Woltjer/8219` 属于这一类
   - 根因 3：默认匹配半径 `1.0"` 太紧，`3331 Kvistaberg` 在当前 Lowell/aleph 预测下距实际检测点约 `1.03..1.30"`，被过滤掉
-  - 修复：BINTABLE 使用传入的 `--nx/--ny`；跨 RA=0 视场改用 `RA=0` 查询中心并重算查询半径；Slurm 默认 `SEP_ARCSEC=1.5`
+  - 修复：BINTABLE 使用传入的 `--nx/--ny`；跨 RA=0 视场改用 `RA=0` 查询中心并重算查询半径；后续拆分为 official `1.0"` matched 和 unknown-mask `1.5"` matched
 - validation:
   - 修复后临时重跑 `20260102` 三张 `OBJ_MP_0682` 曝光，`3331 Kvistaberg` 均进入 matched
   - 修复后临时重跑 `20260103` 的 `OBJ_MP_0925_0081` 和 `OBJ_MP_1060_0083`，`1522/2220/168/1795/8219` 均进入 matched
