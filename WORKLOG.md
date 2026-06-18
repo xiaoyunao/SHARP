@@ -2,6 +2,43 @@
 
 ## 2026-06-18
 
+- task: 将 unknown `trkSub` 从 8 位改为 MPC 要求的 7 位，并迁移服务器产物
+- files_changed: `heliolincrr/assign_unknown_trksub.py`, `heliolincrr/summarize_single_night.py`, `heliolincrr/export_unknown_ades.py`, `heliolincrr/package_unknown_review.py`, `heliolincrr/migrate_trksub_7char.py`, `heliolincrr/README.md`, `README.md`, `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 本地 `rg` 搜索 `trkSub` 8 位硬编码和文档
+  - 本地 `python3 -m py_compile heliolincrr/assign_unknown_trksub.py heliolincrr/summarize_single_night.py heliolincrr/export_unknown_ades.py heliolincrr/package_unknown_review.py heliolincrr/submit_reviewed_unknown.py heliolincrr/migrate_trksub_7char.py`
+  - 服务器审计 `/pipeline/xiaoyunao/data/heliolincrr/trksub_history.jsonl`
+  - 服务器备份 `/pipeline/xiaoyunao/data/heliolincrr/backups/trksub_8char_20260618_094807`
+  - 服务器 dry-run `/pipeline/xiaoyunao/heliolincrr/migrate_trksub_7char.py --dry-run`
+  - 服务器正式运行 `/pipeline/xiaoyunao/heliolincrr/migrate_trksub_7char.py`
+  - 服务器重打 `/pipeline/xiaoyunao/heliolincrr/review_packages/*_unknown_review.tar.gz`
+  - 服务器用 `submit_reviewed_unknown.py 20260103` 和 `submit_reviewed_unknown.py 20260512` 做 dry run
+  - 服务器限定搜索 `2026-05-14T03:00:19.564`, `0000Bx4c`, `000Bx4c`
+- key_findings:
+  - MPC 实际要求 `trkSub` 不超过 `7` 字符；此前实现为固定 `8` 位 managed base62
+  - 服务器 history 共 `4917` 条，迁移前全部为 `8` 位且首位均为 `0`，最大 `000001hj`
+  - 迁移策略为删除首位 `0`，保留 base62 序列值和历史 identity 关系不变，例如 `000000xP -> 00000xP`
+  - 代码已改为 managed `7` 位 base62，通用校验改为 `1..7` 字符
+  - 服务器迁移改写 history、unknown JSON/FITS/PSV、review CSV、submit CSV、review manifest/FITS、combined FITS/CSV，并重命名 GIF 文件
+  - review tar.gz 已全部重打，共 `120` 个
+  - postcheck dry-run 结果为 `changed_files=0`, `changed_items=0`, `renamed_files=0`
+  - `20260103` submit dry run 输出 `6` 个 7 位 `trkSub`、`18` 行 ADES obsData
+  - `20260512` submit dry run 输出 `1` 个 7 位 `trkSub`、`3` 行 ADES obsData
+  - 现有服务器 L4 PSV/reply 中未找到 `2026-05-14T03:00:19.564`, `0000Bx4c` 或 `000Bx4c`
+  - 项目记录中此前真实 unknown submit 指向 `20260220`；当前 `/processed1/20260220/L4/20260220_unknown_links_ades.psv` 已迁为 7 位，且不包含该 2026-05-14 观测时间
+- validation:
+  - 服务器 history 迁移后 `length_counts={7: 4917}`, first5 为 `0000001..0000005`, last5 为 `00001hf..00001hj`
+  - 抽查 `20260103_unknown_review.csv`, `20260103_submit.csv`, `20260512_submit.csv` 均为 7 位
+  - 抽查 `20260103` GIF 文件名和 tar 内部文件名均为 7 位
+  - combined CSV old 8 位 token count 为 `0`
+  - 未运行 MPC validate，未正式 submit
+- remaining_issues:
+  - 已经发往 MPC 的历史提交无法在 MPC 端通过本地迁移回改；如需纠正已提交记录，需要按 MPC 规则另行处理
+  - 用户提供的 `2026-05-14T03:00:19.564_0000Bx4c` 未在当前服务器提交产物中定位到源文件
+- next_step:
+  - 后续人工 check 和 unknown submit 统一使用 7 位 `trkSub`
+  - 若需要继续追查 `0000Bx4c`，需要用户提供 MPC 返回邮件/网页上下文或本地原始提交文件
+
 - task: 排查 `20260103` unknown 6 条 link 全部为真源的原因
 - files_changed: `WORKLOG.md`, `PLAN.md`
 - commands_run:

@@ -25,6 +25,7 @@
 - `export_unknown_ades.py` 已支持 `--review-csv`, `--require-review`, `--validate`, `--submit`
 - `export_unknown_ades.py` 已支持网页最终提交文件 `--submit-csv`，默认读取 `/pipeline/xiaoyunao/heliolincrr/review_packages/<night>/<night>_submit.csv`
 - `submit_reviewed_unknown.py` 已作为人工 check 完成后的单夜入口，默认生成 masked JSON/FITS、ADES PSV 和 stats，不自动 validate/submit
+- `trkSub` 已从旧的 8 位 leading-zero managed base62 迁移为 MPC 要求的 7 位；服务器 history、unknown JSON/FITS/PSV、review/submit CSV、manifest/FITS、GIF 文件名、review tar.gz 和 combined 表均已迁移
 - `run_single_night.sh` 默认关闭 unknown ADES export/validate/submit
 - crontab 目前只有 known asteroid daily，没有 unknown daily wrapper
 - 未发现 `*_unknown_mpc_reply.txt` 或 `*_unknown_validate_reply.txt`，人工筛选后的 unknown 上报尚无完成证据
@@ -62,6 +63,7 @@
 - 用户已确认 recovery/monitor 暂缓，待 unknown 人工 check 与上报链路稳定后再实现；当前重点是人工 check
 - `20260512` 已存在网页生成的 `20260512_submit.csv`；dry run 成功生成 `1` 个 masked unknown link 和 `3` 行 ADES obsData，未 validate，未 submit
 - `20260103` 的 6 条 unknown link 均被人工判为真源；该夜 `tracklets_total=718`, `links_total=79`, `fit_ok all_non_asteroid=6`，5 条非已知候选已在 orbit 阶段因 `max_v` 被剔除，可作为 submit CSV/validate 的正例夜次
+- `2026-06-18` 迁移后 `trkSub` history 为 `4917` 条、全部 7 位，范围 `0000001..00001hj`；postcheck dry-run 无 8 位残留
 
 短期目标：
 
@@ -122,7 +124,7 @@ PPT 素材旁支已完成一批图件，统一在服务器
   - `/pipeline/xiaoyunao/data/heliolincrr/<night>/analysis/<night>_single_night_summary.txt`
   - `/processed1/<night>/L4/<night>_unknown_links.json`
 - summary 中 `counts.matched_detections_total > 0`，否则不能认为已完成已知小行星扣除
-- 若启用 `trkSub`，每个 unknown link 的 `trk_sub` 必须符合 8 位 `[0-9a-zA-Z]`
+- 若启用 `trkSub`，每个 unknown link 的 `trk_sub` 必须符合 MPC 当前要求：不超过 7 个字符；自动分配器使用固定 7 位 `[0-9a-zA-Z]`
 - `trkSub` 分配必须写入全局 history，并且重复运行同一 catalog 不新增重复记录
 - 若启用人工复核或网页 submit CSV，`is_real=0` 的 `trk_sub` 不得进入 ADES PSV
 - 网页 submit CSV 模式必须在导出前检查所有 unknown `tracklet_id` 都有明确 `0/1`

@@ -15,7 +15,7 @@ from astropy.table import Table
 
 SUBMIT_URL = "https://minorplanetcenter.net/submit_psv"
 VALIDATE_URL = "https://www.minorplanetcenter.net/submit_psv_test"
-TRK_SUB_RE = re.compile(r"^[-A-Za-z0-9_]{1,8}$")
+TRK_SUB_RE = re.compile(r"^[-A-Za-z0-9_]{1,7}$")
 
 
 def split_semicolon(value: object) -> list[str]:
@@ -35,7 +35,7 @@ def validate_trk_sub(value: object) -> str:
         return ""
     if not TRK_SUB_RE.fullmatch(trk_sub):
         raise ValueError(
-            f"Invalid trkSub {trk_sub!r}: must be 1-8 characters using A-Z, a-z, 0-9, '_' or '-'."
+            f"Invalid trkSub {trk_sub!r}: must be 1-7 characters using A-Z, a-z, 0-9, '_' or '-'."
         )
     return trk_sub
 

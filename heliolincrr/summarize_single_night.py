@@ -13,9 +13,9 @@ import numpy as np
 from astropy.table import Table
 
 
-TRK_SUB_RE = re.compile(r"^[-A-Za-z0-9_]{1,8}$")
+TRK_SUB_RE = re.compile(r"^[-A-Za-z0-9_]{1,7}$")
 UNKNOWN_CATALOG_COLUMNS = [
-    ("trk_sub", "U8"),
+    ("trk_sub", "U7"),
     ("linkage_id", np.int64),
     ("n_tracklets", np.int64),
     ("n_obs", np.int64),
@@ -86,7 +86,7 @@ def validate_trk_sub(value: str) -> str:
         return ""
     if not TRK_SUB_RE.fullmatch(value):
         raise ValueError(
-            f"Invalid trkSub {value!r}: must be 1-8 characters using A-Z, a-z, 0-9, '_' or '-'."
+            f"Invalid trkSub {value!r}: must be 1-7 characters using A-Z, a-z, 0-9, '_' or '-'."
         )
     return value
 
@@ -485,7 +485,7 @@ def main() -> None:
         default=None,
         help=(
             "Optional CSV/TSV/JSON mapping from linkage_id or internal tracklet_id "
-            "to MPC trkSub. trkSub must be 1-8 chars: A-Z, a-z, 0-9, '_' or '-'."
+            "to MPC trkSub. trkSub must be 1-7 chars: A-Z, a-z, 0-9, '_' or '-'."
         ),
     )
     args = ap.parse_args()

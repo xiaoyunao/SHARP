@@ -16,7 +16,7 @@ from astropy.table import Table
 from export_unknown_ades import build_obs_rows
 
 DETAIL_COLUMNS = [
-    ("trk_sub", "U8"),
+    ("trk_sub", "U7"),
     ("linkage_id", np.int64),
     ("detection_index", np.int64),
     ("image_name", "U128"),

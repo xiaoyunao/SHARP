@@ -16,11 +16,11 @@
 ## Unknown trkSub and review interface
 
 MPC ADES 的 unknown 临时标识使用 `trkSub`。本项目自动分配的 `trkSub`
-采用 8 位 62 进制：
+采用 7 位 62 进制，满足 MPC 当前要求的 no more than 7 characters：
 
 - 字符表：`0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ`
 - `a=10`，`z=35`，`A=36`
-- 起始值：`00000001`
+- 起始值：`0000001`
 - 默认历史文件：`/pipeline/xiaoyunao/data/heliolincrr/trksub_history.jsonl`
 - 历史文件旁边会使用 `.lock` 文件加锁，避免单夜和 15 夜流程同时分配时撞号
 

@@ -13,7 +13,8 @@ from astropy.table import Table
 
 
 ALPHABET = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-TRK_SUB_RE = re.compile(r"^[0-9A-Za-z]{8}$")
+TRK_SUB_WIDTH = 7
+TRK_SUB_RE = re.compile(rf"^[0-9A-Za-z]{{{TRK_SUB_WIDTH}}}$")
 DEFAULT_HISTORY = "/pipeline/xiaoyunao/data/heliolincrr/trksub_history.jsonl"
 
 
@@ -25,16 +26,16 @@ def int_to_base62(value: int) -> str:
     while value:
         value, rem = divmod(value, base)
         digits.append(ALPHABET[rem])
-    out = "".join(reversed(digits)).rjust(8, "0")
-    if len(out) > 8:
-        raise OverflowError("trkSub sequence exhausted 8 base62 digits")
+    out = "".join(reversed(digits)).rjust(TRK_SUB_WIDTH, "0")
+    if len(out) > TRK_SUB_WIDTH:
+        raise OverflowError(f"trkSub sequence exhausted {TRK_SUB_WIDTH} base62 digits")
     return out
 
 
 def base62_to_int(value: str) -> int:
     value = str(value).strip()
     if not TRK_SUB_RE.fullmatch(value):
-        raise ValueError(f"Invalid managed trkSub {value!r}; expected exactly 8 base62 characters")
+        raise ValueError(f"Invalid managed trkSub {value!r}; expected exactly {TRK_SUB_WIDTH} base62 characters")
     out = 0
     base = len(ALPHABET)
     for char in value:
@@ -158,7 +159,7 @@ def assign(args: argparse.Namespace) -> dict[str, int]:
             current = str(row.get("trk_sub", "")).strip()
             if current:
                 if not TRK_SUB_RE.fullmatch(current):
-                    raise ValueError(f"Existing trk_sub {current!r} is not managed 8-character base62")
+                    raise ValueError(f"Existing trk_sub {current!r} is not managed {TRK_SUB_WIDTH}-character base62")
                 trk_sub = current
                 next_value = max(next_value, base62_to_int(trk_sub) + 1)
             else:
