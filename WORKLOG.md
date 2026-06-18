@@ -2,6 +2,27 @@
 
 ## 2026-06-18
 
+- task: 确认早期 MPC unknown submit 来源并删除 8 位 trkSub 备份
+- files_changed: `README.md`, `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 服务器删除 `/pipeline/xiaoyunao/data/heliolincrr/backups/trksub_8char_20260618_094807`
+  - 服务器统计 `/processed1/20260220/L4/20260220_unknown_links_ades.psv`
+  - 服务器统计 `/processed1/20260220/L4/20260220_unknown_links.json`
+  - 服务器统计 `/pipeline/xiaoyunao/data/heliolincrr/trksub_history.jsonl` 中 `20260220` 记录
+- key_findings:
+  - 用户确认 `2026-05-14T03:00:19.564_0000Bx4c` 是早期 MPC submit 时间/ID，不是观测时间
+  - 该 submit 对应 `20260220` unknown 正式提交，提交时未做人工 check
+  - 早期记录显示当时提交版本为 `34` 条 unknown link、`102` 行 ADES obsData，包含旧 `00000001` 形式 ID；迁移后对应 7 位形式为 `0000001`
+  - 当前服务器上的 `20260220` 产物是后续 full remask 覆盖后的版本：`29` 条 unknown link、`87` 行 ADES obsData，history 中 `20260220` 也为 `29` 条
+  - 删除前备份目录大小为 `6.6G`；用户确认不需要保留后已删除
+- validation:
+  - 服务器确认 `/pipeline/xiaoyunao/data/heliolincrr/backups/trksub_8char_20260618_094807` 已删除
+  - 当前 `20260220_unknown_links_ades.psv` 表头后 obsData 行数为 `87`
+- remaining_issues:
+  - 早期已发往 MPC 的 8 位 `trkSub` 记录无法通过本地文件迁移自动更改 MPC 端记录
+- next_step:
+  - 后续所有 unknown submit 使用 7 位 `trkSub`，并先经过 submit CSV 人工 check
+
 - task: 将 unknown `trkSub` 从 8 位改为 MPC 要求的 7 位，并迁移服务器产物
 - files_changed: `heliolincrr/assign_unknown_trksub.py`, `heliolincrr/summarize_single_night.py`, `heliolincrr/export_unknown_ades.py`, `heliolincrr/package_unknown_review.py`, `heliolincrr/migrate_trksub_7char.py`, `heliolincrr/README.md`, `README.md`, `WORKLOG.md`, `PLAN.md`
 - commands_run:

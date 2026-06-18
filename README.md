@@ -92,7 +92,7 @@ PYTHON_BIN=/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python bash
 - 2026-04-08 起，仓库已移除全部 `*_local` 目录
 - `20260220` 单夜正式目录已清理为只保留 `rr_links` 与正式分析文件
 - `20260220` 当前单夜正式结果为：`582` 条 links，`1590/2304` 个已知检测进入 link，`orbit_confirm` 得到 `569/582 fit_ok` 且 `569/582 is_good`
-- `20260220` 已写出 `34` 条 unknown fit_ok catalog 行，并生成 `34` 个 unknown-link GIF
+- `20260220` 当前 remask 后 unknown fit_ok catalog 为 `29` 条、ADES obsData 为 `87` 行；早期已正式 submit 的版本为 `34` 条 unknown、`102` 行 obsData，submission ID `2026-05-14T03:00:19.564_0000Bx4c`
 
 ## 版本记录
 

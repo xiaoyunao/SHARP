@@ -64,6 +64,8 @@
 - `20260512` 已存在网页生成的 `20260512_submit.csv`；dry run 成功生成 `1` 个 masked unknown link 和 `3` 行 ADES obsData，未 validate，未 submit
 - `20260103` 的 6 条 unknown link 均被人工判为真源；该夜 `tracklets_total=718`, `links_total=79`, `fit_ok all_non_asteroid=6`，5 条非已知候选已在 orbit 阶段因 `max_v` 被剔除，可作为 submit CSV/validate 的正例夜次
 - `2026-06-18` 迁移后 `trkSub` history 为 `4917` 条、全部 7 位，范围 `0000001..00001hj`；postcheck dry-run 无 8 位残留
+- 早期 MPC unknown 正式 submit 为 `20260220`，submission ID `2026-05-14T03:00:19.564_0000Bx4c`；当时未经过人工 check，提交版本为 `34` 条 link、`102` 行 obsData。当前服务器 remask 后 `20260220` 版本为 `29` 条 link、`87` 行 obsData
+- 8 位 trkSub 迁移备份 `/pipeline/xiaoyunao/data/heliolincrr/backups/trksub_8char_20260618_094807` 已按用户确认删除
 
 短期目标：
 
