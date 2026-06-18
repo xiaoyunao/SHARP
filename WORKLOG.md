@@ -2,6 +2,27 @@
 
 ## 2026-06-18
 
+- task: 修复 `sbatch` warning 污染 job id 导致的 20260106 finalize dependency 失败
+- files_changed: `known_asteroid/submit_pipeline_slurm.sh`, `known_asteroid/run_known_rematch_then_unknown_remask.sh`, `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 本地 `bash -n known_asteroid/submit_pipeline_slurm.sh known_asteroid/run_known_rematch_then_unknown_remask.sh`
+  - 同步两个 Slurm 脚本到服务器并运行 `bash -n`
+  - 服务器 `scancel 191015` 清理 20260106 没有 dependent finalize 的残留 array
+  - 服务器从 `20260106` 重启 `RUN_ID=known_rematch_20260618_111935` driver
+- key_findings:
+  - Slurm 曾在 array job 成功提交时向 stderr 写入 `Slurm temporarily unable to accept job, sleeping and retrying`，随后 stdout 返回 job id `191015`
+  - 旧 `submit_sbatch` 使用 `2>&1` 合并 stdout/stderr，导致 `ARRAY_JOB` 变成 warning 文本加 job id 的多行字符串
+  - 后续 `--dependency=afterok:${ARRAY_JOB}` 因 dependency 字符串非法而连续失败，driver 停在 `20260106`
+  - 修复后 stdout/stderr 分离；成功时只解析纯数字 job id，stderr warning 仅记录
+- validation:
+  - 本地和服务器 `bash -n` 均通过
+  - 新 driver 进程已从 `20260106..20260617` 启动，旧坏 array `191015` 已取消
+  - `20260106` 已重新提交成功：array `195437` / finalize `195438`
+- remaining_issues:
+  - 新 driver 仍受 Slurm 临时可用性影响，需后续确认 `20260106` 之后夜次是否持续提交
+- next_step:
+  - 继续按三分类口径监控 known/mask15 完成夜次
+
 - task: 为批量 known 重跑补 Slurm submit retry，并从 `20251228` 续跑
 - files_changed: `known_asteroid/submit_pipeline_slurm.sh`, `known_asteroid/run_known_rematch_then_unknown_remask.sh`, `WORKLOG.md`, `PLAN.md`
 - commands_run:

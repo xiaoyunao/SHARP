@@ -72,10 +72,12 @@
 - 修复前生成的 known matched、unknown links 和 review packages 需要重跑后才能用于人工 check 后上报
 - 已启动批量重跑：`RUN_ID=known_rematch_20260618_111935`
   - known forced rematch：中途因 Slurm `sbatch` 临时 `Resource temporarily unavailable` 停在 `20251228`；已给 submit/driver 脚本加 retry 并从 `20251228` 续跑
-  - 最新进度：范围内 `150` 夜，unique finalize 已提交 `38` 夜，当前推进到 `20251230`，剩余 `112` 夜未提交
+  - 最新进度口径改为三分类：有 `OBJ_MP` 输入的夜才作为应跑分母；无 `OBJ_MP` 或无 L2 的夜作为不适用/跳过
+  - 当前应跑夜次 `128`，跳过/不适用 `22`；普通 known 和 mask15 本轮均已完成 `29` 夜，完成范围到 `20251217` 且包含 `20251221`
   - retry 后 `20251228` 已成功提交 array `190635` / finalize `190636`
+  - `20260106` 曾因 `sbatch` stderr warning 污染 array job id，导致 finalize dependency 非法并停住；已修复 stdout/stderr 分离与 job id 解析，取消坏 array `191015`，并从 `20260106` 续跑成功，新 job 为 array `195437` / finalize `195438`
   - duplicate cleanup：并发残留导致的重复/坏 job `185697..185706` 已取消
-  - mask15 夜级产物目前 `18` 夜；unknown remask 尚未开始
+  - unknown remask 尚未开始
   - unknown remask：driver 完成 known 提交并轮询全部 finalize job 离队后提交 `20251116..20260616`，不处理 `20260617` unknown
   - logs: `/pipeline/xiaoyunao/known_asteroid/runtime/logs/known_rematch_20260618_111935.log`, `/pipeline/xiaoyunao/known_asteroid/runtime/logs/known_rematch_20260618_111935_driver.log`
   - remask status: `/pipeline/xiaoyunao/data/heliolincrr/batch_logs/known_rematch_20260618_111935_unknown_remask_status.tsv`

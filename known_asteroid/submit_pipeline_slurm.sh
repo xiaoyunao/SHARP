@@ -56,19 +56,31 @@ submit_sbatch() {
   local rc=0
   while true; do
     set +e
-    local output
-    output="$(sbatch --parsable "$@" 2>&1)"
+    local output err_file err_text job_id
+    err_file="$(mktemp)"
+    output="$(sbatch --parsable "$@" 2>"${err_file}")"
     rc=$?
+    err_text="$(cat "${err_file}")"
+    rm -f "${err_file}"
     set -e
     if [[ "${rc}" -eq 0 ]]; then
-      printf '%s\n' "${output}"
+      if [[ -n "${err_text}" ]]; then
+        printf '[WARN] sbatch stderr with rc=0: %s\n' "${err_text}" >&2
+      fi
+      job_id="$(printf '%s\n' "${output}" | awk '/^[0-9]+(;[^[:space:]]+)?$/ {job=$0} END{print job}')"
+      job_id="${job_id%%;*}"
+      if [[ -z "${job_id}" ]]; then
+        printf '[FATAL] could not parse sbatch job id from output: %s\n' "${output}" >&2
+        return 1
+      fi
+      printf '%s\n' "${job_id}"
       return 0
     fi
     if (( attempt >= SBATCH_RETRIES )); then
-      printf '%s\n' "${output}" >&2
+      printf '%s\n' "${err_text:-${output}}" >&2
       return "${rc}"
     fi
-    printf '[WARN] sbatch failed attempt %d/%d: %s\n' "${attempt}" "${SBATCH_RETRIES}" "${output}" >&2
+    printf '[WARN] sbatch failed attempt %d/%d: %s\n' "${attempt}" "${SBATCH_RETRIES}" "${err_text:-${output}}" >&2
     sleep "${SBATCH_RETRY_SLEEP}"
     attempt=$((attempt + 1))
   done
