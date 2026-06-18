@@ -48,6 +48,31 @@ OBS_DATE_KEY="${OBS_DATE_KEY:-OBS_DATE}"
 OBS_TIMEZONE="${OBS_TIMEZONE:-Asia/Shanghai}"
 NIGHT_ROLLOVER_HOUR="${NIGHT_ROLLOVER_HOUR:-12}"
 MASK_MATCHED_SUFFIX="${MASK_MATCHED_SUFFIX:-_mask15}"
+SBATCH_RETRIES="${SBATCH_RETRIES:-12}"
+SBATCH_RETRY_SLEEP="${SBATCH_RETRY_SLEEP:-60}"
+
+submit_sbatch() {
+  local attempt=1
+  local rc=0
+  while true; do
+    set +e
+    local output
+    output="$(sbatch --parsable "$@" 2>&1)"
+    rc=$?
+    set -e
+    if [[ "${rc}" -eq 0 ]]; then
+      printf '%s\n' "${output}"
+      return 0
+    fi
+    if (( attempt >= SBATCH_RETRIES )); then
+      printf '%s\n' "${output}" >&2
+      return "${rc}"
+    fi
+    printf '[WARN] sbatch failed attempt %d/%d: %s\n' "${attempt}" "${SBATCH_RETRIES}" "${output}" >&2
+    sleep "${SBATCH_RETRY_SLEEP}"
+    attempt=$((attempt + 1))
+  done
+}
 
 if [[ ! "${MAX_PARALLEL}" =~ ^[1-9][0-9]*$ ]]; then
   echo "[FATAL] --max-parallel must be a positive integer" >&2
@@ -128,8 +153,7 @@ for NIGHT in "${NIGHTS[@]}"; do
       if (( ARRAY_LIMIT > NFILES )); then
         ARRAY_LIMIT="${NFILES}"
       fi
-      ARRAY_JOB=$(sbatch \
-        --parsable \
+      ARRAY_JOB=$(submit_sbatch \
         --cpus-per-task="${MATCH_CPUS}" \
         --mem="${MATCH_MEM}" \
         --array="0-${LAST_INDEX}%${ARRAY_LIMIT}" \
@@ -141,15 +165,13 @@ for NIGHT in "${NIGHTS[@]}"; do
   fi
 
   if [[ -n "${ARRAY_JOB}" ]]; then
-    MERGE_JOB=$(sbatch \
-      --parsable \
+    MERGE_JOB=$(submit_sbatch \
       --cpus-per-task="${FINALIZE_CPUS}" \
       --mem="${FINALIZE_MEM}" \
       --dependency="afterok:${ARRAY_JOB}" \
       "${SCRIPT_DIR}/slurm_merge_submit.sh" "${NIGHT}" "${SUBMIT_MPC}")
   else
-    MERGE_JOB=$(sbatch \
-      --parsable \
+    MERGE_JOB=$(submit_sbatch \
       --cpus-per-task="${FINALIZE_CPUS}" \
       --mem="${FINALIZE_MEM}" \
       "${SCRIPT_DIR}/slurm_merge_submit.sh" "${NIGHT}" "${SUBMIT_MPC}")

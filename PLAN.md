@@ -71,8 +71,11 @@
 - 修复后临时验证：`3331 Kvistaberg`, `1522 Kokkola`, `2220 Hicks`, `168 Sibylla`, `1795 Woltjer`, `8219 (1996 JL)` 均可进入 known matched；临时验证目录已删除
 - 修复前生成的 known matched、unknown links 和 review packages 需要重跑后才能用于人工 check 后上报
 - 已启动批量重跑：`RUN_ID=known_rematch_20260618_111935`
-  - known forced rematch：已提交 `20251116..20251204` 的正常 job；新版后台 driver 从 `20251203..20260617` 续跑
+  - known forced rematch：中途因 Slurm `sbatch` 临时 `Resource temporarily unavailable` 停在 `20251228`；已给 submit/driver 脚本加 retry 并从 `20251228` 续跑
+  - 最新进度：范围内 `150` 夜，unique finalize 已提交 `38` 夜，当前推进到 `20251230`，剩余 `112` 夜未提交
+  - retry 后 `20251228` 已成功提交 array `190635` / finalize `190636`
   - duplicate cleanup：并发残留导致的重复/坏 job `185697..185706` 已取消
+  - mask15 夜级产物目前 `18` 夜；unknown remask 尚未开始
   - unknown remask：driver 完成 known 提交并轮询全部 finalize job 离队后提交 `20251116..20260616`，不处理 `20260617` unknown
   - logs: `/pipeline/xiaoyunao/known_asteroid/runtime/logs/known_rematch_20260618_111935.log`, `/pipeline/xiaoyunao/known_asteroid/runtime/logs/known_rematch_20260618_111935_driver.log`
   - remask status: `/pipeline/xiaoyunao/data/heliolincrr/batch_logs/known_rematch_20260618_111935_unknown_remask_status.tsv`

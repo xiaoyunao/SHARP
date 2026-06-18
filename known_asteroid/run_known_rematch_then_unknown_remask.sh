@@ -14,6 +14,8 @@ Environment:
   MASK_MATCHED_SUFFIX     default _mask15
   REMASK_MEM              default 12G
   POLL_SECONDS            default 300
+  SBATCH_RETRIES          default 12
+  SBATCH_RETRY_SLEEP      default 60
 EOF
   exit 1
 fi
@@ -30,6 +32,8 @@ MASK_SEP_ARCSEC="${MASK_SEP_ARCSEC:-1.5}"
 MASK_MATCHED_SUFFIX="${MASK_MATCHED_SUFFIX:-_mask15}"
 REMASK_MEM="${REMASK_MEM:-12G}"
 POLL_SECONDS="${POLL_SECONDS:-300}"
+SBATCH_RETRIES="${SBATCH_RETRIES:-12}"
+SBATCH_RETRY_SLEEP="${SBATCH_RETRY_SLEEP:-60}"
 
 SCRIPT_DIR="${SCRIPT_DIR:-/pipeline/xiaoyunao/known_asteroid}"
 HELIOLINCRR_DIR="${HELIOLINCRR_DIR:-/pipeline/xiaoyunao/heliolincrr}"
@@ -40,6 +44,29 @@ REMASK_LOG="${REMASK_LOG:-/pipeline/xiaoyunao/data/heliolincrr/batch_logs/${RUN_
 REMASK_STATUS="${REMASK_STATUS:-/pipeline/xiaoyunao/data/heliolincrr/batch_logs/${RUN_ID}_unknown_remask_status.tsv}"
 
 mkdir -p "$(dirname "${KNOWN_LOG}")" "$(dirname "${REMASK_LOG}")"
+
+submit_sbatch() {
+  local attempt=1
+  local rc=0
+  while true; do
+    set +e
+    local output
+    output="$(sbatch --parsable "$@" 2>&1)"
+    rc=$?
+    set -e
+    if [[ "${rc}" -eq 0 ]]; then
+      printf '%s\n' "${output}"
+      return 0
+    fi
+    if (( attempt >= SBATCH_RETRIES )); then
+      printf '%s\n' "${output}" >&2
+      return "${rc}"
+    fi
+    printf '[driver] sbatch failed attempt %d/%d: %s\n' "${attempt}" "${SBATCH_RETRIES}" "${output}" >> "${DRIVER_LOG}"
+    sleep "${SBATCH_RETRY_SLEEP}"
+    attempt=$((attempt + 1))
+  done
+}
 
 {
   echo "[driver] start $(date -Is)"
@@ -77,8 +104,7 @@ while true; do
 done
 
 REMASK_JOB="$(
-  sbatch \
-    --parsable \
+  submit_sbatch \
     --job-name=unknown_remask \
     --cpus-per-task=1 \
     --mem="${REMASK_MEM}" \

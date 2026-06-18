@@ -2,6 +2,28 @@
 
 ## 2026-06-18
 
+- task: 为批量 known 重跑补 Slurm submit retry，并从 `20251228` 续跑
+- files_changed: `known_asteroid/submit_pipeline_slurm.sh`, `known_asteroid/run_known_rematch_then_unknown_remask.sh`, `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 本地 `bash -n known_asteroid/submit_pipeline_slurm.sh known_asteroid/run_known_rematch_then_unknown_remask.sh`
+  - 同步 retry 修改到服务器 `/pipeline/xiaoyunao/known_asteroid/`
+  - 服务器从 `20251228` 重新启动 `RUN_ID=known_rematch_20260618_111935` driver
+  - 服务器统计 known submit log、Slurm 队列和 remask status 文件
+- key_findings:
+  - 原 driver 停在 `20251228`，原因是 Slurm `sbatch` 临时返回 `Resource temporarily unavailable`
+  - 已给 known submit 脚本和 known/remask driver 加 `submit_sbatch` retry，默认重试 `12` 次、间隔 `60s`
+  - retry 后 `20251228` 成功提交 array `190635` / finalize `190636`
+  - 最新统计时 known finalize 已提交到 `20251230`，范围内 `150` 夜中 unique finalize 已提交 `38` 夜，剩余 `112` 夜未提交
+  - 当前 mask15 夜级产物 `18` 夜；unknown remask 尚未开始，符合等待所有 known finalize 离队后再启动的设计
+- validation:
+  - 本地 `bash -n` 通过
+  - 服务器进程仍在运行：`run_known_rematch_then_unknown_remask.sh` 调用 `submit_pipeline_slurm.sh`
+- remaining_issues:
+  - known 提交仍在推进，后续需继续检查是否再遇到 Slurm 临时拒收或队列限制
+  - remask status TSV 尚未生成
+- next_step:
+  - 继续监控 driver 推进到 `20260617`，然后检查 remask job 是否启动并完成
+
 - task: 分离 known 官方上报匹配与 unknown 1.5 角秒扣除，并启动批量重跑
 - files_changed: `known_asteroid/match_single_night.py`, `known_asteroid/merge_night_parts.py`, `known_asteroid/slurm_match_one_file.sh`, `known_asteroid/submit_pipeline_slurm.sh`, `known_asteroid/slurm_merge_submit.sh`, `known_asteroid/run_known_rematch_then_unknown_remask.sh`, `known_asteroid/README.md`, `heliolincrr/summarize_single_night.py`, `heliolincrr/remask_unknown_with_known.py`, `WORKLOG.md`, `PLAN.md`
 - commands_run:
