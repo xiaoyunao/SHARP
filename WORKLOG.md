@@ -1,5 +1,33 @@
 # WORKLOG
 
+## 2026-06-18
+
+- task: 排查 `20260103` unknown 6 条 link 全部为真源的原因
+- files_changed: `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 服务器读取 `/pipeline/xiaoyunao/data/heliolincrr/20260103/analysis/20260103_single_night_summary.txt`
+  - 服务器读取 `/processed1/20260103/L4/20260103_unknown_links.json`
+  - 服务器检查 `/pipeline/xiaoyunao/heliolincrr/review_packages/20260103/20260103_unknown_review.csv`
+  - 服务器检查 `/pipeline/xiaoyunao/heliolincrr/review_packages/20260103/20260103_submit.csv`
+  - 服务器统计 unknown 所在 L2/mask_gaia 文件行数、known matched 分布、tracklet group 分布
+  - 服务器读取 `/pipeline/xiaoyunao/data/heliolincrr/20260103/rr_links/orbit_confirm/orbit_links.fits`
+- key_findings:
+  - `20260103` 来自全量批次 `unknown_full_remask_20260514_171651`，状态为 `done rc=0 unknown=6 review_full_rows=18 ades_rows=18`
+  - review CSV 和 submit CSV 中 6 条均为 `is_real=1`
+  - summary 显示 `tracklets_total=718`, `links_total=79`, `orbit_fit_ok=74`, `unknown_fit_ok_catalog_rows=6`
+  - link 分类为 `all_same_asteroid=64`, `mixed_with_non_asteroid=4`, `all_non_asteroid=11`；fit_ok 后 `all_non_asteroid=6`
+  - 5 条非已知 link 在 orbit 阶段失败，`fail_reason=max_v`
+  - masked catalog 共 `118` 个 MP 文件、`31948` 行，平均每文件约 `271` 行；unknown 所在文件 `101..411` 行，没有 dense group 爆炸
+  - 6 条 unknown 集中在 fields `0924`, `0925`, `1060`，每条均为 `3` 个观测点、`2` 条 tracklet 组成
+  - `20260103` 更像是低假阳性压力且 orbit filter 有效的夜次，不是处理异常
+- validation:
+  - review manifest `n_gifs_missing=0`, `review_full_rows=18`, `review_ades_rows=18`
+  - unknown 所在文件均有少量 known matched detections，known subtraction 正常工作
+- remaining_issues:
+  - 部分单夜 orbit 元素为高偏心/负半长轴，可能是 3 点短弧拟合退化；人工真源判断仍需以 GIF/后续复测为准
+- next_step:
+  - 可把 `20260103` 作为人工 check 质量较好的正例夜次，用于测试 submit CSV 到 ADES validate 流程
+
 ## 2026-06-17
 
 - task: 接入网页 `<night>_submit.csv` 到 unknown 人工筛选后导出/上报链路

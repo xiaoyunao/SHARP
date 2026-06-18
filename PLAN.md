@@ -61,6 +61,7 @@
 - 已手动补跑 `2026-06-17` known daily；target night `20260616` 因 `/processed1/20260616` 缺失而 skip
 - 用户已确认 recovery/monitor 暂缓，待 unknown 人工 check 与上报链路稳定后再实现；当前重点是人工 check
 - `20260512` 已存在网页生成的 `20260512_submit.csv`；dry run 成功生成 `1` 个 masked unknown link 和 `3` 行 ADES obsData，未 validate，未 submit
+- `20260103` 的 6 条 unknown link 均被人工判为真源；该夜 `tracklets_total=718`, `links_total=79`, `fit_ok all_non_asteroid=6`，5 条非已知候选已在 orbit 阶段因 `max_v` 被剔除，可作为 submit CSV/validate 的正例夜次
 
 短期目标：
 
@@ -134,7 +135,7 @@ PPT 素材旁支已完成一批图件，统一在服务器
 
 1. 把 2025 年 `35` 个 positive unknown 夜次交给网页筛选；`20251128` 和 `20251201` 为 zero unknown，可直接标记完成
 2. 建立人工 check 完成检查脚本或命令：查找 `<night>_submit.csv`，校验每个 unknown `tracklet_id` 都有明确 `0/1`
-3. 对已完成 submit CSV 的夜次用 `submit_reviewed_unknown.py <night> --validate` 生成筛选后 PSV 并做 MPC test validation
+3. 对已完成 submit CSV 的夜次用 `submit_reviewed_unknown.py <night> --validate` 生成筛选后 PSV 并做 MPC test validation，可先用正例夜 `20260103`
 4. 抽查 `20260529`, `20260530`, `20260601` review package 内容并交给网页筛选
 5. 对 `20260528`、`20260611` 单独复盘 high unknown 原因，重点查 known subtraction、mask 后源密度、dense group 和观测场区
 6. 决定 `20260605` 这种 known-only 无 matched detections 的夜次是否要写 schema-only matched 文件再跑 unknown
