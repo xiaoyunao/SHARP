@@ -2,6 +2,26 @@
 
 ## 2026-06-19
 
+- task: 停用批量 driver，修复 finalize 不覆盖旧夜级 FITS，并改为逐夜手动推进
+- files_changed: `known_asteroid/slurm_merge_submit.sh`, `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 停止 `known_wrapfix_20260619_122524` driver 进程及其 `submit_pipeline_slurm.sh` 子进程
+  - 取消旧逻辑提交的 pending `ka_merge` jobs
+  - 同步修复后的 `slurm_merge_submit.sh` 到服务器并运行 `bash -n`
+  - 对已离队 array 夜次逐夜运行 `FORCE_MERGE=1 FORCE_EXTRACT=1 ./slurm_merge_submit.sh <night> false`
+- key_findings:
+  - 旧 `slurm_merge_submit.sh` 只有当夜级 all/matched/mask15 缺失时才 merge；在 `FORCE_EXTRACT=1` 重跑时，旧夜级 FITS 已存在，导致 finalize 跳过 merge，remask 后续仍会读旧夜级 mask15
+  - 修复为 `FORCE_MERGE=1` 或 `FORCE_EXTRACT=1` 时无条件 merge 覆盖夜级 all/matched/mask15
+  - 已手动强制 merge 新产物到 `20251206`；`20251207..20260104` array 仍 active，尚未完成夜级新产物
+- validation:
+  - `20251116..20251206` 对应夜级 all/matched/mask15 时间戳已更新为 `2026-06-19 14:22..14:35`
+  - 未提交 MPC
+- remaining_issues:
+  - 需要继续等待 `20251207..20260104` 已提交 array 离队后逐夜 merge
+  - `20260105` 及之后尚未按新手动流程提交
+- next_step:
+  - 不再使用 `run_known_rematch_then_unknown_remask.sh` driver；后续按夜次提交/等待/merge，再统一 unknown remask
+
 - task: 让 RA wrap 修复后的 remask 自动清理旧错误 GIF/review 包
 - files_changed: `heliolincrr/remask_unknown_with_known.py`, `WORKLOG.md`, `PLAN.md`
 - commands_run:

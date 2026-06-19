@@ -80,6 +80,9 @@
   - logs: `/pipeline/xiaoyunao/known_asteroid/runtime/logs/known_wrapfix_20260619_122524.log`, `/pipeline/xiaoyunao/known_asteroid/runtime/logs/known_wrapfix_20260619_122524_driver.log`
   - remask status: `/pipeline/xiaoyunao/data/heliolincrr/batch_logs/known_wrapfix_20260619_122524_unknown_remask_status.tsv`
 - 本轮 remask 已改为每夜打包前默认清理旧错误 artifact：删除 `plots/<night>/unknown_link_*_<night>.gif` 和整个 `review_packages/<night>` 后再重画 GIF、重建 review package
+- 批量 driver 已停用：旧 finalize 在 `FORCE_EXTRACT=1` 时会因为夜级 FITS 已存在而跳过 merge，导致 night-level known/mask15 仍是旧结果；已修复 `slurm_merge_submit.sh`，后续用逐夜手动流程推进
+- 手动流程：每夜/每批提交 `ka_match` array，确认 array 离队后运行 `FORCE_MERGE=1 FORCE_EXTRACT=1 ./slurm_merge_submit.sh <night> false`，确认夜级 all/matched/mask15 时间戳为新 run，再进入下一夜
+- 当前手动 merge 已完成到 `20251206`；`20251207..20260104` 是已提交但仍 active/pending 的 array，`20260105` 之后尚未继续提交
 - 修复前生成的 known matched、unknown links 和 review packages 需要重跑后才能用于人工 check 后上报
 - 已启动批量重跑：`RUN_ID=known_rematch_20260618_111935`
   - known forced rematch：中途因 Slurm `sbatch` 临时 `Resource temporarily unavailable` 停在 `20251228`；已给 submit/driver 脚本加 retry 并从 `20251228` 续跑
