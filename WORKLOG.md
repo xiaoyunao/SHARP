@@ -2,6 +2,24 @@
 
 ## 2026-06-19
 
+- task: 让 RA wrap 修复后的 remask 自动清理旧错误 GIF/review 包
+- files_changed: `heliolincrr/remask_unknown_with_known.py`, `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 本地 `python3 -m py_compile heliolincrr/remask_unknown_with_known.py`
+  - 同步 `remask_unknown_with_known.py` 到服务器 `/pipeline/xiaoyunao/heliolincrr/`
+  - 服务器 `/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python -m py_compile /pipeline/xiaoyunao/heliolincrr/remask_unknown_with_known.py`
+  - 服务器检查 `known_wrapfix_20260619_122524` progress、Slurm 队列和 review/GIF artifact timestamps
+- key_findings:
+  - `known_wrapfix_20260619_122524` 仍在 known 提交阶段，unknown remask 尚未提交，脚本修改会被本轮 remask 使用
+  - 旧错误 GIF/review 包仍存在于 `plots/<night>` 和 `review_packages/<night>`，且 package 脚本不会自动删除多余旧文件
+  - 已改为 remask 每个夜次打包前默认删除 `plots/<night>/unknown_link_*_<night>.gif` 和整个 `review_packages/<night>`，再重画 GIF、重建 review package
+- validation:
+  - 本地和服务器 Python 语法检查均通过
+- remaining_issues:
+  - 需要等 `known_wrapfix_20260619_122524` known finalize 全部完成后，确认 remask status 中 `n_gifs_missing=0` 且 review package timestamps 均来自新 run
+- next_step:
+  - 继续监控 known 提交/队列；remask 完成后复查旧错误 GIF/review 包是否已被替换
+
 - task: 停止旧 GIF repair、清理旧 submit，并启动 RA wrap 修复后的全量 known/mask15/remask
 - files_changed: `WORKLOG.md`, `PLAN.md`
 - commands_run:

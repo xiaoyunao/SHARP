@@ -79,6 +79,7 @@
   - 参数：`FORCE_EXTRACT=1`, `MAX_PARALLEL=16`, `MASK_SEP_ARCSEC=1.5`, `MASK_MATCHED_SUFFIX=_mask15`
   - logs: `/pipeline/xiaoyunao/known_asteroid/runtime/logs/known_wrapfix_20260619_122524.log`, `/pipeline/xiaoyunao/known_asteroid/runtime/logs/known_wrapfix_20260619_122524_driver.log`
   - remask status: `/pipeline/xiaoyunao/data/heliolincrr/batch_logs/known_wrapfix_20260619_122524_unknown_remask_status.tsv`
+- 本轮 remask 已改为每夜打包前默认清理旧错误 artifact：删除 `plots/<night>/unknown_link_*_<night>.gif` 和整个 `review_packages/<night>` 后再重画 GIF、重建 review package
 - 修复前生成的 known matched、unknown links 和 review packages 需要重跑后才能用于人工 check 后上报
 - 已启动批量重跑：`RUN_ID=known_rematch_20260618_111935`
   - known forced rematch：中途因 Slurm `sbatch` 临时 `Resource temporarily unavailable` 停在 `20251228`；已给 submit/driver 脚本加 retry 并从 `20251228` 续跑

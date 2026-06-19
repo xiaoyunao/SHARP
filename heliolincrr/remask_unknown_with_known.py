@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -49,6 +50,19 @@ def remove_unknown_outputs(processed_root: Path, night: str) -> None:
         if path.exists():
             path.unlink()
             print(f"[remove] {path}", flush=True)
+
+
+def clean_review_artifacts(args: argparse.Namespace, night: str) -> None:
+    plot_dir = Path(args.plot_root) / night
+    if plot_dir.exists():
+        for path in plot_dir.glob(f"unknown_link_*_{night}.gif"):
+            path.unlink()
+            print(f"[remove] {path}", flush=True)
+
+    review_dir = Path(args.review_root) / night
+    if review_dir.exists():
+        shutil.rmtree(review_dir)
+        print(f"[remove] {review_dir}", flush=True)
 
 
 def remask_one(args: argparse.Namespace, night: str) -> dict[str, object]:
@@ -140,6 +154,9 @@ def remask_one(args: argparse.Namespace, night: str) -> dict[str, object]:
 
     package_stats: dict[str, object] = {}
     if not args.skip_package:
+        if args.clean_review_artifacts:
+            clean_review_artifacts(args, night)
+
         if not args.skip_plots:
             cmd = [
                 sys.executable,
@@ -235,6 +252,12 @@ def build_argparser() -> argparse.ArgumentParser:
     ap.add_argument("--status-out", default="")
     ap.add_argument("--max-unknown-links-after-known", type=int, default=200)
     ap.add_argument("--skip-plots", action="store_true", help="Do not regenerate unknown GIFs before packaging")
+    ap.add_argument(
+        "--no-clean-review-artifacts",
+        dest="clean_review_artifacts",
+        action="store_false",
+        help="Keep existing unknown GIFs and review package files before rebuilding",
+    )
     ap.add_argument("--gif-size", type=int, default=280)
     ap.add_argument("--gif-duration", type=float, default=0.6)
     ap.add_argument("--plot-limit-links", type=int, default=0)
@@ -242,6 +265,7 @@ def build_argparser() -> argparse.ArgumentParser:
     ap.add_argument("--no-assign-trksub", action="store_true")
     ap.add_argument("--skip-package", action="store_true")
     ap.add_argument("--dry-run", action="store_true")
+    ap.set_defaults(clean_review_artifacts=True)
     return ap
 
 
