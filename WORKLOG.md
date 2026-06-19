@@ -2,6 +2,26 @@
 
 ## 2026-06-19
 
+- task: 汇总 1.5 角秒 known mask 对旧 unknown link 的影响
+- files_changed: `WORKLOG.md`
+- commands_run:
+  - 服务器读取 `known_rematch_20260618_111935_unknown_remask_status.tsv`
+  - 服务器读取 `/pipeline/xiaoyunao/data/heliolincrr/trksub_history.jsonl`，按 `created_utc < 2026-06-18T00:00:00Z` 统计旧 link identity
+- key_findings:
+  - 统计口径为 remask `status=done` 的 `121` 夜；这些夜当前 unknown 总数 `4840`
+  - 当前 `4840` 条中 `4624` 条复用旧 `trkSub` identity，`216` 条为新生成 identity
+  - 对应旧结果中这些夜共有 `4917` 条 identity；本次 1.5 角秒 mask 扣掉旧 link `293` 条
+  - 净变化为 `4840 - 4917 = -77` 条；即旧 link 删除 `293` 条，同时新 link 增加 `216` 条
+  - 旧 link 被扣除分布于 `42` 个夜次；新 link 分布于 `11` 个夜次
+  - 四个 high-unknown skip 夜 `20251226`, `20260111`, `20260528`, `20260611` 未进入 assign/package，未纳入旧/新 identity 对比
+- validation:
+  - `assigned_new + reused_existing = 4840`，与当前 done unknown 总数一致
+- remaining_issues:
+  - `20260217` 产生 `127` 条新 link 且 GIF repair 仍在运行，需优先人工复查该夜质量
+  - JPL 复查 `20260103` 当前 5 条时，直接调用 JPL SB Identification API 超时；后续应固定使用此前已验证的临时程序口径，不再临场改 API 参数
+- next_step:
+  - 基于本次汇总优先复查新增 link 夜次，尤其 `20260217`, `20251217`, `20251120`, `20251119`, `20260103`
+
 - task: 删除 remask 前旧人工 submit CSV 和旧 submit 派生产物
 - files_changed: `WORKLOG.md`, `PLAN.md`
 - commands_run:
