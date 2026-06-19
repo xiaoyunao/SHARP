@@ -33,11 +33,19 @@ def query_geometry(
     corner_coords: SkyCoord,
     ra_vals: np.ndarray,
     corner_pad_deg: float,
-) -> tuple[SkyCoord, u.Quantity]:
+) -> tuple[list[SkyCoord], u.Quantity]:
+    query_centers = [field_center]
     if np.nanmax(ra_vals) - np.nanmin(ra_vals) > 180.0:
-        field_center = SkyCoord(ra=0.0 * u.deg, dec=field_center.dec)
+        # Lowell/aleph does not reliably wrap a circular query across RA=0.
+        # Query both sides explicitly, then deduplicate ephemerides downstream.
+        query_centers.extend(
+            [
+                SkyCoord(ra=0.0 * u.deg, dec=field_center.dec),
+                SkyCoord(ra=359.0 * u.deg, dec=field_center.dec),
+            ]
+        )
     field_radius = field_center.separation(corner_coords).max() + corner_pad_deg * u.deg
-    return field_center, field_radius
+    return query_centers, field_radius
 
 
 def query_asteroids(
@@ -72,6 +80,52 @@ def query_asteroids(
     out["dec"] = np.array(ephs["dec"], dtype="f8")
     out["mag"] = np.array(ephs["V"], dtype="f4")
     return out
+
+
+def dedupe_asteroids(rows: Table) -> Table:
+    keep = []
+    seen = set()
+    for i, row in enumerate(rows):
+        key = (
+            str(row["name"]),
+            float(row["number"]),
+            round(float(row["ra"]), 8),
+            round(float(row["dec"]), 8),
+        )
+        if key in seen:
+            continue
+        seen.add(key)
+        keep.append(i)
+    return rows[keep]
+
+
+def query_asteroids_multi(
+    q: Query,
+    field_centers: list[SkyCoord],
+    field_radius: u.Quantity,
+    epoch: Time,
+    observer: EarthLocation,
+    mag_limit: float,
+    njobs: int,
+    confidence_radius: u.Quantity,
+) -> Table | None:
+    tables = []
+    for center in field_centers:
+        ephs = query_asteroids(
+            q=q,
+            field_center=center,
+            field_radius=field_radius,
+            epoch=epoch,
+            observer=observer,
+            mag_limit=mag_limit,
+            njobs=njobs,
+            confidence_radius=confidence_radius,
+        )
+        if ephs is not None and len(ephs) > 0:
+            tables.append(ephs)
+    if not tables:
+        return None
+    return dedupe_asteroids(vstack(tables))
 
 
 def log(msg: str, log_path: str | None) -> None:
@@ -251,7 +305,7 @@ def run_match(args: argparse.Namespace) -> tuple[str | None, str | None]:
                 corner_coords = SkyCoord(ra=ra_vals * u.deg, dec=dec_vals * u.deg)
                 center_world = w.pixel_to_world((nx + 1) / 2.0, (ny + 1) / 2.0)
                 field_center = SkyCoord(ra=center_world.ra, dec=center_world.dec)
-                query_center, query_radius = query_geometry(
+                query_centers, query_radius = query_geometry(
                     field_center,
                     corner_coords,
                     ra_vals,
@@ -275,9 +329,9 @@ def run_match(args: argparse.Namespace) -> tuple[str | None, str | None]:
             continue
 
         try:
-            ephs = query_asteroids(
+            ephs = query_asteroids_multi(
                 q=q,
-                field_center=query_center,
+                field_centers=query_centers,
                 field_radius=query_radius,
                 epoch=epoch,
                 observer=observer,

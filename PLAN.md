@@ -67,8 +67,11 @@
 - 早期 MPC unknown 正式 submit 为 `20260220`，submission ID `2026-05-14T03:00:19.564_0000Bx4c`；当时未经过人工 check，提交版本为 `34` 条 link、`102` 行 obsData。当前服务器 remask 后 `20260220` 版本为 `29` 条 link、`87` 行 obsData
 - 8 位 trkSub 迁移备份 `/pipeline/xiaoyunao/data/heliolincrr/backups/trksub_8char_20260618_094807` 已按用户确认删除
 - `2026-06-18` JPL 临时检查发现人工真源中至少 `6` 条实际为已知小行星；known 提取存在系统性漏检
-- known 提取根因已修复：L2 catalog BINTABLE 不再用 `NAXIS1/NAXIS2` 当图像尺寸，跨 RA=0 视场改用 `RA=0` 查询中心；official known matched 保持 `1.0"` 用于 ADES/MPC，上游另写 `*_matched_asteroids_mask15.fits` 用 `1.5"` 给 unknown 扣除
+- known 提取根因继续修复：L2 catalog BINTABLE 不再用 `NAXIS1/NAXIS2` 当图像尺寸；跨 RA=0 视场不能只改用 `RA=0` 查询中心，必须同时查原始 WCS 中心、`RA=0` 和 `RA=359` 后合并去重；official known matched 保持 `1.0"` 用于 ADES/MPC，上游另写 `*_matched_asteroids_mask15.fits` 用 `1.5"` 给 unknown 扣除
 - 修复后临时验证：`3331 Kvistaberg`, `1522 Kokkola`, `2220 Hicks`, `168 Sibylla`, `1795 Woltjer`, `8219 (1996 JL)` 均可进入 known matched；临时验证目录已删除
+- `2026-06-19` 再次用当前 `20260103` unknown 实时 RA/Dec 做 JPL/Horizons 复查，发现 remask 后新增的 `00001iF/00001iG/00001iH/00001iI` 仍分别是 `2125 Karl-Ontjes`, `2728 Yatskiv`, `3856 Lutskij`, `1989 Tatry`
+- 已修复跨 RA=0 多中心查询并烟测 `OBJ_MP_1060_0055_cat.fits.gz`：上述四个对象均进入 all/matched/mask15，匹配到当前 unknown 的对应 `objID`
+- `known_rematch_20260618_111935` 仍基于旧 RA=0 单中心逻辑生成，不能作为最终人工 check 输入；需要重新跑 affected known/mask15 和 unknown remask
 - 修复前生成的 known matched、unknown links 和 review packages 需要重跑后才能用于人工 check 后上报
 - 已启动批量重跑：`RUN_ID=known_rematch_20260618_111935`
   - known forced rematch：中途因 Slurm `sbatch` 临时 `Resource temporarily unavailable` 停在 `20251228`；已给 submit/driver 脚本加 retry 并从 `20251228` 续跑

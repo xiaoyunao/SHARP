@@ -2,6 +2,31 @@
 
 ## 2026-06-19
 
+- task: 修复 known 提取跨 RA=0 时只查到一侧导致 `20260103` 新 unknown 仍为已知小行星
+- files_changed: `known_asteroid/match_single_night.py`, `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - NERSC 临时目录用 `20260103` 当前 unknown link 的实时 RA/Dec 做 JPL first-pass 候选查询，并对最近候选用 Horizons 精算；临时目录和脚本已删除
+  - 服务器检查 `/processed1/20260103/L4/20260103_unknown_links.json` 与 `*_matched_asteroids_mask15.fits`
+  - 服务器对 `OBJ_MP_1060_0055_cat.fits.gz` 做 aleph RA center 实验：`0.0/360.0/359.47/358.8/1.0`
+  - 本地 `python3 -m py_compile known_asteroid/match_single_night.py`
+  - 同步 `match_single_night.py` 到服务器并运行服务器 `py_compile`
+  - 服务器临时重跑 `20260103 OBJ_MP_1060_0055_cat.fits.gz` 到 `/tmp/known_wrap_check_20260103`，检查后删除
+- key_findings:
+  - 当前 remask 后的 `20260103` unknown 中，`00001iF`, `00001iG`, `00001iH`, `00001iI` 分别与 JPL 已知小行星 `2125 Karl-Ontjes`, `2728 Yatskiv`, `3856 Lutskij`, `1989 Tatry` 在三帧内相差约 `0.3..1.0"`，仍应被 known mask 扣除
+  - 这些对象在新 known 表中被匹配到了 `OBJ_MP_1195_*`，但没有匹配到当前 unknown 使用的 `OBJ_MP_1060_*`
+  - `OBJ_MP_1060_*` 是跨 RA=0 视场；之前把 query center 强制设为 `RA=0` 后，Lowell/aleph 只返回 0 度右侧对象，漏掉 RA `358..359` 度左侧对象
+  - 对同一帧用原始 WCS 中心 `RA≈359.47` 查询时，`2125/2728/3856/1989` 都能被 aleph 返回
+  - 修复为跨 RA=0 时同时查询原始 WCS 中心、`RA=0` 和 `RA=359`，再对 ephemeris 去重
+- validation:
+  - 临时重跑 `OBJ_MP_1060_0055_cat.fits.gz` 后，`Karl-Ontjes`, `Yatskiv`, `Lutskij`, `Tatry` 均进入 `all_asteroids`、official `matched_asteroids` 和 `matched_asteroids_mask15`
+  - 临时 matched 行对应当前 unknown 的 `objID=1606,1624,3605,4498`
+- remaining_issues:
+  - 服务器当前历史批量产物仍是旧 RA=0 单中心查询生成的，需要重新跑 affected known/mask15 和后续 unknown remask
+  - 之前的 `known_rematch_20260618_111935` remask 结果不能作为最终人工 check 输入
+- next_step:
+  - 至少重跑 `20260103` known + unknown remask，确认当前 5 条 unknown 变为只剩 `00000wD`
+  - 再决定是否对全量 `20251116..20260617` 重新跑 known/mask15/remask
+
 - task: 汇总 1.5 角秒 known mask 对旧 unknown link 的影响
 - files_changed: `WORKLOG.md`
 - commands_run:
