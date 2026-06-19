@@ -78,8 +78,8 @@
   - `20260106` 曾因 `sbatch` stderr warning 污染 array job id，导致 finalize dependency 非法并停住；已修复 stdout/stderr 分离与 job id 解析，取消坏 array `191015`，并从 `20260106` 续跑成功，新 job 为 array `195437` / finalize `195438`
   - 后续 driver 因缺 L2 夜 `/processed1/20260203/L2` 退出；已改为缺 L2 时 skip 并继续，当前从 `20260205` 续跑
   - duplicate cleanup：并发残留导致的重复/坏 job `185697..185706` 已取消
-  - unknown remask 尚未开始
-  - unknown remask：driver 完成 known 提交并轮询全部 finalize job 离队后提交 `20251116..20260616`，不处理 `20260617` unknown
+  - `2026-06-19` known rematch 后的 unknown remask 已完成；旧人工 `<night>_submit.csv` 全部删除，review package 下当前 submit CSV 数量为 `0`，所有人工 check 需要基于新 review package 重做
+  - unknown remask：已处理 `20251116..20260616`，不处理 `20260617` unknown
   - logs: `/pipeline/xiaoyunao/known_asteroid/runtime/logs/known_rematch_20260618_111935.log`, `/pipeline/xiaoyunao/known_asteroid/runtime/logs/known_rematch_20260618_111935_driver.log`
   - remask status: `/pipeline/xiaoyunao/data/heliolincrr/batch_logs/known_rematch_20260618_111935_unknown_remask_status.tsv`
 

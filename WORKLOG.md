@@ -1,5 +1,28 @@
 # WORKLOG
 
+## 2026-06-19
+
+- task: 删除 remask 前旧人工 submit CSV 和旧 submit 派生产物
+- files_changed: `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 服务器列出 `/pipeline/xiaoyunao/heliolincrr/review_packages/*/*_submit.csv`
+  - 删除 20 个旧 `<night>_submit.csv`
+  - 删除旧 submit 派生产物：`*_unknown_links_submit_ades.psv`, `*_unknown_links_submit_masked.fits`, `*_unknown_links_submit_masked.json`, `*_unknown_links_submit_stats.json`
+  - 精确验证 20 个目标夜次无旧 submit 文件残留，并确认 review package 下全局 `*_submit.csv` 数量为 `0`
+- key_findings:
+  - 旧 submit CSV 夜次为 `20260101`, `20260102`, `20260103`, `20260104`, `20260105`, `20260106`, `20260107`, `20260108`, `20260109`, `20260110`, `20260112`, `20260114`, `20260115`, `20260116`, `20260117`, `20260119`, `20260120`, `20260121`, `20260122`, `20260512`
+  - `20260103` 和 `20260512` 还存在旧 submit masked/ADES/stats 产物，已一并删除
+  - 这些标签均对应 known 修复/remask 前的旧 unknown review 包，不能作为新结果完成筛选的证据
+- validation:
+  - 目标 20 夜 `remaining_targeted=0`
+  - `/pipeline/xiaoyunao/heliolincrr/review_packages` 下 `*_submit.csv` 剩余数量为 `0`
+- remaining_issues:
+  - 所有 remask 后 positive unknown 夜次需要基于新 review package 重新人工 check
+  - GIF repair 后台任务仍需完成后复查缺图夜次
+- next_step:
+  - 待 GIF repair 结束后，重新统计 review package 的 `n_gifs_missing`
+  - 重新分发新 review package 给网页人工筛选
+
 ## 2026-06-18
 
 - task: 修复 remask 后 review package 不重画 GIF 导致的新 unknown 缺图问题
