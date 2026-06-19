@@ -16,6 +16,7 @@
 - validation:
   - 本地和服务器 Python 语法检查通过
   - 服务器 GIF repair 后台进程已开始处理缺图夜次，首先处理最重的 `20260217`
+  - 已单独优先补完 `20260103`：重跑 `plot_unknown_links.py` 后写出当前 `5` 条 unknown 的 GIF，重打 review package 后 `n_gifs_copied=5`, `n_gifs_missing=0`, `review_full_rows=15`, `review_ades_rows=15`
 - remaining_issues:
   - GIF repair 仍在运行，完成后需复查 11 个缺图夜次的 review manifest/package 是否 `n_gifs_missing=0`
 - next_step:
