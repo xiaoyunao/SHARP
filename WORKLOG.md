@@ -2,6 +2,25 @@
 
 ## 2026-06-18
 
+- task: 复查 `20260103` remask 后 unknown 数仍为 5 的原因
+- files_changed: `WORKLOG.md`
+- commands_run:
+  - 服务器读取 `/processed1/20260103/L4/20260103_unknown_links.json`
+  - 服务器检查 `/processed1/20260103/L4/20260103_matched_asteroids_mask15.fits`
+  - 服务器读取 `20260103` remask 后 summary 和 review/submit CSV
+- key_findings:
+  - remask 后 `20260103` 当前 unknown 为 `5` 条，但不是旧人工 submit 中的 `00000wE..00000wI` 仍然残留
+  - 新的 mask15 known 表已包含旧 JPL 命中的 `1522 Kokkola`, `2220 Hicks`, `168 Sibylla`, `1795 Woltjer`, `8219 (1996 JL)`，这些旧 known false unknown 已被扣除
+  - 当前 unknown 由旧的 `00000wD` 加新分配的 `00001iF`, `00001iG`, `00001iH`, `00001iI` 组成
+  - summary 分类从旧版本的 `fit_ok all_same=64`, `mixed_with_non_asteroid=4`, `all_non=6` 变为 `fit_ok all_same=69`, `mixed_with_non_asteroid=0`, `all_non=5`；即旧 5 条 known false unknown 被扣掉，同时原先 4 条 mixed link 在新 mask 下变成 all_non unknown
+  - `/pipeline/xiaoyunao/heliolincrr/review_packages/20260103/20260103_submit.csv` 仍是旧网页标签，包含旧 `00000wD..00000wI`，不能用于新 remask 后上报
+- validation:
+  - 当前 review CSV 只有 `00000wD`, `00001iF`, `00001iG`, `00001iH`, `00001iI` 五行且 `is_real` 为空
+- remaining_issues:
+  - 新出现的 `00001iF..00001iI` 需要重新人工 check，必要时再用 JPL/Horizons 临时核查
+- next_step:
+  - 后续上报前以新 review CSV/submit CSV 为准，旧 submit CSV 仅作历史参考
+
 - task: 续跑 known/mask15 driver，并让 batch 遇到缺 L2 夜次时跳过而不是退出
 - files_changed: `known_asteroid/submit_pipeline_slurm.sh`, `WORKLOG.md`, `PLAN.md`
 - commands_run:
