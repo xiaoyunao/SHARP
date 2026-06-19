@@ -140,6 +140,29 @@ def remask_one(args: argparse.Namespace, night: str) -> dict[str, object]:
 
     package_stats: dict[str, object] = {}
     if not args.skip_package:
+        if not args.skip_plots:
+            cmd = [
+                sys.executable,
+                str(script_dir / "plot_unknown_links.py"),
+                night,
+                "--processed-root",
+                str(processed_root),
+                "--root-out",
+                str(root_out),
+                "--plot-root",
+                args.plot_root,
+                "--catalog",
+                str(unknown_json),
+                "--gif-size",
+                str(args.gif_size),
+                "--gif-duration",
+                str(args.gif_duration),
+            ]
+            if args.plot_limit_links > 0:
+                cmd.extend(["--limit-links", str(args.plot_limit_links)])
+            print("[run] " + " ".join(cmd), flush=True)
+            subprocess.run(cmd, check=True)
+
         cmd = [
             sys.executable,
             str(script_dir / "package_unknown_review.py"),
@@ -211,6 +234,10 @@ def build_argparser() -> argparse.ArgumentParser:
     ap.add_argument("--review-root", default="/pipeline/xiaoyunao/heliolincrr/review_packages")
     ap.add_argument("--status-out", default="")
     ap.add_argument("--max-unknown-links-after-known", type=int, default=200)
+    ap.add_argument("--skip-plots", action="store_true", help="Do not regenerate unknown GIFs before packaging")
+    ap.add_argument("--gif-size", type=int, default=280)
+    ap.add_argument("--gif-duration", type=float, default=0.6)
+    ap.add_argument("--plot-limit-links", type=int, default=0)
     ap.add_argument("--exclude-night", action="append", default=[])
     ap.add_argument("--no-assign-trksub", action="store_true")
     ap.add_argument("--skip-package", action="store_true")

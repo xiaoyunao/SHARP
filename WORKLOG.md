@@ -2,6 +2,25 @@
 
 ## 2026-06-18
 
+- task: 修复 remask 后 review package 不重画 GIF 导致的新 unknown 缺图问题
+- files_changed: `heliolincrr/remask_unknown_with_known.py`, `WORKLOG.md`
+- commands_run:
+  - 本地 `python -m py_compile heliolincrr/remask_unknown_with_known.py`
+  - 同步 `remask_unknown_with_known.py` 到服务器并运行 `py_compile`
+  - 服务器启动 `/tmp/repair_unknown_gifs_20260619.sh`，对缺 GIF 的 11 夜重跑 `plot_unknown_links.py` 并重打 `package_unknown_review.py`
+- key_findings:
+  - remask 会重建 unknown JSON/FITS，但此前 package 阶段只拷贝既有 `/pipeline/xiaoyunao/heliolincrr/plots/<night>/unknown_link_<id>_<night>.gif`
+  - 当 known remask 改变 unknown link 集合或 linkage_id 时，新 linkage 没有对应旧 GIF，导致 review package 中 `n_gifs_missing > 0`
+  - 这不是 JSON 字段写坏；`image_names/objids` 在程序内按分号拆分，手工检查时逐字符打印是检查脚本误用字符串造成的
+  - `remask_unknown_with_known.py` 已改为默认在 package 前调用 `plot_unknown_links.py` 按当前 unknown JSON 重新生成 GIF；如需跳过可显式 `--skip-plots`
+- validation:
+  - 本地和服务器 Python 语法检查通过
+  - 服务器 GIF repair 后台进程已开始处理缺图夜次，首先处理最重的 `20260217`
+- remaining_issues:
+  - GIF repair 仍在运行，完成后需复查 11 个缺图夜次的 review manifest/package 是否 `n_gifs_missing=0`
+- next_step:
+  - repair 完成后更新/复查 remask status 或单独记录 GIF repair status
+
 - task: 复查 `20260103` remask 后 unknown 数仍为 5 的原因
 - files_changed: `WORKLOG.md`
 - commands_run:
