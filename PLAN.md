@@ -71,7 +71,14 @@
 - 修复后临时验证：`3331 Kvistaberg`, `1522 Kokkola`, `2220 Hicks`, `168 Sibylla`, `1795 Woltjer`, `8219 (1996 JL)` 均可进入 known matched；临时验证目录已删除
 - `2026-06-19` 再次用当前 `20260103` unknown 实时 RA/Dec 做 JPL/Horizons 复查，发现 remask 后新增的 `00001iF/00001iG/00001iH/00001iI` 仍分别是 `2125 Karl-Ontjes`, `2728 Yatskiv`, `3856 Lutskij`, `1989 Tatry`
 - 已修复跨 RA=0 多中心查询并烟测 `OBJ_MP_1060_0055_cat.fits.gz`：上述四个对象均进入 all/matched/mask15，匹配到当前 unknown 的对应 `objID`
-- `known_rematch_20260618_111935` 仍基于旧 RA=0 单中心逻辑生成，不能作为最终人工 check 输入；需要重新跑 affected known/mask15 和 unknown remask
+- `known_rematch_20260618_111935` 仍基于旧 RA=0 单中心逻辑生成，不能作为最终人工 check 输入；已废弃
+- 已停止旧 GIF repair，并清空 review package/L4 中的 submit CSV 和 submit 派生产物
+- 已启动新全量重跑：`RUN_ID=known_wrapfix_20260619_122524`
+  - known/mask15 forced rematch：`20251116..20260617`
+  - unknown remask：`20251116..20260617`
+  - 参数：`FORCE_EXTRACT=1`, `MAX_PARALLEL=16`, `MASK_SEP_ARCSEC=1.5`, `MASK_MATCHED_SUFFIX=_mask15`
+  - logs: `/pipeline/xiaoyunao/known_asteroid/runtime/logs/known_wrapfix_20260619_122524.log`, `/pipeline/xiaoyunao/known_asteroid/runtime/logs/known_wrapfix_20260619_122524_driver.log`
+  - remask status: `/pipeline/xiaoyunao/data/heliolincrr/batch_logs/known_wrapfix_20260619_122524_unknown_remask_status.tsv`
 - 修复前生成的 known matched、unknown links 和 review packages 需要重跑后才能用于人工 check 后上报
 - 已启动批量重跑：`RUN_ID=known_rematch_20260618_111935`
   - known forced rematch：中途因 Slurm `sbatch` 临时 `Resource temporarily unavailable` 停在 `20251228`；已给 submit/driver 脚本加 retry 并从 `20251228` 续跑

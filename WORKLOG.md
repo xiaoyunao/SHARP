@@ -2,6 +2,29 @@
 
 ## 2026-06-19
 
+- task: 停止旧 GIF repair、清理旧 submit，并启动 RA wrap 修复后的全量 known/mask15/remask
+- files_changed: `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 服务器停止 `/tmp/repair_unknown_gifs_20260619.sh` 及其 `plot_unknown_links.py` 子进程
+  - 删除 `/pipeline/xiaoyunao/heliolincrr/review_packages/*/*_submit.csv` 和 review submit 派生产物
+  - 删除 `/processed1/<night>/L4/*_unknown_links_submit_*` 派生产物
+  - 启动 `RUN_ID=known_wrapfix_20260619_122524`：`run_known_rematch_then_unknown_remask.sh 20251116 20260617 20251116 20260617`
+- key_findings:
+  - GIF repair 停止前正在处理 `20251119`
+  - 清理前 review package 下残留旧 submit CSV：`20251116_submit.csv`, `20251118_submit.csv`
+  - 当前服务器最新有 MP L2 的夜次到 `20260617`
+  - 新 run 使用 `FORCE_EXTRACT=1`, `MAX_PARALLEL=16`, `MASK_SEP_ARCSEC=1.5`, 不提交 MPC
+- validation:
+  - `pgrep` 未见实际 `repair_unknown_gifs/plot_unknown_links/package_unknown_review` 进程
+  - review package submit 相关文件剩余数 `0`
+  - `/processed1/<night>/L4/*_unknown_links_submit_*` 剩余数 `0`
+  - 新 run 已提交首批 Slurm jobs：`20251116` array `224874` / finalize `224875`，`20251118` array `224909` / finalize `224910`
+- remaining_issues:
+  - 需要等待 known finalize 全部离队后确认 dependent unknown remask job 是否启动
+  - 本轮会覆盖旧 known/mask15/remask 产物；人工 check 必须等待本轮 review packages 完成后重做
+- next_step:
+  - 继续监控 `known_wrapfix_20260619_122524` 的 known log、driver log、Slurm queue 和 remask status
+
 - task: 修复 known 提取跨 RA=0 时只查到一侧导致 `20260103` 新 unknown 仍为已知小行星
 - files_changed: `known_asteroid/match_single_night.py`, `WORKLOG.md`, `PLAN.md`
 - commands_run:
