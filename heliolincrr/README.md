@@ -136,6 +136,13 @@ tracklet_id,is_real
 /home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python submit_reviewed_unknown.py 20260512
 ```
 
+`submit_reviewed_unknown.py` 默认在 ADES PSV 中包含 `logSNR` 列，数值来自
+`log10(Flux_Aper4 / FluxErr_Aper4)`。如需临时关闭：
+
+```bash
+/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python submit_reviewed_unknown.py 20260512 --no-logsnr
+```
+
 做 MPC test validation：
 
 ```bash
@@ -147,6 +154,77 @@ tracklet_id,is_real
 ```bash
 /home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python submit_reviewed_unknown.py 20260512 --validate --submit
 ```
+
+### Daily automation
+
+每日 09:00 总入口：
+
+```bash
+/pipeline/xiaoyunao/heliolincrr/run_daily_pipeline.sh
+```
+
+它按顺序运行：
+
+1. `/pipeline/xiaoyunao/survey/run_daily.sh` 只为 `RUN_DATE` 生成当天晚上的观测脚本
+2. 按 `RECOVERY_LOOKBACK_DAYS` 回看实际存在数据的夜次，调用 `/pipeline/xiaoyunao/known_asteroid/run_daily.sh`
+3. 对同一批夜次调用 `/pipeline/xiaoyunao/heliolincrr/run_daily_unknown.sh`，等待 known 的 1.5 角秒 mask ready 后生成 unknown check 包
+
+`run_daily_unknown.sh` 默认要求 `/processed1/<night>/L4/<night>_matched_asteroids_mask15.fits`。
+如果 known 已完成但 1.5 角秒内没有任何 matched detection，则依赖
+`<night>_known_asteroid_status.json` 明确记录 empty mask 后继续。
+
+`run_daily_pipeline.sh` 的断电恢复逻辑不补生成连续关机期间已经错过的中间观测脚本；
+survey 只针对当前 `RUN_DATE`。known/unknown 数据处理会按回看窗口补实际拍到且尚未完成的夜。
+
+`run_daily_unknown.sh` 只有在 check 包已经生成且 manifest 中 `n_catalog_rows > 0`
+时，才为该夜启动 `watch_submit_reviews.py`。unknown 为 `0` 的夜只保留空 check 包，
+不挂 submit watcher。
+
+建议 cron：
+
+```cron
+0 9 * * * cd /pipeline/xiaoyunao && /bin/bash /pipeline/xiaoyunao/heliolincrr/run_daily_pipeline.sh
+@reboot sleep 600 && cd /pipeline/xiaoyunao && /bin/bash /pipeline/xiaoyunao/heliolincrr/run_daily_pipeline.sh
+```
+
+`@reboot` 会重新跑当前日期的总入口；survey 只补当天晚上的脚本，known/unknown
+按回看窗口补处理数据。
+
+网页生成 `<night>_submit.csv` 后，批量监测并提交。历史补报推荐用 wrapper：
+
+```bash
+/pipeline/xiaoyunao/heliolincrr/run_review_submit_backlog_watch.sh 20251116 20260617
+```
+
+该 wrapper 会后台运行 `watch_submit_reviews.py --follow --exit-when-complete --validate --submit --retry-failed`，
+并把状态写到：
+
+```text
+/pipeline/xiaoyunao/data/heliolincrr/review_submit_backlog_20251116_20260617.json
+```
+
+底层命令也可手动运行：
+
+```bash
+/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python /pipeline/xiaoyunao/heliolincrr/watch_submit_reviews.py \
+  --start 20251116 \
+  --end 20260617 \
+  --validate \
+  --submit \
+  --follow \
+  --exit-when-complete \
+  --retry-failed
+```
+
+默认正式运行状态记录在：
+
+```text
+/pipeline/xiaoyunao/data/heliolincrr/review_submit_state.json
+```
+
+watcher 只处理已有 `*_unknown_review_manifest.json` 的夜次；zero unknown check 包会直接记为
+`no_observations`。有 unknown 但 submit CSV 全为 `0` 的夜也会记为 `no_observations`，
+不会向 MPC 上报。
 
 在 `run_single_night.sh` 里启用导出：
 

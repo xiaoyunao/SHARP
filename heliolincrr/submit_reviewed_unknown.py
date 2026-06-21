@@ -19,6 +19,8 @@ def build_argparser() -> argparse.ArgumentParser:
     ap.add_argument("--validate", action="store_true", help="Send the generated PSV to MPC test validation")
     ap.add_argument("--submit", action="store_true", help="Submit the generated PSV to MPC")
     ap.add_argument("--no-stats", action="store_true", help="Do not write the default stats JSON")
+    ap.add_argument("--no-logsnr", action="store_true", help="Do not include ADES logSNR in the generated PSV")
+    ap.add_argument("--response-out", default="", help="Optional MPC response output path")
     return ap
 
 
@@ -42,6 +44,20 @@ def main() -> None:
         cmd.extend(["--out", args.out])
     if args.no_stats:
         cmd.extend(["--stats-out", ""])
+    if not args.no_logsnr:
+        cmd.append("--include-logsnr")
+    if args.response_out:
+        cmd.extend(["--response-out", args.response_out])
+    elif args.submit:
+        cmd.extend([
+            "--response-out",
+            str(Path(args.processed_root) / args.night / "L4" / f"{args.night}_unknown_mpc_reply.txt"),
+        ])
+    elif args.validate:
+        cmd.extend([
+            "--response-out",
+            str(Path(args.processed_root) / args.night / "L4" / f"{args.night}_unknown_validate_reply.txt"),
+        ])
     if args.validate:
         cmd.append("--validate")
     if args.submit:

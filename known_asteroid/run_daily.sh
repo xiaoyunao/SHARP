@@ -21,6 +21,7 @@ LOG_PATH="${LOG_DIR}/${RUN_DATE//-/}_daily.log"
   L4_DIR="${NIGHT_DIR}/L4"
   OUT_PSV="${L4_DIR}/${TARGET_NIGHT}_matched_asteroids_ades.psv"
   REPLY_TXT="${L4_DIR}/${TARGET_NIGHT}_mpc_reply.txt"
+  STATUS_JSON="${L4_DIR}/${TARGET_NIGHT}_known_asteroid_status.json"
 
   if [[ ! -d "${NIGHT_DIR}" ]]; then
     echo "[SKIP] missing night dir: ${NIGHT_DIR}"
@@ -41,6 +42,20 @@ LOG_PATH="${LOG_DIR}/${RUN_DATE//-/}_daily.log"
   if [[ -s "${OUT_PSV}" && -s "${REPLY_TXT}" ]]; then
     echo "[SKIP] report products already exist for ${TARGET_NIGHT}"
     exit 0
+  fi
+  if [[ -s "${STATUS_JSON}" ]]; then
+    if "${PYTHON}" - <<PY
+import json, sys
+from pathlib import Path
+status = json.loads(Path("${STATUS_JSON}").read_text(encoding="utf-8"))
+matched = status.get("matched_asteroids", {})
+ok = bool(status.get("known_complete")) and int(matched.get("rows") or 0) == 0
+sys.exit(0 if ok else 1)
+PY
+    then
+      echo "[SKIP] known extraction complete with zero 1.0 arcsec matched detections for ${TARGET_NIGHT}"
+      exit 0
+    fi
   fi
 
   echo "[RUN] submit night ${TARGET_NIGHT} with max_parallel=${MAX_PARALLEL}"

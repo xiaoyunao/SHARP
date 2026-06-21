@@ -39,6 +39,13 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--gif-size", type=int, default=280)
     ap.add_argument("--gif-duration", type=float, default=0.6)
     ap.add_argument("--limit-links", type=int, default=0)
+    ap.add_argument(
+        "--linkage-id",
+        action="append",
+        type=int,
+        default=[],
+        help="Only plot the specified linkage_id; may be repeated",
+    )
     return ap.parse_args()
 
 
@@ -93,8 +100,16 @@ def save_gif(path: Path, frames: list[np.ndarray], duration: float) -> None:
     )
 
 
-def parse_unknown_catalog(catalog_path: Path, processed_root: Path, night: str, limit_links: int) -> tuple[list[dict[str, object]], dict[str, dict[str, object]]]:
+def parse_unknown_catalog(
+    catalog_path: Path,
+    processed_root: Path,
+    night: str,
+    limit_links: int,
+    linkage_ids: set[int],
+) -> tuple[list[dict[str, object]], dict[str, dict[str, object]]]:
     rows = json.loads(catalog_path.read_text(encoding="utf-8"))
+    if linkage_ids:
+        rows = [row for row in rows if int(row["linkage_id"]) in linkage_ids]
     if limit_links > 0:
         rows = rows[:limit_links]
     det_rows: list[dict[str, object]] = []
@@ -251,6 +266,7 @@ def main() -> None:
         processed_root=processed_root,
         night=night,
         limit_links=int(args.limit_links),
+        linkage_ids=set(args.linkage_id),
     )
     if not rows:
         summary_path = out_dir / f"{night}_unknown_link_summary.json"

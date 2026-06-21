@@ -121,6 +121,63 @@ def load_trk_sub_map(path: str | None) -> dict[str, str]:
     return out
 
 
+def load_known_status(path: Path) -> dict[str, object]:
+    if not path.exists():
+        raise FileNotFoundError(f"known status not found: {path}")
+    data = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(data, dict):
+        raise ValueError(f"known status must be a JSON object: {path}")
+    return data
+
+
+def select_matched_table(args: argparse.Namespace, processed_root: Path, night: str) -> tuple[Path, Table, dict[str, object]]:
+    default_mask_matched = processed_root / night / "L4" / f"{night}_matched_asteroids_mask15.fits"
+    default_official_matched = processed_root / night / "L4" / f"{night}_matched_asteroids.fits"
+    status_path = Path(args.known_status) if args.known_status else (
+        processed_root / night / "L4" / f"{night}_known_asteroid_status.json"
+    )
+    meta: dict[str, object] = {
+        "policy": "explicit" if args.matched else ("require_mask15" if args.require_mask15 else "auto"),
+        "status_path": str(status_path),
+        "used_empty_known_mask": False,
+    }
+
+    if args.matched:
+        matched_path = Path(args.matched)
+        meta["path"] = str(matched_path)
+        meta["source"] = "explicit"
+        return matched_path, (Table.read(matched_path) if matched_path.exists() else Table()), meta
+
+    if default_mask_matched.exists():
+        meta["path"] = str(default_mask_matched)
+        meta["source"] = "mask15"
+        return default_mask_matched, Table.read(default_mask_matched), meta
+
+    if args.require_mask15:
+        status = load_known_status(status_path)
+        mask_status = status.get("mask_matched_asteroids", {})
+        if not isinstance(mask_status, dict):
+            raise ValueError(f"known status missing mask_matched_asteroids object: {status_path}")
+        known_complete = bool(status.get("known_complete"))
+        mask_rows = int(mask_status.get("rows") or 0)
+        mask_exists = bool(mask_status.get("exists"))
+        if known_complete and not mask_exists and mask_rows == 0:
+            meta["path"] = str(default_mask_matched)
+            meta["source"] = "known_complete_empty_mask15"
+            meta["used_empty_known_mask"] = True
+            meta["status"] = status
+            return default_mask_matched, Table(), meta
+        raise FileNotFoundError(
+            f"required 1.5 arcsec mask matched FITS is missing or incomplete: {default_mask_matched}; "
+            f"known_status={status_path}"
+        )
+
+    matched_path = default_official_matched
+    meta["path"] = str(matched_path)
+    meta["source"] = "official_fallback"
+    return matched_path, (Table.read(matched_path) if matched_path.exists() else Table()), meta
+
+
 def summarize_count_map(counter: Counter) -> dict[str, int]:
     return {str(k): int(v) for k, v in sorted(counter.items(), key=lambda item: str(item[0]))}
 
@@ -490,6 +547,20 @@ def main() -> None:
         ),
     )
     ap.add_argument(
+        "--require-mask15",
+        action="store_true",
+        help=(
+            "Require the 1.5 arcsec known-asteroid mask product. If the mask15 FITS "
+            "is absent, continue only when the known status JSON confirms a completed "
+            "known run with zero mask15 matches."
+        ),
+    )
+    ap.add_argument(
+        "--known-status",
+        default=None,
+        help="Default: /processed1/<night>/L4/<night>_known_asteroid_status.json",
+    )
+    ap.add_argument(
         "--trk-sub-map",
         default=None,
         help=(
@@ -511,17 +582,12 @@ def main() -> None:
     summary_txt = Path(args.summary_txt) if args.summary_txt else (analysis_outdir / f"{night}_single_night_summary.txt")
     unknown_fits = Path(args.unknown_fits) if args.unknown_fits else (processed_root / night / "L4" / f"{night}_unknown_links.fits")
     unknown_json = Path(args.unknown_json) if args.unknown_json else (processed_root / night / "L4" / f"{night}_unknown_links.json")
-    default_mask_matched = processed_root / night / "L4" / f"{night}_matched_asteroids_mask15.fits"
-    default_official_matched = processed_root / night / "L4" / f"{night}_matched_asteroids.fits"
-    matched_path = Path(args.matched) if args.matched else (
-        default_mask_matched if default_mask_matched.exists() else default_official_matched
-    )
+    matched_path, matched, known_mask_meta = select_matched_table(args, processed_root, night)
 
     links = Table.read(rr_dir / "links_tracklets.fits")
     members = Table.read(rr_dir / "linkage_members.fits")
     tracklets = Table.read(tracklets_path)
     orbit_links = Table.read(rr_dir / "orbit_confirm" / "orbit_links.fits")
-    matched = Table.read(matched_path) if matched_path.exists() else Table()
     mask_dir = root_out / night / "mask_gaia"
     mask_keys, mask_total_rows = load_mask_stats(mask_dir)
 
@@ -600,6 +666,7 @@ def main() -> None:
             "tracklets": str(tracklets_path),
             "rr_dir": str(rr_dir),
             "matched_asteroids": str(matched_path),
+            "known_mask": known_mask_meta,
             "summary_json": str(summary_json),
             "summary_txt": str(summary_txt),
             "unknown_fits": str(unknown_fits),

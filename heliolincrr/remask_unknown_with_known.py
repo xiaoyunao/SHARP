@@ -52,17 +52,32 @@ def remove_unknown_outputs(processed_root: Path, night: str) -> None:
             print(f"[remove] {path}", flush=True)
 
 
-def clean_review_artifacts(args: argparse.Namespace, night: str) -> None:
+def clean_plot_gifs(args: argparse.Namespace, night: str) -> None:
     plot_dir = Path(args.plot_root) / night
     if plot_dir.exists():
         for path in plot_dir.glob(f"unknown_link_*_{night}.gif"):
             path.unlink()
             print(f"[remove] {path}", flush=True)
 
+
+def clean_review_package(args: argparse.Namespace, night: str) -> None:
     review_dir = Path(args.review_root) / night
     if review_dir.exists():
         shutil.rmtree(review_dir)
         print(f"[remove] {review_dir}", flush=True)
+
+
+def count_missing_plot_gifs(args: argparse.Namespace, night: str, catalog: Path) -> int:
+    rows = json.loads(catalog.read_text(encoding="utf-8"))
+    if not isinstance(rows, list):
+        raise ValueError(f"Expected JSON list: {catalog}")
+    plot_dir = Path(args.plot_root) / night
+    missing = 0
+    for row in rows:
+        linkage_id = int(row["linkage_id"])
+        if not (plot_dir / f"unknown_link_{linkage_id:04d}_{night}.gif").exists():
+            missing += 1
+    return missing
 
 
 def remask_one(args: argparse.Namespace, night: str) -> dict[str, object]:
@@ -153,11 +168,19 @@ def remask_one(args: argparse.Namespace, night: str) -> dict[str, object]:
         assign_stats = json.loads(proc.stdout)
 
     package_stats: dict[str, object] = {}
+    missing_plot_gifs_before = ""
     if not args.skip_package:
-        if args.clean_review_artifacts:
-            clean_review_artifacts(args, night)
+        if args.clean_plot_gifs:
+            clean_plot_gifs(args, night)
 
-        if not args.skip_plots:
+        missing_plot_gifs_before = count_missing_plot_gifs(args, night, unknown_json)
+        if args.require_existing_gifs and missing_plot_gifs_before > 0:
+            raise RuntimeError(f"missing {missing_plot_gifs_before} existing source GIFs for {night}")
+        should_plot = (
+            not args.skip_plots
+            and (args.force_plots or args.clean_plot_gifs or missing_plot_gifs_before > 0)
+        )
+        if should_plot:
             cmd = [
                 sys.executable,
                 str(script_dir / "plot_unknown_links.py"),
@@ -179,6 +202,13 @@ def remask_one(args: argparse.Namespace, night: str) -> dict[str, object]:
                 cmd.extend(["--limit-links", str(args.plot_limit_links)])
             print("[run] " + " ".join(cmd), flush=True)
             subprocess.run(cmd, check=True)
+        elif args.skip_plots:
+            print("[skip] plot_unknown_links.py (--skip-plots)", flush=True)
+        else:
+            print(f"[skip] plot_unknown_links.py existing_gifs_ok={unknown_count}", flush=True)
+
+        if args.clean_review_package:
+            clean_review_package(args, night)
 
         cmd = [
             sys.executable,
@@ -207,6 +237,7 @@ def remask_one(args: argparse.Namespace, night: str) -> dict[str, object]:
         "matched": str(matched),
         "assigned_new": assign_stats.get("assigned_new", ""),
         "reused_existing": assign_stats.get("reused_existing", ""),
+        "missing_plot_gifs_before": missing_plot_gifs_before,
         "review_full_rows": package_stats.get("review_full_rows", ""),
         "review_ades_rows": package_stats.get("review_ades_rows", ""),
         "n_gifs_missing": package_stats.get("n_gifs_missing", ""),
@@ -225,6 +256,7 @@ def write_status(path: Path, rows: list[dict[str, object]]) -> None:
         "limit",
         "assigned_new",
         "reused_existing",
+        "missing_plot_gifs_before",
         "review_full_rows",
         "review_ades_rows",
         "n_gifs_missing",
@@ -251,12 +283,29 @@ def build_argparser() -> argparse.ArgumentParser:
     ap.add_argument("--review-root", default="/pipeline/xiaoyunao/heliolincrr/review_packages")
     ap.add_argument("--status-out", default="")
     ap.add_argument("--max-unknown-links-after-known", type=int, default=200)
-    ap.add_argument("--skip-plots", action="store_true", help="Do not regenerate unknown GIFs before packaging")
+    ap.add_argument("--skip-plots", action="store_true", help="Do not generate missing unknown GIFs before packaging")
+    ap.add_argument(
+        "--require-existing-gifs",
+        action="store_true",
+        help="Fail before packaging if any current link is missing its source GIF",
+    )
+    ap.add_argument("--force-plots", action="store_true", help="Regenerate GIFs even when all current link GIFs already exist")
+    ap.add_argument(
+        "--clean-plot-gifs",
+        action="store_true",
+        help="Delete source unknown GIFs before packaging; normally leave this off for mask-only remasks",
+    )
     ap.add_argument(
         "--no-clean-review-artifacts",
-        dest="clean_review_artifacts",
+        dest="clean_review_package",
         action="store_false",
-        help="Keep existing unknown GIFs and review package files before rebuilding",
+        help="Keep the existing review package directory before rebuilding",
+    )
+    ap.add_argument(
+        "--no-clean-review-package",
+        dest="clean_review_package",
+        action="store_false",
+        help="Keep the existing review package directory before rebuilding",
     )
     ap.add_argument("--gif-size", type=int, default=280)
     ap.add_argument("--gif-duration", type=float, default=0.6)
@@ -265,7 +314,7 @@ def build_argparser() -> argparse.ArgumentParser:
     ap.add_argument("--no-assign-trksub", action="store_true")
     ap.add_argument("--skip-package", action="store_true")
     ap.add_argument("--dry-run", action="store_true")
-    ap.set_defaults(clean_review_artifacts=True)
+    ap.set_defaults(clean_review_package=True)
     return ap
 
 

@@ -1,5 +1,223 @@
 # WORKLOG
 
+## 2026-06-21
+
+- task: 排查 09:00 自动任务只跑 survey、未进入 unknown，并改为总入口 cron
+- files_changed: `heliolincrr/run_daily_pipeline.sh`, `heliolincrr/watch_submit_reviews.py`, `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 服务器检查 `crontab -l`、`survey/logs/20260621.log`、`known_asteroid/runtime/logs/20260621_daily.log`
+  - 检查 `/processed1/20260620/L4` known/unknown 产物和 `/pipeline/xiaoyunao/heliolincrr/review_packages/20260620`
+  - 服务器同步 `/pipeline/xiaoyunao/known_asteroid/export_ades.py`，运行 `py_compile` 并确认支持 `--dedup-history-root/--current-night`
+  - 部署更新后的 `/pipeline/xiaoyunao/heliolincrr/run_daily_pipeline.sh` 并运行 `bash -n`
+  - 用 `RECOVERY_LOOKBACK_DAYS=1 WAIT_KNOWN_REPORT_INTERVAL_SEC=30 WAIT_KNOWN_REPORT_TIMEOUT_SEC=3600 run_daily_pipeline.sh 2026-06-21` 做自动链路 smoke
+  - 更新服务器 crontab 为 `0 9 * * * .../heliolincrr/run_daily_pipeline.sh`，并新增 `@reboot sleep 600 .../run_daily_pipeline.sh`
+  - 部署更新后的 `watch_submit_reviews.py`，重启历史补报 watcher 和 `20260620` 单夜 watcher
+- key_findings:
+  - 早上 unknown 没触发的直接原因是服务器 cron 仍是旧的两条：`survey/run_daily.sh` 和 `known_asteroid/run_daily.sh`，没有切到 `heliolincrr/run_daily_pipeline.sh`
+  - `20260620` known extraction 在 09:00 已触发并完成，生成 `all_asteroids=60293`, official matched `2931`, mask15 `3274`
+  - known ADES/reply 初始缺失；根因是服务器 `export_ades.py` 旧版本不接受 `slurm_merge_submit.sh` 传入的 dedup 参数，finalize 失败且 Slurm stdout/stderr 指向 `/dev/null`
+  - `run_daily_pipeline.sh` 已改为 known daily 之后等待 official known report 产物；只有 `<night>_matched_asteroids_ades.psv` 和 `<night>_mpc_reply.txt` 就绪，或 status 明确 official matched 为 `0` 时，才进入 unknown
+  - 自动 smoke 完整跑通 `20260620`：known report 写出后自动进入 unknown，生成 `19` 条 unknown link、`19` 张 GIF、review package 和该夜 submit watcher
+  - 生成的 review package：`/pipeline/xiaoyunao/heliolincrr/review_packages/20260620/20260620_unknown_review_manifest.json`，`n_catalog_rows=19`, `n_gifs_copied=19`, `n_gifs_missing=0`
+  - 网页随后生成 `20260620_submit.csv`；19 条均为 `is_real=0`，单夜 watcher 自动写出 submit masked/ADES/stats，并以 `no_observations` 完成，未向 MPC 提交 unknown obsData
+  - 历史补报 watcher 当前 `complete=58`, `pending=63`, `failed=1`；失败夜 `20260114` 是 `20260114_submit.csv` 中 `00000Dc` 的 `is_real` 为空
+  - `watch_submit_reviews.py` 已改为对 `blank/missing/unknown is_real` 等确定性输入错误不再重复 retry；CSV 或 review package mtime/size 变化后仍会重新处理
+  - 当前 crontab 只有总入口和 reboot recovery；旧 survey/known cron 已移除，避免重复跑和不同入口状态不一致
+- validation:
+  - 本地 `bash -n heliolincrr/run_daily_pipeline.sh` 通过
+  - 服务器 `bash -n /pipeline/xiaoyunao/heliolincrr/run_daily_pipeline.sh` 通过
+  - 服务器 `py_compile /pipeline/xiaoyunao/known_asteroid/export_ades.py` 通过
+  - 本地和服务器 `py_compile heliolincrr/watch_submit_reviews.py` 通过
+  - 自动 smoke 日志显示 `[2026-06-21 11:53:31 CST] daily pipeline done`
+  - `review_submit_state.json` 显示 `20260620` 为 `no_observations`，summary `complete=1`, `failed=0`, `pending=0`
+  - 历史 watcher 新 PID `2604798`，日志最后为 idle，未继续刷同一个 `20260114` 空标签失败
+  - crontab 已确认：
+    - `0 9 * * * cd /pipeline/xiaoyunao && /bin/bash /pipeline/xiaoyunao/heliolincrr/run_daily_pipeline.sh >> /pipeline/xiaoyunao/data/heliolincrr/daily_logs/cron_daily_pipeline.log 2>&1`
+    - `@reboot sleep 600 && cd /pipeline/xiaoyunao && /bin/bash /pipeline/xiaoyunao/heliolincrr/run_daily_pipeline.sh >> /pipeline/xiaoyunao/data/heliolincrr/daily_logs/reboot_recovery_daily_pipeline.log 2>&1`
+- remaining_issues:
+  - `20260620` unknown 网页 check 已全假完成，不需要上报 unknown
+  - `20260620` known 已正式生成 ADES/reply；需按 MPC reply 内容后续确认是否 accepted
+  - `20260114_submit.csv` 需要网页补齐 `00000Dc` 的 `is_real` 后才会重新自动处理
+  - 历史补报 watcher 仍在等待剩余人工 check submit CSV
+- next_step:
+  - 明早检查 `/pipeline/xiaoyunao/data/heliolincrr/daily_logs/cron_daily_pipeline.log` 和对应 daily log，确认 09:00 cron 自然触发
+  - 补齐 `20260114` 空标签后观察历史 watcher 是否自动从 failed 转为 submitted/no_observations
+
+## 2026-06-20
+
+- task: 复查 `20260111` known matched 异常少
+- files_changed: `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 服务器检查 `/processed1/20260111/L4/*known*` 夜级产物和 `known_asteroid_parts`
+  - 读取 merged `all_asteroids/matched_asteroids/matched_asteroids_mask15`，按相邻夜对比行数和星等分布
+  - 抽样 `OBJ_MP_0841_0279`, `OBJ_MP_1093_0003`, `OBJ_MP_1094_0030`, `OBJ_MP_0955_0049` 计算 known candidate 到 L2 catalog 最近邻距离
+  - 对抽样文件按亮候选估计 per-frame 平移后重新计算近邻匹配数量
+- key_findings:
+  - `20260111` 有 `347` 个 MP L2 输入，known candidate 不少：`all_asteroids=106042`
+  - matched 明显异常少：official `1.0"` 只有 `180` 行，mask15 `1.5"` 只有 `419` 行
+  - 相邻夜对比：`20260109=2731/3017`, `20260110=4516/4992`, `20260112=4900/5459`, `20260114=9501/10177`（official/mask15）
+  - 候选星等分布与相邻夜基本一致；亮候选 `mag<=18/19` 在相邻夜 mask15 匹配率约 `0.6..0.8`，`20260111` 只有 `0.002..0.004`
+  - 抽样亮候选最近邻显示每帧有约 `8..11"` RA 方向系统偏移，DEC 偏移较小；Win/PSF 坐标表现相同
+  - 抽样 per-frame 平移校正后，`<=1.5"` 匹配明显增加（例如 `OBJ_MP_0841_0279` 从 `0` 到 `8`）
+  - `20260111_known_asteroid_status.json` 缺失，说明该夜 status 需要补写，但不是 matched 少的根因
+- validation:
+  - 只读检查；未改服务器数据产物
+  - 已停止两次过慢的只读统计脚本，未留下额外进程
+- remaining_issues:
+  - 需要回查 `20260111` L2 astrometric solution/WCS 为什么有约十角秒级系统偏移
+  - 在修复 L2 天测或明确 per-frame astrometric correction 之前，不建议把该夜 known/unknown 上报作为可靠结果
+- next_step:
+  - 检查该夜上游 astrometry/SCAMP/solve 日志或对 L2 catalog 用 Gaia 做外部残差评估
+
+- task: 检查 `20251116..20251231` reviewed unknown 自动上报状态，并导出真源 GIF/测光星表到桌面
+- files_changed: `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 服务器读取 `/pipeline/xiaoyunao/data/heliolincrr/review_submit_backlog_20251116_20260617.json`
+  - 手动触发 `watch_submit_reviews.py --only-night 20251231`，把全假夜记录为 `no_observations`
+  - 用服务器临时脚本读取 submit CSV、review manifest、masked unknown JSON 和 L2 catalog FITS，生成真源 GIF 包和测光星表
+  - 下载到 `/Users/yunaoxiao/Desktop/true_unknown_20251116_20251231`
+  - 删除服务器 `/tmp/build_true_unknown_package.py`、`/tmp/true_unknown_20251116_20251231_20260620T062216Z*` 和本地 `/tmp/build_true_unknown_package.py`
+  - 重新跑全区间 watcher scan 刷新全局 state summary
+- key_findings:
+  - `20251116..20251231` 共 `37` 个 review package，已全部完成，`failed=0`
+  - 该区间真源共 `20` 条 link、`60` 次探测
+  - 有正式 submitted 真源的夜次：`20251121`, `20251124`, `20251125`, `20251203`, `20251204`, `20251207`, `20251208`, `20251209`, `20251214`, `20251215`, `20251216`, `20251217`
+  - 本地输出包含 `20` 张 GIF、`true_unknown_links_20251116_20251231.csv`、`true_unknown_detections_20251116_20251231.csv` 和 FITS 版 detection 表
+  - 全局补报 watcher state 当前 summary：`review_packages=122`, `complete=42`, `pending=80`, `failed=0`
+- validation:
+  - 本地 `gifs/*.gif` 数量为 `20`
+  - link CSV 为 `21` 行含表头，即 `20` 条真源 link
+  - detection CSV 为 `61` 行含表头，即 `60` 次探测
+  - 临时脚本 summary `errors=[]`
+- remaining_issues:
+  - `2026` 年剩余 `80` 个 pending review package 等待网页 submit CSV
+- next_step:
+  - 继续让后台 watcher 处理后续 submit CSV；需要阶段性导出时复用相同字段口径
+
+- task: 完善断电恢复和 reviewed unknown 补报 watcher，并启动历史补报监控
+- files_changed: `heliolincrr/watch_submit_reviews.py`, `heliolincrr/run_review_submit_backlog_watch.sh`, `heliolincrr/run_daily_unknown.sh`, `heliolincrr/run_daily_pipeline.sh`, `known_asteroid/run_daily.sh`, `heliolincrr/README.md`, `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 本地 `python3 -m py_compile heliolincrr/watch_submit_reviews.py heliolincrr/submit_reviewed_unknown.py heliolincrr/export_unknown_ades.py`
+  - 本地 `bash -n heliolincrr/run_daily_unknown.sh heliolincrr/run_daily_pipeline.sh heliolincrr/run_review_submit_backlog_watch.sh known_asteroid/run_daily.sh`
+  - 同步脚本到服务器并运行服务器端 `py_compile`/`bash -n`
+  - 服务器确认 `20260617` unknown daily 已完成，`unknown=0`，check package 已生成
+  - 服务器启动历史补报 watcher：`/pipeline/xiaoyunao/heliolincrr/run_review_submit_backlog_watch.sh 20251116 20260617`
+- key_findings:
+  - `20260617` 已写出 `/processed1/20260617/L4/20260617_unknown_links.json/.fits`，unknown link 为 `0`
+  - `20260617` check 包已写出 `/pipeline/xiaoyunao/heliolincrr/review_packages/20260617/20260617_unknown_review_manifest.json`
+  - 当前 `20251116..20260617` 有 review package `122` 个，其中 positive `115` 个、zero unknown `7` 个；启动时已有 submit CSV `10` 个
+  - `watch_submit_reviews.py` 现在只处理已有 review manifest 的夜次；zero unknown package 自动记录 `no_observations`
+  - 历史补报 watcher 使用 state `/pipeline/xiaoyunao/data/heliolincrr/review_submit_backlog_20251116_20260617.json` 和 log `/pipeline/xiaoyunao/data/heliolincrr/daily_logs/review_submit_backlog_20251116_20260617.log`
+  - 首轮处理后已完成 `17/122`：`14` 个 `no_observations`，`3` 个 `submitted`
+  - 正式 unknown submissions：`20251121` -> `2026-06-20T05:00:14.546_0000C0eY`; `20251124` -> `2026-06-20T05:02:22.435_0000C0ea`; `20251125` -> `2026-06-20T05:00:53.443_0000C0eZ`
+  - `20251124` 初次 validate 遇到 `curl: (56) Recv failure: Connection reset by peer`，重启 watcher 加 `--retry-failed` 后重试成功
+  - `run_daily_unknown.sh` 现在只在 check 包生成且 `n_catalog_rows > 0` 后启动该夜专属 submit watcher；unknown=0 不挂 watcher
+  - `run_daily_pipeline.sh` 现在 survey 只跑 `RUN_DATE` 当天；known/unknown 按 `RECOVERY_LOOKBACK_DAYS` 回看实际数据夜补处理，避免补生成断电期间中间夜的 survey plan
+  - known MPC 上报仍使用 `1.0"` official matched FITS；`known_asteroid/run_daily.sh` 仅新增 zero matched status 的幂等跳过
+- validation:
+  - 本地和服务器语法检查通过
+  - `20260617` daily unknown 真实 run 完成且生成 zero-unknown check package
+  - 历史补报 watcher PID `2530505` 正在后台运行，summary 为 `complete=17`, `pending=105`, `failed=0`, `review_packages=122`
+- remaining_issues:
+  - cron 尚未实际安装
+  - 历史补报 watcher 仍需继续等待剩余 `105` 个 positive check package 的 `<night>_submit.csv`
+  - high-unknown skip 夜仍需单独复盘
+- next_step:
+  - 继续让网页按夜生成 `<night>_submit.csv`；watcher 会自动上报真源或记录全假完成
+  - 安装 cron 前再跑一次 `run_daily_pipeline.sh` 的受控 smoke，确认 recovery lookback 不会重复提交已完成 known
+
+- task: 新增 daily unknown 自动化和 submit CSV watcher，并强制 unknown 使用 1.5 角秒 known mask
+- files_changed: `known_asteroid/merge_night_parts.py`, `heliolincrr/summarize_single_night.py`, `heliolincrr/run_single_night.sh`, `heliolincrr/run_daily_unknown.sh`, `heliolincrr/run_daily_pipeline.sh`, `heliolincrr/watch_submit_reviews.py`, `heliolincrr/submit_reviewed_unknown.py`, `heliolincrr/README.md`, `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 本地 `py_compile`/`bash -n` 检查相关 Python 和 shell 脚本
+  - 服务器确认 `/pipeline/xiaoyunao/known_asteroid/match_single_night.py` 含 RA wrap 多中心查询，`slurm_match_one_file.sh` 默认 `MASK_SEP_ARCSEC=1.5`
+  - 同步新脚本到服务器并做服务器 `py_compile`/`bash -n`
+  - 服务器 smoke：`summarize_single_night.py 20260103 --require-mask15` 输出临时 summary，确认使用 `20260103_matched_asteroids_mask15.fits` 且 `unknown_count=1`
+  - 服务器 smoke：`merge_night_parts.py 20260605 --outdir /tmp/known_status_smoke` 写出 `20260605_known_asteroid_status.json`，确认 `known_complete=true`, `mask_rows=0`
+  - 服务器 smoke：`TARGET_NIGHT=20260103 run_daily_unknown.sh 2026-01-04` 幂等跳过已有 check 包
+  - 服务器 dry-run：`watch_submit_reviews.py --start 20251116 --end 20260617 --dry-run --validate --submit` 发现已有 submit CSV 并构造命令
+  - 启动 `20260617` 真实 daily unknown 后台测试：PID `2528388`，log `/pipeline/xiaoyunao/data/heliolincrr/daily_logs/unknown_daily_20260617_smoke_20260620_124135.log`
+- key_findings:
+  - 服务器 known 匹配代码已经是 RA wrap 修复版；后续 known Slurm 默认生成 1.5 角秒 `_matched_asteroids_mask15.fits`
+  - `merge_night_parts.py` 现在额外写 `/processed1/<night>/L4/<night>_known_asteroid_status.json`，供 unknown 区分“known 未完成”和“known 完成但 1.5 mask 为空”
+  - `summarize_single_night.py --require-mask15` 不再 fallback 到 1 角秒 official matched；缺 mask15 时只在 status 明确 empty mask 时继续
+  - `run_single_night.sh` 默认 `REQUIRE_KNOWN_MASK15=1`
+  - `run_daily_unknown.sh` 会等待 known mask15/status ready，再运行 unknown、画 GIF、打 review package
+  - `run_daily_pipeline.sh` 串起 survey daily、known daily、unknown daily；适合 09:00 cron 和 `@reboot` recovery
+  - `watch_submit_reviews.py` 可扫描 `<night>_submit.csv`，用 state JSON 去重，按需 validate/submit reviewed unknown
+- validation:
+  - 本地和服务器语法检查通过
+  - 20260103 smoke 使用 mask15，`unknown_count=1`
+  - 20260605 known status smoke 可表达 known complete + empty 1.5 mask
+  - daily unknown 对已有 review package 夜次幂等 skip
+  - watcher dry-run 未真实 validate/submit，只写测试 state 并打印命令
+  - `20260617` 测试已确认找到 `/processed1/20260617/L4/20260617_matched_asteroids_mask15.fits` 并进入 `mask_gaia`
+- remaining_issues:
+  - 尚未把 cron 实际改到服务器；建议先人工跑几天或手动安装 cron 后观察日志
+  - `20260617` daily unknown 后台测试仍在运行，需后续检查是否成功生成 check 包
+  - `watch_submit_reviews.py --submit` 尚未真实运行；正式开启前可先用 `--validate` 跑一晚确认 MPC test response
+  - high-unknown skip 夜仍需单独复盘
+- next_step:
+  - 用 `watch_submit_reviews.py --only-night <checked-night> --validate` 做一次真实 MPC test validation
+  - 确认后用 `--submit --follow` 开始补 `20251116..20260617` 已完成 submit CSV 的上报
+
+- task: 在人工筛选后的 unknown ADES 上报入口默认加入 `logSNR`
+- files_changed: `heliolincrr/submit_reviewed_unknown.py`, `heliolincrr/README.md`, `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 检查 `export_unknown_ades.py` 现有 `compute_logsnr()` 与 `--include-logsnr`
+  - 服务器抽查 `20260220`, `20260103`, `20260218` 的 L2 FITS 列
+  - 同步 `submit_reviewed_unknown.py` 到服务器并运行 `py_compile`
+  - 服务器 smoke export：`export_unknown_ades.py 20260103 --out /tmp/20260103_unknown_logsnr_smoke.psv --include-logsnr`
+- key_findings:
+  - L2 catalog 稳定包含 `Flux_Aper4` 和 `FluxErr_Aper4`，可直接计算 `log10(Flux_Aper4 / FluxErr_Aper4)`
+  - `export_unknown_ades.py` 已能计算和写出 `logSNR`，但最终入口 `submit_reviewed_unknown.py` 此前未默认透传
+  - 已改为 `submit_reviewed_unknown.py` 默认传 `--include-logsnr`；新增 `--no-logsnr` 可临时关闭
+- validation:
+  - 本地和服务器 Python 语法检查通过
+  - smoke PSV 表头包含 `logSNR`
+  - `20260103` smoke 输出三行 `logSNR=1.36,1.26,1.16`
+- remaining_issues:
+  - 后续对真实 submit CSV 夜次应先跑 `submit_reviewed_unknown.py <night> --validate`，确认 MPC test validation 接受 `logSNR`
+- next_step:
+  - 待人工 submit CSV 出现后，用默认入口生成带 `logSNR` 的 reviewed ADES PSV 并 validate
+
+- task: 停止误用的 unknown GIF 重建流程，改回 mask-only 优先
+- files_changed: `heliolincrr/remask_unknown_with_known.py`, `heliolincrr/plot_unknown_links.py`, `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 停止 `unknown_remask_after_known_full_20260620_0346` 主进程和残留 `plot_unknown_links.py 20251221`
+  - 服务器检查 log 中已完成夜次的 `assigned_new`，确认当前完成行均为 `0`
+  - 本地和服务器 `python -m py_compile heliolincrr/remask_unknown_with_known.py heliolincrr/plot_unknown_links.py`
+  - 同步修复后的 `remask_unknown_with_known.py` 和 `plot_unknown_links.py` 到服务器
+  - 对 `20251220` 做 smoke run，确认打印 `[skip] plot_unknown_links.py existing_gifs_ok=20`，`n_gifs_missing=0`
+  - 用 `plot_unknown_links.py --linkage-id` 只补 `20251221` 缺失的 `8` 张 GIF
+  - 重打 `20251221` review package，确认 `n_gifs_copied=38`, `n_gifs_missing=0`
+  - 启动严格 mask-only run：`remask_unknown_with_known.py 20251222 20260617 --skip-plots --require-existing-gifs`
+- key_findings:
+  - 本次 remask 不应生成新增 unknown link；已完成日志中 `assigned_new=0`
+  - 之前脚本默认删除 `plots/<night>/unknown_link_*_<night>.gif` 后重画，这是为清 stale artifact 做的过度保守逻辑，不适合本轮 mask-only
+  - 已改为默认只清 `review_packages/<night>`，保留源 GIF；只有缺当前 link 的源 GIF 时才补图
+  - 新增 `--skip-plots --require-existing-gifs` 严格模式，缺源 GIF 时不打不完整 review package
+  - `plot_unknown_links.py` 新增可重复的 `--linkage-id`，用于只补指定 link 的 GIF
+  - `20251221` 曾被旧残留 `plot_unknown_links.py` 清图后部分重画；已只补缺失 linkage_id `186,188,226,235,278,291,292,294`
+  - 严格 mask-only run 已完成，状态表 `119` 行：`done=91`, `skip=28`, `error=0`
+  - done 夜 unknown link 合计 `3379`
+  - 所有 done 夜均 `assigned_new=0` 且 `n_gifs_missing=0`
+  - `20260103` 在最终 mask 下为 `unknown_count=1`
+  - high-unknown skip：`20251226=366`, `20260111=378`, `20260528=926`, `20260611=653`
+  - missing-input skip：`20260203`, `20260209`, `20260214`, `20260221`, `20260307`, `20260312`, `20260314`, `20260402`, `20260408`, `20260414`, `20260415`, `20260417`, `20260418`, `20260421`, `20260505`, `20260510`, `20260513`, `20260514`, `20260515`, `20260531`, `20260602`, `20260605`, `20260612`, `20260617`
+- validation:
+  - 本地和服务器 Python 语法检查通过
+  - `20251220` smoke run 未重画 GIF，复制 `20/20`，`n_gifs_missing=0`
+  - `20251221` package 复制 `38/38` GIF，`n_gifs_missing=0`
+  - 严格 mask-only run 中未出现 `plot_unknown_links.py` 子进程；只运行 summary/package
+  - 最终 status TSV 无 `error` 行，无 `assigned_new != 0`，无 `n_gifs_missing != 0`
+- remaining_issues:
+  - high-unknown skip 夜 `20251226`, `20260111`, `20260528`, `20260611` 需要单独复盘
+  - missing-input skip 夜需确认是否本来无 MP 输入/无 unknown 输入，还是需要补跑上游
+- next_step:
+  - 以 `done=91` 的 review package 作为新一轮人工 check 输入
+  - 对 skip 夜按 high-unknown 和 missing-input 两类分别复盘
+
 ## 2026-06-19
 
 - task: 停用批量 driver，修复 finalize 不覆盖旧夜级 FITS，并改为逐夜手动推进
