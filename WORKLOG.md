@@ -20,28 +20,30 @@
   - 自动 smoke 完整跑通 `20260620`：known report 写出后自动进入 unknown，生成 `19` 条 unknown link、`19` 张 GIF、review package 和该夜 submit watcher
   - 生成的 review package：`/pipeline/xiaoyunao/heliolincrr/review_packages/20260620/20260620_unknown_review_manifest.json`，`n_catalog_rows=19`, `n_gifs_copied=19`, `n_gifs_missing=0`
   - 网页随后生成 `20260620_submit.csv`；19 条均为 `is_real=0`，单夜 watcher 自动写出 submit masked/ADES/stats，并以 `no_observations` 完成，未向 MPC 提交 unknown obsData
-  - 历史补报 watcher 当前 `complete=58`, `pending=63`, `failed=1`；失败夜 `20260114` 是 `20260114_submit.csv` 中 `00000Dc` 的 `is_real` 为空
-  - `watch_submit_reviews.py` 已改为对 `blank/missing/unknown is_real` 等确定性输入错误不再重复 retry；CSV 或 review package mtime/size 变化后仍会重新处理
+  - 历史补报 watcher 曾出现 `20260114` 失败，原因是 `20260114_submit.csv` 中 `00000Dc` 的 `is_real` 为空
+  - 已删除坏的 `20260114_submit.csv` 并清掉该夜 failed state；网页随后重新生成完整 submit CSV，62 条全为 `0`，watcher 自动处理为 `no_observations`
+  - `watch_submit_reviews.py` 已改为对 `blank/missing/unknown is_real` 等确定性输入错误自动删除对应 `<night>_submit.csv`，状态回到 pending；CSV 或 review package mtime/size 变化后仍会重新处理
+  - 历史补报 watcher 当前 `complete=59`, `pending=63`, `failed=0`
   - 当前 crontab 只有总入口和 reboot recovery；旧 survey/known cron 已移除，避免重复跑和不同入口状态不一致
 - validation:
   - 本地 `bash -n heliolincrr/run_daily_pipeline.sh` 通过
   - 服务器 `bash -n /pipeline/xiaoyunao/heliolincrr/run_daily_pipeline.sh` 通过
   - 服务器 `py_compile /pipeline/xiaoyunao/known_asteroid/export_ades.py` 通过
   - 本地和服务器 `py_compile heliolincrr/watch_submit_reviews.py` 通过
+  - 本地 smoke 验证 `blank is_real values` 失败会触发 submit CSV 删除并标记 `invalid_submit_removed`
   - 自动 smoke 日志显示 `[2026-06-21 11:53:31 CST] daily pipeline done`
   - `review_submit_state.json` 显示 `20260620` 为 `no_observations`，summary `complete=1`, `failed=0`, `pending=0`
-  - 历史 watcher 新 PID `2604798`，日志最后为 idle，未继续刷同一个 `20260114` 空标签失败
+  - 历史 watcher 新 PID `2605614`，state summary 为 `complete=59`, `pending=63`, `failed=0`
   - crontab 已确认：
     - `0 9 * * * cd /pipeline/xiaoyunao && /bin/bash /pipeline/xiaoyunao/heliolincrr/run_daily_pipeline.sh >> /pipeline/xiaoyunao/data/heliolincrr/daily_logs/cron_daily_pipeline.log 2>&1`
     - `@reboot sleep 600 && cd /pipeline/xiaoyunao && /bin/bash /pipeline/xiaoyunao/heliolincrr/run_daily_pipeline.sh >> /pipeline/xiaoyunao/data/heliolincrr/daily_logs/reboot_recovery_daily_pipeline.log 2>&1`
 - remaining_issues:
   - `20260620` unknown 网页 check 已全假完成，不需要上报 unknown
   - `20260620` known 已正式生成 ADES/reply；需按 MPC reply 内容后续确认是否 accepted
-  - `20260114_submit.csv` 需要网页补齐 `00000Dc` 的 `is_real` 后才会重新自动处理
   - 历史补报 watcher 仍在等待剩余人工 check submit CSV
 - next_step:
   - 明早检查 `/pipeline/xiaoyunao/data/heliolincrr/daily_logs/cron_daily_pipeline.log` 和对应 daily log，确认 09:00 cron 自然触发
-  - 补齐 `20260114` 空标签后观察历史 watcher 是否自动从 failed 转为 submitted/no_observations
+  - 继续让网页生成剩余 pending 夜的 submit CSV；遇到不完整 submit 时 watcher 会删除并等待重生
 
 ## 2026-06-20
 

@@ -12,6 +12,7 @@ from typing import Any
 
 
 DONE_STATUSES = {"exported", "validated", "submitted", "no_observations", "dry_run"}
+PENDING_STATUSES = {"invalid_submit_removed"}
 NON_RETRYABLE_FAILURE_PATTERNS = (
     "blank is_real values",
     "missing is_real values",
@@ -131,6 +132,8 @@ def already_done(
     status = str(record.get("status") or "")
     if status in DONE_STATUSES:
         return True
+    if status in PENDING_STATUSES:
+        return False
     if status == "failed" and not failure_is_retryable(record):
         return True
     if status == "failed" and not allow_retry_failed:
@@ -183,6 +186,18 @@ def run_one(args: argparse.Namespace, night: str, submit_csv: Path) -> dict[str,
         "stdout_tail": proc.stdout[-4000:],
         "stderr_tail": proc.stderr[-4000:],
     }
+
+
+def remove_invalid_submit_if_needed(result: dict[str, Any], submit_csv: Path) -> None:
+    if result.get("status") != "failed" or failure_is_retryable(result):
+        return
+    try:
+        submit_csv.unlink()
+    except FileNotFoundError:
+        pass
+    result["status"] = "invalid_submit_removed"
+    result["removed_submit_csv"] = str(submit_csv)
+    result["reason"] = "invalid submit CSV removed; waiting for regenerated complete submit CSV"
 
 
 def mark_empty_package(
@@ -295,6 +310,7 @@ def scan_once(args: argparse.Namespace, state: dict[str, Any]) -> int:
         if already_done(record, signature, manifest_signature, args.retry_failed):
             continue
         result = run_one(args, night, submit_csv)
+        remove_invalid_submit_if_needed(result, submit_csv)
         result.update(
             {
                 "night": night,

@@ -27,13 +27,14 @@
   - 网页已生成 `20260620_submit.csv`；19 条均为 `is_real=0`
   - 单夜 watcher 已自动写出 submit masked/ADES/stats，并以 `no_observations` 完成，未向 MPC 提交 unknown obsData
 - 历史补报 watcher 仍在后台运行：
-  - PID `2604798`
+  - PID `2605614`
   - state `/pipeline/xiaoyunao/data/heliolincrr/review_submit_backlog_20251116_20260617.json`
-  - 当前 summary：`complete=58`, `pending=63`, `failed=1`
-  - failed 夜 `20260114` 是 submit CSV 中 `00000Dc` 的 `is_real` 为空；网页修正并重写 CSV 后会自动重新处理
+  - 当前 summary：`complete=59`, `pending=63`, `failed=0`
+  - `20260114` 的坏 submit CSV 已删除；网页随后重写了完整全假 submit，watcher 已处理为 `no_observations`
   - 不应与 daily 新夜 watcher 冲突，因为 state 文件和 night range 不同
-- `watch_submit_reviews.py` 已避免对未变化的确定性坏输入反复 retry：
-  - `blank/missing/unknown is_real`、重复 key 等错误不会每 5 分钟重复上报失败
+- `watch_submit_reviews.py` 已避免对确定性坏输入反复 retry：
+  - `blank/missing/unknown is_real`、重复 key 等错误会自动删除对应 `<night>_submit.csv`
+  - 该夜回到 pending，等网页重新生成完整 submit CSV
   - submit CSV 或 review package mtime/size 变化后仍会重新处理
 
 2026-06-20 状态：
@@ -254,8 +255,8 @@ PPT 素材旁支已完成一批图件，统一在服务器
 ## Next recommended steps
 
 1. 明早检查 `cron_daily_pipeline.log`、`<run_date>_daily_pipeline.log` 和 `<run_date>_unknown_daily.log`，确认 09:00 cron 自然触发且不是人工 smoke
-2. 补齐 `20260114_submit.csv` 中 `00000Dc` 的空 `is_real` 后，确认历史 watcher 自动从 failed 转为 submitted/no_observations
-3. 继续让历史补报 watcher 等待 `20251116..20260617` 剩余 submit CSV，阶段性检查 `complete/pending/failed`
+2. 继续让历史补报 watcher 等待 `20251116..20260617` 剩余 submit CSV，阶段性检查 `complete/pending/failed`
+3. 遇到网页生成的不完整 submit CSV，确认 watcher 删除该文件并让该夜回到 pending
 4. 抽查修复后 `20260102/20260103` 中 JPL 命中的已知小行星是否从 unknown 中消失
 5. 以修复后产物继续网页筛选；旧 submit CSV 只能作为人工判断参考，不能直接上报
 6. 对已完成 submit CSV 的夜次用 watcher/`submit_reviewed_unknown.py` 生成筛选后 PSV 并正式 submit；异常时先看 validate/submit reply
