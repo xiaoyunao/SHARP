@@ -155,6 +155,13 @@ main() {
   fi
   if [[ "${FORCE_UNKNOWN}" != "1" && -s "${unknown_json}" && -s "${review_manifest}" ]]; then
     log "[SKIP] unknown review package already exists: ${review_manifest}"
+    local n_unknown
+    n_unknown="$(review_unknown_count "${review_manifest}")"
+    if [[ "${START_SUBMIT_WATCHER}" == "1" && "${n_unknown}" -gt 0 ]]; then
+      start_submit_watcher "${TARGET_NIGHT}"
+    else
+      log "[INFO] submit watcher not started for ${TARGET_NIGHT}: START_SUBMIT_WATCHER=${START_SUBMIT_WATCHER} unknown_count=${n_unknown}"
+    fi
     return 0
   fi
   if ! wait_for_known "${TARGET_NIGHT}"; then

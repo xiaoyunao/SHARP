@@ -1,5 +1,120 @@
 # WORKLOG
 
+## 2026-06-22
+
+- task: 检查断电后 daily/review watcher 恢复状态
+- files_changed: `heliolincrr/run_daily_unknown.sh`, `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 服务器检查 `date`, `uptime`, `last -x reboot`, `crontab -l`
+  - 读取 `/pipeline/xiaoyunao/data/heliolincrr/review_submit_backlog_20251116_20260617.json`
+  - 检查 `/pipeline/xiaoyunao/data/heliolincrr/daily_logs/20260622_daily_pipeline.log` 和 `reboot_recovery_daily_pipeline.log`
+  - 检查 `/processed1/20260621`、`/pipeline/xiaoyunao/survey/logs/20260622.log` 和 `20260622_plan`
+  - 重启历史补报 watcher：`run_review_submit_backlog_watch.sh 20251116 20260617`
+  - 部署更新后的 `run_daily_unknown.sh`，对已有 package 夜 `20260620` 做恢复 smoke
+  - 更新服务器 crontab，新增历史补报 watcher 的 `@reboot`
+- key_findings:
+  - 服务器 `2026-06-22 10:20 CST` 重启；`09:00` cron 因关机错过
+  - `@reboot` daily pipeline 在 `2026-06-22 10:31 CST` 自动补跑，符合设计
+  - daily pipeline 生成当天观测脚本 `20260622_plan`，`n_exp=282`
+  - 昨晚目标夜 `20260621` 无 `/processed1/20260621`，known/unknown 均因 missing night dir 正常 skip
+  - recovery 回看 `20260615..20260621`：缺数据夜 skip，`20260617/20260620` 已有 report/review package 幂等 skip
+  - 历史补报 watcher 进程在重启后丢失；它不在 crontab `@reboot` 中，已手动重启
+  - 重启后 watcher 处理了新出现的 submit CSV，状态从 `complete=62,pending=60` 更新为 `complete=68,pending=54,failed=0`
+  - 当前历史补报状态：`review_packages=122`, `submitted=14`, `no_observations=54`, `pending=54`, `failed=0`
+  - 当前 submit CSV 共 `62` 个，`2794` 行，其中 `is_real=1` 为 `22`、`is_real=0` 为 `2772`，无 blank/invalid
+  - `run_daily_unknown.sh` 原先在已有 review package 时直接 return，不会重启该夜 submit watcher；已改为已有正 unknown package 时仍确保 watcher 启动
+  - 服务器 crontab 已新增：`@reboot sleep 900 && ... run_review_submit_backlog_watch.sh 20251116 20260617`
+- validation:
+  - 本地和服务器 `bash -n heliolincrr/run_daily_unknown.sh` 通过
+  - 服务器 `TARGET_NIGHT=20260620 START_SUBMIT_WATCHER=1 ./run_daily_unknown.sh 2026-06-21` 未重跑 unknown，只对已有 review package 启动 submit watcher
+  - 当前历史 watcher PID `201618` 正在运行
+  - `20260622_daily_pipeline.log` 显示 `[2026-06-22 10:31:41 CST] daily pipeline done`
+- remaining_issues:
+  - 服务器在 `09:00` 关机时只能依赖 `@reboot` 补跑；今天补跑时间为 `10:31`
+  - 历史补报仍有 `54` 个 pending review package 等待网页 submit CSV
+- next_step:
+  - 下次重启后确认 `reboot_review_submit_backlog.log` 中历史 watcher 自动启动
+  - 继续检查 pending submit CSV 出现后 watcher 是否自动上报或记录 no_observations
+
+- task: 按 DESI MWBP 参考 deck 风格重调中文 PPT
+- files_changed: `/Users/yunaoxiao/Desktop/smt_asteroid_project_status_cn.pptx`, `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 查看参考页 `/Users/yunaoxiao/Desktop/desi_mwbp_et.pptx` 的预览风格
+  - 将中文页改为灰色标题带、左对齐白字标题、扁平白底细线框
+  - 去除中文页卡片阴影和圆角，调整中文字体层级
+  - 渲染中文 PNG 预览并检查布局
+  - `unzip -l /Users/yunaoxiao/Desktop/smt_asteroid_project_status_cn.pptx`
+- key_findings:
+  - 参考 deck 更接近学术汇报页面：顶部深灰标题带、白底主体、图片/文本直接铺排，少卡片化 UI
+- validation:
+  - 中文预览无明显遮挡或溢出
+  - PPTX 包内仍包含两张 GIF
+  - known/unknown GIF 均保持 `3` 帧、总时长 `3000 ms`
+- remaining_issues:
+  - 未在 PowerPoint app 内做实际播放测试
+- next_step:
+  - 用户审阅新版中文视觉风格
+
+- task: 生成项目状态 PPT 中文版本
+- files_changed: `/Users/yunaoxiao/Desktop/smt_asteroid_project_status_cn.pptx`, `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 基于英文版 artifact-tool 脚本生成中文文本版本
+  - 渲染中文 PNG 预览并检查布局
+  - `unzip -l /Users/yunaoxiao/Desktop/smt_asteroid_project_status_cn.pptx`
+  - 检查 known/unknown GIF 帧时序
+- key_findings:
+  - 中文版本保留英文版布局、右侧 GIF 和统计数字
+  - known/unknown GIF 均为 `3` 帧、总时长 `3000 ms`、duration `[600, 600, 1800]`
+- validation:
+  - 中文预览无明显遮挡或溢出
+  - PPTX 包内包含 `ppt/media/image.gif` 和 `ppt/media/image2.gif`
+- remaining_issues:
+  - 未在 PowerPoint app 内做实际播放测试
+- next_step:
+  - 如需正式汇报，可打开中文 PPTX 检查中文字体替换和 GIF 播放效果
+
+- task: 修订桌面项目状态 PPT 的 GIF 时序和文字
+- files_changed: `/Users/yunaoxiao/Desktop/smt_asteroid_project_status.pptx`, `/Users/yunaoxiao/Desktop/top03_Bakhchisaraj_20260528.gif`, `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 检查桌面 PPTX 包内 `ppt/media/image1.GIF` 和 `image2.GIF`
+  - 用 PIL 检查 known/unknown GIF 帧数和 duration
+  - 将 `top03_Bakhchisaraj_20260528.gif` 改为 3 帧、`600/600/1800 ms`，与 unknown GIF 一致
+  - artifact-tool 重新生成 `/Users/yunaoxiao/Desktop/smt_asteroid_project_status.pptx`
+  - 渲染 PNG 预览并检查版式
+- key_findings:
+  - 桌面 known GIF 原始为 `19` 帧且每帧 duration 为 `0 ms`，导致 PowerPoint 中播放/速度异常
+  - unknown GIF 为 `3` 帧、总时长 `3000 ms`
+- validation:
+  - 修改后 known 和 unknown GIF 均为 `3` 帧、总时长 `3000 ms`、duration `[600, 600, 1800]`
+  - PPTX 包内仍包含两张 GIF
+  - 预览确认 known caption 已改为 `Bakhchisaraj`，模块底部文字恢复上一版
+- remaining_issues:
+  - 未在 PowerPoint app 内做实际播放测试
+- next_step:
+  - 在 PowerPoint 中打开桌面 PPTX，确认 GIF 自动播放效果
+
+- task: 生成项目状态单页英文 PPT
+- files_changed: `outputs/smt_asteroid_project_status.pptx`, `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - inspect 参考 deck `/Users/yunaoxiao/Desktop/desi_mwbp_et.pptx`
+  - 从服务器下载 known GIF：`/pipeline/xiaoyunao/known_asteroid/plots/20260529/top01_2000_GK1_20260529.gif`
+  - 使用本地 checked unknown GIF：`/Users/yunaoxiao/Desktop/true_unknown_20251116_20251231/gifs/20251208_00000cR_link1115_20251208.gif`
+  - 服务器统计 known ADES/FITS 和 reviewed unknown watcher state
+  - artifact-tool 生成并渲染 `outputs/smt_asteroid_project_status.pptx`
+  - `unzip -l outputs/smt_asteroid_project_status.pptx`
+- key_findings:
+  - 参考 PPT 为白底、顶部居中标题、少量大块图文的汇报风格；流程图截图只适合作为逻辑关系参考
+  - 服务器 known daily GIF 位于 `/pipeline/xiaoyunao/known_asteroid/plots/<night>/`
+  - 当前统计口径：known ADES `354237` 次探测、FITS 去重 `58224` 个已知小行星对象；reviewed unknown watcher state 中正式 submitted unknown links 为 `22`
+- validation:
+  - 已渲染 PNG 预览并人工检查版式
+  - PPTX 包内包含 `ppt/media/image.gif` 和 `ppt/media/image2.gif`
+- remaining_issues:
+  - 未做 PowerPoint 内播放测试；GIF 已嵌入 PPTX
+  - 统计数字来自当前服务器产物快照，后续 daily/review watcher 继续运行后需要刷新
+- next_step:
+  - 用户审阅单页内容和措辞后再微调标题或示例 GIF
+
 ## 2026-06-21
 
 - task: 排查 09:00 自动任务只跑 survey、未进入 unknown，并改为总入口 cron

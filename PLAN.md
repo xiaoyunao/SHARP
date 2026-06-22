@@ -2,6 +2,53 @@
 
 ## Current objective
 
+2026-06-22 断电恢复检查：
+
+- 服务器 `2026-06-22 10:20 CST` 重启，说明 `09:00` cron 当时错过
+- `@reboot` daily pipeline 已在 `2026-06-22 10:31 CST` 自动补跑完成
+- 今日观测脚本正常生成：
+  - `/pipeline/xiaoyunao/survey/runtime/plans/20260622_plan.json`
+  - `/pipeline/xiaoyunao/survey/runtime/plans/20260622_plan.txt`
+  - `n_exp=282`
+- 昨晚目标夜 `20260621` 没观测：
+  - `/processed1/20260621` 不存在
+  - known/unknown 均因 missing night dir 正常 skip
+- recovery 回看 `20260615..20260621`：
+  - `20260615/16/18/19/21` 缺 processed night dir，正常 skip
+  - `20260617/20260620` 已有 known report 和 unknown review package，幂等 skip
+- 历史补报 watcher 在断电后未自动恢复，已手动重启并加入 `@reboot`：
+  - 当前 PID `201618`
+  - crontab 新增 `@reboot sleep 900 && ... run_review_submit_backlog_watch.sh 20251116 20260617`
+- `run_daily_unknown.sh` 已修复已有 review package 的恢复场景：
+  - 已有正 unknown package 时不重跑 unknown
+  - 会确保该夜 submit watcher 被启动
+  - zero unknown package 不挂 watcher
+- 当前 `20251116..20260617` reviewed unknown 补报进度：
+  - `review_packages=122`
+  - `complete=68`
+  - `submitted=14`
+  - `no_observations=54`
+  - `pending=54`
+  - `failed=0`
+  - submit CSV 共 `62` 个，`2794` 行，`is_real=1` 为 `22`、`is_real=0` 为 `2772`，无空标签/非法值
+
+2026-06-22 补充：
+
+- 已生成项目状态英文单页 PPT：
+  - `/Users/yunaoxiao/Desktop/smt_asteroid/outputs/smt_asteroid_project_status.pptx`
+  - 桌面副本已修订：`/Users/yunaoxiao/Desktop/smt_asteroid_project_status.pptx`
+  - 中文版本已按 DESI MWBP 参考 deck 风格重调：`/Users/yunaoxiao/Desktop/smt_asteroid_project_status_cn.pptx`
+  - 版式参考 `/Users/yunaoxiao/Desktop/desi_mwbp_et.pptx` 的白底学术汇报风格
+  - 内容概括 nightly scheduler、raw images、collaborator preprocessing/calibration/photometry、L1/L2 catalogs、known-object extraction/reporting、unknown search/review
+  - 右侧放大嵌入服务器 known asteroid GIF 和本地 checked unknown candidate GIF
+  - 底部状态采用高层统计：`354237` 次 known asteroid detections、`58224` 个 known objects、`22` 条 submitted reviewed unknown links
+  - 桌面 known GIF 已替换为 `top03_Bakhchisaraj_20260528.gif`，并改为与 unknown GIF 一致的 `3` 帧、`3000 ms` 总时长
+  - known/unknown 两个模块底部说明框已恢复上一版文字
+- 若继续改 PPT，优先微调：
+  - 标题和状态句措辞
+  - 右侧示例 GIF 选择
+  - 统计数字需按服务器最新产物刷新
+
 2026-06-21 最新状态：
 
 - Daily automation 已切到服务器 crontab：
