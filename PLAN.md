@@ -2,6 +2,29 @@
 
 ## Current objective
 
+2026-06-23 断电恢复检查：
+
+- 服务器 `2026-06-23 12:28 CST` 重启；上午断电属实
+- `2026-06-23 09:00 CST` cron daily pipeline 在断电前正常跑完
+- `2026-06-23 12:38 CST` `@reboot` daily pipeline 自动补跑完成
+- `20260623` 观测脚本正常生成并发布，`n_exp=285`
+- 昨晚目标夜 `20260622` 没有 processed data：
+  - `/processed1/20260622` 不存在
+  - known/unknown 均因 missing night dir 正常 skip
+- 历史补报 watcher 已由 `@reboot` 自动恢复：
+  - 当前 PID `12242`
+  - 当前只有一个 watcher 进程，无重复运行
+- 当前 `20251116..20260617` reviewed unknown 补报进度：
+  - `review_packages=122`
+  - `complete=76`
+  - `submitted=19`
+  - `no_observations=57`
+  - `pending=46`
+  - `failed=0`
+  - submit CSV 共 `70` 个、`3138` 行
+  - `is_real=1` 为 `35`，`is_real=0` 为 `3103`
+  - 无空标签/非法值
+
 2026-06-22 断电恢复检查：
 
 - 服务器 `2026-06-22 10:20 CST` 重启，说明 `09:00` cron 当时错过

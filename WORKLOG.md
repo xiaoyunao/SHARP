@@ -1,5 +1,38 @@
 # WORKLOG
 
+## 2026-06-23
+
+- task: 检查上午断电后 reviewed unknown 补报和 daily pipeline 状态
+- files_changed: `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 服务器检查 `date`, `uptime`, `last -x reboot -n 8`, `crontab -l`
+  - 读取 `/pipeline/xiaoyunao/data/heliolincrr/review_submit_backlog_20251116_20260617.json`
+  - 检查 `/pipeline/xiaoyunao/data/heliolincrr/daily_logs/20260623_daily_pipeline.log`
+  - 检查 `cron_daily_pipeline.log`, `reboot_recovery_daily_pipeline.log`, `reboot_review_submit_backlog.log`
+  - 检查 `/processed1/20260622` 和 `20260623_plan`
+  - 扫描 `20251116..20260617` submit CSV 的 blank/invalid `is_real`
+- key_findings:
+  - 服务器 `2026-06-23 12:28 CST` 重启；上午断电确实发生
+  - `2026-06-23 09:00 CST` cron daily pipeline 在断电前正常跑完
+  - `2026-06-23 12:38 CST` `@reboot` daily pipeline 又自动补跑并完成
+  - `20260623` 观测脚本已生成并发布，`n_exp=285`
+  - 昨晚目标夜 `20260622` 无 `/processed1/20260622`，known/unknown 因 missing night dir 正常 skip
+  - 历史补报 watcher 已由 `@reboot` 自动恢复；当前 PID `12242`
+  - `reboot_review_submit_backlog.log` 记录两次启动尝试，但当前只有一个 watcher 进程，无重复运行
+  - 当前补报 state：`review_packages=122`, `complete=76`, `pending=46`, `failed=0`
+  - 状态细分：`submitted=19`, `no_observations=57`
+  - submit CSV 共 `70` 个、`3138` 行，`is_real=1` 为 `35`，`is_real=0` 为 `3103`，无 blank/invalid
+- validation:
+  - `20260623_daily_pipeline.log` 中 09:00 和 12:38 两次 run 均显示 `daily pipeline done`
+  - 当前 `watch_submit_reviews.py` 历史补报进程仍在运行
+  - state 更新时间为 `2026-06-23T08:23:53+00:00`
+- remaining_issues:
+  - 剩余 `46` 个 pending review package 等待网页 submit CSV
+  - 服务器反复断电会导致 daily pipeline 重复跑当天 survey plan，但当前行为是幂等且可接受
+- next_step:
+  - 继续观察 pending submit CSV 出现后的 watcher 自动处理
+  - 如后续担心重复生成 survey plan，可给 daily pipeline 增加同日 reboot skip 条件；当前不需要
+
 ## 2026-06-22
 
 - task: 检查断电后 daily/review watcher 恢复状态
