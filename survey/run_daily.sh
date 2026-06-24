@@ -8,6 +8,12 @@ FOOTPRINTS="${FOOTPRINTS:-$PACKAGE_DIR/footprints/survey_fov_footprints_with_vis
 PROCESSED_ROOT="${PROCESSED_ROOT:-/processed1}"
 PUBLISH_DIR="${PUBLISH_DIR:-/pipeline/xiaoyunao/script}"
 LOG_DIR="${LOG_DIR:-$PACKAGE_DIR/logs}"
+ENABLE_FOLLOWUP="${ENABLE_FOLLOWUP:-1}"
+FOLLOWUP_START_NIGHT="${FOLLOWUP_START_NIGHT:-20260624}"
+FOLLOWUP_STATE="${FOLLOWUP_STATE:-$WORKSPACE/followup/followup_state.json}"
+FOLLOWUP_REVIEW_ROOT="${FOLLOWUP_REVIEW_ROOT:-/pipeline/xiaoyunao/heliolincrr/review_packages}"
+FOLLOWUP_MAX_AGE_DAYS="${FOLLOWUP_MAX_AGE_DAYS:-10}"
+FOLLOWUP_OBS_PER_NIGHT="${FOLLOWUP_OBS_PER_NIGHT:-5}"
 mkdir -p "$LOG_DIR"
 
 RUN_DATE="${1:-$(TZ=Asia/Shanghai date +%F)}"
@@ -38,6 +44,9 @@ log "workspace=$WORKSPACE"
 log "footprints=$FOOTPRINTS"
 log "processed_root=$PROCESSED_ROOT"
 log "publish_dir=${PUBLISH_DIR:-<empty>}"
+log "enable_followup=$ENABLE_FOLLOWUP"
+log "followup_state=$FOLLOWUP_STATE"
+log "followup_start_night=$FOLLOWUP_START_NIGHT"
 log "python_bin=$PYTHON_BIN"
 log "run_date=$RUN_DATE"
 
@@ -51,3 +60,20 @@ PYTHONPATH="$PYTHON_ROOT${PYTHONPATH:+:$PYTHONPATH}" "$PYTHON_BIN" -m survey.run
   --footprints "$FOOTPRINTS" \
   --processed-root "$PROCESSED_ROOT" \
   --publish-dir "$PUBLISH_DIR"
+
+if [[ "$ENABLE_FOLLOWUP" == "1" ]]; then
+  section "follow-up injection"
+  if ! PYTHONPATH="$PYTHON_ROOT${PYTHONPATH:+:$PYTHONPATH}" "$PYTHON_BIN" -m survey.apply_followup \
+    --date "$RUN_DATE" \
+    --workspace "$WORKSPACE" \
+    --footprints "$FOOTPRINTS" \
+    --processed-root "$PROCESSED_ROOT" \
+    --review-root "$FOLLOWUP_REVIEW_ROOT" \
+    --publish-dir "$PUBLISH_DIR" \
+    --state "$FOLLOWUP_STATE" \
+    --start-night "$FOLLOWUP_START_NIGHT" \
+    --max-age-days "$FOLLOWUP_MAX_AGE_DAYS" \
+    --obs-per-night "$FOLLOWUP_OBS_PER_NIGHT"; then
+    log "[WARN] follow-up injection failed; base survey plan remains available"
+  fi
+fi

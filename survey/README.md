@@ -22,6 +22,13 @@
 - 如果设置了共享目录，还会额外复制：
   - `YYYYMMDD_plan.txt`
   - `current_plan.txt`
+- `run_daily.sh` 默认会在基础巡天列表生成后调用 `survey.apply_followup`：
+  - 只 ingest `FOLLOWUP_START_NIGHT` 及之后的 reviewed true unknown 源，默认 `20260624`
+  - follow-up 目标写入 `MP_FU_<trkSub>_<field_id>`，仍会被后续 known/unknown 链条作为 MP 数据处理
+  - 每个 active 源每晚插入 5 帧，满 2 个实际观测夜后完成
+  - 若实际 L2 文件少于 5 帧，该夜记为 failed，后续继续排
+  - 若从发现夜起满 10 天仍未完成，标记 abandoned
+  - 插入失败时基础巡天列表保持可用，并在日志中写 WARN
 
 ## 输出
 
@@ -29,6 +36,7 @@
 - `workspace/plans/YYYYMMDD_plan.txt`
 - `workspace/history/exposure_history.fits`
 - `workspace/history/l2_ingest_state.json`
+- `workspace/followup/followup_state.json`
 - `survey/logs/YYYYMMDD.log`
 - `survey/plots/YYYYMMDD/`
   - `YYYYMMDD_cycle01.png`, `YYYYMMDD_cycle02.png`, ...
@@ -52,6 +60,21 @@ python -m survey.run_daily \
 
 ```bash
 /bin/bash /pipeline/xiaoyunao/survey/run_daily.sh 2026-02-20
+```
+
+仅重跑 follow-up 插入：
+
+```bash
+PYTHONPATH=/pipeline/xiaoyunao \
+/home/smtpipeline/Softwares/miniconda3/bin/python -m survey.apply_followup \
+  --date 2026-06-25 \
+  --workspace /pipeline/xiaoyunao/survey/runtime \
+  --footprints /pipeline/xiaoyunao/survey/footprints/survey_fov_footprints_with_visibility.fits \
+  --processed-root /processed1 \
+  --review-root /pipeline/xiaoyunao/heliolincrr/review_packages \
+  --publish-dir /pipeline/xiaoyunao/script \
+  --state /pipeline/xiaoyunao/survey/runtime/followup/followup_state.json \
+  --start-night 20260624
 ```
 
 ## 定时运行

@@ -2,6 +2,38 @@
 
 ## Current objective
 
+2026-06-24 follow-up 调度入口已完成并部署：
+
+- 新增 `survey.followup` 状态机和 `survey.apply_followup` 插入器
+- follow-up 只处理 `20260624` 及之后新完成网页 check 的 true unknown 源，不回追历史 backlog
+- 状态文件：
+  - `/pipeline/xiaoyunao/survey/runtime/followup/followup_state.json`
+- 调度规则：
+  - 每个源需要两个实际满 `5` 帧的 follow-up 夜
+  - 少于 `5` 帧的夜记为 failed，后续继续排
+  - 从发现夜起满 `10` 天仍未完成则 abandoned
+  - 目标名为 `MP_FU_<trkSub>_MP####`，既区别于普通 MP，又能进入 known/unknown 链条和历史曝光统计
+  - 预测位置用当前 link detections 的线性 RA/Dec 模型；选择已有 footprint 中覆盖预测位置且中心距最近的 field
+- 自动入口：
+  - `survey/run_daily.sh` 生成基础计划后默认调用 `survey.apply_followup`
+  - `heliolincrr/run_daily_unknown.sh` 在 unknown link 生成或已有 package skip 时调用 `associate_followup_links.py`
+  - 单夜 `watch_submit_reviews.py` 由 daily unknown 启动时带 `--enable-followup`，网页 submit 处理完成后立即更新 follow-up 状态和当天 `current_plan.txt`
+- 已部署到服务器：
+  - `/pipeline/xiaoyunao/survey/followup.py`
+  - `/pipeline/xiaoyunao/survey/apply_followup.py`
+  - `/pipeline/xiaoyunao/survey/run_daily.sh`
+  - `/pipeline/xiaoyunao/heliolincrr/associate_followup_links.py`
+  - `/pipeline/xiaoyunao/heliolincrr/watch_submit_reviews.py`
+  - `/pipeline/xiaoyunao/heliolincrr/run_daily_unknown.sh`
+- 验证：
+  - 本地和服务器 `py_compile`/`bash -n` 通过
+  - 本地 smoke 合成 true link 后插入 `5` 条 `MP_FU_...` 行
+  - 本地 smoke 合成 unknown link 后 `associate_followup_links.py` 返回 `matches=1`
+  - 服务器真实计划 dry-run：`active_sources=0`, `inserted_rows=0`，未改写生产计划
+- 待验证：
+  - 等 `20260624` 之后第一条网页 submit true 源出现后，检查 `followup_state.json` 和 `current_plan.txt`
+  - 第二天检查 L2 中 `MP_FU_...` 文件数是否触发 success/failed reconcile
+
 2026-06-24 reviewed unknown 补报完成：
 
 - `20251116..20260617` 历史 reviewed unknown 补报已经全部完成

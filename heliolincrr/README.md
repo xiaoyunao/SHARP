@@ -169,6 +169,11 @@ tracklet_id,is_real
 2. 按 `RECOVERY_LOOKBACK_DAYS` 回看实际存在数据的夜次，调用 `/pipeline/xiaoyunao/known_asteroid/run_daily.sh`
 3. 对同一批夜次调用 `/pipeline/xiaoyunao/heliolincrr/run_daily_unknown.sh`，等待 known 的 1.5 角秒 mask ready 后生成 unknown check 包
 
+`survey/run_daily.sh` 生成基础观测表后，会默认调用 follow-up 插入器。它只读取
+`20260624` 及之后新完成 check 的 true unknown 源，把目标以
+`MP_FU_<trkSub>_<field_id>` 的形式插入当晚观测表，并重新发布 `current_plan.txt`。
+每个源要求两个实际满 5 帧的夜；未满 5 帧会继续往后排，超过 10 天自动放弃。
+
 `run_daily_unknown.sh` 默认要求 `/processed1/<night>/L4/<night>_matched_asteroids_mask15.fits`。
 如果 known 已完成但 1.5 角秒内没有任何 matched detection，则依赖
 `<night>_known_asteroid_status.json` 明确记录 empty mask 后继续。
@@ -179,6 +184,10 @@ survey 只针对当前 `RUN_DATE`。known/unknown 数据处理会按回看窗口
 `run_daily_unknown.sh` 只有在 check 包已经生成且 manifest 中 `n_catalog_rows > 0`
 时，才为该夜启动 `watch_submit_reviews.py`。unknown 为 `0` 的夜只保留空 check 包，
 不挂 submit watcher。
+
+`run_daily_unknown.sh` 还会在 unknown link 生成后调用
+`associate_followup_links.py`，把新 link 与 active follow-up 源按预测位置匹配；匹配上后会把
+新检测加入 follow-up 状态，用于后续夜的预测。
 
 建议 cron：
 
@@ -225,6 +234,11 @@ survey 只针对当前 `RUN_DATE`。known/unknown 数据处理会按回看窗口
 watcher 只处理已有 `*_unknown_review_manifest.json` 的夜次；zero unknown check 包会直接记为
 `no_observations`。有 unknown 但 submit CSV 全为 `0` 的夜也会记为 `no_observations`，
 不会向 MPC 上报。
+
+daily 单夜 watcher 由 `run_daily_unknown.sh` 启动时会带 `--enable-followup`。网页生成
+`<night>_submit.csv` 后，watcher 完成 reviewed unknown 导出/上报后会立即调用
+`survey.apply_followup --only-ingest-night <night>`，这样白天人工确认的新真源可以进入同一天晚上的
+`current_plan.txt`。
 
 在 `run_single_night.sh` 里启用导出：
 

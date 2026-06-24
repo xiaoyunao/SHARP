@@ -25,6 +25,14 @@ SUBMIT_WATCH_VALIDATE="${SUBMIT_WATCH_VALIDATE:-1}"
 SUBMIT_WATCH_SUBMIT="${SUBMIT_WATCH_SUBMIT:-1}"
 SUBMIT_WATCH_NO_LOGSNR="${SUBMIT_WATCH_NO_LOGSNR:-0}"
 SUBMIT_WATCH_RETRY_FAILED="${SUBMIT_WATCH_RETRY_FAILED:-1}"
+ENABLE_FOLLOWUP="${ENABLE_FOLLOWUP:-1}"
+FOLLOWUP_STATE="${FOLLOWUP_STATE:-/pipeline/xiaoyunao/survey/runtime/followup/followup_state.json}"
+FOLLOWUP_START_NIGHT="${FOLLOWUP_START_NIGHT:-20260624}"
+FOLLOWUP_WORKSPACE="${FOLLOWUP_WORKSPACE:-/pipeline/xiaoyunao/survey/runtime}"
+FOLLOWUP_FOOTPRINTS="${FOLLOWUP_FOOTPRINTS:-/pipeline/xiaoyunao/survey/footprints/survey_fov_footprints_with_visibility.fits}"
+FOLLOWUP_PUBLISH_DIR="${FOLLOWUP_PUBLISH_DIR:-/pipeline/xiaoyunao/script}"
+FOLLOWUP_MAX_AGE_DAYS="${FOLLOWUP_MAX_AGE_DAYS:-10}"
+FOLLOWUP_OBS_PER_NIGHT="${FOLLOWUP_OBS_PER_NIGHT:-5}"
 
 mkdir -p "${LOG_DIR}"
 LOG_PATH="${LOG_DIR}/${RUN_DATE//-/}_unknown_daily.log"
@@ -126,6 +134,18 @@ start_submit_watcher() {
   if [[ "${SUBMIT_WATCH_RETRY_FAILED}" == "1" ]]; then
     cmd+=(--retry-failed)
   fi
+  if [[ "${ENABLE_FOLLOWUP}" == "1" ]]; then
+    cmd+=(
+      --enable-followup
+      --followup-state "${FOLLOWUP_STATE}"
+      --followup-start-night "${FOLLOWUP_START_NIGHT}"
+      --followup-workspace "${FOLLOWUP_WORKSPACE}"
+      --followup-footprints "${FOLLOWUP_FOOTPRINTS}"
+      --followup-publish-dir "${FOLLOWUP_PUBLISH_DIR}"
+      --followup-max-age-days "${FOLLOWUP_MAX_AGE_DAYS}"
+      --followup-obs-per-night "${FOLLOWUP_OBS_PER_NIGHT}"
+    )
+  fi
 
   if pgrep -af "watch_submit_reviews.py .*--only-night ${night}" >/dev/null 2>&1; then
     log "[SKIP] submit watcher already running for ${night}"
@@ -155,6 +175,13 @@ main() {
   fi
   if [[ "${FORCE_UNKNOWN}" != "1" && -s "${unknown_json}" && -s "${review_manifest}" ]]; then
     log "[SKIP] unknown review package already exists: ${review_manifest}"
+    if [[ "${ENABLE_FOLLOWUP}" == "1" ]]; then
+      section "associate follow-up links"
+      PYTHONPATH="$(cd "${SCRIPT_DIR}/.." && pwd)${PYTHONPATH:+:${PYTHONPATH}}" \
+        "${PYTHON_BIN}" "${SCRIPT_DIR}/associate_followup_links.py" "${TARGET_NIGHT}" \
+        --processed-root "${PROCESSED_ROOT}" \
+        --state "${FOLLOWUP_STATE}" || log "[WARN] follow-up association failed for ${TARGET_NIGHT}"
+    fi
     local n_unknown
     n_unknown="$(review_unknown_count "${review_manifest}")"
     if [[ "${START_SUBMIT_WATCHER}" == "1" && "${n_unknown}" -gt 0 ]]; then
@@ -187,6 +214,14 @@ main() {
   if [[ "${rc}" -ne 0 ]]; then
     log "[ERROR] run_single_night failed rc=${rc}"
     return "${rc}"
+  fi
+
+  if [[ "${ENABLE_FOLLOWUP}" == "1" ]]; then
+    section "associate follow-up links"
+    PYTHONPATH="$(cd "${SCRIPT_DIR}/.." && pwd)${PYTHONPATH:+:${PYTHONPATH}}" \
+      "${PYTHON_BIN}" "${SCRIPT_DIR}/associate_followup_links.py" "${TARGET_NIGHT}" \
+      --processed-root "${PROCESSED_ROOT}" \
+      --state "${FOLLOWUP_STATE}" || log "[WARN] follow-up association failed for ${TARGET_NIGHT}"
   fi
 
   section "package review"

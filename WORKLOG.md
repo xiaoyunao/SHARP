@@ -2,6 +2,36 @@
 
 ## 2026-06-24
 
+- task: 新增 reviewed unknown 真源 follow-up 调度和关联入口
+- files_changed: `survey/followup.py`, `survey/apply_followup.py`, `survey/run_daily.sh`, `survey/README.md`, `heliolincrr/associate_followup_links.py`, `heliolincrr/watch_submit_reviews.py`, `heliolincrr/run_daily_unknown.sh`, `heliolincrr/README.md`, `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 本地检查 `survey/scheduler.py`, `survey/io_utils.py`, `survey/run_daily.py`, `heliolincrr/watch_submit_reviews.py`
+  - 服务器抽查 reviewed unknown submit masked JSON 字段
+  - 本地 `python3 -m py_compile survey/followup.py survey/apply_followup.py heliolincrr/associate_followup_links.py heliolincrr/watch_submit_reviews.py`
+  - 本地 `bash -n survey/run_daily.sh && bash -n heliolincrr/run_daily_unknown.sh`
+  - 本地 `/tmp` smoke：合成 `20260624` true link，向 `20260625_plan.json` 插入 `5` 条 `MP_FU_...`；合成 unknown link 成功关联回 follow-up 源
+  - `rsync` 部署更新到 `/pipeline/xiaoyunao/survey` 和 `/pipeline/xiaoyunao/heliolincrr`
+  - 服务器 `py_compile` 和 `bash -n`
+  - 服务器 `survey.apply_followup --date 2026-06-24 --dry-run`
+- key_findings:
+  - follow-up 仅 ingest `20260624` 及之后新完成 check 的 true unknown 源，不回追历史 backlog
+  - follow-up 状态文件为 `/pipeline/xiaoyunao/survey/runtime/followup/followup_state.json`
+  - 每个源要求两个实际满 `5` 帧的夜；少于 `5` 帧记 failed 并继续排；从发现夜起满 `10` 天仍未完成则 abandoned
+  - follow-up 目标名为 `MP_FU_<trkSub>_MP####`，保持进入 known/unknown MP 输入，同时保留 field id 供历史曝光统计解析
+  - `watch_submit_reviews.py --enable-followup` 会在网页 submit 被处理后立即重跑 `survey.apply_followup --only-ingest-night <night>`，可白天更新当晚 `current_plan.txt`
+  - `run_daily_unknown.sh` 会在 unknown link 生成或已有 package skip 时调用 `associate_followup_links.py`，按预测位置把新 link 关联回 active follow-up 源
+  - 当前服务器 dry-run：`active_sources=0`, `inserted_rows=0`, 历史 review 目录均因 `start_night=20260624` 被跳过
+- validation:
+  - 本地和服务器语法检查通过
+  - 本地 smoke 插入 `5` 条 follow-up 观测行，状态记录为 `planned`
+  - 本地 smoke 关联脚本对合成 unknown link 返回 `matches=1`
+  - 服务器 dry-run 未改写真实计划或状态
+- remaining_issues:
+  - 真实天上链路还没等到 `20260624` 之后的新 true submit 源验证
+  - 当前预测为线性 RA/Dec 外推；后续若轨道解算接入，可替换 active 源的 `motion_model`
+- next_step:
+  - 等下一次新真源 submit 后检查 `followup_state.json`、`current_plan.txt` 中 `MP_FU_...` 行和第二天 L2 实际帧数 reconcile
+
 - task: 确认 `20251116..20260617` reviewed unknown 补报全部完成
 - files_changed: `WORKLOG.md`, `PLAN.md`
 - commands_run:

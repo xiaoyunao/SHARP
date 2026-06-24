@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import subprocess
 import sys
 import time
@@ -188,6 +189,49 @@ def run_one(args: argparse.Namespace, night: str, submit_csv: Path) -> dict[str,
     }
 
 
+def run_followup_update(args: argparse.Namespace, night: str) -> dict[str, Any]:
+    if not args.enable_followup or args.dry_run:
+        return {"followup_status": "disabled"}
+    repo_root = Path(__file__).resolve().parents[1]
+    cmd = [
+        sys.executable,
+        "-m",
+        "survey.apply_followup",
+        "--workspace",
+        args.followup_workspace,
+        "--footprints",
+        args.followup_footprints,
+        "--processed-root",
+        args.processed_root,
+        "--review-root",
+        args.review_root,
+        "--publish-dir",
+        args.followup_publish_dir,
+        "--state",
+        args.followup_state,
+        "--start-night",
+        args.followup_start_night,
+        "--only-ingest-night",
+        night,
+        "--max-age-days",
+        str(args.followup_max_age_days),
+        "--obs-per-night",
+        str(args.followup_obs_per_night),
+    ]
+    if args.followup_plan_date:
+        cmd.extend(["--date", args.followup_plan_date])
+    env = os.environ.copy()
+    env["PYTHONPATH"] = str(repo_root) + (os.pathsep + env["PYTHONPATH"] if env.get("PYTHONPATH") else "")
+    proc = subprocess.run(cmd, text=True, capture_output=True, cwd=str(repo_root), env=env)
+    return {
+        "followup_status": "ok" if proc.returncode == 0 else "failed",
+        "followup_cmd": cmd,
+        "followup_returncode": proc.returncode,
+        "followup_stdout_tail": proc.stdout[-4000:],
+        "followup_stderr_tail": proc.stderr[-4000:],
+    }
+
+
 def remove_invalid_submit_if_needed(result: dict[str, Any], submit_csv: Path) -> None:
     if result.get("status") != "failed" or failure_is_retryable(result):
         return
@@ -311,6 +355,8 @@ def scan_once(args: argparse.Namespace, state: dict[str, Any]) -> int:
             continue
         result = run_one(args, night, submit_csv)
         remove_invalid_submit_if_needed(result, submit_csv)
+        if result.get("status") in DONE_STATUSES:
+            result.update(run_followup_update(args, night))
         result.update(
             {
                 "night": night,
@@ -348,6 +394,15 @@ def build_argparser() -> argparse.ArgumentParser:
     ap.add_argument("--follow", action="store_true", help="Keep scanning until interrupted")
     ap.add_argument("--exit-when-complete", action="store_true", help="In --follow mode, exit when all discovered review packages are done")
     ap.add_argument("--interval-sec", type=int, default=300)
+    ap.add_argument("--enable-followup", action="store_true", help="Update the follow-up state and current survey plan after a submit CSV is processed.")
+    ap.add_argument("--followup-state", default="/pipeline/xiaoyunao/survey/runtime/followup/followup_state.json")
+    ap.add_argument("--followup-start-night", default="20260624")
+    ap.add_argument("--followup-workspace", default="/pipeline/xiaoyunao/survey/runtime")
+    ap.add_argument("--followup-footprints", default="/pipeline/xiaoyunao/survey/footprints/survey_fov_footprints_with_visibility.fits")
+    ap.add_argument("--followup-publish-dir", default="/pipeline/xiaoyunao/script")
+    ap.add_argument("--followup-plan-date", default="", help="Optional YYYY-MM-DD plan date; default is current Asia/Shanghai date.")
+    ap.add_argument("--followup-max-age-days", type=int, default=10)
+    ap.add_argument("--followup-obs-per-night", type=int, default=5)
     return ap
 
 
