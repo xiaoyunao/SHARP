@@ -2,6 +2,25 @@
 
 ## Current objective
 
+2026-06-24 reviewed unknown 补报完成：
+
+- `20251116..20260617` 历史 reviewed unknown 补报已经全部完成
+- state `/pipeline/xiaoyunao/data/heliolincrr/review_submit_backlog_20251116_20260617.json`
+- 最终 summary：
+  - `review_packages=122`
+  - `complete=122`
+  - `pending=0`
+  - `failed=0`
+  - `submitted=35`
+  - `no_observations=87`
+- 顺序上从 `20251116` 连续完成到 `20260617`
+- submit CSV 共 `116` 个、`4743` 行
+  - `is_real=1`: `67`
+  - `is_real=0`: `4676`
+  - blank/invalid: `0`
+- watcher 日志尾部已写出 `status=complete`，历史补报 watcher 进程已退出
+- 后续只需要处理新 daily unknown check package，不再需要历史区间 backlog watcher 常驻
+
 2026-06-23 断电恢复检查：
 
 - 服务器 `2026-06-23 12:28 CST` 重启；上午断电属实

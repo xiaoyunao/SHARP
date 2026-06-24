@@ -1,5 +1,29 @@
 # WORKLOG
 
+## 2026-06-24
+
+- task: 确认 `20251116..20260617` reviewed unknown 补报全部完成
+- files_changed: `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 读取 `/pipeline/xiaoyunao/data/heliolincrr/review_submit_backlog_20251116_20260617.json`
+  - 扫描 `/pipeline/xiaoyunao/heliolincrr/review_packages/*/*_submit.csv`
+  - 检查 `review_submit_backlog_20251116_20260617.log` 尾部
+- key_findings:
+  - 历史补报 watcher state 已完成：`review_packages=122`, `complete=122`, `pending=0`, `failed=0`
+  - 顺序上从 `20251116` 连续完成到 `20260617`
+  - 状态细分：`submitted=35`, `no_observations=87`
+  - submit CSV 共 `116` 个、`4743` 行，`is_real=1` 为 `67`，`is_real=0` 为 `4676`
+  - submit CSV 无 blank/invalid `is_real`
+  - watcher 日志尾部写出 `status=complete`，进程已退出
+  - 最后一批正式 unknown submit 包含 `20260508`, `20260509`, `20260512`, `20260529`, `20260530`, `20260601`
+- validation:
+  - state 更新时间 `2026-06-24T07:31:03+00:00`
+  - `failed_nights=[]`, `pending_nights=[]`, `manifest_error_nights=[]`
+- remaining_issues:
+  - 历史区间补报本身无剩余 pending；后续只需处理新 daily unknown check 包
+- next_step:
+  - 后续如果需要阶段性汇总，导出 `submitted=35` 的 unknown ADES/真源 GIF/测光表
+
 ## 2026-06-23
 
 - task: 检查上午断电后 reviewed unknown 补报和 daily pipeline 状态
