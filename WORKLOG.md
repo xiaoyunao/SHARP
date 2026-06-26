@@ -2,6 +2,24 @@
 
 ## 2026-06-26
 
+- task: 暂缓 Agent Mail unknown 通知开发
+- files_changed: `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - `git status --short --branch`
+  - `git branch --show-current`
+  - `git fetch --all --prune`
+  - `git log --oneline --decorate --graph -n 15 --all`
+  - 读取 `WORKLOG.md`, `PLAN.md`
+- key_findings:
+  - 用户决定暂时不开发 reviewed unknown 通过 check 后的 Agent Mail 通知
+  - 原调研方案保留为 deferred reference，避免后续误当作 active objective
+- validation:
+  - 未改生产代码，未部署服务器
+- remaining_issues:
+  - 无；后续如重新启用，需要先决定服务器授权还是本机 worker
+- next_step:
+  - 继续保持现有 unknown review/submit/follow-up 流程，不接入邮件通知
+
 - task: 调研 Agent Mail 用于 reviewed unknown 真源通知的接入点
 - files_changed: `WORKLOG.md`, `PLAN.md`
 - commands_run:

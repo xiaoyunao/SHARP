@@ -2,7 +2,17 @@
 
 ## Current objective
 
-2026-06-26 Agent Mail 通知候选方案：
+当前不开发 Agent Mail unknown 通知功能。
+
+- 2026-06-26 用户决定暂缓该功能
+- 现有 daily unknown review/submit/follow-up 流程保持不变
+- 后续如重新启用，先决定部署方式：
+  - 服务器安装并授权 Agent Mail CLI
+  - 或本机 worker 通过 SSH 读取服务器 state 后发信
+
+## Deferred reference
+
+2026-06-26 Agent Mail 通知候选方案，暂缓：
 
 - 目标：当网页 check 产生 `<night>_submit.csv` 且某条 unknown link 被标记 `is_real=1` 后，向关注者邮件通知，邮件中包含 link 的轨道/观测摘要，方便团队及时关注和 follow-up。
 - 推荐挂点：
