@@ -2,6 +2,32 @@
 
 ## Current objective
 
+2026-06-26 Agent Mail 通知候选方案：
+
+- 目标：当网页 check 产生 `<night>_submit.csv` 且某条 unknown link 被标记 `is_real=1` 后，向关注者邮件通知，邮件中包含 link 的轨道/观测摘要，方便团队及时关注和 follow-up。
+- 推荐挂点：
+  - `heliolincrr/watch_submit_reviews.py`
+  - 在 `run_one()` 成功导出/validate/submit 后、`run_followup_update()` 附近触发通知
+  - 使用 watcher state 对 submit CSV signature + review manifest signature 去重，避免重复发送
+- 推荐邮件内容：
+  - subject: `[SMT unknown] <night> <trkSub> passed review`
+  - body: night, trkSub, linkage_id, n_obs, n_tracklets, rms/median/max residual, a/e/i, linear speed/direction, RA/Dec/MJD span, MPC validate/submit status, review package path, GIF path
+  - 可选附件：对应 GIF；若附件策略复杂，先只写服务器绝对路径和 review package 路径
+- 数据来源：
+  - `/processed1/<night>/L4/<night>_unknown_links.json`
+  - `/processed1/<night>/L4/<night>_unknown_links_submit_stats.json`
+  - `/pipeline/xiaoyunao/heliolincrr/review_packages/<night>/<night>_unknown_review_manifest.json`
+  - `/pipeline/xiaoyunao/heliolincrr/review_packages/<night>/gifs/<trkSub>_link....gif`
+- 部署分歧：
+  - 服务器当前 PATH 未发现 `agently-cli`, `npm`, `node`
+  - 若要由 daily watcher 直接发信，需要在 `smtpipeline@www.xinglong-naoc.cn` 上安装并授权 Agent Mail CLI
+  - 若不想把授权放服务器，可本机跑一个轮询 worker，SSH 读取 watcher state/manifest 后用本机 Agent Mail 发信
+- 待决策：
+  - 收件人列表
+  - 每个 true link 一封，还是每夜 digest
+  - 邮件是否附 GIF
+  - 是否只通知 validate/submit 成功，还是网页 check 一通过就通知
+
 2026-06-24 follow-up 调度入口已完成并部署：
 
 - 新增 `survey.followup` 状态机和 `survey.apply_followup` 插入器

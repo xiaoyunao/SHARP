@@ -1,5 +1,29 @@
 # WORKLOG
 
+## 2026-06-26
+
+- task: 调研 Agent Mail 用于 reviewed unknown 真源通知的接入点
+- files_changed: `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 读取 Codex thread `019efde1-0f62-7a42-8bab-5eb860596541` 的项目总结
+  - 本地检查 `git status`, `git fetch --all --prune`, `git log`
+  - 读取 `heliolincrr/watch_submit_reviews.py`, `submit_reviewed_unknown.py`, `export_unknown_ades.py`, `package_unknown_review.py`, `summarize_single_night.py`, `run_daily_unknown.sh`
+  - 服务器只读检查 `ssh -p 20093 smtpipeline@www.xinglong-naoc.cn 'command -v agently-cli; command -v npm; command -v node; python --version'`
+- key_findings:
+  - 最合适通知挂点是 `heliolincrr/watch_submit_reviews.py` 成功处理 `<night>_submit.csv` 之后
+  - 该时刻已知道 `is_real=1` 的 unknown links，且 state JSON 已有按 submit CSV/manifest signature 去重机制
+  - 轨道和观测信息已在 `/processed1/<night>/L4/<night>_unknown_links.json` 里，包括 `trk_sub`, `linkage_id`, `n_obs`, `n_tracklets`, `rms_arcsec`, `a_au`, `ecc`, `inc_deg`, `lin_speed_arcsec_per_day`, RA/Dec/MJD 列等
+  - review package manifest 里已有 GIF 相对路径和同一批核心轨道字段，适合生成邮件摘要
+  - 服务器当前 PATH 未发现 `agently-cli`, `npm`, `node`；Agent Mail CLI 目前只确认在本机 macOS 授权
+- validation:
+  - 未改生产代码，未发送邮件
+  - 只读确认 watcher/follow-up/submit 链路现有状态
+- remaining_issues:
+  - 需要决定邮件发送部署方式：服务器安装授权 Agent Mail CLI，或本机/独立 worker 轮询服务器 state 后发送
+  - 需要确定通知收件人、是否每 link 一封还是每夜 digest、是否附 GIF/ADES 片段
+- next_step:
+  - 设计并实现一个可配置 notifier，优先接在 `watch_submit_reviews.py` 的 DONE status 后置动作中
+
 ## 2026-06-24
 
 - task: 新增 reviewed unknown 真源 follow-up 调度和关联入口
