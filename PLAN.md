@@ -2,13 +2,19 @@
 
 ## Current objective
 
-当前不开发 Agent Mail unknown 通知功能。
+以 `PAPER_PROJECT_SUMMARY.md` 为论文讨论基线，确定项目论文的主定位、冻结数据口径，并补齐发表前最关键的验证。
 
-- 2026-06-26 用户决定暂缓该功能
-- 现有 daily unknown review/submit/follow-up 流程保持不变
-- 后续如重新启用，先决定部署方式：
-  - 服务器安装并授权 Agent Mail CLI
-  - 或本机 worker 通过 SSH 读取服务器 state 后发信
+- 推荐主线：动态黄道巡天调度 + 实际观测 + known 大样本天测/上报 + single-night unknown 搜索和人工复核
+- 当前科学数据冻结候选区间：`20251115..20260715`
+- unknown 论文样本使用后验清洗后的 `58` 条高可信 link / `179` 次探测，不使用服务器初次提交的 `67` 条作为最终真源口径
+- follow-up 程序已部署但尚无实际观测闭环，只作为系统能力和 future work
+- 下一步优先事项：
+  - 团队确认系统论文或 known-astrometry 论文的主定位
+  - 核对 known/unknown submission ID 的 MPC 最终 ingest 状态
+  - 对 58 条 link 做最新 MPC/JPL crossmatch、跨夜去重和 designation 状态检查
+  - 建立正式 night quality mask，排除或单列 `20260111` 等异常夜
+  - 固化 `paper_data_snapshot.json`、统计脚本、输入 hash 和软件 tag
+  - 至少用 known-object truth set 评估 unknown pipeline 各级 completeness
 
 ## Deferred reference
 

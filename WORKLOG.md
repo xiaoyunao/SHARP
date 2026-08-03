@@ -1,5 +1,35 @@
 # WORKLOG
 
+## 2026-08-03
+
+- task: 为项目论文讨论整理端到端程序、观测和统计结果
+- files_changed: `PAPER_PROJECT_SUMMARY.md`, `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 按多机器规则检查 `git status`, branch, fetch 和 recent log，读取 `WORKLOG.md`, `PLAN.md`, `README.md`
+  - 读取 survey/known/unknown README、入口脚本和关键参数代码
+  - 读取此前项目总结与巡天统计 Codex threads
+  - 服务器只读扫描 `/raw1`, `/processed1`, survey plans/history, known/unknown L4, review packages, MPC reply 和 follow-up state
+  - 本地读取后验删除 9 条假源后的 unknown photometry CSV 和 twilight/moon summary
+  - 比较本地和服务器 17 个 survey/known/unknown 关键文件的 SHA-256
+- key_findings:
+  - 标准巡天科学数据为 `41074` 帧、`134` 夜、`342.28 h`，覆盖 `1430` 场；此前 HEALPix 去重面积 `10387.43 deg2`
+  - 当前 known 1 角秒产品为 `534780` 次匹配、`58482` 个对象；有 MPC reply 的 `122` 夜包含 `348568` 条 ADES、`29488` 个对象
+  - unknown 自动候选 `4762` 条；初次提交 `67` 条/`206` 次观测，后验去掉 `9` 条假源后论文样本为 `58` 条/`179` 次探测/`34` 夜
+  - 自动 follow-up 已部署，但 `followup_state.json` 仍无 source，真实 follow-up 为 `0`
+  - 论文最稳妥定位是端到端巡天系统与运行表现，不应把 `58` 条 single-night links 表述为 confirmed discoveries
+- validation:
+  - raw、L2、known matched、ADES、reply、unknown submit 和后验清洗样本分别独立计数
+  - 17 个关键程序文件本地/服务器 SHA-256 全部一致
+  - 明确区分 ADES generated 与有 MPC submission reply 的口径
+  - 明确区分初次 `67` 条提交与后验 `58` 条高可信分析样本
+- remaining_issues:
+  - 未核对 MPC/WAMO 最终 ingest、designation 和 9 条后验假源的后续处理
+  - 未完成 unknown completeness/injection-recovery
+  - follow-up 尚无真实观测闭环
+- next_step:
+  - 团队根据 `PAPER_PROJECT_SUMMARY.md` 确认论文主线和数据冻结口径
+  - 再据此制作正式 paper snapshot、图表和正文大纲
+
 ## 2026-06-26
 
 - task: 暂缓 Agent Mail unknown 通知开发
