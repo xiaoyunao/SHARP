@@ -1,0 +1,36 @@
+{
+  "ambiguous_detection_keys_excluded_from_link_mapping_n": 13,
+  "deduplicated_known_detection_rows": 563612,
+  "eligible_ge3_and_rate_n": 102347,
+  "eligible_ge3_detections_n": 104080,
+  "generated_utc": "2026-08-09T12:37:10.691543+00:00",
+  "guardrail": "not L2 detection completeness; not image injection; intermediate Gaia/static/tracklet losses are not separately identifiable from the frozen final link products",
+  "input_hashes": {
+    "known_mask15.parquet": "f5398587d8d06f038c29487836660b7c69cd1499abbca8de2ae810d61843573a",
+    "l2_manifest.csv": "a5a561c212745bee53a1870a27f83779a2558f3973d88378b8ef5d1cdad6b485",
+    "orbit_links.parquet": "bb8a63052409472cc7ba09d24b29891dc70538a401987fa25cdccaa82da7834f",
+    "orbit_obs_residuals.parquet": "aa4544204c7168fc716b6480709774142e0c2f978f9bd168d28dab3cc836ce69"
+  },
+  "method": "retrospective identity-blind linkage/orbit survival proxy conditional on known 1.5-arcsec detections",
+  "object_night_rows": 246125,
+  "source_known_mask15_rows": 563612,
+  "strict_single_known_object_links_n": 79621,
+  "survival_for_ge3_all_rates": {
+    "eligible_object_n": 104080,
+    "fit_ok_survived_fraction": 0.7292947732513452,
+    "fit_ok_survived_n": 75905,
+    "is_good_survived_fraction": 0.7292947732513452,
+    "is_good_survived_n": 75905,
+    "strict_linked_fraction": 0.7292947732513452,
+    "strict_linked_n": 75905
+  },
+  "survival_for_ge3_and_rate": {
+    "eligible_object_n": 102347,
+    "fit_ok_survived_fraction": 0.7415850000488534,
+    "fit_ok_survived_n": 75899,
+    "is_good_survived_fraction": 0.7415850000488534,
+    "is_good_survived_n": 75899,
+    "strict_linked_fraction": 0.7415850000488534,
+    "strict_linked_n": 75899
+  }
+}

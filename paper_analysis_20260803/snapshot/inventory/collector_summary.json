@@ -1,0 +1,12 @@
+{
+  "all_mp_fits_nights": 136,
+  "all_mp_fits_rows": 41152,
+  "l2_mp_nights": 131,
+  "l2_mp_rows": 40399,
+  "mask_gaia_log_nights": 128,
+  "nightly_product_rows": 131,
+  "plan_nights": 115,
+  "plan_rows": 37619,
+  "strict_raw_nights": 134,
+  "strict_raw_rows": 41074
+}

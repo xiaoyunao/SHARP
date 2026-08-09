@@ -1,0 +1,22 @@
+{
+  "end": "2026-07-15",
+  "generated_utc": "2026-08-09T12:23:41.137084+00:00",
+  "night_rows": 243,
+  "ok_nights": 127,
+  "output_sha256": "cda90bae5ae5dad3812d8bb5474e2ffb3dba1bc12b77db0455f468f9d15395b8",
+  "source_root": "/pipeline/xiaoyunao/data/heliolincrr",
+  "start": "2025-11-15",
+  "status_counts": {
+    "missing": 115,
+    "ok": 127,
+    "zero_groups": 1
+  },
+  "totals_for_complete_nights": {
+    "common_area_survivor_detection_n": 27720162,
+    "edge_shell_survivor_detection_n": 23198577,
+    "grouped_gaia_input_detection_n": 27720162,
+    "static_survivor_detection_n": 9147171,
+    "tracklet_n": 1177651
+  },
+  "true_missing_log_nights": 115
+}

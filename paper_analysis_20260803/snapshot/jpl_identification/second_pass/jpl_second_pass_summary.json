@@ -1,0 +1,13 @@
+{
+  "api": "https://ssd-api.jpl.nasa.gov/sb_ident.api",
+  "api_documentation": "https://ssd-api.jpl.nasa.gov/doc/sb_ident.html",
+  "confirmed_object_names": [
+    "C/2025 Y1 (ATLAS)"
+  ],
+  "first_pass_strict_linkages": 6,
+  "generated_utc": "2026-08-09T12:12:26.461231+00:00",
+  "guardrail": "numerically confirmed JPL candidate association; MPC ingest/designation status still requires submission records",
+  "input_sha256": "18d383f6c943c3a7da8ee532e7afb74c44ccd6c78495887dae58fafaf909fe16",
+  "numerically_confirmed_linkages": 6,
+  "second_pass_result_rows": 6
+}

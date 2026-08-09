@@ -1,0 +1,129 @@
+gaia_matched_rows,gaia_survivor_rows,mtime_utc,night,parsed_rows,path,prefilter_rows,status_counts,status_ok_files
+6098886,241283,2026-05-14T08:35:07.268762+00:00,20251116,290,/pipeline/xiaoyunao/data/heliolincrr/20251116/mask_gaia/mask_gaia.log,6340169,"{""ok"": 290}",290
+9633253,288704,2026-05-14T08:40:03.977187+00:00,20251118,293,/pipeline/xiaoyunao/data/heliolincrr/20251118/mask_gaia/mask_gaia.log,9921957,"{""ok"": 293}",293
+10103650,362078,2026-05-14T09:17:40.097575+00:00,20251119,389,/pipeline/xiaoyunao/data/heliolincrr/20251119/mask_gaia/mask_gaia.log,10465728,"{""ok"": 389}",389
+13614561,487839,2026-05-14T09:35:17.732675+00:00,20251120,419,/pipeline/xiaoyunao/data/heliolincrr/20251120/mask_gaia/mask_gaia.log,14102400,"{""ok"": 419}",419
+16379911,544739,2026-05-14T09:55:15.944820+00:00,20251121,475,/pipeline/xiaoyunao/data/heliolincrr/20251121/mask_gaia/mask_gaia.log,16924650,"{""ok"": 475}",475
+6183219,135418,2026-05-14T10:23:55.517611+00:00,20251122,227,/pipeline/xiaoyunao/data/heliolincrr/20251122/mask_gaia/mask_gaia.log,6318637,"{""ok"": 227}",227
+1377545,111363,2026-05-14T10:27:30.432679+00:00,20251123,170,/pipeline/xiaoyunao/data/heliolincrr/20251123/mask_gaia/mask_gaia.log,1488908,"{""ok"": 170}",170
+1786846,77978,2026-05-14T10:42:25.671081+00:00,20251124,138,/pipeline/xiaoyunao/data/heliolincrr/20251124/mask_gaia/mask_gaia.log,1864824,"{""ok"": 138}",138
+1879278,107972,2026-05-14T10:46:22.635808+00:00,20251125,164,/pipeline/xiaoyunao/data/heliolincrr/20251125/mask_gaia/mask_gaia.log,1987250,"{""ok"": 164}",164
+4215952,149410,2026-05-14T10:52:21.236295+00:00,20251127,224,/pipeline/xiaoyunao/data/heliolincrr/20251127/mask_gaia/mask_gaia.log,4365362,"{""ok"": 224}",224
+1404282,56855,2026-05-14T10:55:40.699251+00:00,20251128,110,/pipeline/xiaoyunao/data/heliolincrr/20251128/mask_gaia/mask_gaia.log,1461137,"{""ok"": 110}",110
+1131700,50226,2026-05-14T10:56:21.884763+00:00,20251129,139,/pipeline/xiaoyunao/data/heliolincrr/20251129/mask_gaia/mask_gaia.log,1181926,"{""ok"": 139}",139
+1788722,42759,2026-05-14T11:00:54.932597+00:00,20251130,157,/pipeline/xiaoyunao/data/heliolincrr/20251130/mask_gaia/mask_gaia.log,1831481,"{""ok"": 157}",157
+855559,31116,2026-05-14T11:01:49.429775+00:00,20251201,39,/pipeline/xiaoyunao/data/heliolincrr/20251201/mask_gaia/mask_gaia.log,886675,"{""ok"": 39}",39
+1069797,52694,2026-05-14T11:02:10.154706+00:00,20251202,156,/pipeline/xiaoyunao/data/heliolincrr/20251202/mask_gaia/mask_gaia.log,1122491,"{""ok"": 156}",156
+6197418,173737,2026-05-14T11:06:33.278684+00:00,20251203,424,/pipeline/xiaoyunao/data/heliolincrr/20251203/mask_gaia/mask_gaia.log,6371155,"{""ok"": 424}",424
+10767301,153757,2026-05-14T11:27:24.960515+00:00,20251204,448,/pipeline/xiaoyunao/data/heliolincrr/20251204/mask_gaia/mask_gaia.log,10921058,"{""ok"": 448}",448
+6708150,107047,2026-05-14T11:38:15.929261+00:00,20251205,462,/pipeline/xiaoyunao/data/heliolincrr/20251205/mask_gaia/mask_gaia.log,6815197,"{""ok"": 462}",462
+3364042,141363,2026-05-14T11:44:49.545992+00:00,20251206,360,/pipeline/xiaoyunao/data/heliolincrr/20251206/mask_gaia/mask_gaia.log,3505405,"{""empty_after_prefilter"": 2, ""ok"": 358}",358
+5705786,244568,2026-05-14T11:56:39.888962+00:00,20251207,468,/pipeline/xiaoyunao/data/heliolincrr/20251207/mask_gaia/mask_gaia.log,5950354,"{""empty_after_prefilter"": 10, ""ok"": 458}",458
+6319913,235704,2026-05-14T12:25:08.163254+00:00,20251208,382,/pipeline/xiaoyunao/data/heliolincrr/20251208/mask_gaia/mask_gaia.log,6555617,"{""empty_after_prefilter"": 1, ""ok"": 381}",381
+11856124,234816,2026-05-14T12:39:26.458827+00:00,20251209,474,/pipeline/xiaoyunao/data/heliolincrr/20251209/mask_gaia/mask_gaia.log,12090940,"{""ok"": 474}",474
+12866537,290975,2026-05-14T13:02:52.731124+00:00,20251210,417,/pipeline/xiaoyunao/data/heliolincrr/20251210/mask_gaia/mask_gaia.log,13157512,"{""ok"": 417}",417
+9498238,199492,2026-05-14T13:22:23.119564+00:00,20251213,375,/pipeline/xiaoyunao/data/heliolincrr/20251213/mask_gaia/mask_gaia.log,9697730,"{""ok"": 375}",375
+5957246,171444,2026-05-14T13:35:03.312622+00:00,20251214,268,/pipeline/xiaoyunao/data/heliolincrr/20251214/mask_gaia/mask_gaia.log,6128690,"{""ok"": 268}",268
+11578302,292635,2026-05-14T13:50:37.973195+00:00,20251215,444,/pipeline/xiaoyunao/data/heliolincrr/20251215/mask_gaia/mask_gaia.log,11870937,"{""ok"": 444}",444
+13717241,304451,2026-05-14T14:25:36.053135+00:00,20251216,431,/pipeline/xiaoyunao/data/heliolincrr/20251216/mask_gaia/mask_gaia.log,14021692,"{""ok"": 431}",431
+12602172,305804,2026-05-14T14:54:30.607080+00:00,20251217,436,/pipeline/xiaoyunao/data/heliolincrr/20251217/mask_gaia/mask_gaia.log,12907976,"{""ok"": 436}",436
+14598614,448723,2026-05-14T15:11:48.889796+00:00,20251220,506,/pipeline/xiaoyunao/data/heliolincrr/20251220/mask_gaia/mask_gaia.log,15047337,"{""ok"": 506}",506
+2463369,187004,2026-05-14T15:19:33.029720+00:00,20251221,284,/pipeline/xiaoyunao/data/heliolincrr/20251221/mask_gaia/mask_gaia.log,2650373,"{""ok"": 284}",284
+8982710,305166,2026-05-14T15:30:21.253026+00:00,20251223,306,/pipeline/xiaoyunao/data/heliolincrr/20251223/mask_gaia/mask_gaia.log,9287876,"{""ok"": 306}",306
+8491391,345379,2026-05-14T15:46:12.719085+00:00,20251225,328,/pipeline/xiaoyunao/data/heliolincrr/20251225/mask_gaia/mask_gaia.log,8836770,"{""ok"": 328}",328
+16021559,556160,2026-05-14T16:05:26.382858+00:00,20251226,627,/pipeline/xiaoyunao/data/heliolincrr/20251226/mask_gaia/mask_gaia.log,16577719,"{""ok"": 627}",627
+8744810,387627,2026-05-14T16:08:35.238383+00:00,20251227,474,/pipeline/xiaoyunao/data/heliolincrr/20251227/mask_gaia/mask_gaia.log,9132437,"{""ok"": 474}",474
+9165499,499068,2026-05-14T16:20:40.626163+00:00,20251228,498,/pipeline/xiaoyunao/data/heliolincrr/20251228/mask_gaia/mask_gaia.log,9664567,"{""ok"": 498}",498
+8547877,456607,2026-05-14T17:08:19.829641+00:00,20251229,471,/pipeline/xiaoyunao/data/heliolincrr/20251229/mask_gaia/mask_gaia.log,9004484,"{""ok"": 471}",471
+6059497,209375,2026-05-14T17:29:09.512232+00:00,20251230,427,/pipeline/xiaoyunao/data/heliolincrr/20251230/mask_gaia/mask_gaia.log,6268872,"{""empty_after_prefilter"": 2, ""ok"": 425}",425
+4484104,196518,2026-05-14T17:50:53.524727+00:00,20251231,451,/pipeline/xiaoyunao/data/heliolincrr/20251231/mask_gaia/mask_gaia.log,4680622,"{""ok"": 451}",451
+3198764,138792,2026-05-14T18:02:44.068925+00:00,20260101,441,/pipeline/xiaoyunao/data/heliolincrr/20260101/mask_gaia/mask_gaia.log,3337556,"{""empty_after_prefilter"": 1, ""ok"": 440}",440
+4725922,147349,2026-05-14T18:12:12.518743+00:00,20260102,518,/pipeline/xiaoyunao/data/heliolincrr/20260102/mask_gaia/mask_gaia.log,4873271,"{""ok"": 518}",518
+904637,31948,2026-05-14T18:24:41.687262+00:00,20260103,118,/pipeline/xiaoyunao/data/heliolincrr/20260103/mask_gaia/mask_gaia.log,936585,"{""ok"": 118}",118
+7706258,208870,2026-05-14T18:27:27.471694+00:00,20260104,497,/pipeline/xiaoyunao/data/heliolincrr/20260104/mask_gaia/mask_gaia.log,7915128,"{""ok"": 497}",497
+6559389,209516,2026-05-14T18:45:42.373806+00:00,20260105,488,/pipeline/xiaoyunao/data/heliolincrr/20260105/mask_gaia/mask_gaia.log,6768905,"{""empty_after_prefilter"": 51, ""ok"": 437}",437
+7731351,217315,2026-05-14T18:59:53.221882+00:00,20260106,432,/pipeline/xiaoyunao/data/heliolincrr/20260106/mask_gaia/mask_gaia.log,7948666,"{""empty_after_prefilter"": 2, ""ok"": 430}",430
+13400571,253970,2026-05-14T19:17:27.481128+00:00,20260107,464,/pipeline/xiaoyunao/data/heliolincrr/20260107/mask_gaia/mask_gaia.log,13654541,"{""ok"": 464}",464
+10336851,119399,2026-05-14T19:40:56.746948+00:00,20260108,226,/pipeline/xiaoyunao/data/heliolincrr/20260108/mask_gaia/mask_gaia.log,10456250,"{""ok"": 226}",226
+5028270,166894,2026-05-14T19:49:57.273146+00:00,20260109,271,/pipeline/xiaoyunao/data/heliolincrr/20260109/mask_gaia/mask_gaia.log,5195164,"{""ok"": 271}",271
+12807940,194053,2026-05-14T19:56:36.330040+00:00,20260110,392,/pipeline/xiaoyunao/data/heliolincrr/20260110/mask_gaia/mask_gaia.log,13001993,"{""ok"": 392}",392
+12456260,251018,2026-05-14T20:07:23.128163+00:00,20260111,347,/pipeline/xiaoyunao/data/heliolincrr/20260111/mask_gaia/mask_gaia.log,12707278,"{""ok"": 347}",347
+17165888,152433,2026-05-14T20:10:25.851763+00:00,20260112,271,/pipeline/xiaoyunao/data/heliolincrr/20260112/mask_gaia/mask_gaia.log,17318321,"{""ok"": 271}",271
+19181265,386663,2026-05-14T20:20:01.293280+00:00,20260114,405,/pipeline/xiaoyunao/data/heliolincrr/20260114/mask_gaia/mask_gaia.log,19567928,"{""ok"": 405}",405
+18321704,228104,2026-05-14T20:42:40.762685+00:00,20260115,413,/pipeline/xiaoyunao/data/heliolincrr/20260115/mask_gaia/mask_gaia.log,18549808,"{""ok"": 413}",413
+9690437,290699,2026-05-14T20:57:33.559876+00:00,20260116,393,/pipeline/xiaoyunao/data/heliolincrr/20260116/mask_gaia/mask_gaia.log,9981136,"{""ok"": 393}",393
+3656073,81796,2026-05-14T21:09:20.168755+00:00,20260117,245,/pipeline/xiaoyunao/data/heliolincrr/20260117/mask_gaia/mask_gaia.log,3737869,"{""ok"": 245}",245
+8324808,271248,2026-05-14T21:16:35.288738+00:00,20260119,456,/pipeline/xiaoyunao/data/heliolincrr/20260119/mask_gaia/mask_gaia.log,8596056,"{""ok"": 456}",456
+10947319,373090,2026-05-14T21:20:45.737030+00:00,20260120,508,/pipeline/xiaoyunao/data/heliolincrr/20260120/mask_gaia/mask_gaia.log,11320409,"{""ok"": 508}",508
+12562754,476264,2026-05-14T21:27:27.684015+00:00,20260121,492,/pipeline/xiaoyunao/data/heliolincrr/20260121/mask_gaia/mask_gaia.log,13039018,"{""ok"": 492}",492
+10483880,503199,2026-05-14T21:46:51.513157+00:00,20260122,501,/pipeline/xiaoyunao/data/heliolincrr/20260122/mask_gaia/mask_gaia.log,10987079,"{""ok"": 501}",501
+11707428,455634,2026-05-14T22:01:47.563777+00:00,20260123,486,/pipeline/xiaoyunao/data/heliolincrr/20260123/mask_gaia/mask_gaia.log,12163062,"{""ok"": 486}",486
+23300931,348747,2026-05-14T22:15:18.727562+00:00,20260124,482,/pipeline/xiaoyunao/data/heliolincrr/20260124/mask_gaia/mask_gaia.log,23649678,"{""ok"": 482}",482
+13080884,457719,2026-05-14T22:31:51.068193+00:00,20260126,496,/pipeline/xiaoyunao/data/heliolincrr/20260126/mask_gaia/mask_gaia.log,13538603,"{""ok"": 496}",496
+7981857,119972,2026-05-14T22:48:48.754783+00:00,20260127,362,/pipeline/xiaoyunao/data/heliolincrr/20260127/mask_gaia/mask_gaia.log,8101829,"{""empty_after_prefilter"": 4, ""ok"": 358}",358
+1858274,9896,2026-05-14T22:51:51.926497+00:00,20260128,34,/pipeline/xiaoyunao/data/heliolincrr/20260128/mask_gaia/mask_gaia.log,1868170,"{""ok"": 34}",34
+7713024,77194,2026-05-14T22:53:07.933273+00:00,20260129,313,/pipeline/xiaoyunao/data/heliolincrr/20260129/mask_gaia/mask_gaia.log,7790218,"{""empty_after_prefilter"": 5, ""ok"": 308}",308
+3313040,108144,2026-05-14T22:59:00.362288+00:00,20260131,315,/pipeline/xiaoyunao/data/heliolincrr/20260131/mask_gaia/mask_gaia.log,3421184,"{""ok"": 315}",315
+2325126,77053,2026-05-14T23:06:42.367721+00:00,20260201,285,/pipeline/xiaoyunao/data/heliolincrr/20260201/mask_gaia/mask_gaia.log,2402179,"{""empty_after_prefilter"": 2, ""ok"": 283}",283
+9169169,149573,2026-05-14T23:15:40.478781+00:00,20260202,493,/pipeline/xiaoyunao/data/heliolincrr/20260202/mask_gaia/mask_gaia.log,9318742,"{""ok"": 493}",493
+12168709,200034,2026-05-14T23:31:31.461096+00:00,20260205,286,/pipeline/xiaoyunao/data/heliolincrr/20260205/mask_gaia/mask_gaia.log,12368743,"{""ok"": 286}",286
+12656403,168323,2026-05-14T23:38:07.302149+00:00,20260206,240,/pipeline/xiaoyunao/data/heliolincrr/20260206/mask_gaia/mask_gaia.log,12824726,"{""ok"": 240}",240
+16975071,341774,2026-05-14T23:45:24.074290+00:00,20260207,495,/pipeline/xiaoyunao/data/heliolincrr/20260207/mask_gaia/mask_gaia.log,17316845,"{""ok"": 495}",495
+18051540,447849,2026-05-15T00:11:32.582802+00:00,20260208,489,/pipeline/xiaoyunao/data/heliolincrr/20260208/mask_gaia/mask_gaia.log,18499389,"{""ok"": 489}",489
+5607604,159392,2026-05-15T00:38:23.635981+00:00,20260210,140,/pipeline/xiaoyunao/data/heliolincrr/20260210/mask_gaia/mask_gaia.log,5766996,"{""ok"": 140}",140
+9193007,455023,2026-05-15T00:46:11.819639+00:00,20260211,416,/pipeline/xiaoyunao/data/heliolincrr/20260211/mask_gaia/mask_gaia.log,9648030,"{""ok"": 416}",416
+5202769,267395,2026-05-15T01:12:01.872666+00:00,20260212,289,/pipeline/xiaoyunao/data/heliolincrr/20260212/mask_gaia/mask_gaia.log,5470164,"{""ok"": 289}",289
+8787082,365127,2026-05-15T01:20:06.540271+00:00,20260213,394,/pipeline/xiaoyunao/data/heliolincrr/20260213/mask_gaia/mask_gaia.log,9152209,"{""ok"": 394}",394
+7199131,345908,2026-05-15T02:00:00.552102+00:00,20260215,461,/pipeline/xiaoyunao/data/heliolincrr/20260215/mask_gaia/mask_gaia.log,7545039,"{""ok"": 461}",461
+8784840,610845,2026-05-15T02:12:42.965251+00:00,20260216,482,/pipeline/xiaoyunao/data/heliolincrr/20260216/mask_gaia/mask_gaia.log,9395685,"{""ok"": 482}",482
+8520425,513091,2026-05-15T02:35:10.450252+00:00,20260217,486,/pipeline/xiaoyunao/data/heliolincrr/20260217/mask_gaia/mask_gaia.log,9033516,"{""ok"": 486}",486
+12092950,508827,2026-05-15T02:38:38.058837+00:00,20260218,497,/pipeline/xiaoyunao/data/heliolincrr/20260218/mask_gaia/mask_gaia.log,12601777,"{""ok"": 497}",497
+5246314,228444,2026-05-15T03:08:51.871922+00:00,20260219,278,/pipeline/xiaoyunao/data/heliolincrr/20260219/mask_gaia/mask_gaia.log,5474758,"{""ok"": 278}",278
+11992519,226113,2026-05-15T03:33:29.908259+00:00,20260220,462,/pipeline/xiaoyunao/data/heliolincrr/20260220/mask_gaia/mask_gaia.log,12218632,"{""ok"": 462}",462
+11192206,491640,2026-05-15T03:43:47.003296+00:00,20260222,429,/pipeline/xiaoyunao/data/heliolincrr/20260222/mask_gaia/mask_gaia.log,11683846,"{""ok"": 429}",429
+1043745,115756,2026-05-15T03:57:33.200282+00:00,20260223,84,/pipeline/xiaoyunao/data/heliolincrr/20260223/mask_gaia/mask_gaia.log,1159501,"{""ok"": 84}",84
+657479,11608,2026-05-15T03:58:35.667527+00:00,20260224,47,/pipeline/xiaoyunao/data/heliolincrr/20260224/mask_gaia/mask_gaia.log,669087,"{""ok"": 47}",47
+3091924,86565,2026-05-15T03:59:08.056675+00:00,20260303,184,/pipeline/xiaoyunao/data/heliolincrr/20260303/mask_gaia/mask_gaia.log,3178489,"{""ok"": 184}",184
+12458120,146657,2026-05-15T04:03:20.188186+00:00,20260306,313,/pipeline/xiaoyunao/data/heliolincrr/20260306/mask_gaia/mask_gaia.log,12604777,"{""ok"": 313}",313
+8843674,131852,2026-05-15T04:07:46.190014+00:00,20260308,234,/pipeline/xiaoyunao/data/heliolincrr/20260308/mask_gaia/mask_gaia.log,8975526,"{""ok"": 234}",234
+1453820,50853,2026-05-15T04:12:49.119825+00:00,20260309,182,/pipeline/xiaoyunao/data/heliolincrr/20260309/mask_gaia/mask_gaia.log,1504673,"{""ok"": 182}",182
+7028984,382516,2026-05-15T04:16:14.075660+00:00,20260310,457,/pipeline/xiaoyunao/data/heliolincrr/20260310/mask_gaia/mask_gaia.log,7411500,"{""ok"": 457}",457
+5707396,350829,2026-05-15T04:39:08.849817+00:00,20260311,408,/pipeline/xiaoyunao/data/heliolincrr/20260311/mask_gaia/mask_gaia.log,6058225,"{""ok"": 408}",408
+1057800,81666,2026-05-15T04:56:44.336699+00:00,20260315,127,/pipeline/xiaoyunao/data/heliolincrr/20260315/mask_gaia/mask_gaia.log,1139466,"{""ok"": 127}",127
+1263807,96775,2026-05-15T04:58:36.612565+00:00,20260316,140,/pipeline/xiaoyunao/data/heliolincrr/20260316/mask_gaia/mask_gaia.log,1360582,"{""ok"": 140}",140
+996042,159795,2026-05-15T05:03:10.578126+00:00,20260318,93,/pipeline/xiaoyunao/data/heliolincrr/20260318/mask_gaia/mask_gaia.log,1155837,"{""ok"": 93}",93
+4972374,60075,2026-05-15T05:08:50.107968+00:00,20260330,304,/pipeline/xiaoyunao/data/heliolincrr/20260330/mask_gaia/mask_gaia.log,5032449,"{""empty_after_prefilter"": 3, ""ok"": 301}",301
+4003578,73104,2026-05-15T05:12:26.828703+00:00,20260331,342,/pipeline/xiaoyunao/data/heliolincrr/20260331/mask_gaia/mask_gaia.log,4076682,"{""ok"": 342}",342
+3790463,64324,2026-05-15T05:21:12.305902+00:00,20260401,363,/pipeline/xiaoyunao/data/heliolincrr/20260401/mask_gaia/mask_gaia.log,3854787,"{""empty_after_prefilter"": 2, ""ok"": 361}",361
+6253358,90443,2026-05-15T05:28:40.251583+00:00,20260403,232,/pipeline/xiaoyunao/data/heliolincrr/20260403/mask_gaia/mask_gaia.log,6343801,"{""ok"": 232}",232
+747840,29628,2026-05-15T05:33:27.446899+00:00,20260404,74,/pipeline/xiaoyunao/data/heliolincrr/20260404/mask_gaia/mask_gaia.log,777468,"{""ok"": 74}",74
+1409970,136671,2026-05-15T05:34:29.477073+00:00,20260405,114,/pipeline/xiaoyunao/data/heliolincrr/20260405/mask_gaia/mask_gaia.log,1546641,"{""ok"": 114}",114
+4199408,393293,2026-05-15T05:37:10.612531+00:00,20260406,387,/pipeline/xiaoyunao/data/heliolincrr/20260406/mask_gaia/mask_gaia.log,4592701,"{""ok"": 387}",387
+4385318,381625,2026-05-15T05:53:36.117556+00:00,20260407,380,/pipeline/xiaoyunao/data/heliolincrr/20260407/mask_gaia/mask_gaia.log,4766943,"{""ok"": 380}",380
+3667627,285772,2026-05-15T06:17:30.965213+00:00,20260410,235,/pipeline/xiaoyunao/data/heliolincrr/20260410/mask_gaia/mask_gaia.log,3953399,"{""ok"": 235}",235
+1158382,63120,2026-05-15T06:25:11.381899+00:00,20260411,137,/pipeline/xiaoyunao/data/heliolincrr/20260411/mask_gaia/mask_gaia.log,1221502,"{""ok"": 137}",137
+256245,7466,2026-05-15T06:27:32.077525+00:00,20260412,27,/pipeline/xiaoyunao/data/heliolincrr/20260412/mask_gaia/mask_gaia.log,263711,"{""ok"": 27}",27
+4403923,403928,2026-05-15T06:28:11.399745+00:00,20260420,345,/pipeline/xiaoyunao/data/heliolincrr/20260420/mask_gaia/mask_gaia.log,4807851,"{""ok"": 345}",345
+750034,60940,2026-05-15T06:54:06.180065+00:00,20260422,90,/pipeline/xiaoyunao/data/heliolincrr/20260422/mask_gaia/mask_gaia.log,810974,"{""ok"": 90}",90
+605148,28082,2026-05-15T06:56:21.688266+00:00,20260423,91,/pipeline/xiaoyunao/data/heliolincrr/20260423/mask_gaia/mask_gaia.log,633230,"{""ok"": 91}",91
+542593,22802,2026-05-15T06:57:09.555583+00:00,20260425,104,/pipeline/xiaoyunao/data/heliolincrr/20260425/mask_gaia/mask_gaia.log,565395,"{""ok"": 104}",104
+1910855,38231,2026-05-15T06:58:23.434193+00:00,20260426,142,/pipeline/xiaoyunao/data/heliolincrr/20260426/mask_gaia/mask_gaia.log,1949086,"{""ok"": 142}",142
+2679696,95300,2026-05-15T06:59:29.161122+00:00,20260427,224,/pipeline/xiaoyunao/data/heliolincrr/20260427/mask_gaia/mask_gaia.log,2774996,"{""ok"": 224}",224
+4688463,131598,2026-05-15T07:06:25.319686+00:00,20260428,329,/pipeline/xiaoyunao/data/heliolincrr/20260428/mask_gaia/mask_gaia.log,4820061,"{""ok"": 329}",329
+5183241,112282,2026-05-15T07:16:12.285151+00:00,20260429,298,/pipeline/xiaoyunao/data/heliolincrr/20260429/mask_gaia/mask_gaia.log,5295523,"{""ok"": 298}",298
+256565,10387,2026-05-15T07:32:18.668073+00:00,20260430,48,/pipeline/xiaoyunao/data/heliolincrr/20260430/mask_gaia/mask_gaia.log,266952,"{""ok"": 48}",48
+12975657,1025703,2026-05-15T07:40:21.408011+00:00,20260503,328,/pipeline/xiaoyunao/data/heliolincrr/20260503/mask_gaia/mask_gaia.log,14001360,"{""ok"": 328}",328
+5830361,167924,2026-05-15T07:51:29.418014+00:00,20260504,327,/pipeline/xiaoyunao/data/heliolincrr/20260504/mask_gaia/mask_gaia.log,5998285,"{""ok"": 327}",327
+1940149,79607,2026-05-15T08:02:06.009523+00:00,20260506,147,/pipeline/xiaoyunao/data/heliolincrr/20260506/mask_gaia/mask_gaia.log,2019756,"{""ok"": 147}",147
+3578749,114267,2026-05-15T08:08:37.673132+00:00,20260507,142,/pipeline/xiaoyunao/data/heliolincrr/20260507/mask_gaia/mask_gaia.log,3693016,"{""ok"": 142}",142
+2334648,191538,2026-05-15T08:13:36.656426+00:00,20260508,222,/pipeline/xiaoyunao/data/heliolincrr/20260508/mask_gaia/mask_gaia.log,2526186,"{""ok"": 222}",222
+4714736,129494,2026-05-15T08:22:29.344542+00:00,20260509,200,/pipeline/xiaoyunao/data/heliolincrr/20260509/mask_gaia/mask_gaia.log,4844230,"{""ok"": 200}",200
+2288964,106562,2026-05-15T08:33:52.744066+00:00,20260512,240,/pipeline/xiaoyunao/data/heliolincrr/20260512/mask_gaia/mask_gaia.log,2395526,"{""ok"": 240}",240
+15585084,223228,2026-06-17T08:21:49.363644+00:00,20260528,279,/pipeline/xiaoyunao/data/heliolincrr/20260528/mask_gaia/mask_gaia.log,15808312,"{""ok"": 279}",279
+13156953,266645,2026-06-17T08:30:11.018977+00:00,20260529,296,/pipeline/xiaoyunao/data/heliolincrr/20260529/mask_gaia/mask_gaia.log,13423598,"{""ok"": 296}",296
+9385231,331442,2026-06-17T08:45:56.892249+00:00,20260530,275,/pipeline/xiaoyunao/data/heliolincrr/20260530/mask_gaia/mask_gaia.log,9716673,"{""ok"": 275}",275
+4589224,72657,2026-06-17T08:53:56.764558+00:00,20260601,298,/pipeline/xiaoyunao/data/heliolincrr/20260601/mask_gaia/mask_gaia.log,4661881,"{""ok"": 298}",298
+12576542,1087221,2026-06-17T09:04:28.635607+00:00,20260611,269,/pipeline/xiaoyunao/data/heliolincrr/20260611/mask_gaia/mask_gaia.log,13663763,"{""ok"": 269}",269
+464800,30012,2026-06-20T04:41:45.178150+00:00,20260617,27,/pipeline/xiaoyunao/data/heliolincrr/20260617/mask_gaia/mask_gaia.log,494812,"{""ok"": 27}",27
+11474926,261649,2026-06-21T03:48:39.313443+00:00,20260620,227,/pipeline/xiaoyunao/data/heliolincrr/20260620/mask_gaia/mask_gaia.log,11736575,"{""ok"": 227}",227
+975704,40163,2026-07-16T01:04:33.388170+00:00,20260715,50,/pipeline/xiaoyunao/data/heliolincrr/20260715/mask_gaia/mask_gaia.log,1015867,"{""ok"": 50}",50

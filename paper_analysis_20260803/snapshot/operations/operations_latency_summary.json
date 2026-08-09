@@ -1,0 +1,1272 @@
+{
+  "caveats": [
+    "Inventory timestamps are latest mtimes, not immutable creation timestamps.",
+    "Historical reruns and latest-mtime-only nights are reported separately from normal daily runs.",
+    "Human-review intervals are wall-clock mtime proxies, not active-person labor time.",
+    "MPC intervals include transport and external queue/response time.",
+    "CPU and peak-RAM usage cannot be recovered because Slurm accounting is disabled.",
+    "Negative durations remain in the per-night CSV as audit flags but are excluded from summaries."
+  ],
+  "date_range_inclusive": {
+    "end": "2026-07-15",
+    "start": "2025-11-15"
+  },
+  "event_counts": {
+    "by_type": {
+      "known_ades_mtime": 127,
+      "known_all_mtime": 131,
+      "known_mask15_mtime": 129,
+      "known_match1_mtime": 130,
+      "known_reply_mtime": 122,
+      "known_start": 464,
+      "l2_latest_mtime": 131,
+      "review_csv_mtime": 124,
+      "review_manifest_mtime": 124,
+      "submit_csv_mtime": 117,
+      "unknown_ades_mtime": 117,
+      "unknown_catalog_mtime": 124,
+      "unknown_end": 7,
+      "unknown_reply_mtime": 35,
+      "unknown_start": 73,
+      "unknown_summary_mtime": 128
+    },
+    "selected_log_events": 8,
+    "total": 2083
+  },
+  "generated_utc": "2026-08-09T12:47:32.574878Z",
+  "host": "Leviathan.local",
+  "input_hashes": {
+    "l2_manifest.csv": "a5a561c212745bee53a1870a27f83779a2558f3973d88378b8ef5d1cdad6b485",
+    "night_status.csv": "fb4ce8be7ef326bde678ed8a8ffd1111a8401733cff21af36629fd242e24f052",
+    "nightly_products.csv": "e91dc04839ae047288a68c478a1dda5cdd2fa1bb3b83aa2b109d21ae53d4e5f7"
+  },
+  "latency_categories": {
+    "automatic": {
+      "auto_known_mask15_to_unknown_start_hours": {
+        "all_nonnegative": {
+          "max": 9.207802097499998,
+          "median": 2.653767660833333,
+          "min": 0.031736748055555555,
+          "n": 3,
+          "n_negative_excluded": 0,
+          "p16": 0.8707866401444444,
+          "p84": 7.110511077766665,
+          "p90": 7.896995210166665,
+          "p95": 8.55239865383333
+        },
+        "historical_rerun": {
+          "max": 9.207802097499998,
+          "median": 9.207802097499998,
+          "min": 9.207802097499998,
+          "n": 1,
+          "n_negative_excluded": 0,
+          "p16": 9.207802097499998,
+          "p84": 9.207802097499998,
+          "p90": 9.207802097499998,
+          "p95": 9.207802097499998
+        },
+        "latest_mtime_only": {
+          "max": null,
+          "median": null,
+          "min": null,
+          "n": 0,
+          "n_negative_excluded": 0,
+          "p16": null,
+          "p84": null,
+          "p90": null,
+          "p95": null
+        },
+        "no_evidence": {
+          "max": null,
+          "median": null,
+          "min": null,
+          "n": 0,
+          "n_negative_excluded": 0,
+          "p16": null,
+          "p84": null,
+          "p90": null,
+          "p95": null
+        },
+        "normal_daily": {
+          "max": 2.653767660833333,
+          "median": 1.3427522044444444,
+          "min": 0.031736748055555555,
+          "n": 2,
+          "n_negative_excluded": 0,
+          "p16": 0.45126169409999994,
+          "p84": 2.2342427147888886,
+          "p90": 2.391564569555556,
+          "p95": 2.5226661151944443
+        },
+        "primary_science_included": {
+          "max": 9.207802097499998,
+          "median": 2.653767660833333,
+          "min": 0.031736748055555555,
+          "n": 3,
+          "n_negative_excluded": 0,
+          "p16": 0.8707866401444444,
+          "p84": 7.110511077766665,
+          "p90": 7.896995210166665,
+          "p95": 8.55239865383333
+        },
+        "unit": "hours"
+      },
+      "auto_known_reply_to_unknown_start_hours": {
+        "all_nonnegative": {
+          "max": 51.674296766666664,
+          "median": 0.030159832499999997,
+          "min": 0.005967757222222222,
+          "n": 3,
+          "n_negative_excluded": 0,
+          "p16": 0.01370922131111111,
+          "p84": 35.14817294773333,
+          "p90": 41.34546937983333,
+          "p95": 46.509883073249995
+        },
+        "historical_rerun": {
+          "max": 51.674296766666664,
+          "median": 51.674296766666664,
+          "min": 51.674296766666664,
+          "n": 1,
+          "n_negative_excluded": 0,
+          "p16": 51.674296766666664,
+          "p84": 51.674296766666664,
+          "p90": 51.674296766666664,
+          "p95": 51.674296766666664
+        },
+        "latest_mtime_only": {
+          "max": null,
+          "median": null,
+          "min": null,
+          "n": 0,
+          "n_negative_excluded": 0,
+          "p16": null,
+          "p84": null,
+          "p90": null,
+          "p95": null
+        },
+        "no_evidence": {
+          "max": null,
+          "median": null,
+          "min": null,
+          "n": 0,
+          "n_negative_excluded": 0,
+          "p16": null,
+          "p84": null,
+          "p90": null,
+          "p95": null
+        },
+        "normal_daily": {
+          "max": 0.030159832499999997,
+          "median": 0.01806379486111111,
+          "min": 0.005967757222222222,
+          "n": 2,
+          "n_negative_excluded": 0,
+          "p16": 0.009838489266666667,
+          "p84": 0.026289100455555554,
+          "p90": 0.027740624972222218,
+          "p95": 0.028950228736111108
+        },
+        "primary_science_included": {
+          "max": 51.674296766666664,
+          "median": 0.030159832499999997,
+          "min": 0.005967757222222222,
+          "n": 3,
+          "n_negative_excluded": 0,
+          "p16": 0.01370922131111111,
+          "p84": 35.14817294773333,
+          "p90": 41.34546937983333,
+          "p95": 46.509883073249995
+        },
+        "unit": "hours"
+      },
+      "auto_known_start_to_ades_hours": {
+        "all_nonnegative": {
+          "max": 0.036635185555555554,
+          "median": 0.01882095222222222,
+          "min": 0.001006718888888889,
+          "n": 2,
+          "n_negative_excluded": 0,
+          "p16": 0.006707273555555555,
+          "p84": 0.030934630888888884,
+          "p90": 0.033072338888888886,
+          "p95": 0.034853762222222216
+        },
+        "historical_rerun": {
+          "max": null,
+          "median": null,
+          "min": null,
+          "n": 0,
+          "n_negative_excluded": 0,
+          "p16": null,
+          "p84": null,
+          "p90": null,
+          "p95": null
+        },
+        "latest_mtime_only": {
+          "max": null,
+          "median": null,
+          "min": null,
+          "n": 0,
+          "n_negative_excluded": 0,
+          "p16": null,
+          "p84": null,
+          "p90": null,
+          "p95": null
+        },
+        "no_evidence": {
+          "max": null,
+          "median": null,
+          "min": null,
+          "n": 0,
+          "n_negative_excluded": 0,
+          "p16": null,
+          "p84": null,
+          "p90": null,
+          "p95": null
+        },
+        "normal_daily": {
+          "max": 0.036635185555555554,
+          "median": 0.01882095222222222,
+          "min": 0.001006718888888889,
+          "n": 2,
+          "n_negative_excluded": 0,
+          "p16": 0.006707273555555555,
+          "p84": 0.030934630888888884,
+          "p90": 0.033072338888888886,
+          "p95": 0.034853762222222216
+        },
+        "primary_science_included": {
+          "max": 0.036635185555555554,
+          "median": 0.01882095222222222,
+          "min": 0.001006718888888889,
+          "n": 2,
+          "n_negative_excluded": 0,
+          "p16": 0.006707273555555555,
+          "p84": 0.030934630888888884,
+          "p90": 0.033072338888888886,
+          "p95": 0.034853762222222216
+        },
+        "unit": "hours"
+      },
+      "auto_l2_latest_to_known_ades_hours": {
+        "all_nonnegative": {
+          "max": 1664.3324200936113,
+          "median": 1368.2360764030557,
+          "min": 0.40421708361111114,
+          "n": 127,
+          "n_negative_excluded": 0,
+          "p16": 9.356305296222223,
+          "p84": 1594.2326494291776,
+          "p90": 1613.9310620781112,
+          "p95": 1632.6727637694444
+        },
+        "historical_rerun": {
+          "max": null,
+          "median": null,
+          "min": null,
+          "n": 0,
+          "n_negative_excluded": 0,
+          "p16": null,
+          "p84": null,
+          "p90": null,
+          "p95": null
+        },
+        "latest_mtime_only": {
+          "max": 1664.3324200936113,
+          "median": 1372.2140077975,
+          "min": 0.40421708361111114,
+          "n": 125,
+          "n_negative_excluded": 0,
+          "p16": 9.502786394055557,
+          "p84": 1595.7306580275776,
+          "p90": 1614.597334658,
+          "p95": 1632.832145045278
+        },
+        "no_evidence": {
+          "max": null,
+          "median": null,
+          "min": null,
+          "n": 0,
+          "n_negative_excluded": 0,
+          "p16": null,
+          "p84": null,
+          "p90": null,
+          "p95": null
+        },
+        "normal_daily": {
+          "max": 10.347114847777776,
+          "median": 9.630734085833332,
+          "min": 8.91435332388889,
+          "n": 2,
+          "n_negative_excluded": 0,
+          "p16": 9.14359516771111,
+          "p84": 10.117873003955554,
+          "p90": 10.203838695388889,
+          "p95": 10.275476771583332
+        },
+        "primary_science_included": {
+          "max": 1664.3324200936113,
+          "median": 1365.519732944861,
+          "min": 0.40421708361111114,
+          "n": 126,
+          "n_negative_excluded": 0,
+          "p16": 9.321839155555555,
+          "p84": 1589.1232492752777,
+          "p90": 1612.3910604625,
+          "p95": 1632.7524544073613
+        },
+        "unit": "hours"
+      },
+      "auto_l2_latest_to_known_start_hours": {
+        "all_nonnegative": {
+          "max": 10.310479662222221,
+          "median": 9.611913133611111,
+          "min": 8.913346605,
+          "n": 2,
+          "n_negative_excluded": 0,
+          "p16": 9.136887894155555,
+          "p84": 10.086938373066666,
+          "p90": 10.1707663565,
+          "p95": 10.24062300936111
+        },
+        "historical_rerun": {
+          "max": null,
+          "median": null,
+          "min": null,
+          "n": 0,
+          "n_negative_excluded": 0,
+          "p16": null,
+          "p84": null,
+          "p90": null,
+          "p95": null
+        },
+        "latest_mtime_only": {
+          "max": null,
+          "median": null,
+          "min": null,
+          "n": 0,
+          "n_negative_excluded": 0,
+          "p16": null,
+          "p84": null,
+          "p90": null,
+          "p95": null
+        },
+        "no_evidence": {
+          "max": null,
+          "median": null,
+          "min": null,
+          "n": 0,
+          "n_negative_excluded": 0,
+          "p16": null,
+          "p84": null,
+          "p90": null,
+          "p95": null
+        },
+        "normal_daily": {
+          "max": 10.310479662222221,
+          "median": 9.611913133611111,
+          "min": 8.913346605,
+          "n": 2,
+          "n_negative_excluded": 0,
+          "p16": 9.136887894155555,
+          "p84": 10.086938373066666,
+          "p90": 10.1707663565,
+          "p95": 10.24062300936111
+        },
+        "primary_science_included": {
+          "max": 10.310479662222221,
+          "median": 9.611913133611111,
+          "min": 8.913346605,
+          "n": 2,
+          "n_negative_excluded": 0,
+          "p16": 9.136887894155555,
+          "p84": 10.086938373066666,
+          "p90": 10.1707663565,
+          "p95": 10.24062300936111
+        },
+        "unit": "hours"
+      },
+      "auto_unknown_start_to_catalog_hours": {
+        "all_nonnegative": {
+          "max": 0.06098567027777778,
+          "median": 0.007180318333333334,
+          "min": 0.0057967466666666665,
+          "n": 3,
+          "n_negative_excluded": 0,
+          "p16": 0.0062394896,
+          "p84": 0.04376795765555555,
+          "p90": 0.050224599888888895,
+          "p95": 0.055605135083333326
+        },
+        "historical_rerun": {
+          "max": 0.0057967466666666665,
+          "median": 0.0057967466666666665,
+          "min": 0.0057967466666666665,
+          "n": 1,
+          "n_negative_excluded": 0,
+          "p16": 0.0057967466666666665,
+          "p84": 0.0057967466666666665,
+          "p90": 0.0057967466666666665,
+          "p95": 0.0057967466666666665
+        },
+        "latest_mtime_only": {
+          "max": null,
+          "median": null,
+          "min": null,
+          "n": 0,
+          "n_negative_excluded": 0,
+          "p16": null,
+          "p84": null,
+          "p90": null,
+          "p95": null
+        },
+        "no_evidence": {
+          "max": null,
+          "median": null,
+          "min": null,
+          "n": 0,
+          "n_negative_excluded": 0,
+          "p16": null,
+          "p84": null,
+          "p90": null,
+          "p95": null
+        },
+        "normal_daily": {
+          "max": 0.06098567027777778,
+          "median": 0.03408299430555556,
+          "min": 0.007180318333333334,
+          "n": 2,
+          "n_negative_excluded": 0,
+          "p16": 0.015789174644444445,
+          "p84": 0.052376813966666665,
+          "p90": 0.05560513508333333,
+          "p95": 0.05829540268055556
+        },
+        "primary_science_included": {
+          "max": 0.06098567027777778,
+          "median": 0.007180318333333334,
+          "min": 0.0057967466666666665,
+          "n": 3,
+          "n_negative_excluded": 0,
+          "p16": 0.0062394896,
+          "p84": 0.04376795765555555,
+          "p90": 0.050224599888888895,
+          "p95": 0.055605135083333326
+        },
+        "unit": "hours"
+      },
+      "auto_unknown_start_to_end_minutes": {
+        "all_nonnegative": {
+          "max": 7.683333333333334,
+          "median": 0.45,
+          "min": 0.36666666666666664,
+          "n": 3,
+          "n_negative_excluded": 0,
+          "p16": 0.3933333333333333,
+          "p84": 5.368666666666667,
+          "p90": 6.236666666666667,
+          "p95": 6.959999999999999
+        },
+        "historical_rerun": {
+          "max": 0.36666666666666664,
+          "median": 0.36666666666666664,
+          "min": 0.36666666666666664,
+          "n": 1,
+          "n_negative_excluded": 0,
+          "p16": 0.36666666666666664,
+          "p84": 0.36666666666666664,
+          "p90": 0.36666666666666664,
+          "p95": 0.36666666666666664
+        },
+        "latest_mtime_only": {
+          "max": null,
+          "median": null,
+          "min": null,
+          "n": 0,
+          "n_negative_excluded": 0,
+          "p16": null,
+          "p84": null,
+          "p90": null,
+          "p95": null
+        },
+        "no_evidence": {
+          "max": null,
+          "median": null,
+          "min": null,
+          "n": 0,
+          "n_negative_excluded": 0,
+          "p16": null,
+          "p84": null,
+          "p90": null,
+          "p95": null
+        },
+        "normal_daily": {
+          "max": 7.683333333333334,
+          "median": 4.066666666666666,
+          "min": 0.45,
+          "n": 2,
+          "n_negative_excluded": 0,
+          "p16": 1.6073333333333335,
+          "p84": 6.526,
+          "p90": 6.96,
+          "p95": 7.321666666666666
+        },
+        "primary_science_included": {
+          "max": 7.683333333333334,
+          "median": 0.45,
+          "min": 0.36666666666666664,
+          "n": 3,
+          "n_negative_excluded": 0,
+          "p16": 0.3933333333333333,
+          "p84": 5.368666666666667,
+          "p90": 6.236666666666667,
+          "p95": 6.959999999999999
+        },
+        "unit": "minutes"
+      },
+      "auto_unknown_start_to_review_package_hours": {
+        "all_nonnegative": {
+          "max": 0.1281636775,
+          "median": 0.0077049902777777774,
+          "min": 0.006147603333333333,
+          "n": 3,
+          "n_negative_excluded": 0,
+          "p16": 0.0066459671555555554,
+          "p84": 0.08961689758888888,
+          "p90": 0.10407194005555556,
+          "p95": 0.11611780877777775
+        },
+        "historical_rerun": {
+          "max": 0.006147603333333333,
+          "median": 0.006147603333333333,
+          "min": 0.006147603333333333,
+          "n": 1,
+          "n_negative_excluded": 0,
+          "p16": 0.006147603333333333,
+          "p84": 0.006147603333333333,
+          "p90": 0.006147603333333333,
+          "p95": 0.006147603333333333
+        },
+        "latest_mtime_only": {
+          "max": null,
+          "median": null,
+          "min": null,
+          "n": 0,
+          "n_negative_excluded": 0,
+          "p16": null,
+          "p84": null,
+          "p90": null,
+          "p95": null
+        },
+        "no_evidence": {
+          "max": null,
+          "median": null,
+          "min": null,
+          "n": 0,
+          "n_negative_excluded": 0,
+          "p16": null,
+          "p84": null,
+          "p90": null,
+          "p95": null
+        },
+        "normal_daily": {
+          "max": 0.1281636775,
+          "median": 0.06793433388888888,
+          "min": 0.0077049902777777774,
+          "n": 2,
+          "n_negative_excluded": 0,
+          "p16": 0.02697838023333333,
+          "p84": 0.10889028754444444,
+          "p90": 0.11611780877777776,
+          "p95": 0.12214074313888888
+        },
+        "primary_science_included": {
+          "max": 0.1281636775,
+          "median": 0.0077049902777777774,
+          "min": 0.006147603333333333,
+          "n": 3,
+          "n_negative_excluded": 0,
+          "p16": 0.0066459671555555554,
+          "p84": 0.08961689758888888,
+          "p90": 0.10407194005555556,
+          "p95": 0.11611780877777775
+        },
+        "unit": "hours"
+      }
+    },
+    "end_to_end": {
+      "end_to_end_l2_latest_to_known_reply_hours": {
+        "all_nonnegative": {
+          "max": 1664.333502847778,
+          "median": 1365.5213269383335,
+          "min": 0.40421736138888886,
+          "n": 122,
+          "n_negative_excluded": 0,
+          "p16": 9.53893187391111,
+          "p84": 1593.0172576916889,
+          "p90": 1612.5581700745001,
+          "p95": 1633.0722764219306
+        },
+        "historical_rerun": {
+          "max": null,
+          "median": null,
+          "min": null,
+          "n": 0,
+          "n_negative_excluded": 0,
+          "p16": null,
+          "p84": null,
+          "p90": null,
+          "p95": null
+        },
+        "latest_mtime_only": {
+          "max": 1664.333502847778,
+          "median": 1370.227145110278,
+          "min": 0.40421736138888886,
+          "n": 120,
+          "n_negative_excluded": 0,
+          "p16": 9.542111875466665,
+          "p84": 1594.9637346892,
+          "p90": 1612.9328217662223,
+          "p95": 1633.2912185775278
+        },
+        "no_evidence": {
+          "max": null,
+          "median": null,
+          "min": null,
+          "n": 0,
+          "n_negative_excluded": 0,
+          "p16": null,
+          "p84": null,
+          "p90": null,
+          "p95": null
+        },
+        "normal_daily": {
+          "max": 10.3480976075,
+          "median": 9.632043783194444,
+          "min": 8.915989958888888,
+          "n": 2,
+          "n_negative_excluded": 0,
+          "p16": 9.145127182666664,
+          "p84": 10.118960383722222,
+          "p90": 10.204886842638889,
+          "p95": 10.276492225069443
+        },
+        "primary_science_included": {
+          "max": 1664.333502847778,
+          "median": 1365.5213269383335,
+          "min": 0.40421736138888886,
+          "n": 122,
+          "n_negative_excluded": 0,
+          "p16": 9.53893187391111,
+          "p84": 1593.0172576916889,
+          "p90": 1612.5581700745001,
+          "p95": 1633.0722764219306
+        },
+        "unit": "hours"
+      },
+      "end_to_end_l2_latest_to_review_package_hours": {
+        "all_nonnegative": {
+          "max": 3582.762839146667,
+          "median": 3315.0070017850003,
+          "min": 9.05012139361111,
+          "n": 124,
+          "n_negative_excluded": 0,
+          "p16": 1396.1684314296556,
+          "p84": 3509.6547360015775,
+          "p90": 3531.027186757528,
+          "p95": 3551.376645473792
+        },
+        "historical_rerun": {
+          "max": 62.56618199305556,
+          "median": 62.56618199305556,
+          "min": 62.56618199305556,
+          "n": 1,
+          "n_negative_excluded": 0,
+          "p16": 62.56618199305556,
+          "p84": 62.56618199305556,
+          "p90": 62.56618199305556,
+          "p95": 62.56618199305556
+        },
+        "latest_mtime_only": {
+          "max": 3582.762839146667,
+          "median": 3321.3154156772225,
+          "min": 439.63672669500005,
+          "n": 121,
+          "n_negative_excluded": 0,
+          "p16": 1647.6463935943334,
+          "p84": 3512.554416078111,
+          "p90": 3531.1588250011114,
+          "p95": 3551.613970929167
+        },
+        "no_evidence": {
+          "max": null,
+          "median": null,
+          "min": null,
+          "n": 0,
+          "n_negative_excluded": 0,
+          "p16": null,
+          "p84": null,
+          "p90": null,
+          "p95": null
+        },
+        "normal_daily": {
+          "max": 10.385962430277777,
+          "median": 9.718041911944443,
+          "min": 9.05012139361111,
+          "n": 2,
+          "n_negative_excluded": 0,
+          "p16": 9.263855959477777,
+          "p84": 10.17222786441111,
+          "p90": 10.25237832661111,
+          "p95": 10.319170378444444
+        },
+        "primary_science_included": {
+          "max": 3582.762839146667,
+          "median": 3315.0070017850003,
+          "min": 9.05012139361111,
+          "n": 124,
+          "n_negative_excluded": 0,
+          "p16": 1396.1684314296556,
+          "p84": 3509.6547360015775,
+          "p90": 3531.027186757528,
+          "p95": 3551.376645473792
+        },
+        "unit": "hours"
+      },
+      "end_to_end_l2_latest_to_unknown_catalog_hours": {
+        "all_nonnegative": {
+          "max": 3582.7451311144446,
+          "median": 3314.994747808889,
+          "min": 8.98294338638889,
+          "n": 124,
+          "n_negative_excluded": 0,
+          "p16": 1396.1671652345221,
+          "p84": 3509.619434961566,
+          "p90": 3531.011887245834,
+          "p95": 3551.3390124428615
+        },
+        "historical_rerun": {
+          "max": 62.56583113638889,
+          "median": 62.56583113638889,
+          "min": 62.56583113638889,
+          "n": 1,
+          "n_negative_excluded": 0,
+          "p16": 62.56583113638889,
+          "p84": 62.56583113638889,
+          "p90": 62.56583113638889,
+          "p95": 62.56583113638889
+        },
+        "latest_mtime_only": {
+          "max": 3582.7451311144446,
+          "median": 3321.2917860488888,
+          "min": 439.6302602458333,
+          "n": 121,
+          "n_negative_excluded": 0,
+          "p16": 1647.6459467059442,
+          "p84": 3512.533957985167,
+          "p90": 3531.1486542175003,
+          "p95": 3551.573754017778
+        },
+        "no_evidence": {
+          "max": null,
+          "median": null,
+          "min": null,
+          "n": 0,
+          "n_negative_excluded": 0,
+          "p16": null,
+          "p84": null,
+          "p90": null,
+          "p95": null
+        },
+        "normal_daily": {
+          "max": 10.385437758333333,
+          "median": 9.68419057236111,
+          "min": 8.98294338638889,
+          "n": 2,
+          "n_negative_excluded": 0,
+          "p16": 9.2073424859,
+          "p84": 10.161038658822221,
+          "p90": 10.24518832113889,
+          "p95": 10.315313039736111
+        },
+        "primary_science_included": {
+          "max": 3582.7451311144446,
+          "median": 3314.994747808889,
+          "min": 8.98294338638889,
+          "n": 124,
+          "n_negative_excluded": 0,
+          "p16": 1396.1671652345221,
+          "p84": 3509.619434961566,
+          "p90": 3531.011887245834,
+          "p95": 3551.3390124428615
+        },
+        "unit": "hours"
+      },
+      "end_to_end_l2_latest_to_unknown_reply_hours": {
+        "all_nonnegative": {
+          "max": 3567.2315279283334,
+          "median": 3220.03840277,
+          "min": 539.7028671405556,
+          "n": 35,
+          "n_negative_excluded": 0,
+          "p16": 1159.4042793961,
+          "p84": 3411.079149095278,
+          "p90": 3436.782786447333,
+          "p95": 3478.6929166274995
+        },
+        "historical_rerun": {
+          "max": null,
+          "median": null,
+          "min": null,
+          "n": 0,
+          "n_negative_excluded": 0,
+          "p16": null,
+          "p84": null,
+          "p90": null,
+          "p95": null
+        },
+        "latest_mtime_only": {
+          "max": 3567.2315279283334,
+          "median": 3220.03840277,
+          "min": 539.7028671405556,
+          "n": 35,
+          "n_negative_excluded": 0,
+          "p16": 1159.4042793961,
+          "p84": 3411.079149095278,
+          "p90": 3436.782786447333,
+          "p95": 3478.6929166274995
+        },
+        "no_evidence": {
+          "max": null,
+          "median": null,
+          "min": null,
+          "n": 0,
+          "n_negative_excluded": 0,
+          "p16": null,
+          "p84": null,
+          "p90": null,
+          "p95": null
+        },
+        "normal_daily": {
+          "max": null,
+          "median": null,
+          "min": null,
+          "n": 0,
+          "n_negative_excluded": 0,
+          "p16": null,
+          "p84": null,
+          "p90": null,
+          "p95": null
+        },
+        "primary_science_included": {
+          "max": 3567.2315279283334,
+          "median": 3220.03840277,
+          "min": 539.7028671405556,
+          "n": 35,
+          "n_negative_excluded": 0,
+          "p16": 1159.4042793961,
+          "p84": 3411.079149095278,
+          "p90": 3436.782786447333,
+          "p95": 3478.6929166274995
+        },
+        "unit": "hours"
+      }
+    },
+    "human": {
+      "human_review_csv_to_submit_csv_hours": {
+        "all_nonnegative": {
+          "max": 0.0,
+          "median": 0.0,
+          "min": 0.0,
+          "n": 115,
+          "n_negative_excluded": 2,
+          "p16": 0.0,
+          "p84": 0.0,
+          "p90": 0.0,
+          "p95": 0.0
+        },
+        "historical_rerun": {
+          "max": null,
+          "median": null,
+          "min": null,
+          "n": 0,
+          "n_negative_excluded": 0,
+          "p16": null,
+          "p84": null,
+          "p90": null,
+          "p95": null
+        },
+        "latest_mtime_only": {
+          "max": 0.0,
+          "median": 0.0,
+          "min": 0.0,
+          "n": 115,
+          "n_negative_excluded": 1,
+          "p16": 0.0,
+          "p84": 0.0,
+          "p90": 0.0,
+          "p95": 0.0
+        },
+        "no_evidence": {
+          "max": null,
+          "median": null,
+          "min": null,
+          "n": 0,
+          "n_negative_excluded": 0,
+          "p16": null,
+          "p84": null,
+          "p90": null,
+          "p95": null
+        },
+        "normal_daily": {
+          "max": null,
+          "median": null,
+          "min": null,
+          "n": 0,
+          "n_negative_excluded": 1,
+          "p16": null,
+          "p84": null,
+          "p90": null,
+          "p95": null
+        },
+        "primary_science_included": {
+          "max": 0.0,
+          "median": 0.0,
+          "min": 0.0,
+          "n": 115,
+          "n_negative_excluded": 2,
+          "p16": 0.0,
+          "p84": 0.0,
+          "p90": 0.0,
+          "p95": 0.0
+        },
+        "unit": "hours"
+      },
+      "human_review_package_to_review_csv_hours": {
+        "all_nonnegative": {
+          "max": 107.99747707555555,
+          "median": 54.201692378611114,
+          "min": 4.412221233611111,
+          "n": 116,
+          "n_negative_excluded": 8,
+          "p16": 4.871181260277778,
+          "p84": 78.04548629227777,
+          "p90": 78.10874659486112,
+          "p95": 99.89764527305555
+        },
+        "historical_rerun": {
+          "max": null,
+          "median": null,
+          "min": null,
+          "n": 0,
+          "n_negative_excluded": 1,
+          "p16": null,
+          "p84": null,
+          "p90": null,
+          "p95": null
+        },
+        "latest_mtime_only": {
+          "max": 107.99747707555555,
+          "median": 54.202115883611114,
+          "min": 4.412221233611111,
+          "n": 115,
+          "n_negative_excluded": 6,
+          "p16": 4.870819650277778,
+          "p84": 78.04549562547777,
+          "p90": 78.1088484278889,
+          "p95": 99.89861026799998
+        },
+        "no_evidence": {
+          "max": null,
+          "median": null,
+          "min": null,
+          "n": 0,
+          "n_negative_excluded": 0,
+          "p16": null,
+          "p84": null,
+          "p90": null,
+          "p95": null
+        },
+        "normal_daily": {
+          "max": 46.458910547777776,
+          "median": 46.458910547777776,
+          "min": 46.458910547777776,
+          "n": 1,
+          "n_negative_excluded": 1,
+          "p16": 46.458910547777776,
+          "p84": 46.458910547777776,
+          "p90": 46.458910547777776,
+          "p95": 46.458910547777776
+        },
+        "primary_science_included": {
+          "max": 107.99747707555555,
+          "median": 54.201692378611114,
+          "min": 4.412221233611111,
+          "n": 116,
+          "n_negative_excluded": 8,
+          "p16": 4.871181260277778,
+          "p84": 78.04548629227777,
+          "p90": 78.10874659486112,
+          "p95": 99.89764527305555
+        },
+        "unit": "hours"
+      },
+      "human_review_package_to_submit_csv_hours": {
+        "all_nonnegative": {
+          "max": 100.02665319555555,
+          "median": 54.201692378611114,
+          "min": 0.0700612063888889,
+          "n": 116,
+          "n_negative_excluded": 1,
+          "p16": 4.865855440944445,
+          "p84": 78.04548629227777,
+          "p90": 78.10874659486112,
+          "p95": 83.95654032541667
+        },
+        "historical_rerun": {
+          "max": null,
+          "median": null,
+          "min": null,
+          "n": 0,
+          "n_negative_excluded": 0,
+          "p16": null,
+          "p84": null,
+          "p90": null,
+          "p95": null
+        },
+        "latest_mtime_only": {
+          "max": 100.02665319555555,
+          "median": 54.202115883611114,
+          "min": 4.412221233611111,
+          "n": 115,
+          "n_negative_excluded": 1,
+          "p16": 4.870819650277778,
+          "p84": 78.04549562547777,
+          "p90": 78.1088484278889,
+          "p95": 85.01895899027772
+        },
+        "no_evidence": {
+          "max": null,
+          "median": null,
+          "min": null,
+          "n": 0,
+          "n_negative_excluded": 0,
+          "p16": null,
+          "p84": null,
+          "p90": null,
+          "p95": null
+        },
+        "normal_daily": {
+          "max": 0.0700612063888889,
+          "median": 0.0700612063888889,
+          "min": 0.0700612063888889,
+          "n": 1,
+          "n_negative_excluded": 0,
+          "p16": 0.0700612063888889,
+          "p84": 0.0700612063888889,
+          "p90": 0.0700612063888889,
+          "p95": 0.0700612063888889
+        },
+        "primary_science_included": {
+          "max": 100.02665319555555,
+          "median": 54.201692378611114,
+          "min": 0.0700612063888889,
+          "n": 116,
+          "n_negative_excluded": 1,
+          "p16": 4.865855440944445,
+          "p84": 78.04548629227777,
+          "p90": 78.10874659486112,
+          "p95": 83.95654032541667
+        },
+        "unit": "hours"
+      }
+    },
+    "mpc": {
+      "mpc_known_ades_to_reply_hours": {
+        "all_nonnegative": {
+          "max": 0.01953874222222222,
+          "median": 0.0013310822222222223,
+          "min": 2.7777777777777776e-07,
+          "n": 122,
+          "n_negative_excluded": 0,
+          "p16": 0.0009149801555555555,
+          "p84": 0.0020085681,
+          "p90": 0.002419892194444445,
+          "p95": 0.0032643878611111105
+        },
+        "historical_rerun": {
+          "max": null,
+          "median": null,
+          "min": null,
+          "n": 0,
+          "n_negative_excluded": 0,
+          "p16": null,
+          "p84": null,
+          "p90": null,
+          "p95": null
+        },
+        "latest_mtime_only": {
+          "max": 0.01953874222222222,
+          "median": 0.0013310822222222223,
+          "min": 2.7777777777777776e-07,
+          "n": 120,
+          "n_negative_excluded": 0,
+          "p16": 0.0009038694,
+          "p84": 0.002013012011111111,
+          "p90": 0.002425475472222223,
+          "p95": 0.0032887483611111104
+        },
+        "no_evidence": {
+          "max": null,
+          "median": null,
+          "min": null,
+          "n": 0,
+          "n_negative_excluded": 0,
+          "p16": null,
+          "p84": null,
+          "p90": null,
+          "p95": null
+        },
+        "normal_daily": {
+          "max": 0.0016366350000000002,
+          "median": 0.0013096973611111114,
+          "min": 0.0009827597222222223,
+          "n": 2,
+          "n_negative_excluded": 0,
+          "p16": 0.0010873797666666666,
+          "p84": 0.0015320149555555556,
+          "p90": 0.0015712474722222223,
+          "p95": 0.0016039412361111114
+        },
+        "primary_science_included": {
+          "max": 0.01953874222222222,
+          "median": 0.0013310822222222223,
+          "min": 2.7777777777777776e-07,
+          "n": 122,
+          "n_negative_excluded": 0,
+          "p16": 0.0009149801555555555,
+          "p84": 0.0020085681,
+          "p90": 0.002419892194444445,
+          "p95": 0.0032643878611111105
+        },
+        "unit": "hours"
+      },
+      "mpc_unknown_ades_to_reply_hours": {
+        "all_nonnegative": {
+          "max": 0.006999586944444444,
+          "median": 0.0016566347222222223,
+          "min": 0.0007852627777777777,
+          "n": 35,
+          "n_negative_excluded": 0,
+          "p16": 0.0010716792,
+          "p84": 0.0022745892999999997,
+          "p90": 0.003027220000000001,
+          "p95": 0.003921118583333331
+        },
+        "historical_rerun": {
+          "max": null,
+          "median": null,
+          "min": null,
+          "n": 0,
+          "n_negative_excluded": 0,
+          "p16": null,
+          "p84": null,
+          "p90": null,
+          "p95": null
+        },
+        "latest_mtime_only": {
+          "max": 0.006999586944444444,
+          "median": 0.0016566347222222223,
+          "min": 0.0007852627777777777,
+          "n": 35,
+          "n_negative_excluded": 0,
+          "p16": 0.0010716792,
+          "p84": 0.0022745892999999997,
+          "p90": 0.003027220000000001,
+          "p95": 0.003921118583333331
+        },
+        "no_evidence": {
+          "max": null,
+          "median": null,
+          "min": null,
+          "n": 0,
+          "n_negative_excluded": 0,
+          "p16": null,
+          "p84": null,
+          "p90": null,
+          "p95": null
+        },
+        "normal_daily": {
+          "max": null,
+          "median": null,
+          "min": null,
+          "n": 0,
+          "n_negative_excluded": 0,
+          "p16": null,
+          "p84": null,
+          "p90": null,
+          "p95": null
+        },
+        "primary_science_included": {
+          "max": 0.006999586944444444,
+          "median": 0.0016566347222222223,
+          "min": 0.0007852627777777777,
+          "n": 35,
+          "n_negative_excluded": 0,
+          "p16": 0.0010716792,
+          "p84": 0.0022745892999999997,
+          "p90": 0.003027220000000001,
+          "p95": 0.003921118583333331
+        },
+        "unit": "hours"
+      }
+    }
+  },
+  "logs": {
+    "combined_sorted_sha256_manifest_hash": "4990b95aa7b026153991ac4a09426c85939ca5fd455b1a079f6ddf703219baf1",
+    "file_count": 193,
+    "parsed_log_count": 187
+  },
+  "night_counts": {
+    "known_run_class": {
+      "latest_mtime_only": 129,
+      "no_evidence": 112,
+      "normal_daily": 2
+    },
+    "operations_run_class": {
+      "latest_mtime_only": 128,
+      "mixed_historical_rerun__latest_mtime_only": 1,
+      "no_evidence": 112,
+      "normal_daily": 2
+    },
+    "total": 243,
+    "unknown_run_class": {
+      "historical_rerun": 1,
+      "latest_mtime_only": 125,
+      "no_evidence": 115,
+      "normal_daily": 2
+    }
+  },
+  "pairing": {
+    "max_event_product_gap_hours": 72.0,
+    "rule": "latest explicit successful segment at or before the relevant latest product mtime, within the configured gap"
+  },
+  "python": "3.12.2 | packaged by conda-forge | (main, Feb 16 2024, 20:54:21) [Clang 16.0.6 ]",
+  "resource_accounting": {
+    "cpu": {
+      "status": "unavailable_slurm_accounting_disabled",
+      "value": null
+    },
+    "ram": {
+      "status": "unavailable_slurm_accounting_disabled",
+      "value": null
+    }
+  },
+  "schema_version": "1.0",
+  "time_handling": {
+    "inventory_timezone": "ISO offset honored; timezone-naive inventory values assumed UTC",
+    "log_timezone": "CST explicitly interpreted as China Standard Time UTC+08:00",
+    "output_timezone": "UTC"
+  }
+}

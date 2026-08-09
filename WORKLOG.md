@@ -1,5 +1,36 @@
 # WORKLOG
 
+## 2026-08-09
+
+- task: 完成 SHARP PASP 初稿所列 P0/P1 数据冻结、统计、表格、代码冲突审计和全部 12 张论文图
+- files_changed:
+  - 新增 `paper_analysis_20260803/`：冻结快照、分析程序、5 张表、12 张图、执行后 notebook、QA、报告和 SHA256 manifest
+  - 更新 `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 按多机器规则核对 git/远端状态；只读审计本地与服务器生产代码、cron、日志、raw/L2/L4/review/MPC 相关产物
+  - 服务器只读收集 `20251115..20260715` manifests/stage counts，并在独立临时目录完成 128 夜替代站点 orbit-confirmation sensitivity run
+  - 本地生成 known recovery/residual/random-shift、unknown funnel/cross-night/JPL、scheduler、operations、twilight、ADES midpoint correction 和 blinded-known proxy
+  - 生成 Table 1--5、Figure 1--12、executed notebook、figure contact sheet；运行独立 validator 和全量 SHA256 复验
+- key_findings:
+  - 当前代码并非只有 960 m：scheduler/known 为 `117.575 E, 40.393 N, 960 m`，orbit-confirmation 为 `117.575 E, 40.394239 N, 868.221 m`；L1/L2 的 GMG site header 是上游模板污染
+  - 替代站点全 128 夜重跑在 87,850 条 link、正式 4,762 条和保留 58 条中均为 0 个 `fit_ok/is_good` flip；但部分极短弧轨道元素高度不稳定，不可作种群推断
+  - known 名义预测去重后 `13,310,546`，1 arcsec 匹配 `534,780`（`4.017716%`）；径向残差中位数 `0.263406 arcsec`
+  - unknown 全链为 68 复核标真 -> 67 提交冻结 -> 58 后验保留；`14,299` 是 linkage-detection memberships，全球唯一 detection key 为 `14,159`
+  - 58 条只是 single-night linkages；线性运动筛选为 37 个候选 component；其中 6 条在两遍 JPL 数值查询中关联 C/2025 Y1，不能替代 MPC 身份/认定
+  - scheduler 的 `95.1743%` 只定义在 7,833 帧 plan-active acquired cohort（7,455 matched）；历史 near-Sun 实现的太阳距排序被 RA 排序覆盖
+- validation:
+  - snapshot assembler: `complete`，555 个 artifact 全部 SHA256 复验通过
+  - independent validator: 63 PASS / 0 FAIL / 1 SKIP；唯一 SKIP 是 author quality-mask sign-off
+  - figure QA: 12/12 PNG、12/12 单页可渲染 PDF、12/12 PASS；已人工检查 3x4 contact sheet
+  - Python 语法、目标 smoke tests、表格 52 项闭合、executed notebook 6/6 code cells 无 error
+- remaining_issues:
+  - 需要作者/台站确认正式 surveyed MPC 327 坐标/基准面并签字确认 science-night quality mask
+  - 需要上游 reduction/depth/effective-mask/header 文档、MPC 58+9 逐行状态、C/2025 Y1 与 15 s 时间更正政策
+  - image-level injection、CPU/RAM、天气/设备效率缺少外部证据；当前报告均明确标为 unavailable/conditional proxy
+- next_step:
+  - 作者先回复 `paper_analysis_20260803/reports/AUTHOR_INPUTS_REQUIRED.md` 的最小决策模板
+  - GPT Pro/作者据 `MANUSCRIPT_CODE_CONFLICTS.md` 和 Table/Figure 产物修订论文文字；不要把 linkage/component/JPL association 写成 discovery count
+
 ## 2026-08-03
 
 - task: 为项目论文讨论整理端到端程序、观测和统计结果

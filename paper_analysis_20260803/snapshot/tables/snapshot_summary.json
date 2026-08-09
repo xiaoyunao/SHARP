@@ -1,0 +1,18 @@
+{
+  "all_mp_fits": 41152,
+  "human_review_marked_real_linkages": 68,
+  "initial_review_selected_linkages": 67,
+  "known_matches_1arcsec": 534780,
+  "known_matches_1p5arcsec": 563612,
+  "known_predictions": 13311871,
+  "l2_catalogs": 40399,
+  "open_shutter_hours": 342.28333333333336,
+  "posthoc_retained_detection_memberships": 179,
+  "posthoc_retained_linkages": 58,
+  "quality_mask_status": "provisional_pending_author_signoff",
+  "raw_fields": 1430,
+  "strict_raw_frames": 41074,
+  "strict_raw_nights": 134,
+  "submission_selected_linkages": 67,
+  "unknown_catalog_linkages": 4762
+}

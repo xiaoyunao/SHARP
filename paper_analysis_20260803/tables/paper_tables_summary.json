@@ -1,0 +1,477 @@
+{
+  "combined_input_manifest_hash": "b93f28f3eacc6672987f5c277b99593a53bbbccca7293c0f81606109e51ffdd6",
+  "data_quality_checks": [
+    {
+      "check_id": "table1.orbit_baseline_height_vs_config",
+      "detail": "config.site_configuration_as_executed.single_night_orbit_confirm.height_m=868.221; orbit_site_summary.baseline.observer.height_m=868.221",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table1.orbit_alternate_height_vs_scheduler_config",
+      "detail": "config.site_configuration_as_executed.scheduler.height_m=960; orbit_site_summary.alternate_run_summary.observer.height_m=960",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table2.strict_raw_frames.snapshot_summary_vs_coverage_summary",
+      "detail": "snapshot_summary=41074; coverage_summary=41074",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table2.strict_raw_frames.snapshot_summary_vs_night_status",
+      "detail": "snapshot_summary=41074; night_status=41074",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table2.strict_raw_nights.snapshot_summary_vs_coverage_summary",
+      "detail": "snapshot_summary=134; coverage_summary=134",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table2.strict_raw_nights.snapshot_summary_vs_night_status",
+      "detail": "snapshot_summary=134; night_status=134",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table2.observed_unique_fields.snapshot_summary_vs_coverage_summary",
+      "detail": "snapshot_summary=1430; coverage_summary=1430",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table2.open_shutter_hours.snapshot_summary_vs_coverage_summary",
+      "detail": "snapshot_summary=342.283; coverage_summary=342.283",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table2.all_mp_fits.snapshot_summary_vs_night_status",
+      "detail": "snapshot_summary=41152; night_status=41152",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table2.strict_l2_catalogs.snapshot_summary_vs_night_status",
+      "detail": "snapshot_summary=40399; night_status=40399",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table2.known_prediction_rows.snapshot_summary_vs_frozen_row_counts",
+      "detail": "snapshot_summary=1.33119e+07; frozen_row_counts=1.33119e+07",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table2.known_prediction_rows.snapshot_summary_vs_night_status",
+      "detail": "snapshot_summary=1.33119e+07; night_status=1.33119e+07",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table2.known_matches_1arcsec.snapshot_summary_vs_frozen_row_counts",
+      "detail": "snapshot_summary=534780; frozen_row_counts=534780",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table2.known_matches_1arcsec.snapshot_summary_vs_night_status",
+      "detail": "snapshot_summary=534780; night_status=534780",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table2.known_matches_1p5arcsec.snapshot_summary_vs_frozen_row_counts",
+      "detail": "snapshot_summary=563612; frozen_row_counts=563612",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table2.known_matches_1p5arcsec.snapshot_summary_vs_night_status",
+      "detail": "snapshot_summary=563612; night_status=563612",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table2.unknown_catalog_linkages.snapshot_summary_vs_frozen_row_counts",
+      "detail": "snapshot_summary=4762; frozen_row_counts=4762",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table2.unknown_catalog_linkages.snapshot_summary_vs_night_status",
+      "detail": "snapshot_summary=4762; night_status=4762",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table2.human_review_marked_real_linkages.snapshot_summary_vs_night_status",
+      "detail": "snapshot_summary=68; night_status=68",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table2.submission_selected_linkages.snapshot_summary_vs_night_status",
+      "detail": "snapshot_summary=67; night_status=67",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table2.initial_human_selected_linkages.snapshot_summary_vs_night_status",
+      "detail": "snapshot_summary=67; night_status=67",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table2.posthoc_retained_linkages.snapshot_summary_vs_night_status",
+      "detail": "snapshot_summary=58; night_status=58",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table3.residual_row_count",
+      "detail": "known residual rows=534780; matched_1arcsec_n=534780",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table3.median_radial_residual_arcsec.summary_vs_residuals",
+      "detail": "known summary=0.263406; recomputed residual percentile=0.263406",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table3.p84_radial_residual_arcsec.summary_vs_residuals",
+      "detail": "known summary=0.529015; recomputed residual percentile=0.529015",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table3.p95_radial_residual_arcsec.summary_vs_residuals",
+      "detail": "known summary=0.757147; recomputed residual percentile=0.757147",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table3.nominal_match_fraction_closure",
+      "detail": "reported fraction=0.0401772; matched/predicted=0.0401772",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table4.magnitude_flag_survivor_detection.monotonic_count",
+      "detail": "magnitude_flag_survivor_detection=883370479; l2_source_detection=1144557890",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table4.gaia_survivor_detection.monotonic_count",
+      "detail": "gaia_survivor_detection=27138619; magnitude_flag_survivor_detection=883370479",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table4.grouped_gaia_input_detection.monotonic_count",
+      "detail": "grouped_gaia_input_detection=25618052; gaia_survivor_detection=27138619",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table4.common_area_survivor_detection.monotonic_count",
+      "detail": "common_area_survivor_detection=25618052; grouped_gaia_input_detection=25618052",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table4.edge_shell_survivor_detection.monotonic_count",
+      "detail": "edge_shell_survivor_detection=21250751; common_area_survivor_detection=25618052",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table4.reference_anchored_static_survivor_detection.monotonic_count",
+      "detail": "reference_anchored_static_survivor_detection=7933253; edge_shell_survivor_detection=21250751",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table4.orbit_fit_ok_linkage.monotonic_count",
+      "detail": "orbit_fit_ok_linkage=82821; shared_endpoint_linkage=83176",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table4.orbit_is_good_linkage.monotonic_count",
+      "detail": "orbit_is_good_linkage=82821; orbit_fit_ok_linkage=82821",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table4.fit_ok_all_non_known_linkage.monotonic_count",
+      "detail": "fit_ok_all_non_known_linkage=4762; orbit_fit_ok_linkage=82821",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table4.is_good_all_non_known_linkage.monotonic_count",
+      "detail": "is_good_all_non_known_linkage=4762; fit_ok_all_non_known_linkage=4762",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table4.post_known_catalog_linkage.monotonic_count",
+      "detail": "post_known_catalog_linkage=4762; fit_ok_all_non_known_linkage=4762",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table4.initial_human_selected_linkage.monotonic_count",
+      "detail": "initial_human_selected_linkage=67; post_known_catalog_linkage=4762",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table4.posthoc_retained_linkage.monotonic_count",
+      "detail": "posthoc_retained_linkage=58; initial_human_selected_linkage=67",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table4.membership_duplicate_closure",
+      "detail": "memberships-unique detections=140; reported duplicate memberships=140",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table4.blinded_known_eligible_closure",
+      "detail": "nested eligible object-night rows=102347; top-level eligible_ge3_and_rate_n=102347",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table4.blinded_known_strict_linked_object_n.fraction_closure",
+      "detail": "reported blinded-known fraction=0.741585; count/eligible=0.741585",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table4.blinded_known_fit_ok_survived_object_n.fraction_closure",
+      "detail": "reported blinded-known fraction=0.741585; count/eligible=0.741585",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table4.blinded_known_is_good_survived_object_n.fraction_closure",
+      "detail": "reported blinded-known fraction=0.741585; count/eligible=0.741585",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table5.retained_review_row_count",
+      "detail": "retained_rows=58",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table5.retained_link_key_coverage",
+      "detail": "one-to-one keys=58",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table5.linear_motion_candidate_group_closure",
+      "detail": "assigned_links=58; candidate_components=37",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table5.authoritative_mpc_evidence",
+      "detail": "All retained-link MPC states remain pending.",
+      "severity": "high",
+      "status": "not_run_input_not_supplied"
+    },
+    {
+      "check_id": "table5.jpl_does_not_promote_mpc_state",
+      "detail": "JPL_second_pass_confirmed=6; MPC_pending=58; no JPL-derived MPC fields",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table4_vs_table5.retained_linkage_count",
+      "detail": "Table 4 retained linkages=58; Table 5 rows=58",
+      "severity": "critical",
+      "status": "pass"
+    },
+    {
+      "check_id": "table5.review_selection_funnel",
+      "detail": "68 -> 67 -> 58",
+      "severity": "critical",
+      "status": "pass"
+    }
+  ],
+  "generated_utc": "2026-08-09T12:56:05.328970+00:00",
+  "guardrails": {
+    "jpl_vs_mpc": "JPL positional/rate association only; not evidence of MPC ingest, MPC identification, provisional designation, or discovery confirmation.",
+    "mpc_pending_rule": "Without a separately supplied verified MPC evidence row, submission/identification/designation fields remain blank and ingest state is pending.",
+    "retained_link_grain": "One retained single-night linkage row; not necessarily one independent object.",
+    "unknown_retention": "Stage retention/post-audit precision proxy only; not a completeness or discovery rate."
+  },
+  "input_sources": {
+    "blinded_known_summary": {
+      "path": "/Users/yunaoxiao/Desktop/smt_asteroid/paper_analysis_20260803/snapshot/blinded_known/blinded_known_summary.json",
+      "sha256": "d234d4f38bd6e45e0dcb4125ac4b8798e13f6e5ef0fa8e28350b8b5f6e09a2d1"
+    },
+    "config": {
+      "path": "/Users/yunaoxiao/Desktop/smt_asteroid/paper_analysis_20260803/config/snapshot.json",
+      "sha256": "4f9d1c7a6688a46cdb6c38023b8c10249b215ef3551a697a54cfcecb7492a7ce"
+    },
+    "coverage_summary": {
+      "path": "/Users/yunaoxiao/Desktop/smt_asteroid/paper_analysis_20260803/snapshot/coverage/coverage_summary.json",
+      "sha256": "68b8b1b2477d62b9cbc8eb57a949e3bb283e91b2e21996f5e6f1f59252381647"
+    },
+    "cross_night_groups": {
+      "path": "/Users/yunaoxiao/Desktop/smt_asteroid/paper_analysis_20260803/snapshot/derived_unknown/unknown_linear_motion_candidate_group_assignments.csv",
+      "sha256": "ef718624b8f9c08d72ba09692c86d5fdeed377b0ac0b4396334b24a58758187e"
+    },
+    "environment": {
+      "path": "/Users/yunaoxiao/Desktop/smt_asteroid/paper_analysis_20260803/snapshot/provenance/remote_environment.json",
+      "sha256": "c4940ec02bdc86fbde9578d0b98df5008fbb46c27562127ccab989f27921772a"
+    },
+    "frozen_row_counts": {
+      "path": "/Users/yunaoxiao/Desktop/smt_asteroid/paper_analysis_20260803/snapshot/frozen_products/row_counts.json",
+      "sha256": "1765975377a874d6f9442e9084a7ff4a6f5ab1f322bd9c3f4a9760939c3a7161"
+    },
+    "jpl_first_pass": {
+      "path": "/Users/yunaoxiao/Desktop/smt_asteroid/paper_analysis_20260803/snapshot/jpl_identification/jpl_best_match_by_link.csv",
+      "sha256": "87dd958f829fa60add340d84901c5b7df304b8d9b7dafbd4b86354265b1e191c"
+    },
+    "jpl_second_pass": {
+      "path": "/Users/yunaoxiao/Desktop/smt_asteroid/paper_analysis_20260803/snapshot/jpl_identification/second_pass/jpl_second_pass_confirmations.csv",
+      "sha256": "588272ae36e9ad045d47e1bb50207f1c3aa46be7ce7fbba71c4d321795fd9e6e"
+    },
+    "known_residuals": {
+      "path": "/Users/yunaoxiao/Desktop/smt_asteroid/paper_analysis_20260803/snapshot/derived_known/known_astrometric_residuals.parquet",
+      "sha256": "15b2ebcb5644a590f9edf63a57378156b83aa03a1b0c8b0e26af223dabd12c6e"
+    },
+    "known_summary": {
+      "path": "/Users/yunaoxiao/Desktop/smt_asteroid/paper_analysis_20260803/snapshot/derived_known/known_population_summary.json",
+      "sha256": "0ebf1fb9f39bced46663937d6bc80a6fcfc8690e72067d996078fbcb577d94de"
+    },
+    "night_status": {
+      "path": "/Users/yunaoxiao/Desktop/smt_asteroid/paper_analysis_20260803/snapshot/tables/night_status.csv",
+      "sha256": "fb4ce8be7ef326bde678ed8a8ffd1111a8401733cff21af36629fd242e24f052"
+    },
+    "orbit_site_summary": {
+      "path": "/Users/yunaoxiao/Desktop/smt_asteroid/paper_analysis_20260803/snapshot/orbit_site_comparison/orbit_site_sensitivity_summary.json",
+      "sha256": "57c102c1fb58fa6789bfe32ba550e2fa6a654e3535ffc98c6e98f24d7dde6a6d"
+    },
+    "production_hashes": {
+      "path": "/Users/yunaoxiao/Desktop/smt_asteroid/paper_analysis_20260803/snapshot/provenance/production_file_hashes.csv",
+      "sha256": "8b00c5b3c853fb2dc679e36a9e69ccecb8a677b86a5ce1d8671f666f1aef1e53"
+    },
+    "random_shift_summary": {
+      "path": "/Users/yunaoxiao/Desktop/smt_asteroid/paper_analysis_20260803/snapshot/random_shift/known_random_shift_summary.json",
+      "sha256": "af53321682c33ebc76e29d3b0ad4dab31d2693e52990b8b6e0dfa3e85311478b"
+    },
+    "retained_links": {
+      "path": "/Users/yunaoxiao/Desktop/smt_asteroid/paper_analysis_20260803/snapshot/derived_unknown/unknown_high_confidence_links_recomputed.csv",
+      "sha256": "1ed7fd250b9a8fad37456d2934e77d65e8212228ff9e1ed5d9471179514adb43"
+    },
+    "review_status": {
+      "path": "/Users/yunaoxiao/Desktop/smt_asteroid/paper_analysis_20260803/snapshot/review_sample/review_and_mpc_status.csv",
+      "sha256": "c426e2e8cdaf0d246772594cc8ea8148863f0f9556810e1c26070a719c059e24"
+    },
+    "snapshot_summary": {
+      "path": "/Users/yunaoxiao/Desktop/smt_asteroid/paper_analysis_20260803/snapshot/tables/snapshot_summary.json",
+      "sha256": "b27bf11b0093acded1bb1d5502520626f7fe1bb89b2f2bfec9174c304e93acc9"
+    },
+    "unknown_population_summary": {
+      "path": "/Users/yunaoxiao/Desktop/smt_asteroid/paper_analysis_20260803/snapshot/derived_unknown/unknown_population_summary.json",
+      "sha256": "1a8a85aafcb9d6473483a75ebfe4e9aa62993a2bf0fa4ce83070e97e390c3c21"
+    },
+    "unknown_stage_totals": {
+      "path": "/Users/yunaoxiao/Desktop/smt_asteroid/paper_analysis_20260803/snapshot/tables/unknown_stage_counts_total.json",
+      "sha256": "4a48e2c95b17775973d6e1b7ccc84ac9f9d267d12c0f3c6fdc65a073092b96b3"
+    }
+  },
+  "latex_emitted": true,
+  "output_hashes": {
+    "table1_configuration_environment.csv": "a1d2e1d59f4c44843ac3c205608d20a03127b9ab38483738fe619406d2d6d00b",
+    "table1_configuration_environment.tex": "c281bee76dcc28fe1ace38d19000bea1a14a12c856b148e19cd363e90a43c060",
+    "table2_data_accounting.csv": "d45cba2c9549b3223563c77dd14f3cbbbbd7d1e12fd87005fc7cebdb1991c67e",
+    "table2_data_accounting.tex": "fc086958449c1f4828c9ad278f11fa95637f29b321b12a0ca8b2eb5a8392af7c",
+    "table3_known_recovery_astrometry.csv": "a3af0e0808a64e99e38a0c0986290675fab4a73f5ccfa80e72efde34a779aa5d",
+    "table3_known_recovery_astrometry.tex": "82402b6c93658bd5e1e9f8837264f976a34ceb370157504ae4776f3f8f9cd74f",
+    "table4_unknown_funnel_retention.csv": "f7ced037bace85e797e6a069cbb5968dac8a12d374fc9bd03a60c94e74dd71a6",
+    "table4_unknown_funnel_retention.tex": "56b15d8fdada1c2f28fadf0e19e8ab14c1f846236f25c957b75bc9c64eabfcea",
+    "table5_retained_links.csv": "799c878c1564f593d007042c89322e134b3079afe513959fd5a14acdf40d6160",
+    "table5_retained_links.tex": "8dee4dc3da03d4935c242a569fbcfd48203e5d318474f9748b8698d2260dc82d"
+  },
+  "outputs": {
+    "table1_configuration_environment.csv": {
+      "row_count": 98,
+      "sha256": "a1d2e1d59f4c44843ac3c205608d20a03127b9ab38483738fe619406d2d6d00b"
+    },
+    "table2_data_accounting.csv": {
+      "row_count": 21,
+      "sha256": "d45cba2c9549b3223563c77dd14f3cbbbbd7d1e12fd87005fc7cebdb1991c67e"
+    },
+    "table3_known_recovery_astrometry.csv": {
+      "row_count": 19,
+      "sha256": "a3af0e0808a64e99e38a0c0986290675fab4a73f5ccfa80e72efde34a779aa5d"
+    },
+    "table4_unknown_funnel_retention.csv": {
+      "row_count": 25,
+      "sha256": "f7ced037bace85e797e6a069cbb5968dac8a12d374fc9bd03a60c94e74dd71a6"
+    },
+    "table5_retained_links.csv": {
+      "row_count": 58,
+      "sha256": "799c878c1564f593d007042c89322e134b3079afe513959fd5a14acdf40d6160"
+    }
+  },
+  "pending_row_counts": {
+    "table1": 11,
+    "table2": 0,
+    "table3": 1,
+    "table4": 0,
+    "table5": 58
+  },
+  "schema_version": "1.0",
+  "table5_evidence_counts": {
+    "authoritative_mpc_evidence_rows": 0,
+    "jpl_second_pass_confirmed_link_keys": [
+      "20260309|000011l|35",
+      "20260310|000012H|1026",
+      "20260311|000013V|1139",
+      "20260530|00001gL|73",
+      "20260530|00001gM|75",
+      "20260601|00001h8|82"
+    ],
+    "jpl_second_pass_confirmed_object_counts": {
+      "C/2025 Y1 (ATLAS)": 6
+    },
+    "jpl_second_pass_numerically_confirmed_candidate_rows": 6,
+    "linear_motion_candidate_component_count": 37,
+    "linear_motion_candidate_component_size_distribution": {
+      "1": 25,
+      "2": 4,
+      "3": 7,
+      "4": 1
+    },
+    "linear_motion_candidate_group_assigned_rows": 58,
+    "nonblank_provisional_designation_rows": 0,
+    "pending_mpc_evidence_rows": 58,
+    "retained_link_rows": 58,
+    "selection_funnel": {
+      "audit_ledger_initial_linkages": 67,
+      "operational_review_marked_real_linkages": 68,
+      "posthoc_retained_linkages": 58,
+      "submission_selected_linkages": 67
+    }
+  }
+}

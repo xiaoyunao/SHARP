@@ -1,0 +1,1325 @@
+{
+  "analysis_name": "retained_unknown_linear_motion_repeat_candidate_screen",
+  "candidate_semantics": {
+    "disclaimer": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+    "permitted_interpretation": "A component is a screening candidate for repeated observations under a local linear-motion approximation.",
+    "prohibited_interpretations": [
+      "confirmed independent object count",
+      "confirmed cross-night orbital linkage",
+      "MPC/JPL identity or designation",
+      "replacement for orbit fitting or external identification"
+    ],
+    "transitive_closure_note": "Connected components use transitive closure; two members in the same component need not themselves share a direct qualifying edge."
+  },
+  "generated_utc": "2026-08-09T12:32:25.328605+00:00",
+  "inputs": {
+    "expected_links_asserted": 58,
+    "links_path": "/Users/yunaoxiao/Desktop/smt_asteroid/paper_analysis_20260803/snapshot/derived_unknown/unknown_high_confidence_links_recomputed.csv",
+    "links_row_count": 58,
+    "links_sha256": "1ed7fd250b9a8fad37456d2934e77d65e8212228ff9e1ed5d9471179514adb43",
+    "review_status_merge": {
+      "output_path": "/Users/yunaoxiao/Desktop/smt_asteroid/paper_analysis_20260803/snapshot/derived_unknown/review_and_mpc_status_with_linear_motion_candidate_groups.csv",
+      "output_row_count": 67,
+      "output_sha256": "add2f7fe3fda157d2060b51619c89e68712868a583b76172422514e0c5bdb8a8",
+      "retained_58_rows_assigned": 58,
+      "rows_not_in_retained_58": 9,
+      "source_path": "/Users/yunaoxiao/Desktop/smt_asteroid/paper_analysis_20260803/snapshot/review_sample/review_and_mpc_status.csv",
+      "source_preserved": true,
+      "source_row_count": 67,
+      "source_sha256": "c426e2e8cdaf0d246772594cc8ea8148863f0f9556810e1c26070a719c059e24"
+    }
+  },
+  "method": {
+    "backward_test": "Propagate the later link by -delta_t using its own speed and direction in the tangent plane centered at the later position.",
+    "direction_convention": "lin_dir_deg = atan2(north, east) modulo 360 degrees; 0 degrees is increasing RA*cos(Dec), 90 degrees is increasing Dec",
+    "eligible_pair_rule": "all unordered pairs with 0 < delta_t <= 7 days",
+    "forward_test": "Propagate the earlier link by +delta_t using its own speed and direction in the tangent plane centered at the earlier position.",
+    "maximum_delta_days": 7.0,
+    "position_coordinate": "median_ra_deg, median_dec_deg (ICRS degrees)",
+    "production_convention_source": "heliolincrr/orbit_confirm_links.py linear_motion_test",
+    "ra_wrap_handling": "RA differences use the shortest signed wrap in [-180, 180) degrees",
+    "residual_metric": "Euclidean east/north tangent-plane separation in degrees; the edge test uses max(forward residual, backward residual).",
+    "speed_unit": "arcsec per hour",
+    "time_coordinate": "median_mjd"
+  },
+  "outputs": {
+    "group_assignments_csv": {
+      "path": "/Users/yunaoxiao/Desktop/smt_asteroid/paper_analysis_20260803/snapshot/derived_unknown/unknown_linear_motion_candidate_group_assignments.csv",
+      "row_count": 58,
+      "sha256": "ef718624b8f9c08d72ba09692c86d5fdeed377b0ac0b4396334b24a58758187e"
+    },
+    "pair_metrics_csv": {
+      "path": "/Users/yunaoxiao/Desktop/smt_asteroid/paper_analysis_20260803/snapshot/derived_unknown/unknown_cross_night_pair_metrics.csv",
+      "row_count": 190,
+      "sha256": "9380e194ae3dbf7b99f4b508887001647a03be875db1110ce5473c5f4b3c240b"
+    }
+  },
+  "pair_accounting": {
+    "all_unordered_pairs": 1653,
+    "eligible_positive_pairs_within_7_days": 190,
+    "pairs_beyond_7_days_excluded": 1452,
+    "zero_or_negative_delta_pairs_excluded": 11
+  },
+  "primary_graph_definition": {
+    "component_definition": "undirected connected component of primary edges",
+    "edge_rule": "max(two-way residual) <= 0.03 deg AND speed difference <= 2 arcsec/hour AND direction difference <= 5 deg",
+    "fixed_not_cli_overridable": true,
+    "includes_same_night_edges": true,
+    "node_definition": "one retained link row (58 nodes total)",
+    "threshold": {
+      "comparison_operator": "all metrics <= their thresholds",
+      "maximum_direction_difference_deg": 5.0,
+      "maximum_speed_difference_arcsec_per_hour": 2.0,
+      "maximum_two_way_residual_deg": 0.03,
+      "name": "conservative_primary"
+    }
+  },
+  "primary_results": {
+    "component_count": 37,
+    "component_size_distribution": {
+      "1": 25,
+      "2": 4,
+      "3": 7,
+      "4": 1
+    },
+    "cross_night_primary_edge_count": 25,
+    "groups": [
+      {
+        "cross_night_direct_primary_edge_count": 0,
+        "direct_primary_edge_count": 0,
+        "distinct_night_count": 1,
+        "has_cross_night_primary_edge": false,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": true,
+        "linear_motion_candidate_group_id": "LMG001",
+        "link_count": 1,
+        "maximum_mjd": 61000.54039288194,
+        "member_link_keys": [
+          "20251121|000004r|598"
+        ],
+        "member_nights": [
+          "20251121"
+        ],
+        "minimum_mjd": 61000.54039288194,
+        "same_night_direct_primary_edge_count": 0,
+        "time_span_days": 0.0
+      },
+      {
+        "cross_night_direct_primary_edge_count": 0,
+        "direct_primary_edge_count": 0,
+        "distinct_night_count": 1,
+        "has_cross_night_primary_edge": false,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": true,
+        "linear_motion_candidate_group_id": "LMG002",
+        "link_count": 1,
+        "maximum_mjd": 61003.484596828705,
+        "member_link_keys": [
+          "20251124|000006v|0"
+        ],
+        "member_nights": [
+          "20251124"
+        ],
+        "minimum_mjd": 61003.484596828705,
+        "same_night_direct_primary_edge_count": 0,
+        "time_span_days": 0.0
+      },
+      {
+        "cross_night_direct_primary_edge_count": 0,
+        "direct_primary_edge_count": 0,
+        "distinct_night_count": 1,
+        "has_cross_night_primary_edge": false,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": true,
+        "linear_motion_candidate_group_id": "LMG003",
+        "link_count": 1,
+        "maximum_mjd": 61004.44406861111,
+        "member_link_keys": [
+          "20251125|000006K|21"
+        ],
+        "member_nights": [
+          "20251125"
+        ],
+        "minimum_mjd": 61004.44406861111,
+        "same_night_direct_primary_edge_count": 0,
+        "time_span_days": 0.0
+      },
+      {
+        "cross_night_direct_primary_edge_count": 0,
+        "direct_primary_edge_count": 0,
+        "distinct_night_count": 1,
+        "has_cross_night_primary_edge": false,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": true,
+        "linear_motion_candidate_group_id": "LMG004",
+        "link_count": 1,
+        "maximum_mjd": 61004.45999814815,
+        "member_link_keys": [
+          "20251125|000006S|132"
+        ],
+        "member_nights": [
+          "20251125"
+        ],
+        "minimum_mjd": 61004.45999814815,
+        "same_night_direct_primary_edge_count": 0,
+        "time_span_days": 0.0
+      },
+      {
+        "cross_night_direct_primary_edge_count": 1,
+        "direct_primary_edge_count": 1,
+        "distinct_night_count": 2,
+        "has_cross_night_primary_edge": true,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": false,
+        "linear_motion_candidate_group_id": "LMG005",
+        "link_count": 2,
+        "maximum_mjd": 61013.87480642361,
+        "member_link_keys": [
+          "20251203|000008u|343",
+          "20251204|000009h|306"
+        ],
+        "member_nights": [
+          "20251203",
+          "20251204"
+        ],
+        "minimum_mjd": 61012.75381357639,
+        "same_night_direct_primary_edge_count": 0,
+        "time_span_days": 1.1209928472235333
+      },
+      {
+        "cross_night_direct_primary_edge_count": 0,
+        "direct_primary_edge_count": 0,
+        "distinct_night_count": 1,
+        "has_cross_night_primary_edge": false,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": true,
+        "linear_motion_candidate_group_id": "LMG006",
+        "link_count": 1,
+        "maximum_mjd": 61013.87085726852,
+        "member_link_keys": [
+          "20251204|0000098|274"
+        ],
+        "member_nights": [
+          "20251204"
+        ],
+        "minimum_mjd": 61013.87085726852,
+        "same_night_direct_primary_edge_count": 0,
+        "time_span_days": 0.0
+      },
+      {
+        "cross_night_direct_primary_edge_count": 0,
+        "direct_primary_edge_count": 0,
+        "distinct_night_count": 1,
+        "has_cross_night_primary_edge": false,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": true,
+        "linear_motion_candidate_group_id": "LMG007",
+        "link_count": 1,
+        "maximum_mjd": 61013.87695957176,
+        "member_link_keys": [
+          "20251204|000009l|317"
+        ],
+        "member_nights": [
+          "20251204"
+        ],
+        "minimum_mjd": 61013.87695957176,
+        "same_night_direct_primary_edge_count": 0,
+        "time_span_days": 0.0
+      },
+      {
+        "cross_night_direct_primary_edge_count": 1,
+        "direct_primary_edge_count": 1,
+        "distinct_night_count": 2,
+        "has_cross_night_primary_edge": true,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": false,
+        "linear_motion_candidate_group_id": "LMG008",
+        "link_count": 2,
+        "maximum_mjd": 61017.48187351852,
+        "member_link_keys": [
+          "20251207|00000aG|298",
+          "20251208|00000cs|449"
+        ],
+        "member_nights": [
+          "20251207",
+          "20251208"
+        ],
+        "minimum_mjd": 61016.46225980325,
+        "same_night_direct_primary_edge_count": 0,
+        "time_span_days": 1.0196137152670417
+      },
+      {
+        "cross_night_direct_primary_edge_count": 0,
+        "direct_primary_edge_count": 0,
+        "distinct_night_count": 1,
+        "has_cross_night_primary_edge": false,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": true,
+        "linear_motion_candidate_group_id": "LMG009",
+        "link_count": 1,
+        "maximum_mjd": 61016.5485206713,
+        "member_link_keys": [
+          "20251207|00000bh|896"
+        ],
+        "member_nights": [
+          "20251207"
+        ],
+        "minimum_mjd": 61016.5485206713,
+        "same_night_direct_primary_edge_count": 0,
+        "time_span_days": 0.0
+      },
+      {
+        "cross_night_direct_primary_edge_count": 0,
+        "direct_primary_edge_count": 1,
+        "distinct_night_count": 1,
+        "has_cross_night_primary_edge": false,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": false,
+        "linear_motion_candidate_group_id": "LMG010",
+        "link_count": 2,
+        "maximum_mjd": 61017.78884447917,
+        "member_link_keys": [
+          "20251208|00000cR|1115",
+          "20251208|00000cT|1141"
+        ],
+        "member_nights": [
+          "20251208",
+          "20251208"
+        ],
+        "minimum_mjd": 61017.78582819444,
+        "same_night_direct_primary_edge_count": 1,
+        "time_span_days": 0.003016284725163132
+      },
+      {
+        "cross_night_direct_primary_edge_count": 0,
+        "direct_primary_edge_count": 0,
+        "distinct_night_count": 1,
+        "has_cross_night_primary_edge": false,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": true,
+        "linear_motion_candidate_group_id": "LMG011",
+        "link_count": 1,
+        "maximum_mjd": 61018.87456671296,
+        "member_link_keys": [
+          "20251209|00000e2|1083"
+        ],
+        "member_nights": [
+          "20251209"
+        ],
+        "minimum_mjd": 61018.87456671296,
+        "same_night_direct_primary_edge_count": 0,
+        "time_span_days": 0.0
+      },
+      {
+        "cross_night_direct_primary_edge_count": 3,
+        "direct_primary_edge_count": 3,
+        "distinct_night_count": 3,
+        "has_cross_night_primary_edge": true,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": false,
+        "linear_motion_candidate_group_id": "LMG012",
+        "link_count": 3,
+        "maximum_mjd": 61025.473747986114,
+        "member_link_keys": [
+          "20251214|00000gA|260",
+          "20251215|00000hz|246",
+          "20251216|00000jr|232"
+        ],
+        "member_nights": [
+          "20251214",
+          "20251215",
+          "20251216"
+        ],
+        "minimum_mjd": 61023.48359408565,
+        "same_night_direct_primary_edge_count": 0,
+        "time_span_days": 1.9901539004640654
+      },
+      {
+        "cross_night_direct_primary_edge_count": 0,
+        "direct_primary_edge_count": 0,
+        "distinct_night_count": 1,
+        "has_cross_night_primary_edge": false,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": true,
+        "linear_motion_candidate_group_id": "LMG013",
+        "link_count": 1,
+        "maximum_mjd": 61026.8592416088,
+        "member_link_keys": [
+          "20251217|00000lw|1025"
+        ],
+        "member_nights": [
+          "20251217"
+        ],
+        "minimum_mjd": 61026.8592416088,
+        "same_night_direct_primary_edge_count": 0,
+        "time_span_days": 0.0
+      },
+      {
+        "cross_night_direct_primary_edge_count": 0,
+        "direct_primary_edge_count": 0,
+        "distinct_night_count": 1,
+        "has_cross_night_primary_edge": false,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": true,
+        "linear_motion_candidate_group_id": "LMG014",
+        "link_count": 1,
+        "maximum_mjd": 61026.86847631945,
+        "member_link_keys": [
+          "20251217|00000lA|1134"
+        ],
+        "member_nights": [
+          "20251217"
+        ],
+        "minimum_mjd": 61026.86847631945,
+        "same_night_direct_primary_edge_count": 0,
+        "time_span_days": 0.0
+      },
+      {
+        "cross_night_direct_primary_edge_count": 0,
+        "direct_primary_edge_count": 0,
+        "distinct_night_count": 1,
+        "has_cross_night_primary_edge": false,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": true,
+        "linear_motion_candidate_group_id": "LMG015",
+        "link_count": 1,
+        "maximum_mjd": 61026.87490996528,
+        "member_link_keys": [
+          "20251217|00000lG|1187"
+        ],
+        "member_nights": [
+          "20251217"
+        ],
+        "minimum_mjd": 61026.87490996528,
+        "same_night_direct_primary_edge_count": 0,
+        "time_span_days": 0.0
+      },
+      {
+        "cross_night_direct_primary_edge_count": 0,
+        "direct_primary_edge_count": 0,
+        "distinct_night_count": 1,
+        "has_cross_night_primary_edge": false,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": true,
+        "linear_motion_candidate_group_id": "LMG016",
+        "link_count": 1,
+        "maximum_mjd": 61043.45238027778,
+        "member_link_keys": [
+          "20260103|00000wD|40"
+        ],
+        "member_nights": [
+          "20260103"
+        ],
+        "minimum_mjd": 61043.45238027778,
+        "same_night_direct_primary_edge_count": 0,
+        "time_span_days": 0.0
+      },
+      {
+        "cross_night_direct_primary_edge_count": 0,
+        "direct_primary_edge_count": 0,
+        "distinct_night_count": 1,
+        "has_cross_night_primary_edge": false,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": true,
+        "linear_motion_candidate_group_id": "LMG017",
+        "link_count": 1,
+        "maximum_mjd": 61052.55698405093,
+        "member_link_keys": [
+          "20260112|00000C3|119"
+        ],
+        "member_nights": [
+          "20260112"
+        ],
+        "minimum_mjd": 61052.55698405093,
+        "same_night_direct_primary_edge_count": 0,
+        "time_span_days": 0.0
+      },
+      {
+        "cross_night_direct_primary_edge_count": 3,
+        "direct_primary_edge_count": 3,
+        "distinct_night_count": 3,
+        "has_cross_night_primary_edge": true,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": false,
+        "linear_motion_candidate_group_id": "LMG018",
+        "link_count": 3,
+        "maximum_mjd": 61079.49535907408,
+        "member_link_keys": [
+          "20260205|00000LG|51",
+          "20260207|00000Ma|120",
+          "20260208|00000NM|232"
+        ],
+        "member_nights": [
+          "20260205",
+          "20260207",
+          "20260208"
+        ],
+        "minimum_mjd": 61076.491546400466,
+        "same_night_direct_primary_edge_count": 0,
+        "time_span_days": 3.0038126736108097
+      },
+      {
+        "cross_night_direct_primary_edge_count": 3,
+        "direct_primary_edge_count": 3,
+        "distinct_night_count": 3,
+        "has_cross_night_primary_edge": true,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": false,
+        "linear_motion_candidate_group_id": "LMG019",
+        "link_count": 3,
+        "maximum_mjd": 61079.58260363426,
+        "member_link_keys": [
+          "20260205|00000LJ|67",
+          "20260207|00000Md|159",
+          "20260208|00000Ot|421"
+        ],
+        "member_nights": [
+          "20260205",
+          "20260207",
+          "20260208"
+        ],
+        "minimum_mjd": 61076.49569466435,
+        "same_night_direct_primary_edge_count": 0,
+        "time_span_days": 3.0869089699117467
+      },
+      {
+        "cross_night_direct_primary_edge_count": 3,
+        "direct_primary_edge_count": 3,
+        "distinct_night_count": 3,
+        "has_cross_night_primary_edge": true,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": false,
+        "linear_motion_candidate_group_id": "LMG020",
+        "link_count": 3,
+        "maximum_mjd": 61079.58260363426,
+        "member_link_keys": [
+          "20260206|00000LX|102",
+          "20260207|00000Mh|177",
+          "20260208|00000Ow|435"
+        ],
+        "member_nights": [
+          "20260206",
+          "20260207",
+          "20260208"
+        ],
+        "minimum_mjd": 61077.53237195602,
+        "same_night_direct_primary_edge_count": 0,
+        "time_span_days": 2.0502316782440175
+      },
+      {
+        "cross_night_direct_primary_edge_count": 0,
+        "direct_primary_edge_count": 0,
+        "distinct_night_count": 1,
+        "has_cross_night_primary_edge": false,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": true,
+        "linear_motion_candidate_group_id": "LMG021",
+        "link_count": 1,
+        "maximum_mjd": 61078.495940277775,
+        "member_link_keys": [
+          "20260207|00000Mf|168"
+        ],
+        "member_nights": [
+          "20260207"
+        ],
+        "minimum_mjd": 61078.495940277775,
+        "same_night_direct_primary_edge_count": 0,
+        "time_span_days": 0.0
+      },
+      {
+        "cross_night_direct_primary_edge_count": 0,
+        "direct_primary_edge_count": 0,
+        "distinct_night_count": 1,
+        "has_cross_night_primary_edge": false,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": true,
+        "linear_motion_candidate_group_id": "LMG022",
+        "link_count": 1,
+        "maximum_mjd": 61078.495940277775,
+        "member_link_keys": [
+          "20260207|00000Mg|174"
+        ],
+        "member_nights": [
+          "20260207"
+        ],
+        "minimum_mjd": 61078.495940277775,
+        "same_night_direct_primary_edge_count": 0,
+        "time_span_days": 0.0
+      },
+      {
+        "cross_night_direct_primary_edge_count": 0,
+        "direct_primary_edge_count": 0,
+        "distinct_night_count": 1,
+        "has_cross_night_primary_edge": false,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": true,
+        "linear_motion_candidate_group_id": "LMG023",
+        "link_count": 1,
+        "maximum_mjd": 61078.495940277775,
+        "member_link_keys": [
+          "20260207|00000Mi|178"
+        ],
+        "member_nights": [
+          "20260207"
+        ],
+        "minimum_mjd": 61078.495940277775,
+        "same_night_direct_primary_edge_count": 0,
+        "time_span_days": 0.0
+      },
+      {
+        "cross_night_direct_primary_edge_count": 0,
+        "direct_primary_edge_count": 0,
+        "distinct_night_count": 1,
+        "has_cross_night_primary_edge": false,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": true,
+        "linear_motion_candidate_group_id": "LMG024",
+        "link_count": 1,
+        "maximum_mjd": 61081.49198965278,
+        "member_link_keys": [
+          "20260210|00000P2|35"
+        ],
+        "member_nights": [
+          "20260210"
+        ],
+        "minimum_mjd": 61081.49198965278,
+        "same_night_direct_primary_edge_count": 0,
+        "time_span_days": 0.0
+      },
+      {
+        "cross_night_direct_primary_edge_count": 0,
+        "direct_primary_edge_count": 0,
+        "distinct_night_count": 1,
+        "has_cross_night_primary_edge": false,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": true,
+        "linear_motion_candidate_group_id": "LMG025",
+        "link_count": 1,
+        "maximum_mjd": 61084.54259320602,
+        "member_link_keys": [
+          "20260213|00000RM|350"
+        ],
+        "member_nights": [
+          "20260213"
+        ],
+        "minimum_mjd": 61084.54259320602,
+        "same_night_direct_primary_edge_count": 0,
+        "time_span_days": 0.0
+      },
+      {
+        "cross_night_direct_primary_edge_count": 0,
+        "direct_primary_edge_count": 1,
+        "distinct_night_count": 1,
+        "has_cross_night_primary_edge": false,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": false,
+        "linear_motion_candidate_group_id": "LMG026",
+        "link_count": 2,
+        "maximum_mjd": 61087.48198363426,
+        "member_link_keys": [
+          "20260216|00000UH|90",
+          "20260216|00000UI|208"
+        ],
+        "member_nights": [
+          "20260216",
+          "20260216"
+        ],
+        "minimum_mjd": 61087.476148298614,
+        "same_night_direct_primary_edge_count": 1,
+        "time_span_days": 0.005835335643496364
+      },
+      {
+        "cross_night_direct_primary_edge_count": 3,
+        "direct_primary_edge_count": 3,
+        "distinct_night_count": 3,
+        "has_cross_night_primary_edge": true,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": false,
+        "linear_motion_candidate_group_id": "LMG027",
+        "link_count": 3,
+        "maximum_mjd": 61110.76767074074,
+        "member_link_keys": [
+          "20260309|000011l|35",
+          "20260310|000012H|1026",
+          "20260311|000013V|1139"
+        ],
+        "member_nights": [
+          "20260309",
+          "20260310",
+          "20260311"
+        ],
+        "minimum_mjd": 61108.72570941551,
+        "same_night_direct_primary_edge_count": 0,
+        "time_span_days": 2.041961325230659
+      },
+      {
+        "cross_night_direct_primary_edge_count": 0,
+        "direct_primary_edge_count": 0,
+        "distinct_night_count": 1,
+        "has_cross_night_primary_edge": false,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": true,
+        "linear_motion_candidate_group_id": "LMG028",
+        "link_count": 1,
+        "maximum_mjd": 61109.66339591435,
+        "member_link_keys": [
+          "20260310|000012m|730"
+        ],
+        "member_nights": [
+          "20260310"
+        ],
+        "minimum_mjd": 61109.66339591435,
+        "same_night_direct_primary_edge_count": 0,
+        "time_span_days": 0.0
+      },
+      {
+        "cross_night_direct_primary_edge_count": 4,
+        "direct_primary_edge_count": 6,
+        "distinct_night_count": 2,
+        "has_cross_night_primary_edge": true,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": false,
+        "linear_motion_candidate_group_id": "LMG029",
+        "link_count": 4,
+        "maximum_mjd": 61140.69492429398,
+        "member_link_keys": [
+          "20260407|0000188|1081",
+          "20260407|000018c|1098",
+          "20260410|000018E|394",
+          "20260410|000018H|420"
+        ],
+        "member_nights": [
+          "20260407",
+          "20260407",
+          "20260410",
+          "20260410"
+        ],
+        "minimum_mjd": 61137.73254207176,
+        "same_night_direct_primary_edge_count": 2,
+        "time_span_days": 2.962382222220185
+      },
+      {
+        "cross_night_direct_primary_edge_count": 0,
+        "direct_primary_edge_count": 0,
+        "distinct_night_count": 1,
+        "has_cross_night_primary_edge": false,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": true,
+        "linear_motion_candidate_group_id": "LMG030",
+        "link_count": 1,
+        "maximum_mjd": 61140.674274687495,
+        "member_link_keys": [
+          "20260410|000018w|159"
+        ],
+        "member_nights": [
+          "20260410"
+        ],
+        "minimum_mjd": 61140.674274687495,
+        "same_night_direct_primary_edge_count": 0,
+        "time_span_days": 0.0
+      },
+      {
+        "cross_night_direct_primary_edge_count": 0,
+        "direct_primary_edge_count": 0,
+        "distinct_night_count": 1,
+        "has_cross_night_primary_edge": false,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": true,
+        "linear_motion_candidate_group_id": "LMG031",
+        "link_count": 1,
+        "maximum_mjd": 61150.668297986114,
+        "member_link_keys": [
+          "20260420|000019o|807"
+        ],
+        "member_nights": [
+          "20260420"
+        ],
+        "minimum_mjd": 61150.668297986114,
+        "same_night_direct_primary_edge_count": 0,
+        "time_span_days": 0.0
+      },
+      {
+        "cross_night_direct_primary_edge_count": 0,
+        "direct_primary_edge_count": 0,
+        "distinct_night_count": 1,
+        "has_cross_night_primary_edge": false,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": true,
+        "linear_motion_candidate_group_id": "LMG032",
+        "link_count": 1,
+        "maximum_mjd": 61152.585856550926,
+        "member_link_keys": [
+          "20260422|00001aJ|102"
+        ],
+        "member_nights": [
+          "20260422"
+        ],
+        "minimum_mjd": 61152.585856550926,
+        "same_night_direct_primary_edge_count": 0,
+        "time_span_days": 0.0
+      },
+      {
+        "cross_night_direct_primary_edge_count": 2,
+        "direct_primary_edge_count": 2,
+        "distinct_night_count": 3,
+        "has_cross_night_primary_edge": true,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": false,
+        "linear_motion_candidate_group_id": "LMG033",
+        "link_count": 3,
+        "maximum_mjd": 61172.57021942129,
+        "member_link_keys": [
+          "20260503|00001d1|389",
+          "20260508|00001eC|186",
+          "20260512|00001fU|105"
+        ],
+        "member_nights": [
+          "20260503",
+          "20260508",
+          "20260512"
+        ],
+        "minimum_mjd": 61163.69213002315,
+        "same_night_direct_primary_edge_count": 0,
+        "time_span_days": 8.878089398145676
+      },
+      {
+        "cross_night_direct_primary_edge_count": 0,
+        "direct_primary_edge_count": 0,
+        "distinct_night_count": 1,
+        "has_cross_night_primary_edge": false,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": true,
+        "linear_motion_candidate_group_id": "LMG034",
+        "link_count": 1,
+        "maximum_mjd": 61169.65841542824,
+        "member_link_keys": [
+          "20260509|00001fs|311"
+        ],
+        "member_nights": [
+          "20260509"
+        ],
+        "minimum_mjd": 61169.65841542824,
+        "same_night_direct_primary_edge_count": 0,
+        "time_span_days": 0.0
+      },
+      {
+        "cross_night_direct_primary_edge_count": 0,
+        "direct_primary_edge_count": 0,
+        "distinct_night_count": 1,
+        "has_cross_night_primary_edge": false,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": true,
+        "linear_motion_candidate_group_id": "LMG035",
+        "link_count": 1,
+        "maximum_mjd": 61169.68824444444,
+        "member_link_keys": [
+          "20260509|00001fm|221"
+        ],
+        "member_nights": [
+          "20260509"
+        ],
+        "minimum_mjd": 61169.68824444444,
+        "same_night_direct_primary_edge_count": 0,
+        "time_span_days": 0.0
+      },
+      {
+        "cross_night_direct_primary_edge_count": 2,
+        "direct_primary_edge_count": 3,
+        "distinct_night_count": 2,
+        "has_cross_night_primary_edge": true,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": false,
+        "linear_motion_candidate_group_id": "LMG036",
+        "link_count": 3,
+        "maximum_mjd": 61192.579758935186,
+        "member_link_keys": [
+          "20260530|00001gL|73",
+          "20260530|00001gM|75",
+          "20260601|00001h8|82"
+        ],
+        "member_nights": [
+          "20260530",
+          "20260530",
+          "20260601"
+        ],
+        "minimum_mjd": 61190.59204358796,
+        "same_night_direct_primary_edge_count": 1,
+        "time_span_days": 1.9877153472261853
+      },
+      {
+        "cross_night_direct_primary_edge_count": 0,
+        "direct_primary_edge_count": 0,
+        "distinct_night_count": 1,
+        "has_cross_night_primary_edge": false,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": true,
+        "linear_motion_candidate_group_id": "LMG037",
+        "link_count": 1,
+        "maximum_mjd": 61192.562040833334,
+        "member_link_keys": [
+          "20260601|00001h1|9"
+        ],
+        "member_nights": [
+          "20260601"
+        ],
+        "minimum_mjd": 61192.562040833334,
+        "same_night_direct_primary_edge_count": 0,
+        "time_span_days": 0.0
+      }
+    ],
+    "largest_component_size": 4,
+    "links_in_non_singleton_components": 33,
+    "node_count": 58,
+    "non_singleton_component_count": 12,
+    "non_singleton_groups": [
+      {
+        "cross_night_direct_primary_edge_count": 1,
+        "direct_primary_edge_count": 1,
+        "distinct_night_count": 2,
+        "has_cross_night_primary_edge": true,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": false,
+        "linear_motion_candidate_group_id": "LMG005",
+        "link_count": 2,
+        "maximum_mjd": 61013.87480642361,
+        "member_link_keys": [
+          "20251203|000008u|343",
+          "20251204|000009h|306"
+        ],
+        "member_nights": [
+          "20251203",
+          "20251204"
+        ],
+        "minimum_mjd": 61012.75381357639,
+        "same_night_direct_primary_edge_count": 0,
+        "time_span_days": 1.1209928472235333
+      },
+      {
+        "cross_night_direct_primary_edge_count": 1,
+        "direct_primary_edge_count": 1,
+        "distinct_night_count": 2,
+        "has_cross_night_primary_edge": true,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": false,
+        "linear_motion_candidate_group_id": "LMG008",
+        "link_count": 2,
+        "maximum_mjd": 61017.48187351852,
+        "member_link_keys": [
+          "20251207|00000aG|298",
+          "20251208|00000cs|449"
+        ],
+        "member_nights": [
+          "20251207",
+          "20251208"
+        ],
+        "minimum_mjd": 61016.46225980325,
+        "same_night_direct_primary_edge_count": 0,
+        "time_span_days": 1.0196137152670417
+      },
+      {
+        "cross_night_direct_primary_edge_count": 0,
+        "direct_primary_edge_count": 1,
+        "distinct_night_count": 1,
+        "has_cross_night_primary_edge": false,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": false,
+        "linear_motion_candidate_group_id": "LMG010",
+        "link_count": 2,
+        "maximum_mjd": 61017.78884447917,
+        "member_link_keys": [
+          "20251208|00000cR|1115",
+          "20251208|00000cT|1141"
+        ],
+        "member_nights": [
+          "20251208",
+          "20251208"
+        ],
+        "minimum_mjd": 61017.78582819444,
+        "same_night_direct_primary_edge_count": 1,
+        "time_span_days": 0.003016284725163132
+      },
+      {
+        "cross_night_direct_primary_edge_count": 3,
+        "direct_primary_edge_count": 3,
+        "distinct_night_count": 3,
+        "has_cross_night_primary_edge": true,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": false,
+        "linear_motion_candidate_group_id": "LMG012",
+        "link_count": 3,
+        "maximum_mjd": 61025.473747986114,
+        "member_link_keys": [
+          "20251214|00000gA|260",
+          "20251215|00000hz|246",
+          "20251216|00000jr|232"
+        ],
+        "member_nights": [
+          "20251214",
+          "20251215",
+          "20251216"
+        ],
+        "minimum_mjd": 61023.48359408565,
+        "same_night_direct_primary_edge_count": 0,
+        "time_span_days": 1.9901539004640654
+      },
+      {
+        "cross_night_direct_primary_edge_count": 3,
+        "direct_primary_edge_count": 3,
+        "distinct_night_count": 3,
+        "has_cross_night_primary_edge": true,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": false,
+        "linear_motion_candidate_group_id": "LMG018",
+        "link_count": 3,
+        "maximum_mjd": 61079.49535907408,
+        "member_link_keys": [
+          "20260205|00000LG|51",
+          "20260207|00000Ma|120",
+          "20260208|00000NM|232"
+        ],
+        "member_nights": [
+          "20260205",
+          "20260207",
+          "20260208"
+        ],
+        "minimum_mjd": 61076.491546400466,
+        "same_night_direct_primary_edge_count": 0,
+        "time_span_days": 3.0038126736108097
+      },
+      {
+        "cross_night_direct_primary_edge_count": 3,
+        "direct_primary_edge_count": 3,
+        "distinct_night_count": 3,
+        "has_cross_night_primary_edge": true,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": false,
+        "linear_motion_candidate_group_id": "LMG019",
+        "link_count": 3,
+        "maximum_mjd": 61079.58260363426,
+        "member_link_keys": [
+          "20260205|00000LJ|67",
+          "20260207|00000Md|159",
+          "20260208|00000Ot|421"
+        ],
+        "member_nights": [
+          "20260205",
+          "20260207",
+          "20260208"
+        ],
+        "minimum_mjd": 61076.49569466435,
+        "same_night_direct_primary_edge_count": 0,
+        "time_span_days": 3.0869089699117467
+      },
+      {
+        "cross_night_direct_primary_edge_count": 3,
+        "direct_primary_edge_count": 3,
+        "distinct_night_count": 3,
+        "has_cross_night_primary_edge": true,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": false,
+        "linear_motion_candidate_group_id": "LMG020",
+        "link_count": 3,
+        "maximum_mjd": 61079.58260363426,
+        "member_link_keys": [
+          "20260206|00000LX|102",
+          "20260207|00000Mh|177",
+          "20260208|00000Ow|435"
+        ],
+        "member_nights": [
+          "20260206",
+          "20260207",
+          "20260208"
+        ],
+        "minimum_mjd": 61077.53237195602,
+        "same_night_direct_primary_edge_count": 0,
+        "time_span_days": 2.0502316782440175
+      },
+      {
+        "cross_night_direct_primary_edge_count": 0,
+        "direct_primary_edge_count": 1,
+        "distinct_night_count": 1,
+        "has_cross_night_primary_edge": false,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": false,
+        "linear_motion_candidate_group_id": "LMG026",
+        "link_count": 2,
+        "maximum_mjd": 61087.48198363426,
+        "member_link_keys": [
+          "20260216|00000UH|90",
+          "20260216|00000UI|208"
+        ],
+        "member_nights": [
+          "20260216",
+          "20260216"
+        ],
+        "minimum_mjd": 61087.476148298614,
+        "same_night_direct_primary_edge_count": 1,
+        "time_span_days": 0.005835335643496364
+      },
+      {
+        "cross_night_direct_primary_edge_count": 3,
+        "direct_primary_edge_count": 3,
+        "distinct_night_count": 3,
+        "has_cross_night_primary_edge": true,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": false,
+        "linear_motion_candidate_group_id": "LMG027",
+        "link_count": 3,
+        "maximum_mjd": 61110.76767074074,
+        "member_link_keys": [
+          "20260309|000011l|35",
+          "20260310|000012H|1026",
+          "20260311|000013V|1139"
+        ],
+        "member_nights": [
+          "20260309",
+          "20260310",
+          "20260311"
+        ],
+        "minimum_mjd": 61108.72570941551,
+        "same_night_direct_primary_edge_count": 0,
+        "time_span_days": 2.041961325230659
+      },
+      {
+        "cross_night_direct_primary_edge_count": 4,
+        "direct_primary_edge_count": 6,
+        "distinct_night_count": 2,
+        "has_cross_night_primary_edge": true,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": false,
+        "linear_motion_candidate_group_id": "LMG029",
+        "link_count": 4,
+        "maximum_mjd": 61140.69492429398,
+        "member_link_keys": [
+          "20260407|0000188|1081",
+          "20260407|000018c|1098",
+          "20260410|000018E|394",
+          "20260410|000018H|420"
+        ],
+        "member_nights": [
+          "20260407",
+          "20260407",
+          "20260410",
+          "20260410"
+        ],
+        "minimum_mjd": 61137.73254207176,
+        "same_night_direct_primary_edge_count": 2,
+        "time_span_days": 2.962382222220185
+      },
+      {
+        "cross_night_direct_primary_edge_count": 2,
+        "direct_primary_edge_count": 2,
+        "distinct_night_count": 3,
+        "has_cross_night_primary_edge": true,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": false,
+        "linear_motion_candidate_group_id": "LMG033",
+        "link_count": 3,
+        "maximum_mjd": 61172.57021942129,
+        "member_link_keys": [
+          "20260503|00001d1|389",
+          "20260508|00001eC|186",
+          "20260512|00001fU|105"
+        ],
+        "member_nights": [
+          "20260503",
+          "20260508",
+          "20260512"
+        ],
+        "minimum_mjd": 61163.69213002315,
+        "same_night_direct_primary_edge_count": 0,
+        "time_span_days": 8.878089398145676
+      },
+      {
+        "cross_night_direct_primary_edge_count": 2,
+        "direct_primary_edge_count": 3,
+        "distinct_night_count": 2,
+        "has_cross_night_primary_edge": true,
+        "interpretation": "Linear-motion repeat candidate only; not a confirmed independent object, orbital identity, or MPC/JPL identification.",
+        "is_singleton": false,
+        "linear_motion_candidate_group_id": "LMG036",
+        "link_count": 3,
+        "maximum_mjd": 61192.579758935186,
+        "member_link_keys": [
+          "20260530|00001gL|73",
+          "20260530|00001gM|75",
+          "20260601|00001h8|82"
+        ],
+        "member_nights": [
+          "20260530",
+          "20260530",
+          "20260601"
+        ],
+        "minimum_mjd": 61190.59204358796,
+        "same_night_direct_primary_edge_count": 1,
+        "time_span_days": 1.9877153472261853
+      }
+    ],
+    "primary_edge_count": 30,
+    "same_night_primary_edge_count": 5,
+    "singleton_component_count": 25
+  },
+  "same_night_vs_cross_night": {
+    "all": {
+      "direction_difference_deg": {
+        "maximum": 129.230153286416,
+        "minimum": 0.0002131179680020523,
+        "n": 190,
+        "p50": 7.097769219712276,
+        "p90": 54.621647699173565,
+        "p95": 67.10250722954493
+      },
+      "eligible_pair_count": 190,
+      "max_two_way_residual_deg": {
+        "maximum": 77.59364991854463,
+        "minimum": 8.309287556395417e-06,
+        "n": 190,
+        "p50": 5.763575516449299,
+        "p90": 67.07958994539742,
+        "p95": 74.49500527564705
+      },
+      "primary_edge_count": 30,
+      "primary_edge_fraction": 0.15789473684210525,
+      "speed_difference_arcsec_per_hour": {
+        "maximum": 50.56236196341876,
+        "minimum": 0.027173082163876927,
+        "n": 190,
+        "p50": 3.847498242882918,
+        "p90": 29.574271724022744,
+        "p95": 46.6500750683855
+      }
+    },
+    "cross_night": {
+      "direction_difference_deg": {
+        "maximum": 129.230153286416,
+        "minimum": 0.0002131179680020523,
+        "n": 162,
+        "p50": 6.972774997846869,
+        "p90": 54.00605300905426,
+        "p95": 66.61490379960512
+      },
+      "eligible_pair_count": 162,
+      "max_two_way_residual_deg": {
+        "maximum": 77.59364991854463,
+        "minimum": 0.0028284456535206722,
+        "n": 162,
+        "p50": 8.17093559713155,
+        "p90": 67.13110579460037,
+        "p95": 74.47347227779936
+      },
+      "primary_edge_count": 25,
+      "primary_edge_fraction": 0.15432098765432098,
+      "speed_difference_arcsec_per_hour": {
+        "maximum": 50.56236196341876,
+        "minimum": 0.1260378436605034,
+        "n": 162,
+        "p50": 4.521605582646366,
+        "p90": 29.78965482705907,
+        "p95": 46.7123894198316
+      }
+    },
+    "same_night": {
+      "direction_difference_deg": {
+        "maximum": 100.3316718590549,
+        "minimum": 0.05003073382891898,
+        "n": 28,
+        "p50": 7.220518149820762,
+        "p90": 64.04077493895367,
+        "p95": 66.69220501104017
+      },
+      "eligible_pair_count": 28,
+      "max_two_way_residual_deg": {
+        "maximum": 74.51266517930819,
+        "minimum": 8.309287556395417e-06,
+        "n": 28,
+        "p50": 3.308848630456052,
+        "p90": 33.89903066120651,
+        "p95": 70.29975298479914
+      },
+      "primary_edge_count": 5,
+      "primary_edge_fraction": 0.17857142857142858,
+      "speed_difference_arcsec_per_hour": {
+        "maximum": 37.00585507096304,
+        "minimum": 0.027173082163876927,
+        "n": 28,
+        "p50": 2.9169054711619147,
+        "p90": 15.53378416121721,
+        "p95": 29.178429442741333
+      }
+    }
+  },
+  "schema_version": "1.0",
+  "threshold_sensitivity": [
+    {
+      "component_count": 41,
+      "component_size_distribution": {
+        "1": 31,
+        "2": 3,
+        "3": 7
+      },
+      "cross_night_edge_count": 15,
+      "edge_count": 19,
+      "eligible_pair_count": 190,
+      "largest_component_size": 3,
+      "links_in_non_singleton_components": 27,
+      "non_singleton_component_count": 10,
+      "same_night_edge_count": 4,
+      "singleton_component_count": 31,
+      "threshold": {
+        "comparison_operator": "all metrics <= their thresholds",
+        "maximum_direction_difference_deg": 3.0,
+        "maximum_speed_difference_arcsec_per_hour": 1.0,
+        "maximum_two_way_residual_deg": 0.01,
+        "name": "strict"
+      }
+    },
+    {
+      "component_count": 37,
+      "component_size_distribution": {
+        "1": 25,
+        "2": 4,
+        "3": 7,
+        "4": 1
+      },
+      "cross_night_edge_count": 25,
+      "edge_count": 30,
+      "eligible_pair_count": 190,
+      "largest_component_size": 4,
+      "links_in_non_singleton_components": 33,
+      "non_singleton_component_count": 12,
+      "same_night_edge_count": 5,
+      "singleton_component_count": 25,
+      "threshold": {
+        "comparison_operator": "all metrics <= their thresholds",
+        "maximum_direction_difference_deg": 5.0,
+        "maximum_speed_difference_arcsec_per_hour": 2.0,
+        "maximum_two_way_residual_deg": 0.03,
+        "name": "conservative_primary"
+      }
+    },
+    {
+      "component_count": 35,
+      "component_size_distribution": {
+        "1": 22,
+        "2": 4,
+        "3": 8,
+        "4": 1
+      },
+      "cross_night_edge_count": 27,
+      "edge_count": 32,
+      "eligible_pair_count": 190,
+      "largest_component_size": 4,
+      "links_in_non_singleton_components": 36,
+      "non_singleton_component_count": 13,
+      "same_night_edge_count": 5,
+      "singleton_component_count": 22,
+      "threshold": {
+        "comparison_operator": "all metrics <= their thresholds",
+        "maximum_direction_difference_deg": 7.0,
+        "maximum_speed_difference_arcsec_per_hour": 3.0,
+        "maximum_two_way_residual_deg": 0.05,
+        "name": "relaxed"
+      }
+    }
+  ]
+}

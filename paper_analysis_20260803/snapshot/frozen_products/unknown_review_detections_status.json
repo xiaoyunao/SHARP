@@ -1,0 +1,1875 @@
+{
+  "created_utc": "2026-08-09T11:19:06.214360+00:00",
+  "errors": 0,
+  "files": [
+    {
+      "night": "20251115",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20251115/20251115_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "mtime_utc": "2026-06-19T19:49:37.682377+00:00",
+      "night": "20251116",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20251116/20251116_unknown_review_full.fits",
+      "rows": 33,
+      "sha256": "0d4b662ad55c23c0d610487a4103446500212b0049a940efe7bafe385326d1e9",
+      "size_bytes": 28800,
+      "status": "ok"
+    },
+    {
+      "night": "20251117",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20251117/20251117_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "mtime_utc": "2026-06-19T20:07:09.925680+00:00",
+      "night": "20251118",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20251118/20251118_unknown_review_full.fits",
+      "rows": 216,
+      "sha256": "77229658bd8ac353ff12d92faa761d44e03c6b6766b9c0568ade323b21769187",
+      "size_bytes": 120960,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-19T20:21:38.575513+00:00",
+      "night": "20251119",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20251119/20251119_unknown_review_full.fits",
+      "rows": 192,
+      "sha256": "c4e6c5da2af43c392751f67c31c5a43214969dbc4385681033c5bf17ba52c1c9",
+      "size_bytes": 112320,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-19T20:37:15.708662+00:00",
+      "night": "20251120",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20251120/20251120_unknown_review_full.fits",
+      "rows": 189,
+      "sha256": "fc9801c83a12b08fa48a0dfe75f3bb211577d76117ab2d983b408597bcf239e2",
+      "size_bytes": 109440,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-19T21:01:55.600068+00:00",
+      "night": "20251121",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20251121/20251121_unknown_review_full.fits",
+      "rows": 312,
+      "sha256": "3bb39d2996a433c441b1843d226cb480a9db96d2d0acdb65193d0c0ce9e42bf1",
+      "size_bytes": 216000,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-19T21:04:56.250711+00:00",
+      "night": "20251122",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20251122/20251122_unknown_review_full.fits",
+      "rows": 33,
+      "sha256": "d8e979d7173bc2509eeee5eee7479ac57e0598e67a3d7cb1caa3f25fe5816dc9",
+      "size_bytes": 31680,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-19T21:19:32.541315+00:00",
+      "night": "20251123",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20251123/20251123_unknown_review_full.fits",
+      "rows": 189,
+      "sha256": "c60ffaae9610cebd6840ede7330896a72e43dd84b3b08eadbfee3c8e4d0a683f",
+      "size_bytes": 115200,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-19T21:23:08.301165+00:00",
+      "night": "20251124",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20251124/20251124_unknown_review_full.fits",
+      "rows": 42,
+      "sha256": "2eaaa2c9d78933bdacafeb701c88c40e3ef87c5cd4cd9bc00a7995ee64df80c3",
+      "size_bytes": 37440,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-19T21:28:18.513289+00:00",
+      "night": "20251125",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20251125/20251125_unknown_review_full.fits",
+      "rows": 60,
+      "sha256": "f3e02e48e4316943f331f192192fcf146ef65d00f55f67384231aeeaac803b75",
+      "size_bytes": 48960,
+      "status": "ok"
+    },
+    {
+      "night": "20251126",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20251126/20251126_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "mtime_utc": "2026-06-19T21:29:58.427265+00:00",
+      "night": "20251127",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20251127/20251127_unknown_review_full.fits",
+      "rows": 15,
+      "sha256": "296c3049b0b74b357678b06031fb304ce8745f52b1c9044b72585ab2f6c2f556",
+      "size_bytes": 20160,
+      "status": "ok"
+    },
+    {
+      "changed_during_read": false,
+      "mtime_utc": "2026-06-19T21:30:08.719562+00:00",
+      "night": "20251128",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20251128/20251128_unknown_review_full.fits",
+      "rows": 0,
+      "sha256": "97e75a73181d18d5ca852a991f04e280772555871699e806fb843eb54f1a35c9",
+      "size_bytes": 11520,
+      "status": "ok_zero"
+    },
+    {
+      "mtime_utc": "2026-06-19T21:34:14.571759+00:00",
+      "night": "20251129",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20251129/20251129_unknown_review_full.fits",
+      "rows": 49,
+      "sha256": "81f99f6a670af9da2bd27f5aac6728e3b94d2119f006aef3ed0ae35db4c507d7",
+      "size_bytes": 40320,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-19T21:34:43.071476+00:00",
+      "night": "20251130",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20251130/20251130_unknown_review_full.fits",
+      "rows": 3,
+      "sha256": "2b020e77cb3d7123d656ba1f10e4fc714da3966d5983414033f8642e9876c754",
+      "size_bytes": 14400,
+      "status": "ok"
+    },
+    {
+      "changed_during_read": false,
+      "mtime_utc": "2026-06-19T21:34:48.589425+00:00",
+      "night": "20251201",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20251201/20251201_unknown_review_full.fits",
+      "rows": 0,
+      "sha256": "97e75a73181d18d5ca852a991f04e280772555871699e806fb843eb54f1a35c9",
+      "size_bytes": 11520,
+      "status": "ok_zero"
+    },
+    {
+      "mtime_utc": "2026-06-19T21:38:14.821123+00:00",
+      "night": "20251202",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20251202/20251202_unknown_review_full.fits",
+      "rows": 39,
+      "sha256": "6f83ebd2da5fb32bb379cf67b632286fb746241b669be6e5bca76c53dd4f7d56",
+      "size_bytes": 34560,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-19T21:57:08.827665+00:00",
+      "night": "20251203",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20251203/20251203_unknown_review_full.fits",
+      "rows": 222,
+      "sha256": "738a87b44c3ebd491d6e912d056bb215890a3cd840b68ee7c31d8d69d81efb0b",
+      "size_bytes": 158400,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-19T22:06:04.421632+00:00",
+      "night": "20251204",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20251204/20251204_unknown_review_full.fits",
+      "rows": 96,
+      "sha256": "2180fc3f4a1b0520c4dfd88e7b8c80b06e50cd90725101071ca6c4fdc8d4456c",
+      "size_bytes": 60480,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-19T22:11:37.114582+00:00",
+      "night": "20251205",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20251205/20251205_unknown_review_full.fits",
+      "rows": 57,
+      "sha256": "5bd57a71d9dfb507d737a386e394068b2d2dfaaf8c5d654d0940b3644b6a63f5",
+      "size_bytes": 40320,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-19T22:22:01.818172+00:00",
+      "night": "20251206",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20251206/20251206_unknown_review_full.fits",
+      "rows": 123,
+      "sha256": "2d96fe19165017309a8dd77eb61777ef69077aefbe867242df2602bddec1fedf",
+      "size_bytes": 77760,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-19T22:49:06.644101+00:00",
+      "night": "20251207",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20251207/20251207_unknown_review_full.fits",
+      "rows": 333,
+      "sha256": "84e7208351b25664cd395061777c9d2cdae8ca7bd37e20fb8f876e58f0667132",
+      "size_bytes": 216000,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-19T23:00:56.215126+00:00",
+      "night": "20251208",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20251208/20251208_unknown_review_full.fits",
+      "rows": 138,
+      "sha256": "89a2620b3ffc23630483b9f7405cb9d0cfdc53c5b3f608dc253270dc33bb4f65",
+      "size_bytes": 89280,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-19T23:21:30.603558+00:00",
+      "night": "20251209",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20251209/20251209_unknown_review_full.fits",
+      "rows": 246,
+      "sha256": "5b8d60bc542c0b5de29627aaf2e3812c61ebd48f27c31275d7b53047549bc1e2",
+      "size_bytes": 146880,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-19T23:38:56.399366+00:00",
+      "night": "20251210",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20251210/20251210_unknown_review_full.fits",
+      "rows": 207,
+      "sha256": "19e5fc7b433c84123ff23d26b70857b759a9cd4c56eb2b93c2bf5a3d7b7b9368",
+      "size_bytes": 129600,
+      "status": "ok"
+    },
+    {
+      "night": "20251211",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20251211/20251211_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20251212",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20251212/20251212_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "mtime_utc": "2026-06-19T23:50:05.927915+00:00",
+      "night": "20251213",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20251213/20251213_unknown_review_full.fits",
+      "rows": 129,
+      "sha256": "996a3b874f750122fe0e3badae319b64a6b329da39ba3df428803799dc0c0390",
+      "size_bytes": 80640,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T00:03:05.326317+00:00",
+      "night": "20251214",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20251214/20251214_unknown_review_full.fits",
+      "rows": 153,
+      "sha256": "318348b167a129206338147ab68923a8a672c8ad258ba17f4a3eb780fd777354",
+      "size_bytes": 95040,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T00:33:46.261499+00:00",
+      "night": "20251215",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20251215/20251215_unknown_review_full.fits",
+      "rows": 384,
+      "sha256": "e10bd31c0738830a1b839b826b0db4bd3019ca07e20c8d7c20ccf91f4e7517a7",
+      "size_bytes": 239040,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T00:59:37.186336+00:00",
+      "night": "20251216",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20251216/20251216_unknown_review_full.fits",
+      "rows": 318,
+      "sha256": "4266d43ce716015dc5a43e71eaf54b9d36f25f593668fded13955050adc6b6e4",
+      "size_bytes": 178560,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T01:12:11.948695+00:00",
+      "night": "20251217",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20251217/20251217_unknown_review_full.fits",
+      "rows": 141,
+      "sha256": "844e5d994b675c653f0073592d76bb1559c0c5d4f05c150572dc3b179d43e4d1",
+      "size_bytes": 89280,
+      "status": "ok"
+    },
+    {
+      "night": "20251218",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20251218/20251218_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20251219",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20251219/20251219_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "mtime_utc": "2026-06-20T01:22:34.127585+00:00",
+      "night": "20251220",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20251220/20251220_unknown_review_full.fits",
+      "rows": 60,
+      "sha256": "a98f1cfe37c580c00093f663dc3b29cec94fb644ec46060940f77e11669c6a65",
+      "size_bytes": 43200,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T01:31:02.796308+00:00",
+      "night": "20251221",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20251221/20251221_unknown_review_full.fits",
+      "rows": 114,
+      "sha256": "4b42d95a5d60165e1dbf02c8147632cf5897e9a03100d439429fb90a2f4d53f0",
+      "size_bytes": 80640,
+      "status": "ok"
+    },
+    {
+      "night": "20251222",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20251222/20251222_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "mtime_utc": "2026-06-20T01:33:03.980810+00:00",
+      "night": "20251223",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20251223/20251223_unknown_review_full.fits",
+      "rows": 159,
+      "sha256": "9ccca2f5264ec5967f4f4f2a0b04d41357da77781915446e65ea628e69e5394e",
+      "size_bytes": 92160,
+      "status": "ok"
+    },
+    {
+      "night": "20251224",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20251224/20251224_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "mtime_utc": "2026-06-20T01:35:11.655590+00:00",
+      "night": "20251225",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20251225/20251225_unknown_review_full.fits",
+      "rows": 201,
+      "sha256": "2b99733747454c9de87095aea596f6fbcbd51233ad0449d59a7b0e72449c6e81",
+      "size_bytes": 123840,
+      "status": "ok"
+    },
+    {
+      "night": "20251226",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20251226/20251226_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "mtime_utc": "2026-06-20T01:37:25.298707+00:00",
+      "night": "20251227",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20251227/20251227_unknown_review_full.fits",
+      "rows": 114,
+      "sha256": "f1198699afcbc4572b7d168423c87559d27f742afdfe260bf9cb5e53bd40375c",
+      "size_bytes": 74880,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T01:41:48.869789+00:00",
+      "night": "20251228",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20251228/20251228_unknown_review_full.fits",
+      "rows": 544,
+      "sha256": "af8063e9dcba1b52da75def879337580fbae6883a4f88f026f1feb4bb78b1fe9",
+      "size_bytes": 354240,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T01:43:51.431688+00:00",
+      "night": "20251229",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20251229/20251229_unknown_review_full.fits",
+      "rows": 225,
+      "sha256": "f425eb627b4f0bd2528443385c68509885fe6f628e683ff91510b2b4491bffa9",
+      "size_bytes": 149760,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T01:45:36.677006+00:00",
+      "night": "20251230",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20251230/20251230_unknown_review_full.fits",
+      "rows": 252,
+      "sha256": "53fd31d9a669eed1eeb1862cee22a58bdefa45ee6c824c1accf4c6e0cd226f55",
+      "size_bytes": 161280,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T01:46:42.444440+00:00",
+      "night": "20251231",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20251231/20251231_unknown_review_full.fits",
+      "rows": 123,
+      "sha256": "e7da865b7fb786b23b86b427364da228e11a024c7c1d221005612d251ebd1e29",
+      "size_bytes": 83520,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T01:47:35.902336+00:00",
+      "night": "20260101",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260101/20260101_unknown_review_full.fits",
+      "rows": 90,
+      "sha256": "39ec69203358005b8df8c8425382a61c32a8e65e7e0ae8d3e5847ba4d6f7c6c3",
+      "size_bytes": 60480,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T01:48:45.814470+00:00",
+      "night": "20260102",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260102/20260102_unknown_review_full.fits",
+      "rows": 129,
+      "sha256": "2378547a750ecfacc6f4bb5eab018bd8d5906bac2686e04e68787a0f675a97d8",
+      "size_bytes": 83520,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T01:48:57.701217+00:00",
+      "night": "20260103",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260103/20260103_unknown_review_full.fits",
+      "rows": 3,
+      "sha256": "11497c4b1ff989c7d02135866cc1ec999effcb3083c3f9f959d0956bf9390c86",
+      "size_bytes": 14400,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T01:50:32.817688+00:00",
+      "night": "20260104",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260104/20260104_unknown_review_full.fits",
+      "rows": 192,
+      "sha256": "d5d3daa5803bdf5296128ed81ac99b6ee2f0d2e2a757c085a62da02ef0895123",
+      "size_bytes": 132480,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T01:51:46.220365+00:00",
+      "night": "20260105",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260105/20260105_unknown_review_full.fits",
+      "rows": 126,
+      "sha256": "d0af3b306628eeb64d3527e8bb2c5dca5f3ce6c1ffe483cb520062041885ea15",
+      "size_bytes": 83520,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T01:53:20.699539+00:00",
+      "night": "20260106",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260106/20260106_unknown_review_full.fits",
+      "rows": 180,
+      "sha256": "167aaac26a61717866a081622b8ca3d0c84a15503189d765a88b674d2085f498",
+      "size_bytes": 123840,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T01:56:17.963970+00:00",
+      "night": "20260107",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260107/20260107_unknown_review_full.fits",
+      "rows": 237,
+      "sha256": "8301de8fc2252d40fe286d915797ef2e4262f834b023459f8a311ae1f930d0a1",
+      "size_bytes": 138240,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T01:58:00.527092+00:00",
+      "night": "20260108",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260108/20260108_unknown_review_full.fits",
+      "rows": 81,
+      "sha256": "f7eb15a989c457c00d8f2dd02a8bdaf998ae5646ed549a0c22942a1f900f0c6b",
+      "size_bytes": 54720,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T01:58:37.802147+00:00",
+      "night": "20260109",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260109/20260109_unknown_review_full.fits",
+      "rows": 51,
+      "sha256": "5cdac84da95b1ca349aa7f0bf24ef4bff46136bea9cccbc5c96cfcd2b067bcb0",
+      "size_bytes": 37440,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T01:59:59.351727+00:00",
+      "night": "20260110",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260110/20260110_unknown_review_full.fits",
+      "rows": 87,
+      "sha256": "b5db22e6b2690fc50459a3a1445cec281af4b83ef944302b632667d8fef35a84",
+      "size_bytes": 60480,
+      "status": "ok"
+    },
+    {
+      "night": "20260111",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260111/20260111_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "mtime_utc": "2026-06-20T02:02:00.559887+00:00",
+      "night": "20260112",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260112/20260112_unknown_review_full.fits",
+      "rows": 51,
+      "sha256": "51a6e43927c784601953af63cfc32175d51f1a7df42a6351c4d8b86c4f6307b0",
+      "size_bytes": 37440,
+      "status": "ok"
+    },
+    {
+      "night": "20260113",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260113/20260113_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "mtime_utc": "2026-06-20T02:05:33.370698+00:00",
+      "night": "20260114",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260114/20260114_unknown_review_full.fits",
+      "rows": 186,
+      "sha256": "18a56b52fde42c1576272561ea0e4be2dea0dabc0868752dad840c3700e732d6",
+      "size_bytes": 109440,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T02:07:42.484344+00:00",
+      "night": "20260115",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260115/20260115_unknown_review_full.fits",
+      "rows": 141,
+      "sha256": "8f92b54141c1e15c66c696f08c085b2dc430b6665d50d7181b2701b67bcd51a3",
+      "size_bytes": 89280,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T02:09:12.919608+00:00",
+      "night": "20260116",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260116/20260116_unknown_review_full.fits",
+      "rows": 123,
+      "sha256": "6cbf5fe1b0efbb7478491f6f5916910caa8ce7930d958effbcf837fdf3e4780c",
+      "size_bytes": 77760,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T02:09:53.402486+00:00",
+      "night": "20260117",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260117/20260117_unknown_review_full.fits",
+      "rows": 66,
+      "sha256": "4de3e9ca3e35cc054b473562daba0282adfd28c8b9140055d3b0807a6095e03d",
+      "size_bytes": 46080,
+      "status": "ok"
+    },
+    {
+      "night": "20260118",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260118/20260118_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "mtime_utc": "2026-06-20T02:10:32.264837+00:00",
+      "night": "20260119",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260119/20260119_unknown_review_full.fits",
+      "rows": 12,
+      "sha256": "f13dc3fbd1f8401ad201eb51fd2d75a61ad948349398ed1d87da697c789091cc",
+      "size_bytes": 20160,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T02:11:22.481582+00:00",
+      "night": "20260120",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260120/20260120_unknown_review_full.fits",
+      "rows": 33,
+      "sha256": "90a39971dcc2b8bd99ba7eec9a5637655aa1d3b779ca96f27a9271732193460f",
+      "size_bytes": 31680,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T02:13:26.982163+00:00",
+      "night": "20260121",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260121/20260121_unknown_review_full.fits",
+      "rows": 195,
+      "sha256": "2aa8bde219c472407ac4535e84299b25ef03913540c010318ea9cb2425212c39",
+      "size_bytes": 132480,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T02:14:56.012982+00:00",
+      "night": "20260122",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260122/20260122_unknown_review_full.fits",
+      "rows": 147,
+      "sha256": "9f1bac2f1f170506bdac4422f532da17a231d85d89a56105451383ec2556e592",
+      "size_bytes": 89280,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T02:16:08.831125+00:00",
+      "night": "20260123",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260123/20260123_unknown_review_full.fits",
+      "rows": 108,
+      "sha256": "b00461c62fc108e7e667605ad81f8092d2f932fba27a8e84a88b4c59f71ad777",
+      "size_bytes": 72000,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T02:19:25.864701+00:00",
+      "night": "20260124",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260124/20260124_unknown_review_full.fits",
+      "rows": 135,
+      "sha256": "020a4b27d1cb20b4c0ee997fa32a40fa2e3356f86b397b0a1525620cef978fa9",
+      "size_bytes": 86400,
+      "status": "ok"
+    },
+    {
+      "night": "20260125",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260125/20260125_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "mtime_utc": "2026-06-20T02:21:06.349740+00:00",
+      "night": "20260126",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260126/20260126_unknown_review_full.fits",
+      "rows": 165,
+      "sha256": "d7e5d1e236df6f2070cb98ba454f40e84a6889b2d5e323a12fdd3df21996bb44",
+      "size_bytes": 103680,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T02:21:46.173653+00:00",
+      "night": "20260127",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260127/20260127_unknown_review_full.fits",
+      "rows": 12,
+      "sha256": "31b3dcd747eeef310dd40673cfbf5dca9c0f11d28fd86b9ec02696996f1645dd",
+      "size_bytes": 20160,
+      "status": "ok"
+    },
+    {
+      "changed_during_read": false,
+      "mtime_utc": "2026-06-20T02:21:49.968739+00:00",
+      "night": "20260128",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260128/20260128_unknown_review_full.fits",
+      "rows": 0,
+      "sha256": "97e75a73181d18d5ca852a991f04e280772555871699e806fb843eb54f1a35c9",
+      "size_bytes": 11520,
+      "status": "ok_zero"
+    },
+    {
+      "mtime_utc": "2026-06-20T02:22:32.642694+00:00",
+      "night": "20260129",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260129/20260129_unknown_review_full.fits",
+      "rows": 54,
+      "sha256": "1ab07aead9f50f2c2a25b034b0721e9cb915583ff317e12e12ceaf7f2746e4a1",
+      "size_bytes": 40320,
+      "status": "ok"
+    },
+    {
+      "night": "20260130",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260130/20260130_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "mtime_utc": "2026-06-20T02:22:57.716245+00:00",
+      "night": "20260131",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260131/20260131_unknown_review_full.fits",
+      "rows": 18,
+      "sha256": "284b0511df3c1751324ce1be0d4346dd52d4f637797a0a3d960f5c122b15e347",
+      "size_bytes": 23040,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T02:23:26.650873+00:00",
+      "night": "20260201",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260201/20260201_unknown_review_full.fits",
+      "rows": 51,
+      "sha256": "e98276c00aabbdb4dc97dbbd5d6f94f6ee57abfd68ea0f0fdac37b29151f0c2e",
+      "size_bytes": 43200,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T02:24:42.713370+00:00",
+      "night": "20260202",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260202/20260202_unknown_review_full.fits",
+      "rows": 162,
+      "sha256": "82bd9dc3125821cccb17053bdff3ef0699df9efa216f2c601a03d1ff8d1dc3a6",
+      "size_bytes": 97920,
+      "status": "ok"
+    },
+    {
+      "night": "20260203",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260203/20260203_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260204",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260204/20260204_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "mtime_utc": "2026-06-20T02:25:47.867827+00:00",
+      "night": "20260205",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260205/20260205_unknown_review_full.fits",
+      "rows": 42,
+      "sha256": "e900486ac32b42c7a6a5054b8fd22acbf93b0016b459f4dca967fb70c2522887",
+      "size_bytes": 34560,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T02:26:52.316652+00:00",
+      "night": "20260206",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260206/20260206_unknown_review_full.fits",
+      "rows": 42,
+      "sha256": "12912a08eac9e6295c5388a225d45219e575a13be3dc50c12a2ce06d3ac262f9",
+      "size_bytes": 34560,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T02:29:16.733293+00:00",
+      "night": "20260207",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260207/20260207_unknown_review_full.fits",
+      "rows": 153,
+      "sha256": "a864bae9c660b6e586a2fbccda944a9e347c3cfaa575719f14618744cad04478",
+      "size_bytes": 92160,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T02:33:49.245948+00:00",
+      "night": "20260208",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260208/20260208_unknown_review_full.fits",
+      "rows": 276,
+      "sha256": "674c021a729976413e1a261bd7e4f03462388632263cc634671158987430c92a",
+      "size_bytes": 164160,
+      "status": "ok"
+    },
+    {
+      "night": "20260209",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260209/20260209_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "mtime_utc": "2026-06-20T02:34:52.146070+00:00",
+      "night": "20260210",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260210/20260210_unknown_review_full.fits",
+      "rows": 69,
+      "sha256": "a6a08045a5fd8db3564d09c5c98efd8aa89b442e42fe82489ee29dbdd441cde9",
+      "size_bytes": 46080,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T02:37:21.598398+00:00",
+      "night": "20260211",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260211/20260211_unknown_review_full.fits",
+      "rows": 243,
+      "sha256": "6611a81cc136c5f6a3cf97068469329c4246780fa661d18b66d9c5211c6f05f4",
+      "size_bytes": 141120,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T02:38:06.973488+00:00",
+      "night": "20260212",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260212/20260212_unknown_review_full.fits",
+      "rows": 45,
+      "sha256": "18764bbf40478e75c4a712af9a8017bab9fd2f75b713bdbf193cf8ebff8bc22c",
+      "size_bytes": 34560,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T02:41:34.022044+00:00",
+      "night": "20260213",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260213/20260213_unknown_review_full.fits",
+      "rows": 321,
+      "sha256": "7536a2fa56b78880e21dc21336e7836c2f663358a7d0db8aa54234bb9672d35c",
+      "size_bytes": 181440,
+      "status": "ok"
+    },
+    {
+      "night": "20260214",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260214/20260214_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "mtime_utc": "2026-06-20T02:42:57.840460+00:00",
+      "night": "20260215",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260215/20260215_unknown_review_full.fits",
+      "rows": 126,
+      "sha256": "0ed9f65c19c227c9bad9c2fb76aff121913a44cfc2b492c35768e3752f2e0a4f",
+      "size_bytes": 77760,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T02:45:06.556640+00:00",
+      "night": "20260216",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260216/20260216_unknown_review_full.fits",
+      "rows": 210,
+      "sha256": "78a7c2e8e84e534cf413e6b8db813658f9822bb5e7fe8904a9fbca459b31892c",
+      "size_bytes": 123840,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T02:48:35.257617+00:00",
+      "night": "20260217",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260217/20260217_unknown_review_full.fits",
+      "rows": 381,
+      "sha256": "1984bdb4379a5fec4c3f4de1705022aec77b326f78b728c23a1d7d2e8d185de5",
+      "size_bytes": 213120,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T02:50:46.602325+00:00",
+      "night": "20260218",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260218/20260218_unknown_review_full.fits",
+      "rows": 201,
+      "sha256": "62ba5d7f8927a10fbd2d4d7911446885a82e8a831c5cad7552f85ce04fe50e37",
+      "size_bytes": 132480,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T02:53:14.168929+00:00",
+      "night": "20260219",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260219/20260219_unknown_review_full.fits",
+      "rows": 273,
+      "sha256": "f93288920fdad84a13d4349f40e65e53c2f3665caadf6cd784df69bcf92faa6f",
+      "size_bytes": 155520,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T02:54:30.397642+00:00",
+      "night": "20260220",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260220/20260220_unknown_review_full.fits",
+      "rows": 84,
+      "sha256": "cecfcf57f495e5b07bc6047241438f2cb69d8304cabcf49825b2f555844e24d8",
+      "size_bytes": 57600,
+      "status": "ok"
+    },
+    {
+      "night": "20260221",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260221/20260221_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "mtime_utc": "2026-06-20T02:56:09.991129+00:00",
+      "night": "20260222",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260222/20260222_unknown_review_full.fits",
+      "rows": 147,
+      "sha256": "b3faa4430f3358ae14d20dbe7b4a8d09616a3037230de48e4fcf317528271043",
+      "size_bytes": 92160,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T02:56:21.476774+00:00",
+      "night": "20260223",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260223/20260223_unknown_review_full.fits",
+      "rows": 6,
+      "sha256": "d2e239fe6dfbeaede068dd8aa65f10b4b483f16b5e270a71eb1b99c0a9d86af8",
+      "size_bytes": 14400,
+      "status": "ok"
+    },
+    {
+      "changed_during_read": false,
+      "mtime_utc": "2026-06-20T02:56:26.156632+00:00",
+      "night": "20260224",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260224/20260224_unknown_review_full.fits",
+      "rows": 0,
+      "sha256": "97e75a73181d18d5ca852a991f04e280772555871699e806fb843eb54f1a35c9",
+      "size_bytes": 11520,
+      "status": "ok_zero"
+    },
+    {
+      "night": "20260225",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260225/20260225_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260226",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260226/20260226_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260227",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260227/20260227_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260228",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260228/20260228_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260301",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260301/20260301_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260302",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260302/20260302_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "mtime_utc": "2026-06-20T02:56:49.928730+00:00",
+      "night": "20260303",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260303/20260303_unknown_review_full.fits",
+      "rows": 27,
+      "sha256": "22a3d1b4582dabb04fdb96d363255ef6bc2e9ed0ff890dc220b9f0bdf78f09d2",
+      "size_bytes": 25920,
+      "status": "ok"
+    },
+    {
+      "night": "20260304",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260304/20260304_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260305",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260305/20260305_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "mtime_utc": "2026-06-20T02:57:29.602332+00:00",
+      "night": "20260306",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260306/20260306_unknown_review_full.fits",
+      "rows": 27,
+      "sha256": "4df894e9f170942b596fd494079db441b78117a67137179abfdcfb190e92a144",
+      "size_bytes": 25920,
+      "status": "ok"
+    },
+    {
+      "night": "20260307",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260307/20260307_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "mtime_utc": "2026-06-20T02:58:24.170288+00:00",
+      "night": "20260308",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260308/20260308_unknown_review_full.fits",
+      "rows": 45,
+      "sha256": "67f1bea11877f07cd6ad2dfd93a0141c17e57778669e7704d1e4c69d8649afd6",
+      "size_bytes": 40320,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T02:58:44.389096+00:00",
+      "night": "20260309",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260309/20260309_unknown_review_full.fits",
+      "rows": 25,
+      "sha256": "1caccb6b88bfe8e08b2a8f45187abfbbd9ccda7306e4661bb1f12e671fd44c17",
+      "size_bytes": 25920,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T03:00:49.726811+00:00",
+      "night": "20260310",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260310/20260310_unknown_review_full.fits",
+      "rows": 261,
+      "sha256": "fbba150aaa4adf051cc068686ca7141bb987f21ecb8aa8b97ad3857c6f0e9492",
+      "size_bytes": 161280,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T03:02:26.736489+00:00",
+      "night": "20260311",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260311/20260311_unknown_review_full.fits",
+      "rows": 207,
+      "sha256": "ec501a2872e0f1bf314737700b91b4e303de4f832ba44cbcdcb3d0f0c18152c5",
+      "size_bytes": 126720,
+      "status": "ok"
+    },
+    {
+      "night": "20260312",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260312/20260312_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260313",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260313/20260313_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260314",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260314/20260314_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "mtime_utc": "2026-06-20T03:02:43.527328+00:00",
+      "night": "20260315",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260315/20260315_unknown_review_full.fits",
+      "rows": 15,
+      "sha256": "cac0a58853b48f18ea09984c17effc814ebe2901fb7aaa544b07b5d27e1e50b0",
+      "size_bytes": 23040,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T03:03:06.422087+00:00",
+      "night": "20260316",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260316/20260316_unknown_review_full.fits",
+      "rows": 48,
+      "sha256": "d6e90fbd0a569223e1bd7a250f082d3ccbac1779cff0c1ca06487f5292306df8",
+      "size_bytes": 37440,
+      "status": "ok"
+    },
+    {
+      "night": "20260317",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260317/20260317_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "mtime_utc": "2026-06-20T03:03:31.785841+00:00",
+      "night": "20260318",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260318/20260318_unknown_review_full.fits",
+      "rows": 54,
+      "sha256": "e7a6fb81b233cae2d3814206a657fc17d144a776a0b26288788d8939c7d651ee",
+      "size_bytes": 40320,
+      "status": "ok"
+    },
+    {
+      "night": "20260319",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260319/20260319_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260320",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260320/20260320_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260321",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260321/20260321_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260322",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260322/20260322_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260323",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260323/20260323_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260324",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260324/20260324_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260325",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260325/20260325_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260326",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260326/20260326_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260327",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260327/20260327_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260328",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260328/20260328_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260329",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260329/20260329_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "mtime_utc": "2026-06-20T03:04:01.112580+00:00",
+      "night": "20260330",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260330/20260330_unknown_review_full.fits",
+      "rows": 27,
+      "sha256": "545992320c125a889975d6514c8f8a8245255ba78385605de57bda623b01ef1c",
+      "size_bytes": 25920,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T03:04:51.344193+00:00",
+      "night": "20260331",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260331/20260331_unknown_review_full.fits",
+      "rows": 84,
+      "sha256": "0377e371a64087cc835dfbc5498314823d092530995420e7003b8664995da39a",
+      "size_bytes": 57600,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T03:05:32.337428+00:00",
+      "night": "20260401",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260401/20260401_unknown_review_full.fits",
+      "rows": 57,
+      "sha256": "ebb7786b36f519ae7920204413710d2e6cea3fc45e85a4f16e14b9b3ccd03f12",
+      "size_bytes": 40320,
+      "status": "ok"
+    },
+    {
+      "night": "20260402",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260402/20260402_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "mtime_utc": "2026-06-20T03:06:07.450377+00:00",
+      "night": "20260403",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260403/20260403_unknown_review_full.fits",
+      "rows": 45,
+      "sha256": "e3c889116c049c1c1420d0c737e793eed069756900afbd1bb1617367fb06f422",
+      "size_bytes": 34560,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T03:06:15.673691+00:00",
+      "night": "20260404",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260404/20260404_unknown_review_full.fits",
+      "rows": 6,
+      "sha256": "45cf24d97f2c51e2884ce17c1c120e7a6cf7abbfdd6f61636e249945aac4dc3d",
+      "size_bytes": 17280,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T03:06:32.949447+00:00",
+      "night": "20260405",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260405/20260405_unknown_review_full.fits",
+      "rows": 21,
+      "sha256": "bd2f19f4bdf23ff17b0eacb3f711bbd8095c23152f94542eff3e2f8dd45e2897",
+      "size_bytes": 23040,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T03:07:53.628311+00:00",
+      "night": "20260406",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260406/20260406_unknown_review_full.fits",
+      "rows": 183,
+      "sha256": "e4b502209464b01f801a8b0cf79f6360f01555dba313095fbd35691204cc337e",
+      "size_bytes": 112320,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T03:09:48.914444+00:00",
+      "night": "20260407",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260407/20260407_unknown_review_full.fits",
+      "rows": 296,
+      "sha256": "b354f641383ba9fd5837a4b16bd94fdc22da15f19ed49f7dc34e530ef783cdb4",
+      "size_bytes": 181440,
+      "status": "ok"
+    },
+    {
+      "night": "20260408",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260408/20260408_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260409",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260409/20260409_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "mtime_utc": "2026-06-20T03:10:38.336560+00:00",
+      "night": "20260410",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260410/20260410_unknown_review_full.fits",
+      "rows": 82,
+      "sha256": "d916c976b0cd32f2c03f1263554a8c6da3e40e0f310c1bc83f6314500fa786fa",
+      "size_bytes": 57600,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T03:10:54.914638+00:00",
+      "night": "20260411",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260411/20260411_unknown_review_full.fits",
+      "rows": 21,
+      "sha256": "7da73392e8d1451b7375a9379c40f0f385729f53cea46662a5105447ad138e5f",
+      "size_bytes": 23040,
+      "status": "ok"
+    },
+    {
+      "changed_during_read": false,
+      "mtime_utc": "2026-06-20T03:10:58.362060+00:00",
+      "night": "20260412",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260412/20260412_unknown_review_full.fits",
+      "rows": 0,
+      "sha256": "97e75a73181d18d5ca852a991f04e280772555871699e806fb843eb54f1a35c9",
+      "size_bytes": 11520,
+      "status": "ok_zero"
+    },
+    {
+      "night": "20260413",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260413/20260413_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260414",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260414/20260414_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260415",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260415/20260415_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260416",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260416/20260416_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260417",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260417/20260417_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260418",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260418/20260418_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260419",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260419/20260419_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "mtime_utc": "2026-06-20T03:13:05.058158+00:00",
+      "night": "20260420",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260420/20260420_unknown_review_full.fits",
+      "rows": 319,
+      "sha256": "f63470fd0de4f369c23944b61f8bd40c724f75f53e242c0c02abdda433cb7028",
+      "size_bytes": 201600,
+      "status": "ok"
+    },
+    {
+      "night": "20260421",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260421/20260421_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "mtime_utc": "2026-06-20T03:13:21.769565+00:00",
+      "night": "20260422",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260422/20260422_unknown_review_full.fits",
+      "rows": 21,
+      "sha256": "3e59b987fec31e8e3ddade0085a3985d61b21eb9c9dd6e3f179c3bcbe442b7ad",
+      "size_bytes": 23040,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T03:13:29.969445+00:00",
+      "night": "20260423",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260423/20260423_unknown_review_full.fits",
+      "rows": 3,
+      "sha256": "a3f1f9c1ebcc6d68a416ea9e01d5da19153ef2bb1226b1a7b3d2ca8bf161f6f7",
+      "size_bytes": 14400,
+      "status": "ok"
+    },
+    {
+      "night": "20260424",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260424/20260424_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "mtime_utc": "2026-06-20T03:13:39.894733+00:00",
+      "night": "20260425",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260425/20260425_unknown_review_full.fits",
+      "rows": 6,
+      "sha256": "409d93dfbe091eac75dcfeba791a076780346f97b087652b40438a5ae8dabaec",
+      "size_bytes": 17280,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T03:13:51.095236+00:00",
+      "night": "20260426",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260426/20260426_unknown_review_full.fits",
+      "rows": 3,
+      "sha256": "48b4338b10cd9a3447bd0467bafaf6b1c3f65b7897e8d2fca90d56c656ca135f",
+      "size_bytes": 14400,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T03:14:26.895311+00:00",
+      "night": "20260427",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260427/20260427_unknown_review_full.fits",
+      "rows": 66,
+      "sha256": "584b770a491a07cc1d49862d554d54afe672e53c19677163612a67100d3680a7",
+      "size_bytes": 46080,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T03:15:19.740442+00:00",
+      "night": "20260428",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260428/20260428_unknown_review_full.fits",
+      "rows": 93,
+      "sha256": "61e352ec9d57e48e14e4f3200944668e3110b9ed528f915b465c3cc2dccf34e9",
+      "size_bytes": 66240,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T03:16:43.711694+00:00",
+      "night": "20260429",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260429/20260429_unknown_review_full.fits",
+      "rows": 174,
+      "sha256": "41d708aae087e2aa58eade449cb2989cd428d85fe356f96fb39417cfd022ec73",
+      "size_bytes": 129600,
+      "status": "ok"
+    },
+    {
+      "changed_during_read": false,
+      "mtime_utc": "2026-06-20T03:16:50.272716+00:00",
+      "night": "20260430",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260430/20260430_unknown_review_full.fits",
+      "rows": 0,
+      "sha256": "97e75a73181d18d5ca852a991f04e280772555871699e806fb843eb54f1a35c9",
+      "size_bytes": 11520,
+      "status": "ok_zero"
+    },
+    {
+      "night": "20260501",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260501/20260501_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260502",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260502/20260502_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "mtime_utc": "2026-06-20T03:18:16.753362+00:00",
+      "night": "20260503",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260503/20260503_unknown_review_full.fits",
+      "rows": 96,
+      "sha256": "c765669969fd66a82b4e02a44a00f60f70c8a6a392a9547c1e04c869566cd632",
+      "size_bytes": 60480,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T03:19:21.848290+00:00",
+      "night": "20260504",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260504/20260504_unknown_review_full.fits",
+      "rows": 119,
+      "sha256": "ac59181bf8bad1ce4c953619b3b4b54d45d5d2425222b290f3bc70349560d1ce",
+      "size_bytes": 80640,
+      "status": "ok"
+    },
+    {
+      "night": "20260505",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260505/20260505_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "mtime_utc": "2026-06-20T03:19:56.193318+00:00",
+      "night": "20260506",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260506/20260506_unknown_review_full.fits",
+      "rows": 73,
+      "sha256": "6f3d5ed0ba8140e63955aa07679a5af3328d3ead27f3e4c430c27f140b94ab5c",
+      "size_bytes": 51840,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T03:20:38.758627+00:00",
+      "night": "20260507",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260507/20260507_unknown_review_full.fits",
+      "rows": 48,
+      "sha256": "6cdd042030fb3a80d41855ed6aaf70c0e2b4a56bf4d7a2e28ab1b8999cfdd025",
+      "size_bytes": 37440,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T03:21:25.037843+00:00",
+      "night": "20260508",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260508/20260508_unknown_review_full.fits",
+      "rows": 102,
+      "sha256": "8a5fe7a0032ec1ba3fb5cac6602dde33754079dca78931453a7d1234cf6de5be",
+      "size_bytes": 74880,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T03:22:36.844192+00:00",
+      "night": "20260509",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260509/20260509_unknown_review_full.fits",
+      "rows": 132,
+      "sha256": "fda0791cfb66ba95bf1cb8ab23e89e10ad84c35ac0935acf0d295e9ff0ae67d0",
+      "size_bytes": 86400,
+      "status": "ok"
+    },
+    {
+      "night": "20260510",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260510/20260510_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260511",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260511/20260511_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "mtime_utc": "2026-06-20T03:23:17.829665+00:00",
+      "night": "20260512",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260512/20260512_unknown_review_full.fits",
+      "rows": 84,
+      "sha256": "08982f93df35cae629e27e00998fa44193801b2a4f374b3b54597271c4687fbd",
+      "size_bytes": 57600,
+      "status": "ok"
+    },
+    {
+      "night": "20260513",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260513/20260513_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260514",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260514/20260514_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260515",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260515/20260515_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260516",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260516/20260516_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260517",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260517/20260517_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260518",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260518/20260518_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260519",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260519/20260519_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260520",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260520/20260520_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260521",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260521/20260521_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260522",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260522/20260522_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260523",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260523/20260523_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260524",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260524/20260524_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260525",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260525/20260525_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260526",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260526/20260526_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260527",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260527/20260527_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260528",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260528/20260528_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "mtime_utc": "2026-06-20T03:24:42.768846+00:00",
+      "night": "20260529",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260529/20260529_unknown_review_full.fits",
+      "rows": 87,
+      "sha256": "3ba444442e51bb16ae686519b8a5d3d9e412bae79593dd1238af8888fc2e6d67",
+      "size_bytes": 57600,
+      "status": "ok"
+    },
+    {
+      "mtime_utc": "2026-06-20T03:26:22.204327+00:00",
+      "night": "20260530",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260530/20260530_unknown_review_full.fits",
+      "rows": 63,
+      "sha256": "1f9f2dfdcd7e92515bbdefc7798cbf9dc7cd55b010811bf871dd5db49f086896",
+      "size_bytes": 43200,
+      "status": "ok"
+    },
+    {
+      "night": "20260531",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260531/20260531_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "mtime_utc": "2026-06-20T03:27:05.133262+00:00",
+      "night": "20260601",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260601/20260601_unknown_review_full.fits",
+      "rows": 57,
+      "sha256": "d9c24f1b26e794316fb1b9239da6e387b68ec62e6eb56c3dadc4d419ebe007e8",
+      "size_bytes": 40320,
+      "status": "ok"
+    },
+    {
+      "night": "20260602",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260602/20260602_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260603",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260603/20260603_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260604",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260604/20260604_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260605",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260605/20260605_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260606",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260606/20260606_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260607",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260607/20260607_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260608",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260608/20260608_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260609",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260609/20260609_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260610",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260610/20260610_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260611",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260611/20260611_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260612",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260612/20260612_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260613",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260613/20260613_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260614",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260614/20260614_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260615",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260615/20260615_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260616",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260616/20260616_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "changed_during_read": false,
+      "mtime_utc": "2026-06-20T04:41:57.128824+00:00",
+      "night": "20260617",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260617/20260617_unknown_review_full.fits",
+      "rows": 0,
+      "sha256": "97e75a73181d18d5ca852a991f04e280772555871699e806fb843eb54f1a35c9",
+      "size_bytes": 11520,
+      "status": "ok_zero"
+    },
+    {
+      "night": "20260618",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260618/20260618_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260619",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260619/20260619_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "mtime_utc": "2026-06-21T03:53:31.377880+00:00",
+      "night": "20260620",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260620/20260620_unknown_review_full.fits",
+      "rows": 57,
+      "sha256": "9be962611a32cddb0c106f771930b76cc946602f6e62582903dd7918bcc9512c",
+      "size_bytes": 46080,
+      "status": "ok"
+    },
+    {
+      "night": "20260621",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260621/20260621_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260622",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260622/20260622_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260623",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260623/20260623_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260624",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260624/20260624_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260625",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260625/20260625_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260626",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260626/20260626_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260627",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260627/20260627_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260628",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260628/20260628_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260629",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260629/20260629_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260630",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260630/20260630_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260701",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260701/20260701_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260702",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260702/20260702_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260703",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260703/20260703_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260704",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260704/20260704_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260705",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260705/20260705_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260706",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260706/20260706_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260707",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260707/20260707_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260708",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260708/20260708_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260709",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260709/20260709_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260710",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260710/20260710_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260711",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260711/20260711_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260712",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260712/20260712_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260713",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260713/20260713_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "night": "20260714",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260714/20260714_unknown_review_full.fits",
+      "rows": 0,
+      "status": "missing"
+    },
+    {
+      "changed_during_read": false,
+      "mtime_utc": "2026-07-16T01:04:53.736175+00:00",
+      "night": "20260715",
+      "path": "/home/admin/pipeline/xiaoyunao/heliolincrr/review_packages/20260715/20260715_unknown_review_full.fits",
+      "rows": 0,
+      "sha256": "97e75a73181d18d5ca852a991f04e280772555871699e806fb843eb54f1a35c9",
+      "size_bytes": 11520,
+      "status": "ok_zero"
+    }
+  ],
+  "nights_present": 124,
+  "nonempty_nights": 116,
+  "parquet_sha256": "abacf874b9d985cd5ecf65a03d8acc959562ec224a34f8f8e09b1349148a8286",
+  "parquet_size_bytes": 2222776,
+  "rows": 14299,
+  "unit_metadata_columns": {
+    "a_au": "AU",
+    "best_v1_kms": "km/s",
+    "dec_err_deg": "deg",
+    "dec_psf_deg": "deg",
+    "dec_win_deg": "deg",
+    "inc_deg": "deg",
+    "lin_dir_deg": "deg",
+    "lin_rms_arcsec": "arcsec",
+    "lin_speed_arcsec_per_day": "arcsec/day",
+    "mag_aper4": "mag",
+    "mag_psf": "mag",
+    "magerr_aper4": "mag",
+    "magerr_psf": "mag",
+    "max_arcsec": "arcsec",
+    "med_arcsec": "arcsec",
+    "mjd": "d",
+    "ra_err_deg": "deg",
+    "ra_psf_deg": "deg",
+    "ra_win_deg": "deg",
+    "rms_arcsec": "arcsec",
+    "x_win_px": "pix",
+    "y_win_px": "pix"
+  },
+  "unit_metadata_stamped_utc": "2026-08-09T13:01:17.004936+00:00",
+  "zero_nights": 8
+}

@@ -1,0 +1,49 @@
+{
+  "data_second_pass": [
+    [
+      "C/2025 Y1 (ATLAS)",
+      "12:40:19.26",
+      "+04 40'04.9\"",
+      ".539",
+      "-.090",
+      ".5465",
+      "18.4N",
+      "-4.678E+00",
+      "1.260E+00"
+    ]
+  ],
+  "fields_second": [
+    "Object name",
+    "Astrometric RA (hh:mm:ss)",
+    "Astrometric Dec (dd mm'ss\")",
+    "Dist. from center RA (\")",
+    "Dist. from center Dec (\")",
+    "Dist. from center Norm (\")",
+    "Visual magnitude (V)",
+    "RA rate (\"/h)",
+    "Dec rate (\"/h)"
+  ],
+  "n_second_pass": 1,
+  "observer": {
+    "fov_center": "12:40:19.22, +04 40'04.99\" (J2000)",
+    "fov_offset": "00:00:07.20, +00 01'48.00\"",
+    "location": "Peking Observatory, Xinglong Station",
+    "obs_date": "2026-May-30 15:18:44 (2461191.138018 UT)"
+  },
+  "signature": {
+    "source": "NASA/JPL Small-Body Identification API",
+    "version": "1.1"
+  },
+  "summary": {
+    "fov-dec-center": "04-40-04.99",
+    "fov-dec-hwidth": "0.03000",
+    "fov-ra-center": "12-40-19.22",
+    "fov-ra-hwidth": "0.03000",
+    "mag-required": "true",
+    "mpc-code": "327",
+    "obs-time": "2461191.13801819",
+    "suppress-first-pass": "true",
+    "two-pass": "true",
+    "vmag-lim": "22.50"
+  }
+}

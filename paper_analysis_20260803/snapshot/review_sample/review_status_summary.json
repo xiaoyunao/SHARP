@@ -1,0 +1,25 @@
+{
+  "copied_example_gifs": [
+    "20251121_000004r_link0598.gif",
+    "20260207_00000Mi_link0178.gif",
+    "20260529_00001gB_link0128.gif",
+    "20260530_00001gK_link0064.gif"
+  ],
+  "detection_keys_shared_across_links": 0,
+  "generated_utc": "2026-08-09T10:51:51.237842+00:00",
+  "identity_reconciliation_complete": false,
+  "initial_linkages": 67,
+  "input_hashes_sha256": {
+    "submitted_unknown_gif_manifest.csv": "866ba3d74add8686f8bd1b9134cbb5d9291ca39aa0d5203d6876d005f3cec322",
+    "submitted_unknown_link_twilight_summary.csv": "715e5440ef6d86a26ee16a2cf597e285002768b8c49a27549f33c0954a2b201f",
+    "submitted_unknown_true_detections_photometry.csv": "2a1a7a1adce6bf5e28ebf6ac623232bfdcc52447adfe5997f5d70319c151b042"
+  },
+  "posthoc_rejected_linkages": 9,
+  "retained_link_member_rows": 179,
+  "retained_linkages": 58,
+  "retained_nights": 34,
+  "retained_unique_detection_keys": 179,
+  "schema_version": "1.0",
+  "source_directory": "/Users/yunaoxiao/Desktop/submitted_unknown_20251116_20260628",
+  "twilight_metrics_final": false
+}

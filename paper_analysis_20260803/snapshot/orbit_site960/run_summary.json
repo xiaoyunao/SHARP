@@ -1,0 +1,15 @@
+{
+  "candidate_nights": 128,
+  "completed_nights": 128,
+  "cores": 8,
+  "created_utc": "2026-08-09T12:28:21.215234+00:00",
+  "elapsed_s": 2976.1237843446434,
+  "error_nights": 0,
+  "observer": {
+    "height_m": 960.0,
+    "latitude_deg_north": 40.393,
+    "longitude_deg_east": 117.575
+  },
+  "source_module": "/home/admin/pipeline/xiaoyunao/heliolincrr/orbit_confirm_links.py",
+  "source_module_sha256": "993186b4125370c8a38d35614715322ebb098769e42782c0a607ccea89793c2f"
+}

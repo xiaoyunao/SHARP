@@ -1,0 +1,61 @@
+{
+  "archive_limit": "Missing condition tracks are marked ‘not archived’ and are not reconstructed from coordinates, site parameters, or a current ephemeris.",
+  "attribution_limit": "Planned–unacquired means only that no strict raw frame matched the planned (night, field) multiplicity; no weather or equipment cause is assigned.",
+  "chart_contract": {
+    "analytical_question": "What cadence did the archived plan specify, how closely do archived starts follow it, and which observing conditions were actually archived?",
+    "non_color_distinction": "marker shape, open fill, line style, and direct labels",
+    "palette_policy": "hard two-root cap: GOTTA blue normal, orange near-Sun, neutrals",
+    "panels": {
+      "a": "planned/actual timeline by scheduler cycle and mode",
+      "b": "repeat-relative planned median and actual p16/median/p84 cadence",
+      "c": "actual minus planned start residual at matched-pair grain",
+      "d": "archived exposure-level Sun, Moon, and altitude/airmass tracks"
+    },
+    "surface": "static 300-dpi PNG plus vector PDF"
+  },
+  "combined_input_manifest_hash": "dbb46a8e7c9ac8b676de38304feef9c2622d52b25c200fe3ca598e1949fb0263",
+  "condition_availability": {
+    "airmass": "not_archived",
+    "altitude": "not_archived",
+    "moon_separation": "archived",
+    "sun_separation": "not_archived"
+  },
+  "condition_thresholds_read_directly_from_config": {},
+  "counts": {
+    "cadence_rows": 372,
+    "condition_value_rows": 372,
+    "timed_residual_rows": 345,
+    "timeline_rows": 372
+  },
+  "definitions": {
+    "cadence_anchor": "actual elapsed time is reported only for field/cycle groups with a matched, timed repeat-1 exposure",
+    "conditions": "direct archived values only; no ephemeris, coordinate, altitude, or airmass reconstruction",
+    "plan_actual_residual": "actual_start_utc minus planned_start_utc"
+  },
+  "generated_utc": "2026-08-09T12:51:43.328282+00:00",
+  "historical_near_sun_implementation": "Historical near-Sun rows are the executed RA-prefix implementation: an initial solar-separation ordering was overwritten by RA sorting before prefix selection.",
+  "input_sources": {
+    "config": {
+      "path": "/Users/yunaoxiao/Desktop/smt_asteroid/paper_analysis_20260803/config/snapshot.json",
+      "sha256": "4f9d1c7a6688a46cdb6c38023b8c10249b215ef3551a697a54cfcecb7492a7ce"
+    },
+    "footprint": {
+      "path": "/Users/yunaoxiao/Desktop/smt_asteroid/paper_analysis_20260803/snapshot/provenance/survey_fov_footprints_with_visibility.fits",
+      "sha256": "13f394877ce26e50e5cee5053a4ad845f412be4520421e46931b3e157d9e0225"
+    },
+    "l2_manifest": {
+      "path": "/Users/yunaoxiao/Desktop/smt_asteroid/paper_analysis_20260803/snapshot/inventory/l2_manifest.csv",
+      "sha256": "a5a561c212745bee53a1870a27f83779a2558f3973d88378b8ef5d1cdad6b485"
+    },
+    "night_summary": {
+      "path": "/Users/yunaoxiao/Desktop/smt_asteroid/paper_analysis_20260803/snapshot/scheduler/scheduler_plan_realization_by_night.csv",
+      "sha256": "01dfe80fba7e0ea3dd5f3d0810ca18091d214a469e3add4e002c73144f657bde"
+    },
+    "scheduler_example": {
+      "path": "/Users/yunaoxiao/Desktop/smt_asteroid/paper_analysis_20260803/snapshot/scheduler/scheduler_example_20260420.csv",
+      "sha256": "f09b9d3cef1cdc3728b74817b385f9994a821008a1e572f882b14b12b964e29d"
+    }
+  },
+  "representative_night": "20260420",
+  "schema_version": "1.0"
+}

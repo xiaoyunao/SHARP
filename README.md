@@ -22,6 +22,8 @@
 - `heliolincrr/`
 - `resources/known_asteroid/`
   - 放补充参考文件，例如 `submit.xsd`
+- `paper_analysis_20260803/`
+  - PASP 论文的冻结数据分析、5 张表、12 张图、审计报告和可复现验证；不修改论文工程或生产代码
 
 运行产物路径汇总见 `OUTPUTS.md`。
 

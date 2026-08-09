@@ -1,0 +1,30 @@
+{
+  "catalog_linkages": 4762,
+  "catalog_nights": 116,
+  "detection_keys_shared_by_multiple_links": 138,
+  "duplicate_memberships": 140,
+  "exposure_denominator_rows": 40399,
+  "exposure_midpoint_fallback_30s_rows": 0,
+  "fit_ok_linkages": 4762,
+  "generated_utc": "2026-08-09T12:32:06.137602+00:00",
+  "globally_unique_detection_keys": 14159,
+  "iers_status": "bundled_table_auto_download_disabled; out-of-range UT1 uses Astropy degraded-accuracy fallback",
+  "initial_human_selected_linkages": 67,
+  "input_hashes": {
+    "l2_manifest.csv": "a5a561c212745bee53a1870a27f83779a2558f3973d88378b8ef5d1cdad6b485",
+    "unknown_catalog.parquet": "7ea13969bd226de2df8048dc53b5eec8d8895e6389a14ff9451002c8239b0756",
+    "unknown_review_detections.parquet": "abacf874b9d985cd5ecf65a03d8acc959562ec224a34f8f8e09b1349148a8286"
+  },
+  "input_unit_metadata_status": "explicit_physical_units_stamped",
+  "is_good_linkages": 4762,
+  "linkage_detection_memberships": 14299,
+  "posthoc_retained_linkages": 58,
+  "posthoc_retained_memberships": 179,
+  "posthoc_retained_unique_detection_keys": 179,
+  "site": {
+    "height_m": 960.0,
+    "latitude_deg_north": 40.393,
+    "longitude_deg_east": 117.575
+  },
+  "site_status": "provisional_scheduler_known_coordinates_pending_author_confirmation"
+}

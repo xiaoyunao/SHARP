@@ -1,0 +1,39 @@
+{
+  "condition_finite_prediction_counts": {
+    "limiting_mag": 13310546,
+    "moon_illumination_fraction": 13310546,
+    "moon_separation_deg": 13310546,
+    "n_sources": 13310546,
+    "seeing_arcsec": 13310546,
+    "sky_adu": 13310546
+  },
+  "generated_utc": "2026-08-09T12:35:44.882189+00:00",
+  "iers_status": "bundled_table_auto_download_disabled; out-of-range UT1 uses Astropy degraded-accuracy fallback",
+  "input_hashes": {
+    "known_all.parquet": "378b29126ae85e977c4494d571f4a4903a427c5cc84beacf8411576ea776644a",
+    "known_matched.parquet": "029989b675a3a4fbdecc672ea6e58aa293569de6189dbc84074cd7c7f81b6d1e",
+    "l2_manifest.csv": "a5a561c212745bee53a1870a27f83779a2558f3973d88378b8ef5d1cdad6b485"
+  },
+  "match_fraction_nominal": 0.0401771647834732,
+  "matched_1arcsec_n": 534780,
+  "matched_prediction_key_duplicates": 0,
+  "matched_unique_identity_keys": 58482,
+  "median_ddec_arcsec": 0.02245559949827225,
+  "median_dra_cosdec_arcsec": -0.017433146392414688,
+  "median_radial_residual_arcsec": 0.263406223604322,
+  "moon_context_site_status": "provisional_scheduler_known_coordinates_117.575E_40.393N_960m",
+  "outputs": {
+    "known_astrometric_residuals.fits_sha256": "b2f0d8676fc4bd710d7f9ae67ab5d7d9fc767b8a8a3491b7de298c74eecb91ba",
+    "known_recovery_by_detection.csv_sha256": "2b4d312d667f9ca9b8b281d5734efffbd9113faf0fc21afdb877651165b33e75",
+    "known_recovery_by_detection.parquet_sha256": "be81fc4dbae84fdef8a8c30f18145095ecbdf6f76bb559eac77a72459c5c49a5"
+  },
+  "p84_radial_residual_arcsec": 0.529014581663005,
+  "p95_radial_residual_arcsec": 0.7571465216242887,
+  "predicted_nominal_n": 13310546,
+  "prediction_denominator_definition": "V<22.5 and nominal WCS-projected detector rectangle; not a true detectable denominator",
+  "prediction_key_duplicates": 1325,
+  "radial_distribution_truncated_at_arcsec": 1.0,
+  "robust_sigma_ddec_arcsec": 0.21527220353332735,
+  "robust_sigma_dra_arcsec": 0.22181118786264328,
+  "source_prediction_rows_including_duplicates": 13311871
+}

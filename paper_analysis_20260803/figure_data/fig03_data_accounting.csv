@@ -1,0 +1,54 @@
+panel,order,stage_key,stage_label,unit,scope,count,parent_total,closure_delta,source_column
+closure_nights,0,primary_excluded,Primary-science excluded,night,all calendar nights in frozen night_status,1,243,0,night;raw_science_n;l2_mp_n;primary_science_included;unknown_science_included
+closure_nights,1,unknown_quarantine,Unknown-branch quarantine,night,all calendar nights in frozen night_status,3,243,0,night;raw_science_n;l2_mp_n;primary_science_included;unknown_science_included
+closure_nights,2,no_strict_raw,No strict raw frame,night,all calendar nights in frozen night_status,109,243,0,night;raw_science_n;l2_mp_n;primary_science_included;unknown_science_included
+closure_nights,3,raw_without_l2,"Raw present, L2 absent",night,all calendar nights in frozen night_status,3,243,0,night;raw_science_n;l2_mp_n;primary_science_included;unknown_science_included
+closure_nights,4,analysis_ready,Unknown scope with raw + L2,night,all calendar nights in frozen night_status,127,243,0,night;raw_science_n;l2_mp_n;primary_science_included;unknown_science_included
+closure_raw_science_n,0,raw_science_n_primary_included,Strict raw science frames: Primary-science included,file,all frozen nights,40727,41074,0,raw_science_n
+closure_raw_science_n,1,raw_science_n_primary_excluded,Strict raw science frames: Primary-science excluded,file,all frozen nights,347,41074,0,raw_science_n
+closure_l2_mp_n,0,l2_mp_n_primary_included,Strict L2 catalogs: Primary-science included,file,all frozen nights,40052,40399,0,l2_mp_n
+closure_l2_mp_n,1,l2_mp_n_primary_excluded,Strict L2 catalogs: Primary-science excluded,file,all frozen nights,347,40399,0,l2_mp_n
+known_branch,0,raw_science,Strict raw science,file,primary-science-included nights,40727,41074,0,raw_science_n
+known_branch_excluded,0,raw_science_excluded,Strict raw science: primary-science excluded,file,primary-science-excluded nights,347,41074,0,raw_science_n
+known_branch,1,l2_catalog,Strict L2 catalogs,file,primary-science-included nights,40052,40399,0,l2_mp_n
+known_branch_excluded,1,l2_catalog_excluded,Strict L2 catalogs: primary-science excluded,file,primary-science-excluded nights,347,40399,0,l2_mp_n
+known_branch,2,known_prediction,Known-object predictions,detection,primary-science-included nights,13205829,13311871,0,known_predicted_n
+known_branch_excluded,2,known_prediction_excluded,Known-object predictions: primary-science excluded,detection,primary-science-excluded nights,106042,13311871,0,known_predicted_n
+known_branch,3,known_match1,1 arcsec known matches,detection,primary-science-included nights,534600,534780,0,known_match1_n
+known_branch_excluded,3,known_match1_excluded,1 arcsec known matches: primary-science excluded,detection,primary-science-excluded nights,180,534780,0,known_match1_n
+known_branch,4,known_mask15,1.5 arcsec subtraction mask,detection,primary-science-included nights,563193,563612,0,known_mask15_n
+known_branch_excluded,4,known_mask15_excluded,1.5 arcsec subtraction mask: primary-science excluded,detection,primary-science-excluded nights,419,563612,0,known_mask15_n
+known_branch,5,known_ades,Known ADES observations,ADES row,primary-science-included nights,350706,350706,0,known_ades_n
+known_branch_excluded,5,known_ades_excluded,Known ADES observations: primary-science excluded,ADES row,primary-science-excluded nights,0,350706,0,known_ades_n
+known_branch,6,known_reply,Known MPC reply received,night,primary-science-included nights,122,122,0,known_mpc_state
+unknown_branch,0,l2_detection,L2 catalog sources,detection,unknown included,1144557890,1236013375,0,l2_detection_n
+unknown_branch_excluded,0,l2_detection_primary_excluded,L2 catalog sources: primary excluded,detection,primary excluded,18373862,1236013375,0,l2_detection_n
+unknown_branch_excluded,0,l2_detection_unknown_quarantine,L2 catalog sources: unknown quarantine,detection,unknown quarantine,73081623,1236013375,0,l2_detection_n
+unknown_branch,1,gaia_survivor,Gaia-mask survivors,detection,unknown included,27138619,29256246,0,gaia_survivor_n
+unknown_branch_excluded,1,gaia_survivor_primary_excluded,Gaia-mask survivors: primary excluded,detection,primary excluded,251018,29256246,0,gaia_survivor_n
+unknown_branch_excluded,1,gaia_survivor_unknown_quarantine,Gaia-mask survivors: unknown quarantine,detection,unknown quarantine,1866609,29256246,0,gaia_survivor_n
+unknown_branch,2,tracklet,Two-point tracklets,tracklet,unknown included,697805,1177651,0,tracklet_n
+unknown_branch_excluded,2,tracklet_primary_excluded,Two-point tracklets: primary excluded,tracklet,primary excluded,7671,1177651,0,tracklet_n
+unknown_branch_excluded,2,tracklet_unknown_quarantine,Two-point tracklets: unknown quarantine,tracklet,unknown quarantine,472175,1177651,0,tracklet_n
+unknown_branch,3,link,Shared-endpoint links,linkage,unknown included,83176,87850,0,link_n
+unknown_branch_excluded,3,link_primary_excluded,Shared-endpoint links: primary excluded,linkage,primary excluded,378,87850,0,link_n
+unknown_branch_excluded,3,link_unknown_quarantine,Shared-endpoint links: unknown quarantine,linkage,unknown quarantine,4296,87850,0,link_n
+unknown_branch,4,orbit_fit,Numerical fit_ok,linkage,unknown included,82821,87462,0,orbit_fit_n
+unknown_branch_excluded,4,orbit_fit_primary_excluded,Numerical fit_ok: primary excluded,linkage,primary excluded,378,87462,0,orbit_fit_n
+unknown_branch_excluded,4,orbit_fit_unknown_quarantine,Numerical fit_ok: unknown quarantine,linkage,unknown quarantine,4263,87462,0,orbit_fit_n
+unknown_branch,5,orbit_is_good,Thresholded is_good (diagnostic),linkage,unknown included,82821,87351,0,orbit_is_good_n
+unknown_branch_excluded,5,orbit_is_good_primary_excluded,Thresholded is_good (diagnostic): primary excluded,linkage,primary excluded,378,87351,0,orbit_is_good_n
+unknown_branch_excluded,5,orbit_is_good_unknown_quarantine,Thresholded is_good (diagnostic): unknown quarantine,linkage,unknown quarantine,4152,87351,0,orbit_is_good_n
+unknown_branch,6,post_known,Post-known catalog,linkage,unknown included,4762,4762,0,unknown_n
+unknown_branch_excluded,6,post_known_primary_excluded,Post-known catalog: primary excluded,linkage,primary excluded,0,4762,0,unknown_n
+unknown_branch_excluded,6,post_known_unknown_quarantine,Post-known catalog: unknown quarantine,linkage,unknown quarantine,0,4762,0,unknown_n
+unknown_branch,7,initial_review,Human review marked real,linkage,unknown included,68,68,0,review_real_n
+unknown_branch_excluded,7,initial_review_primary_excluded,Human review marked real: primary excluded,linkage,primary excluded,0,68,0,review_real_n
+unknown_branch_excluded,7,initial_review_unknown_quarantine,Human review marked real: unknown quarantine,linkage,unknown quarantine,0,68,0,review_real_n
+unknown_branch,8,submission_selected,Submission-selected,linkage,unknown included,67,67,0,submit_real_n
+unknown_branch_excluded,8,submission_selected_primary_excluded,Submission-selected: primary excluded,linkage,primary excluded,0,67,0,submit_real_n
+unknown_branch_excluded,8,submission_selected_unknown_quarantine,Submission-selected: unknown quarantine,linkage,unknown quarantine,0,67,0,submit_real_n
+unknown_branch,9,posthoc_audit,Post-audit retained,linkage,unknown included,58,58,0,audit_real_n
+unknown_branch_excluded,9,posthoc_audit_primary_excluded,Post-audit retained: primary excluded,linkage,primary excluded,0,58,0,audit_real_n
+unknown_branch_excluded,9,posthoc_audit_unknown_quarantine,Post-audit retained: unknown quarantine,linkage,unknown quarantine,0,58,0,audit_real_n
+unknown_branch,10,unknown_reply,Unknown MPC reply received,night,unknown-science-included nights,35,35,0,unknown_mpc_state

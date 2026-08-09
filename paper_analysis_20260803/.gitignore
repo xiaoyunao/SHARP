@@ -1,0 +1,37 @@
+# Large frozen extracts and image material are retained locally but not committed.
+snapshot/cache/
+snapshot/fits/
+snapshot/cutouts/
+snapshot/gifs/
+qa/renders/
+logs/remote_tmp/
+snapshot/operations_logs/
+snapshot/plans/
+snapshot/inventory_partial/
+snapshot/orbit_site960/*/
+snapshot/review_sample/review_gifs/
+
+# Row-level CSV products retained in the local frozen snapshot.  Their hashes,
+# schemas, summaries, and compact binned tables remain versioned.
+snapshot/inventory/raw_manifest.csv
+snapshot/inventory/raw_engineering_manifest.csv
+snapshot/inventory/l2_manifest.csv
+snapshot/inventory/plan_rows.csv
+snapshot/derived_known/known_recovery_by_detection.csv
+snapshot/blinded_known/blinded_known_recovery_by_object.csv
+snapshot/derived_unknown/exposure_twilight_context.csv
+snapshot/derived_unknown/unknown_all_link_memberships.csv
+snapshot/derived_unknown/unknown_unique_detections.csv
+snapshot/orbit_site_comparison/orbit_site_sensitivity_by_link.csv
+snapshot/scheduler/scheduler_exposure_matches.csv
+figure_data/fig11_exposure_denominator.csv
+
+# Reproducible generated binary products.
+*.fits
+*.fits.gz
+*.parquet
+*.npy
+*.npz
+
+# Notebook execution checkpoints.
+.ipynb_checkpoints/

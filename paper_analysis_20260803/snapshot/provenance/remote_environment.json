@@ -1,0 +1,103 @@
+{
+  "conda_list": {
+    "command": [
+      "/home/smtpipeline/Softwares/miniconda3/bin/python",
+      "-m",
+      "pip",
+      "freeze"
+    ],
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "anaconda-anon-usage @ file:///croot/anaconda-anon-usage_1753980460404/work\nanaconda-auth @ file:///croot/anaconda-cloud-auth-split_1747863777058/work\nanaconda-cli-base @ file:///croot/anaconda-cli-base_1741369443553/work\nannotated-types @ file:///work/perseverance-python-buildout/croot/annotated-types_1728386958747/work\narchspec @ file:///croot/archspec_1709217642129/work\nasteval==1.0.6\nastro_aleph==1.0.0\nastroplan==0.10.1\nastropy @ file:///croot/astropy_1752152894461/work\nastropy-iers-data @ file:///home/task_176155384748911/conda-bld/astropy-iers-data_1761553896761/work\nastropy_healpix==1.1.2\nastroquery==0.4.11\nastroscrappy==1.2.0\nasttokens @ file:///croot/asttokens_1743630435401/work\nbcrypt @ file:///croot/bcrypt_1747402770140/work\nbeautifulsoup4==4.14.3\nblinker==1.9.0\nboltons @ file:///croot/boltons_1751383775419/work\nBottleneck @ file:///croot/bottleneck_1731058641041/work\nbrotlicffi @ file:///croot/brotlicffi_1736182461069/work\nccdproc==2.5.1\ncertifi @ file:///home/conda/feedstock_root/build_artifacts/certifi_1767500808759/work/certifi\ncffi @ file:///croot/cffi_1736182485317/work\ncharset-normalizer @ file:///croot/charset-normalizer_1721748349566/work\nclick @ file:///croot/click_1754477934456/work\ncloudpickle==3.1.1\ncolorama @ file:///work/perseverance-python-buildout/croot/colorama_1728388434940/work\ncomm @ file:///work/perseverance-python-buildout/croot/comm_1728387093347/work\nconda @ file:///home/conda/feedstock_root/build_artifacts/conda_1765816436992/work/conda-src\nconda-anaconda-telemetry @ file:///croot/conda-anaconda-telemetry_1755883788794/work\nconda-anaconda-tos @ file:///croot/conda-anaconda-tos_1755123313635/work\nconda-content-trust @ file:///work/perseverance-python-buildout/croot/conda-content-trust_1728487058234/work\nconda-libmamba-solver @ file:///croot/conda-libmamba-solver_1745607008911/work/src\nconda-package-handling @ file:///croot/conda-package-handling_1731369017509/work\nconda_package_streaming @ file:///croot/conda-package-streaming_1751307506088/work\ncontourpy @ file:///croot/contourpy_1732540045555/work\ncrc32c==2.8\ncryptography @ file:///croot/cryptography_1753084572505/work\ncycler @ file:///tmp/build/80754af9/cycler_1637851556182/work\ndask==2025.10.0\ndebugpy @ file:///home/task_175706710750177/conda-bld/debugpy_1757067122398/work\ndecorator @ file:///home/task_175734100107081/conda-bld/decorator_1757341232741/work\ndill==0.4.0\ndistro @ file:///work/perseverance-python-buildout/croot/distro_1728396110052/work\ndonfig==0.8.1.post1\nexecuting @ file:///home/task_175706097909872/conda-bld/executing_1757061232604/work\nFlask==3.1.2\nfonttools @ file:///home/task_175975446549307/conda-bld/fonttools_1759754871956/work\nfrozendict @ file:///work/perseverance-python-buildout/croot/frozendict_1728497542215/work\nfsspec==2025.9.0\nhealpy==1.18.1\nhtml5lib==1.1\nidna @ file:///work/perseverance-python-buildout/croot/idna_1728385935861/work\nimageio==2.37.0\nipykernel @ file:///home/task_175758334351072/conda-bld/ipykernel_1757583366135/work\nipython @ file:///home/task_175932814549162/conda-bld/ipython_1759328495757/work\nipython_pygments_lexers @ file:///croot/ipython_pygments_lexers_1744753235686/work\nitsdangerous==2.2.0\njaraco.classes @ file:///croot/jaraco.classes_1755516327832/work\njaraco.context @ file:///io/perseverance-python-buildout/croot/jaraco.context_1731706750665/work\njaraco.functools @ file:///croot/jaraco.functools_1740408111753/work\njedi @ file:///croot/jedi_1733987392413/work\njeepney @ file:///tmp/build/80754af9/jeepney_1627537048313/work\nJinja2==3.1.6\njoblib @ file:///home/task_175792571725602/conda-bld/joblib_1757926344243/work\njplephem==2.23\njsonpatch @ file:///work/perseverance-python-buildout/croot/jsonpatch_1728399595941/work\njsonpointer @ file:///croot/jsonpointer_1753788433671/work\njupyter_client @ file:///io/buildout/croot/jupyter_client_1739558249609/work\njupyter_core @ file:///croot/jupyter_core_1751991368470/work\nkeyring @ file:///croot/keyring_1745484691218/work\nkiwisolver @ file:///croot/kiwisolver_1737039087198/work\nlacosmic==1.3.0\nlazy_loader==0.4\nlibmambapy @ file:///croot/mamba-split_1734469461757/work/libmambapy\nllvmlite @ file:///home/task_176046918215974/conda-bld/llvmlite_1760469301550/work\nlmfit==1.3.4\nlocket==1.0.0\nmarkdown-it-py @ file:///work/perseverance-python-buildout/croot/markdown-it-py_1728387994477/work\nMarkupSafe==3.0.3\nmatplotlib==3.10.6\nmatplotlib-inline @ file:///home/task_175851946546628/conda-bld/matplotlib-inline_1758520104477/work\nmdurl @ file:///work/perseverance-python-buildout/croot/mdurl_1728387286143/work\nmenuinst @ file:///croot/menuinst_1753464582829/work\nmkl-service==2.5.2\nmkl_fft @ file:///home/task_176159249290440/conda-bld/mkl_fft_1761592897595/work\nmkl_random @ file:///home/task_176159294306005/conda-bld/mkl_random_1761592958759/work\nmore-itertools @ file:///work/perseverance-python-buildout/croot/more-itertools_1728388668839/work\nnest_asyncio @ file:///work/perseverance-python-buildout/croot/nest-asyncio_1728387361665/work\nnetworkx==3.5\nnumba @ file:///home/task_176099155436763/conda-bld/numba_1760991925408/work\nnumcodecs==0.16.3\nnumdifftools==0.9.41\nnumexpr @ file:///croot/numexpr_1755766469354/work\nnumpy @ file:///home/task_176054767993148/conda-bld/numpy_and_numpy_base_1760547729305/work/dist/numpy-2.3.3-cp313-cp313-linux_x86_64.whl#sha256=6da8a1a998b0446f101e7f5f01331f1356dbd412a613d2ef55d78e678847a55f\npackaging @ file:///croot/packaging_1753775359799/work\npandas @ file:///home/task_175982150434623/conda-bld/pandas_1759822245298/work/dist/pandas-2.3.3-cp313-cp313-linux_x86_64.whl#sha256=0024608b4004a89c9885fced5cd604b10f2207ec5ad2b319a80c614928009087\npandoc==2.4\nparamiko @ file:///io/buildout/croot/paramiko_1735873252117/work\nparso @ file:///croot/parso_1733963305961/work\npartd==1.4.2\npexpect @ file:///croot/pexpect_1750072593878/work\nphotutils==2.3.0\npillow @ file:///croot/pillow_1752524526621/work\npkce @ file:///work/perseverance-python-buildout/croot/pkce_1728388093137/work\nplatformdirs @ file:///croot/platformdirs_1744273042065/work\npluggy @ file:///croot/pluggy_1733169602837/work\nplumbum==1.9.0\nply==3.11\npoliastro==0.7.0\nprompt_toolkit @ file:///home/task_176174483342131/conda-bld/prompt-toolkit_1761744881010/work\npsutil @ file:///home/task_175710406387641/conda-bld/psutil_1757104539982/work\nptyprocess @ file:///tmp/build/80754af9/ptyprocess_1609355006118/work/dist/ptyprocess-0.7.0-py2.py3-none-any.whl\npure_eval @ file:///home/task_175706703697232/conda-bld/pure_eval_1757067052848/work\nPyAVM==0.9.7\npycosat @ file:///croot/pycosat_1736868416091/work\npycparser @ file:///tmp/build/80754af9/pycparser_1636541352034/work\npydantic @ file:///croot/pydantic_1750768261732/work\npydantic-settings @ file:///io/buildout/croot/pydantic-settings_1735843225507/work\npydantic_core @ file:///croot/pydantic-core_1750754736071/work\npyerfa @ file:///croot/pyerfa_1738082786199/work\nPygments @ file:///croot/pygments_1744664109463/work\nPyJWT @ file:///io/buildout/croot/pyjwt_1739558969999/work\nPyNaCl @ file:///home/task_175889197862490/conda-bld/pynacl_1758891993821/work\npyparsing @ file:///io/buildout/croot/pyparsing_1735862672222/work\nPyQt6==6.9.1\nPyQt6_sip @ file:///home/task_175751009430255/conda-bld/pyqt-split_1757511023908/work/pyqt_sip\nPySocks @ file:///work/perseverance-python-buildout/croot/pysocks_1728386193338/work\npython-dateutil @ file:///work/perseverance-python-buildout/croot/python-dateutil_1728385355105/work\npython-dotenv @ file:///croot/python-dotenv_1745610241282/work\npytz @ file:///croot/pytz_1752135852232/work\npyvo==1.8.1\nPyYAML @ file:///croot/pyyaml_1731006091482/work\npyzmq @ file:///home/task_175810349669950/conda-bld/pyzmq_1758103933718/work\nreadchar @ file:///work/perseverance-python-buildout/croot/readchar_1728397613245/work\nrebound==4.4.11\nreproject==0.18.0\nrequests @ file:///croot/requests_1750426329888/work\nrich @ file:///croot/rich_1732638981168/work\nruamel.yaml @ file:///croot/ruamel.yaml_1745960305322/work\nruamel.yaml.clib @ file:///croot/ruamel.yaml.clib_1745937152469/work\nscikit-image==0.25.2\nscikit-learn @ file:///home/task_175861954039045/conda-bld/scikit-learn_1758619605892/work\nscipy @ file:///home/task_175948890321469/conda-bld/scipy_1759489051140/work/dist/scipy-1.16.2-cp313-cp313-linux_x86_64.whl#sha256=f061f9613c6711fa260264d9a353917821567615b232bcde6dc6cd82f9794cc3\nseaborn @ file:///croot/seaborn_1749110291192/work\nSecretStorage @ file:///work/perseverance-python-buildout/croot/secretstorage_1728387678881/work\nsemver @ file:///croot/semver_1736540782504/work\nsep==1.4.1\nsetuptools==78.1.1\nshellingham @ file:///work/perseverance-python-buildout/croot/shellingham_1728395303315/work\nsip @ file:///croot/sip_1756223371714/work\nsix @ file:///croot/six_1744271502820/work\nslide-lsst==0.2.0\nsoupsieve==2.8.1\nspeclite==0.20\nstack_data @ file:///home/task_175706678948354/conda-bld/stack_data_1757067036076/work\nthreadpoolctl @ file:///croot/threadpoolctl_1731006087558/work\ntifffile==2025.10.16\ntomli @ file:///croot/tomli_1753774587605/work\ntoolz==1.1.0\ntornado @ file:///croot/tornado_1748956929273/work\ntqdm @ file:///croot/tqdm_1738943501192/work\ntraitlets @ file:///work/perseverance-python-buildout/croot/traitlets_1728385099292/work\ntruststore @ file:///croot/truststore_1753907171582/work\ntyper @ file:///work/perseverance-python-buildout/croot/typer_1728397851651/work\ntyping-inspection @ file:///croot/typing-inspection_1746023470701/work\ntyping_extensions @ file:///croot/typing_extensions_1734714854207/work\ntzdata @ file:///croot/python-tzdata_1746123641790/work\nuncertainties==3.2.3\nurllib3 @ file:///croot/urllib3_1750775463400/work\nwcwidth @ file:///croot/wcwidth_1750352883074/work\nwebencodings==0.5.1\nWerkzeug==3.1.4\nwheel==0.45.1\nzarr==3.1.3\nzstandard @ file:///croot/zstandard_1731356346222/work"
+  },
+  "created_utc": "2026-08-09T11:06:22.369926+00:00",
+  "crontab": {
+    "command": [
+      "crontab",
+      "-l"
+    ],
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "0 9 * * * cd /pipeline/xiaoyunao && /bin/bash /pipeline/xiaoyunao/heliolincrr/run_daily_pipeline.sh >> /pipeline/xiaoyunao/data/heliolincrr/daily_logs/cron_daily_pipeline.log 2>&1\n@reboot sleep 600 && cd /pipeline/xiaoyunao && /bin/bash /pipeline/xiaoyunao/heliolincrr/run_daily_pipeline.sh >> /pipeline/xiaoyunao/data/heliolincrr/daily_logs/reboot_recovery_daily_pipeline.log 2>&1\n@reboot sleep 900 && cd /pipeline/xiaoyunao/heliolincrr && /bin/bash /pipeline/xiaoyunao/heliolincrr/run_review_submit_backlog_watch.sh 20251116 20260617 >> /pipeline/xiaoyunao/data/heliolincrr/daily_logs/reboot_review_submit_backlog.log 2>&1"
+  },
+  "environment_name": "",
+  "footprint": {
+    "columns": [
+      "field_id",
+      "center_ra",
+      "center_dec",
+      "corner_ra_1",
+      "corner_dec_1",
+      "corner_ra_2",
+      "corner_dec_2",
+      "corner_ra_3",
+      "corner_dec_3",
+      "corner_ra_4",
+      "corner_dec_4",
+      "visible_day"
+    ],
+    "exists": true,
+    "n_rows": 1855,
+    "path": "/pipeline/xiaoyunao/survey/footprints/survey_fov_footprints_with_visibility.fits"
+  },
+  "gaia_tiles": {
+    "count": 12288,
+    "manifest_sha256": "ad53e8d594de3045e7706a7d05b4ce2a6e2a330419aaddc00a2e8f8e14c69586",
+    "release_provenance_in_files": "not_established",
+    "root": "/pipeline/ref/healpix",
+    "total_size_bytes": 452565518400
+  },
+  "git_pipeline_root": {
+    "command": [
+      "git",
+      "-C",
+      "/pipeline/xiaoyunao",
+      "rev-parse",
+      "HEAD"
+    ],
+    "returncode": 128,
+    "stderr": "fatal: not a git repository (or any parent up to mount point /)\nStopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).",
+    "stdout": ""
+  },
+  "host": "smtdata",
+  "model_notes": {
+    "known_propagation": "astro_aleph with local de432s.bsp modification",
+    "short_arc_orbit": "poliastro environment; astropy solar_system_ephemeris=builtin"
+  },
+  "packages": {
+    "astro-aleph": "1.0.0",
+    "astropy": "7.1.0",
+    "healpy": "1.18.1",
+    "numpy": "2.3.3",
+    "pandas": "2.3.3",
+    "pyarrow": null,
+    "scipy": "1.16.2"
+  },
+  "platform": "Linux-6.17.0-35-generic-x86_64-with-glibc2.39",
+  "python_executable": "/home/smtpipeline/Softwares/miniconda3/bin/python",
+  "python_version": "3.13.5 | packaged by Anaconda, Inc. | (main, Jun 12 2025, 16:09:02) [GCC 11.2.0]",
+  "short_arc_environment": {
+    "command": [
+      "/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python",
+      "-c",
+      "import importlib.metadata as m,json,sys;names=['numpy','astropy','poliastro','pandas','scipy','pyarrow'];print(json.dumps({'python':sys.version,'executable':sys.executable,'packages':{n:(m.version(n) if n in {d.metadata['Name'] for d in m.distributions()} else None) for n in names}}))"
+    ],
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "{\"python\": \"3.10.20 | packaged by conda-forge | (main, Mar  5 2026, 16:42:22) [GCC 14.3.0]\", \"executable\": \"/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python\", \"packages\": {\"numpy\": \"1.26.4\", \"astropy\": \"5.3.4\", \"poliastro\": \"0.17.0\", \"pandas\": \"2.3.3\", \"scipy\": \"1.15.2\", \"pyarrow\": \"23.0.1\"}}"
+  },
+  "slurm_accounting_probe": {
+    "command": [
+      "sacct",
+      "-S",
+      "2026-07-15",
+      "-E",
+      "2026-07-16",
+      "-n",
+      "-X"
+    ],
+    "returncode": 1,
+    "stderr": "Slurm accounting storage is disabled",
+    "stdout": ""
+  }
+}

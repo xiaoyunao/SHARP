@@ -1,0 +1,68 @@
+{
+  "date_range_inclusive": {
+    "end": "2026-07-15",
+    "start": "2025-11-15"
+  },
+  "error_file_count": 0,
+  "expected_file_count": 1458,
+  "missing_file_count": 688,
+  "night_count": 243,
+  "present_file_count": 770,
+  "products": {
+    "known_all": {
+      "files_error": 0,
+      "files_missing": 112,
+      "files_ok": 131,
+      "parquet_path": "/tmp/sharp_paper_20260803.QDka91/frozen_products/known_all.parquet",
+      "parquet_sha256": "378b29126ae85e977c4494d571f4a4903a427c5cc84beacf8411576ea776644a",
+      "parquet_size_bytes": 423278694,
+      "rows_written": 13311871
+    },
+    "known_mask15": {
+      "files_error": 0,
+      "files_missing": 114,
+      "files_ok": 129,
+      "parquet_path": "/tmp/sharp_paper_20260803.QDka91/frozen_products/known_mask15.parquet",
+      "parquet_sha256": "f5398587d8d06f038c29487836660b7c69cd1499abbca8de2ae810d61843573a",
+      "parquet_size_bytes": 98580736,
+      "rows_written": 563612
+    },
+    "known_matched": {
+      "files_error": 0,
+      "files_missing": 113,
+      "files_ok": 130,
+      "parquet_path": "/tmp/sharp_paper_20260803.QDka91/frozen_products/known_matched.parquet",
+      "parquet_sha256": "029989b675a3a4fbdecc672ea6e58aa293569de6189dbc84074cd7c7f81b6d1e",
+      "parquet_size_bytes": 93403185,
+      "rows_written": 534780
+    },
+    "orbit_links": {
+      "files_error": 0,
+      "files_missing": 115,
+      "files_ok": 128,
+      "parquet_path": "/tmp/sharp_paper_20260803.QDka91/frozen_products/orbit_links.parquet",
+      "parquet_sha256": "bb8a63052409472cc7ba09d24b29891dc70538a401987fa25cdccaa82da7834f",
+      "parquet_size_bytes": 12740176,
+      "rows_written": 87850
+    },
+    "orbit_obs_residuals": {
+      "files_error": 0,
+      "files_missing": 115,
+      "files_ok": 128,
+      "parquet_path": "/tmp/sharp_paper_20260803.QDka91/frozen_products/orbit_obs_residuals.parquet",
+      "parquet_sha256": "aa4544204c7168fc716b6480709774142e0c2f978f9bd168d28dab3cc836ce69",
+      "parquet_size_bytes": 10104514,
+      "rows_written": 277686
+    },
+    "unknown_catalog": {
+      "files_error": 0,
+      "files_missing": 119,
+      "files_ok": 124,
+      "parquet_path": "/tmp/sharp_paper_20260803.QDka91/frozen_products/unknown_catalog.parquet",
+      "parquet_sha256": "7ea13969bd226de2df8048dc53b5eec8d8895e6389a14ff9451002c8239b0756",
+      "parquet_size_bytes": 1900048,
+      "rows_written": 4762
+    }
+  },
+  "schema_version": "1.0"
+}

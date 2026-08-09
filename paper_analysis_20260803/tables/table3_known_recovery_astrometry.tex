@@ -1,0 +1,25 @@
+\begin{tabular}{llrll}
+\toprule
+section & metric & value & unit & caveat \\
+\midrule
+recovery & source\_prediction\_rows\_including\_duplicates & 13311871.000000 & rows & V<22.5 and nominal WCS-projected detector rectangle; not a true detectable denominator \\
+recovery & predicted\_nominal\_n & 13310546.000000 & predictions & V<22.5 and nominal WCS-projected detector rectangle; not a true detectable denominator \\
+recovery & matched\_1arcsec\_n & 534780.000000 & matched detections & Nearest-neighbor thresholded association \\
+recovery & match\_fraction\_nominal & 0.040177 & fraction & Nominal recovery proxy; not detectable-object completeness \\
+recovery & matched\_unique\_identity\_keys & 58482.000000 & identity keys & Identity-key count is not a unique-object survey denominator \\
+data\_quality & prediction\_key\_duplicates & 1325.000000 & rows & Duplicates are retained as a reported quality diagnostic \\
+data\_quality & matched\_prediction\_key\_duplicates & 0.000000 & rows & Expected to be zero \\
+astrometry & median\_radial\_residual\_arcsec & 0.263406 & arcsec & Distribution is truncated by the 1 arcsec production match threshold \\
+astrometry & p84\_radial\_residual\_arcsec & 0.529015 & arcsec & Distribution is threshold-truncated \\
+astrometry & p90\_radial\_residual\_arcsec & 0.628424 & arcsec & Pending unless frozen by the known-population analysis; distribution is threshold-truncated \\
+astrometry & p95\_radial\_residual\_arcsec & 0.757147 & arcsec & Distribution is threshold-truncated \\
+astrometry & median\_dra\_cosdec\_arcsec & -0.017433 & arcsec & Signed component \\
+astrometry & median\_ddec\_arcsec & 0.022456 & arcsec & Signed component \\
+astrometry & robust\_sigma\_dra\_arcsec & 0.221811 & arcsec & Robust component scale \\
+astrometry & robust\_sigma\_ddec\_arcsec & 0.215272 & arcsec & Robust component scale \\
+astrometry & radial\_distribution\_truncated\_at\_arcsec & 1.000000 & arcsec & Selection threshold, not an uncertainty estimate \\
+chance\_match\_control & random\_shift\_prediction\_trials & 352184.000000 & trials & deterministic exposure-stratified 30/60 arcsec random-direction position shifts; finite Mag\_Kron schema gate; nearest neighbor; strict <1 arcsec \\
+chance\_match\_control & random\_shift\_matches\_lt\_1arcsec & 257.000000 & matches & deterministic exposure-stratified 30/60 arcsec random-direction position shifts; finite Mag\_Kron schema gate; nearest neighbor; strict <1 arcsec \\
+chance\_match\_control & random\_shift\_chance\_fraction & 0.000730 & fraction & deterministic exposure-stratified 30/60 arcsec random-direction position shifts; finite Mag\_Kron schema gate; nearest neighbor; strict <1 arcsec \\
+\bottomrule
+\end{tabular}

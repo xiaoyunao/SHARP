@@ -1,0 +1,15 @@
+{
+  "api": "https://ssd-api.jpl.nasa.gov/sb_ident.api",
+  "api_documentation": "https://ssd-api.jpl.nasa.gov/doc/sb_ident.html",
+  "candidate_rows_within_180_arcsec": 27,
+  "failed_queries": 0,
+  "generated_utc": "2026-08-09T12:07:26.056732+00:00",
+  "guardrail": "JPL positional/rate candidates are not MPC ingest or designation states; row-level MPC records remain author-supplied",
+  "input_sha256": "641edced2e022df450c90c28b012e972315785638fcf6d87af0a97f315a66022",
+  "links_with_any_candidate_within_180_arcsec": 25,
+  "mpc_observatory_code": "327",
+  "plausible_candidate_association_links": 6,
+  "query_linkages": 58,
+  "strict_candidate_association_links": 6,
+  "successful_queries": 58
+}

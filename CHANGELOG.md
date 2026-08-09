@@ -3,6 +3,24 @@
 本文件记录仓库中值得保留的版本级行为变化，重点覆盖服务器基线流程、
 调试中确认过的默认值变更，以及会影响结果解释的输出变化。
 
+## 2026-08-09
+
+### SHARP PASP 冻结分析交付
+
+- 新增 `paper_analysis_20260803/`，集中保存 2026-08-03 论文快照的：
+  - raw/L2/known/unknown/plan/log/review manifests 与 provenance hashes
+  - P0/P1 统计程序、5 张 paper table、12 张 PDF/PNG figure
+  - executed notebook、代码-稿件冲突审计、作者输入清单和 QA 报告
+- 完成 128 夜 observer-location sensitivity run：
+  - 历史 orbit-confirmation 位置与 960 m scheduler/known 位置之间无 `fit_ok`
+    或 `is_good` 分类翻转
+  - 保留短弧轨道元素不稳定警告，不把单夜元素用于种群推断
+- 冻结 unknown 人工口径为 `68 -> 67 -> 58`，并区分 14,299 个
+  linkage-detection memberships 与 14,159 个唯一 detection keys
+- 全量验证结果为 63 PASS / 0 FAIL / 1 author-signoff SKIP；12/12 图件通过
+  PNG/PDF 渲染检查；555 个冻结制品通过 SHA256 manifest 复验
+- 本次交付不修改论文工程或生产 pipeline 行为
+
 ## 2026-05-14
 
 ### heliolincrr 空结果与异常 group 保护

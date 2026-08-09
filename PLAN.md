@@ -2,19 +2,29 @@
 
 ## Current objective
 
-以 `PAPER_PROJECT_SUMMARY.md` 为论文讨论基线，确定项目论文的主定位、冻结数据口径，并补齐发表前最关键的验证。
+SHARP PASP 的本地可完成分析已收口在 `paper_analysis_20260803/`。当前目标从“生成统计与图件”转为“等待作者/上游证据后冻结论文口径”。
 
-- 推荐主线：动态黄道巡天调度 + 实际观测 + known 大样本天测/上报 + single-night unknown 搜索和人工复核
-- 当前科学数据冻结候选区间：`20251115..20260715`
-- unknown 论文样本使用后验清洗后的 `58` 条高可信 link / `179` 次探测，不使用服务器初次提交的 `67` 条作为最终真源口径
-- follow-up 程序已部署但尚无实际观测闭环，只作为系统能力和 future work
-- 下一步优先事项：
-  - 团队确认系统论文或 known-astrometry 论文的主定位
-  - 核对 known/unknown submission ID 的 MPC 最终 ingest 状态
-  - 对 58 条 link 做最新 MPC/JPL crossmatch、跨夜去重和 designation 状态检查
-  - 建立正式 night quality mask，排除或单列 `20260111` 等异常夜
-  - 固化 `paper_data_snapshot.json`、统计脚本、输入 hash 和软件 tag
-  - 至少用 known-object truth set 评估 unknown pipeline 各级 completeness
+- 已完成：
+  - `20251115..20260715` raw/L2/known/unknown/plan/log/review 冻结清单与哈希
+  - known recovery/astrometry/random-shift、unknown full funnel、cross-night/JPL、scheduler、operations、site sensitivity 和 ADES midpoint correction
+  - 5 张 paper table、12 张 PDF/PNG 图、executed notebook、contact sheet 和机器验证报告
+  - 555 个 artifact 的最终 snapshot manifest；63 PASS / 0 FAIL / 1 external SKIP
+- 冻结解释：
+  - 68 human-marked-real -> 67 submission-selected -> 58 post-audit-retained single-night linkages
+  - 58 不能写成独立天体或 discovery count；37 只是线性运动候选 component
+  - 6 条 C/2025 Y1 是 JPL 数值关联候选，不是 MPC attribution/designation
+  - 960 m 替代站点重跑无 gate flip，但短弧轨道元素不可作 population inference
+  - scheduler `95.1743%` 只适用于 plan-active acquired cohort，不是 observatory efficiency
+- 当前外部阻塞：
+  - 作者/台站确认 surveyed MPC 327 lon/lat/height/datum 和历史-as-run/未来代码修正政策
+  - 作者签字确认 quality mask 与异常夜主文/附录策略
+  - 上游 reduction、depth、effective detector mask、GMG header 修复和 image-injection 接口
+  - MPC 58+9 逐行 ingest/identity/designation 记录，以及 C/2025 Y1 和 unknown 15 s midpoint correction 的处理政策
+  - 独立 CPU/RAM、人工时间、天气/设备/override 日志
+- 下一步：
+  - 使用 `paper_analysis_20260803/reports/AUTHOR_INPUTS_REQUIRED.md` 收集最小回复
+  - 收到外部证据后只更新相应冻结表、重跑受影响的表/图/validator/assembler
+  - 论文文字修订以 `MANUSCRIPT_CODE_CONFLICTS.md` 为准；本分析任务不直接修改论文工程
 
 ## Deferred reference
 

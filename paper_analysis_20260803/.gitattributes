@@ -1,0 +1,4 @@
+# CSV products are byte-frozen analytical artifacts.  Many were emitted with
+# RFC-style CRLF records; do not reinterpret the record-ending CR as trailing
+# whitespace during Git's patch check.
+*.csv -whitespace

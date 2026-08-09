@@ -1,0 +1,16 @@
+{
+  "collector_schema_version": "1.0",
+  "command": "/tmp/sharp_paper_20260803.QDka91/collect_server_snapshot.py --output-dir /tmp/sharp_paper_20260803.QDka91/out --start 2025-11-15 --end 2026-07-15 --plan-end 2026-08-03 --l2-workers 16",
+  "created_utc": "2026-08-09T11:02:33.175565+00:00",
+  "end": "2026-07-15",
+  "host": "smtdata",
+  "plan_end": "2026-08-03",
+  "platform": "Linux-6.17.0-35-generic-x86_64-with-glibc2.39",
+  "python": "3.13.5 | packaged by Anaconda, Inc. | (main, Jun 12 2025, 16:09:02) [GCC 11.2.0]",
+  "roots": {
+    "pipeline": "/pipeline/xiaoyunao",
+    "processed": "/processed1",
+    "raw": "/raw1"
+  },
+  "start": "2025-11-15"
+}
