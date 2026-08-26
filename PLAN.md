@@ -2,6 +2,12 @@
 
 ## Completed side task (2026-08-26)
 
+- 已按修正后的逐帧取模规则生成 60 帧、0 ms 的完整合成 GIF：
+  - `/Users/yunaoxiao/Desktop/known_asteroid_cutout_top40_mosaic_5x8_60frame_0ms_20260826.gif`
+  - 每个全局帧均为完整 `3880×2425` 合成图；格子使用 `global_index % used_frames` 取帧
+  - `60` 个 GIF image blocks 和 GCE delay=`0` 已逐块验证；2400 次格位映射检查通过
+  - 取帧清单：`/Users/yunaoxiao/Desktop/known_asteroid_cutout_top40_mosaic_5x8_60frame_0ms_20260826_manifest.csv`
+  - 静态预览：`/Users/yunaoxiao/Desktop/known_asteroid_cutout_top40_mosaic_5x8_60frame_0ms_20260826_preview.jpg`
 - 已从 50 张 daily known asteroid cutout GIF 中逐帧精选 40 张，并生成无缝 `5×8` 循环大 GIF：
   - `/Users/yunaoxiao/Desktop/known_asteroid_cutout_top40_mosaic_5x8_20260826.gif`
   - 画布 `3880×2425`，`22` 帧，`500 ms/帧`，总循环 `11 s`，无限循环

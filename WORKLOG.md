@@ -2,6 +2,30 @@
 
 ## 2026-08-26
 
+- task: 按逐帧取模规则重建 40 图、60 帧、0 ms 的 known asteroid 5×8 循环 GIF
+- files_changed:
+  - 新增桌面成品 `/Users/yunaoxiao/Desktop/known_asteroid_cutout_top40_mosaic_5x8_60frame_0ms_20260826.gif`
+  - 新增取帧清单 `/Users/yunaoxiao/Desktop/known_asteroid_cutout_top40_mosaic_5x8_60frame_0ms_20260826_manifest.csv`
+  - 新增静态预览 `/Users/yunaoxiao/Desktop/known_asteroid_cutout_top40_mosaic_5x8_60frame_0ms_20260826_preview.jpg`
+  - 更新 `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 逐文件复核输入 GIF 的真实帧序列，确认编码器已合并生成代码尝试追加的两个相同末帧
+  - 将不整除 60 的帧数仅用原始帧均匀抽样到约数：`7/8/9→6`, `17/18/19→15`, `22→20`
+  - 对每个全局帧 `k` 使用 `k % used_frames` 选择每个格子的源帧，生成 60 张完整 `5×8` 合成帧
+  - 用 Pillow、GIF block parser 和 ffmpeg 检查完整画布、取帧对应、GCE delay、循环和解码
+- key_findings:
+  - 先前“所有 GIF 均保留两个重复末帧”的推断不成立；源码虽追加重复帧，但 GIF 编码结果中已合并，现有 `4..22` 帧都是真实编码帧
+  - 60 帧方案不插入重复停顿帧、不做图像混合，只对 10 个不整除 60 的序列均匀舍弃少量源帧
+  - 整图第 `k` 帧的每个格子均独立按帧号取模，但输出本身始终是一张完整合成图像
+- validation:
+  - 画布 `3880×2425`、布局 `5×8`、GIF image blocks `60`、解码后唯一完整帧 `60`
+  - Pillow duration 为 `0 ms`；逐块解析得到 `60` 个 GCE，delay 全为 `0` centiseconds；`loop=0` 无限循环
+  - `40×60=2400` 次格位/源帧取模检查全部通过；ffmpeg 全量解码无错误
+  - 文件大小 `200,735,375` bytes；SHA-256 `ec2e48da102ad21314ca094c9e1118e25aa7bbfdba9a6a44a08458b508cc3a01`
+- remaining_issues:
+  - GIF 标准允许 0 delay，但具体查看器可能自行设置最小显示时间；文件内部延时字段已确认是 0
+- next_step: 使用目标网页/浏览器实际播放一次，确认该查看器对 0 delay 的呈现速度符合预期
+
 - task: 检查 50 张 known asteroid cutout GIF，精选 40 张并合成为无缝 5×8 循环大 GIF
 - files_changed:
   - 新增桌面成品 `/Users/yunaoxiao/Desktop/known_asteroid_cutout_top40_mosaic_5x8_20260826.gif`
