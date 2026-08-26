@@ -2,6 +2,27 @@
 
 ## 2026-08-26
 
+- task: 为 PowerPoint 导出较小且高质量的 H.264 MP4 版本
+- files_changed:
+  - 新增推荐版 `/Users/yunaoxiao/Desktop/known_asteroid_cutout_top40_mosaic_5x8_ppt_2560x1600_crf18_20260826.mp4`
+  - 新增预览 `/Users/yunaoxiao/Desktop/known_asteroid_cutout_top40_mosaic_5x8_ppt_2560x1600_crf18_20260826_preview.jpg`
+  - 保留全分辨率试验版 `/Users/yunaoxiao/Desktop/known_asteroid_cutout_top40_mosaic_5x8_ppt_3840x2400_crf16_20260826.mp4`
+  - 更新 `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 用 ffmpeg/libx264 编码 `3840×2400`, 5 fps, CRF 16 和 `2560×1600`, 5 fps, CRF 18 两版 H.264/yuv420p MP4
+  - 用 ffprobe 检查 codec/profile/pixel format/分辨率/帧率/时长/帧数
+  - 用 ffmpeg 对推荐版做全帧 SSIM/PSNR 和解码检查，并人工检查中间帧预览
+- key_findings:
+  - 天文 cutout 的随机噪声逐帧变化，`3840×2400` CRF 16 仍为 `205,437,029` bytes，不比 GIF 小
+  - `2560×1600` 已高于常见 1080p 投影分辨率，文字、时间和绿色标记仍清楚，文件降到 `83,687,194` bytes
+- validation:
+  - 推荐版为 H.264 High/yuv420p，`2560×1600`, `5 fps`, `60` 帧, `12.0 s`
+  - 相对同分辨率参考：SSIM `0.995937`，PSNR `44.570131 dB`
+  - 比 200 ms GIF 小 `58.3%`；SHA-256 `aa8adb6da4e53669b2e705d4b82f439a5ec5a2ce9e1d5bbd0d72b809d47172d8`
+- remaining_issues:
+  - MP4 循环需在 PowerPoint 的 Playback 中设置 Automatically + Loop Until Stopped
+- next_step: 在目标 PPT 中嵌入推荐版并从当前幻灯片试播
+
 - task: 为 60 帧 known asteroid 5×8 合成 GIF 增加 `200 ms` 帧时长
 - files_changed:
   - 新增 `/Users/yunaoxiao/Desktop/known_asteroid_cutout_top40_mosaic_5x8_60frame_200ms_20260826.gif`

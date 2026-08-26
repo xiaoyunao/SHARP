@@ -2,6 +2,12 @@
 
 ## Completed side task (2026-08-26)
 
+- 已生成 PowerPoint 推荐 MP4：
+  - `/Users/yunaoxiao/Desktop/known_asteroid_cutout_top40_mosaic_5x8_ppt_2560x1600_crf18_20260826.mp4`
+  - H.264 High/yuv420p，`2560×1600`, `5 fps`, `60` 帧, `12 s`，约 `80 MB`
+  - SSIM `0.995937`、PSNR `44.57 dB`；比 200 ms GIF 小 `58.3%`
+  - PowerPoint 中设置 `Start: Automatically` 和 `Loop Until Stopped`
+- 全分辨率 `3840×2400` CRF 16 试验版仍约 `196 MB`，仅作为备选，不推荐嵌入 PPT。
 - 已在不重新编码画面的前提下生成 `200 ms/帧` 版本：
   - `/Users/yunaoxiao/Desktop/known_asteroid_cutout_top40_mosaic_5x8_60frame_200ms_20260826.gif`
   - `60` 帧，总循环 `12 s`；与 0 ms 版的 60 个解码画面逐帧一致
