@@ -2,6 +2,24 @@
 
 ## 2026-08-26
 
+- task: 为 60 帧 known asteroid 5×8 合成 GIF 增加 `200 ms` 帧时长
+- files_changed:
+  - 新增 `/Users/yunaoxiao/Desktop/known_asteroid_cutout_top40_mosaic_5x8_60frame_200ms_20260826.gif`
+  - 新增 `/Users/yunaoxiao/Desktop/known_asteroid_cutout_top40_mosaic_5x8_60frame_200ms_20260826_manifest.csv`
+  - 更新 `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 解析 0 ms 成品的 GIF block，只把 60 个 GCE delay 从 `0` 改为 `20` centiseconds
+  - 用 Pillow 和 ffmpeg 复核帧数、帧时长、循环、画布及全帧解码
+  - 对比 0 ms/200 ms 两版的 60 个解码画面哈希和二进制差异
+- key_findings:
+  - 200 ms 版只改动 `60` 个 delay 字节，图像数据、格位和逐帧取模序列均未重新编码
+- validation:
+  - `60` 帧、`200 ms/帧`、总循环 `12,000 ms`、无限循环；画布 `3880×2425`
+  - 两版 60 个解码帧 SHA-256 逐帧一致；ffmpeg 解码无错误
+  - 文件大小 `200,735,375` bytes；SHA-256 `9f16457df310231cd38fd3f3a8198d660fae217dc6ec3beeca614df72b010154`
+- remaining_issues: 无
+- next_step: 在目标网页实际播放确认 12 秒循环速度
+
 - task: 按逐帧取模规则重建 40 图、60 帧、0 ms 的 known asteroid 5×8 循环 GIF
 - files_changed:
   - 新增桌面成品 `/Users/yunaoxiao/Desktop/known_asteroid_cutout_top40_mosaic_5x8_60frame_0ms_20260826.gif`

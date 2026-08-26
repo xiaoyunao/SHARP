@@ -2,6 +2,10 @@
 
 ## Completed side task (2026-08-26)
 
+- 已在不重新编码画面的前提下生成 `200 ms/帧` 版本：
+  - `/Users/yunaoxiao/Desktop/known_asteroid_cutout_top40_mosaic_5x8_60frame_200ms_20260826.gif`
+  - `60` 帧，总循环 `12 s`；与 0 ms 版的 60 个解码画面逐帧一致
+  - 清单：`/Users/yunaoxiao/Desktop/known_asteroid_cutout_top40_mosaic_5x8_60frame_200ms_20260826_manifest.csv`
 - 已按修正后的逐帧取模规则生成 60 帧、0 ms 的完整合成 GIF：
   - `/Users/yunaoxiao/Desktop/known_asteroid_cutout_top40_mosaic_5x8_60frame_0ms_20260826.gif`
   - 每个全局帧均为完整 `3880×2425` 合成图；格子使用 `global_index % used_frames` 取帧
