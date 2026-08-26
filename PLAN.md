@@ -1,5 +1,11 @@
 # PLAN
 
+## Completed side task (2026-08-26)
+
+- 已将最近 10 个完整 daily known asteroid 夜次的 50 张 cutout GIF 打包到：
+  - `/Users/yunaoxiao/Desktop/known_asteroid_cutout_gifs_latest50_20260826.tar.gz`
+- 归档内含按夜次组织的 GIF、选择说明和逐文件 SHA-256 manifest；本地完整性验证通过。
+
 ## Current objective
 
 SHARP PASP 的本地可完成分析已收口在 `paper_analysis_20260803/`。当前目标从“生成统计与图件”转为“等待作者/上游证据后冻结论文口径”。

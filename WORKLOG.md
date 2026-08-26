@@ -1,5 +1,26 @@
 # WORKLOG
 
+## 2026-08-26
+
+- task: 从 daily known asteroid 可视化产物中选取最近 50 张 cutout GIF，打包并下载到本地桌面
+- files_changed:
+  - 新增桌面归档 `/Users/yunaoxiao/Desktop/known_asteroid_cutout_gifs_latest50_20260826.tar.gz`
+  - 更新 `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 按多机器规则检查 git 状态、分支、远端历史，并读取 `WORKLOG.md`, `PLAN.md`
+  - 服务器扫描 `/pipeline/xiaoyunao/known_asteroid/plots/<night>/top??_*.gif`
+  - 选择最近 10 个各有完整 5 张 GIF 的观测夜，生成带 `README.txt` 和 `MANIFEST.csv` 的 tar.gz
+  - 用 `scp -P 20093` 下载归档到本地桌面，并逐文件复核大小和 SHA-256
+- key_findings:
+  - 服务器当前有 `129` 个 known plot 夜次、共 `630` 张 daily top GIF
+  - 本次夜次为 `20260715`, `20260620`, `20260617`, `20260611`, `20260601`, `20260530`, `20260529`, `20260528`, `20260512`, `20260509`
+  - 每晚 5 张由 `plot_known_asteroids.py` 按当晚匹配观测次数排序生成
+- validation:
+  - 归档包含 `50` 张 GIF、`10` 个夜次、`50` 行 manifest，GIF 文件头/尾和逐文件 SHA-256 全部通过
+  - 本地归档大小 `42,730,312` bytes；SHA-256 `92159222672df24a5f420cf166ee5005696d58c80d9faa53012610320f966986`
+- remaining_issues: 无
+- next_step: 如需人工精选，可从该 50 张中再按画面质量、移动显著度或目标类型筛选子集
+
 ## 2026-08-09
 
 - task: 完成 SHARP PASP 初稿所列 P0/P1 数据冻结、统计、表格、代码冲突审计和全部 12 张论文图
