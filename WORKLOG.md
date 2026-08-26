@@ -2,6 +2,29 @@
 
 ## 2026-08-26
 
+- task: 检查 50 张 known asteroid cutout GIF，精选 40 张并合成为无缝 5×8 循环大 GIF
+- files_changed:
+  - 新增桌面成品 `/Users/yunaoxiao/Desktop/known_asteroid_cutout_top40_mosaic_5x8_20260826.gif`
+  - 新增筛选/位置清单 `/Users/yunaoxiao/Desktop/known_asteroid_cutout_top40_mosaic_5x8_20260826_manifest.csv`
+  - 新增静态预览 `/Users/yunaoxiao/Desktop/known_asteroid_cutout_top40_mosaic_5x8_20260826_preview.jpg`
+  - 更新 `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 用 Pillow/NumPy 检查每个 GIF 的科学帧数、标记覆盖、目标局部信号、对比度和清晰度
+  - 用连通黑区和 Hough line 指标扫描跨帧裁切/线状伪迹，并对高风险序列制作全帧 contact sheet 人工复核
+  - 将不同帧数 GIF 按完整播放相位映射到 `22` 帧主时间轴，原尺寸无间隔拼成 `5×8`
+  - 用 Pillow 和 ffmpeg 解码复核最终 GIF，检查画布、帧数、帧时长、循环标记和 manifest 布局覆盖
+- key_findings:
+  - 原 50 张 GIF 的 duration 元数据均为 `0 ms`；总帧数为 `3..22`，去掉结尾停顿帧后的科学帧为 `1..20`
+  - 剔除 `5` 个明显黑色裁切/卫星划痕序列、`3` 个只有 1 个科学帧的静态序列，以及 `2` 个剩余目标信号较弱序列
+  - 最终采用统一相位而非简单截断：每个入选 GIF 在 `11 s` 主循环中完整播放一轮，短序列自动均匀延长
+- validation:
+  - 成品画布 `3880×2425`，严格等于 `8×485` by `5×485`，40 个 cell 无空位或额外间距
+  - `22` 帧均唯一，`500 ms/帧`，总时长 `11,000 ms`，`loop=0` 无限循环
+  - Pillow 与 ffmpeg 全帧解码通过；manifest 为 `40 selected + 10 excluded`
+  - 文件大小 `73,734,124` bytes；SHA-256 `f38d521068be938aee270c5a846c00c0f97631bdf4b15bb6270e04c7a8aafa06`
+- remaining_issues: 无
+- next_step: 如用于网页且 70 MB 过大，可另导出降采样轻量版，不替换当前全分辨率成品
+
 - task: 从 daily known asteroid 可视化产物中选取最近 50 张 cutout GIF，打包并下载到本地桌面
 - files_changed:
   - 新增桌面归档 `/Users/yunaoxiao/Desktop/known_asteroid_cutout_gifs_latest50_20260826.tar.gz`

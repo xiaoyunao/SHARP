@@ -2,6 +2,12 @@
 
 ## Completed side task (2026-08-26)
 
+- 已从 50 张 daily known asteroid cutout GIF 中逐帧精选 40 张，并生成无缝 `5×8` 循环大 GIF：
+  - `/Users/yunaoxiao/Desktop/known_asteroid_cutout_top40_mosaic_5x8_20260826.gif`
+  - 画布 `3880×2425`，`22` 帧，`500 ms/帧`，总循环 `11 s`，无限循环
+  - 不同源帧数按完整播放相位统一映射；未简单截断
+  - 筛选/格位清单：`/Users/yunaoxiao/Desktop/known_asteroid_cutout_top40_mosaic_5x8_20260826_manifest.csv`
+  - 静态预览：`/Users/yunaoxiao/Desktop/known_asteroid_cutout_top40_mosaic_5x8_20260826_preview.jpg`
 - 已将最近 10 个完整 daily known asteroid 夜次的 50 张 cutout GIF 打包到：
   - `/Users/yunaoxiao/Desktop/known_asteroid_cutout_gifs_latest50_20260826.tar.gz`
 - 归档内含按夜次组织的 GIF、选择说明和逐文件 SHA-256 manifest；本地完整性验证通过。
