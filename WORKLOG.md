@@ -1,5 +1,28 @@
 # WORKLOG
 
+## 2026-08-27
+
+- task: 将 SHARP PASP 完整初稿、正式图表和论文修订证据整理为 GPT Pro 上传包
+- files_changed:
+  - 新增 `paper_analysis_20260803/reports/GPT_HANDOFF_INSTRUCTIONS.md`
+  - 新增 `paper_analysis_20260803/reports/GPT_HANDOFF_PACKAGE_CONTENTS.md`
+  - 新增桌面归档 `/Users/yunaoxiao/Desktop/SHARP_PASP_GPT_handoff_20260827.zip`
+  - 更新 `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 解包原始 `SHARP_PASP_draft.zip`，保留完整 LaTeX 工程并填入 12 张正式 PDF/PNG 图
+  - 汇集 5 张 CSV/TeX 表、最终报告、紧凑证据摘要、QA、figure data 和 executed notebook
+  - 生成包内逐文件 SHA-256 manifest，重新解压后逐项复核并运行 `unzip -t`
+- key_findings:
+  - 正式 PASP 入口为 `manuscript/manuscript.tex`；`manuscript_preview.tex` 仅为预览入口
+  - 上传包刻意排除 5.7 GB 行级快照、原始图像和日志，但保留 GPT 修订论文需要的冻结统计与解释边界
+- validation:
+  - 包内 147 个受管文件 SHA-256 全部通过，另有 manifest 本身，共 148 个文件
+  - 12 PDF + 12 PNG 图、5 CSV + 5 TeX 表及所有关键说明/正文文件均存在
+  - ZIP 完整性通过；大小约 19 MB；SHA-256 `ea863cd8d095ab2ba94d5634460eeff5abfb09e2b5aafa3bbc2b00474a4f5802`
+- remaining_issues:
+  - 本轮不修改论文；作者仍需处理 `AUTHOR_INPUTS_REQUIRED.md` 中的外部 TODO
+- next_step: 将 ZIP 上传 GPT Pro，并让其先读 `START_HERE.md` 后修改 `manuscript/`
+
 ## 2026-08-26
 
 - task: 为 PowerPoint 导出较小且高质量的 H.264 MP4 版本

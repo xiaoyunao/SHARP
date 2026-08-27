@@ -1,5 +1,14 @@
 # PLAN
 
+## Completed side task (2026-08-27)
+
+- 已生成 GPT Pro 论文续写交接包：
+  - `/Users/yunaoxiao/Desktop/SHARP_PASP_GPT_handoff_20260827.zip`
+  - 包含完整原始 LaTeX 工程、12 张正式图的 PDF/PNG、5 张正式表的 CSV/TeX、最终分析报告、紧凑证据摘要、QA 和 executed notebook
+  - `START_HERE.md` 给出修订顺序、必须遵守的统计口径、代码冲突和外部 TODO
+- 已重新解压验证：147 个受管文件哈希全通过，图表数量和关键文件齐全，ZIP 无压缩错误。
+- 下一步：上传给 GPT Pro；论文修订以 `analysis_support/` 冻结结果为准，不让其自行补造 MPC、站点、天气或性能证据。
+
 ## Completed side task (2026-08-26)
 
 - 已生成 PowerPoint 推荐 MP4：
