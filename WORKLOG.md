@@ -1,5 +1,29 @@
 # WORKLOG
 
+## 2026-08-30
+
+- task: 按 GPT Pro 新结构要求完成 SHARP 本地统计复核、GOTTA 风格正式图件和独立交接包
+- files_changed:
+  - 新增 `SHARP_local_analysis_figures_20260830/`：13 张 PDF/PNG 图、3 张主表、完整 figure data、审计、脚本、QA 和 GPT handoff
+  - 更新 `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 读取 `CODEX_LOCAL_ANALYSIS_AND_FIGURES_20260830.md` 与 11 页结构修订 PDF，逐页渲染检查占位图需求
+  - 只读同步并哈希生产 ASTORB、4 张 L1 和 3 张 L2；用冻结 Parquet 重算对象/候选统计
+  - 用当前 `orbit_confirm_links.py` 及 poliastro 0.17 重跑普通候选和 C/2025 Y1 距离格点；渲染并检查全部 PDF
+- key_findings:
+  - 13 项 baseline 全通过；known 为 534,780 detection associations / 58,482 unique identities，candidate 为 58 linkages / 179 measurements / 34 nights
+  - 冻结 known 表中的距离和太阳伸距列全空，已从精确 ASTORB 根数与 Astropy 太阳位置重新计算，未补造数据
+  - 当前代码仍不统一：scheduler/known matcher 为 960 m，但 `heliolincrr/orbit_confirm_links.py` 仍为 868.221 m；本包保留并审计该差异
+  - 未找到合格时域 source manifest，因此不生成 Figures 07/08，并给出最短缺失输入清单
+- validation:
+  - 13 PDF 全部通过 `pdfinfo` 并以 Poppler 成功渲染；13 PNG 均为 300 dpi 输出
+  - Figure 06 固定参考星最大配准偏移 0.445 arcsec，小于 0.8 arcsec QA 阈值
+  - QA contact sheet 人工检查通过；全目录 SHA-256 manifest 和 ZIP 完整性检查通过
+- remaining_issues:
+  - 时域光变/差分图等待作者提供显式 calibrated-source manifests
+  - 论文需由 GPT/作者处理 868.221 m 与 960 m 的当前代码冲突；本任务不改生产代码或论文
+- next_step: 上传桌面 ZIP 给 GPT Pro，并让其先读 `GPT_HANDOFF.md` 与 `README.md`
+
 ## 2026-08-27
 
 - task: 将 SHARP PASP 完整初稿、正式图表和论文修订证据整理为 GPT Pro 上传包

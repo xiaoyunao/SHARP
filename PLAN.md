@@ -1,5 +1,18 @@
 # PLAN
 
+## Completed paper-analysis bundle (2026-08-30)
+
+- 已完成独立目录 `SHARP_local_analysis_figures_20260830/`：
+  - 13 张 GOTTA 风格 PDF/PNG 正式图（真实 field/cutout、workflow、known sky/orbits/geometry/photometry/residual/revisit、candidate diagnostics/tracks/solution families、真实三帧序列）
+  - 58-linkage candidate table、58,482-row orbit join audit、orbit-class summary 和完整 figure data
+  - code/catalog/baseline/image-source audit、QA contact sheet、机器 QA、运行脚本和全文件哈希
+- 已确认的边界：
+  - 不修改 manuscript 或生产代码
+  - 当前 orbit confirmation 仍是 868.221 m，scheduler/known matcher 是 960 m
+  - 无可靠 PHA 标志；NEO 仅按 `q < 1.3 AU` 派生
+  - 缺时域 calibrated-source manifests，因此 Figures 07/08 合理缺席
+- 下一步：上传桌面 `SHARP_local_analysis_figures_20260830.zip` 给 GPT Pro；后续仅在收到 `MISSING_INPUTS.md` 所列数据后补时域图。
+
 ## Completed side task (2026-08-27)
 
 - 已生成 GPT Pro 论文续写交接包：

@@ -1,0 +1,13 @@
+{
+  "candidate_linkages": 58,
+  "candidate_measurements": 179,
+  "stats": {
+    "catalog_epoch_values": [
+      "2026-03-01"
+    ],
+    "known_associations": 534780,
+    "known_unique_identities": 58482,
+    "orbit_joined": 58482,
+    "orbit_unmatched": 0
+  }
+}

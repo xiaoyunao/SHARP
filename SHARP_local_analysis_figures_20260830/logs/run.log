@@ -1,0 +1,11 @@
+2026-08-30T14:40Z generate_products.py completed with /opt/anaconda3/bin/python3 3.12.2
+2026-08-30T14:41Z generate_candidate_families.py completed with Python 3.10 / poliastro 0.17.0
+2026-08-30T14:41Z generate_image_figures.py completed from four calibrated L1 images and three L2 catalogs
+2026-08-30T14:44Z all 13 PDF figures passed pdfinfo and Poppler first-page rendering
+2026-08-30T14:46Z 13-figure PNG contact sheet reviewed; no blank, clipped, or unreadable panels found
+2026-08-30T14:46Z Figure 06 fixed-reference registration PASS: 0.445 arcsec maximum offset (<0.8 arcsec)
+2026-08-30T14:46Z validate_bundle.py completed; full SHA-256 manifest regenerated
+
+Expected non-fatal warnings:
+- FITSFixedWarning when Astropy derived MJD-OBS from DATE-OBS in calibrated L1 headers.
+- NonRotationTransformationWarning when computing solar elongation from GCRS solar coordinates against ICRS source coordinates; effect is below plotting-bin scale and does not affect frozen association counts.

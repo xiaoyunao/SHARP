@@ -1,0 +1,10 @@
+numpy==1.26.4
+pandas==2.3.3
+scipy==1.15.2
+matplotlib==3.10.6
+astropy==5.3.4
+pyarrow==23.0.1
+poliastro==0.17.0
+healpy>=1.17
+Pillow>=10
+aleph>=0.4

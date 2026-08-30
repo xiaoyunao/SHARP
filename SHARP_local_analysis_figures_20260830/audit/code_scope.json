@@ -1,0 +1,15 @@
+{
+  "altitude_discrepancy_preserved": true,
+  "analysis_scope": "read-only frozen snapshot plus current code audit; no production or manuscript changes",
+  "generated_utc": "2026-08-30T14:41:14.911813+00:00",
+  "local_branch": "main",
+  "local_commit": "313a98960666260763fcf33e461aa39613faeafa",
+  "local_dirty": true,
+  "local_repository": "/Users/yunaoxiao/Desktop/smt_asteroid",
+  "orbit_confirmation_source_sha256": "993186b4125370c8a38d35614715322ebb098769e42782c0a607ccea89793c2f",
+  "orbit_confirmation_site_altitude_m_in_current_code": 868.221,
+  "platform": "macOS-27.0-arm64-arm-64bit",
+  "python_executable": "/opt/anaconda3/bin/python3",
+  "python_version": "3.12.2 | packaged by conda-forge | (main, Feb 16 2024, 20:54:21) [Clang 16.0.6 ]",
+  "scheduler_and_known_matcher_altitude_m_in_current_code": 960.0
+}

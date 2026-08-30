@@ -1,0 +1,14 @@
+metric,expected_reported,observed_recomputed,comparison,status,source,grain
+survey_exposures,41074,41074,rounded to reported precision,PASS,coverage_summary.json,object/linkage/survey as named
+survey_nights,134,134,rounded to reported precision,PASS,coverage_summary.json,object/linkage/survey as named
+open_shutter_hr,342.28,342.28333333333336,rounded to 2 decimals,PASS,coverage_summary.json,object/linkage/survey as named
+fields,1430,1430,rounded to reported precision,PASS,coverage_summary.json,object/linkage/survey as named
+area_deg2,10387,10387.42600221356,rounded to reported precision,PASS,coverage_summary.json,object/linkage/survey as named
+known_associations,534780,534780,rounded to reported precision,PASS,frozen product/review tables,detection
+known_unique_identities,58482,58482,rounded to reported precision,PASS,frozen product/review tables,object/linkage/survey as named
+automated_linkages,4762,4762,rounded to reported precision,PASS,frozen product/review tables,object/linkage/survey as named
+visually_retained,67,67,rounded to reported precision,PASS,frozen product/review tables,object/linkage/survey as named
+posthoc_artifacts,9,9,rounded to reported precision,PASS,frozen product/review tables,object/linkage/survey as named
+final_linkages,58,58,rounded to reported precision,PASS,frozen product/review tables,object/linkage/survey as named
+candidate_measurements,179,179,rounded to reported precision,PASS,frozen product/review tables,detection
+candidate_nights,34,34,rounded to reported precision,PASS,frozen product/review tables,object/linkage/survey as named

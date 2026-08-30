@@ -1,0 +1,13 @@
+{
+  "catalog": "Lowell astorb.dat",
+  "catalog_epoch_values": [
+    "2026-03-01"
+  ],
+  "file_mtime_utc": "2026-04-02T11:37:27+00:00",
+  "neo_status": "derived only from q=a(1-e)<1.3 AU",
+  "pha_status": "unavailable: frozen ASTORB does not provide an authoritative PHA flag",
+  "scope": "asteroid orbital elements; no comet entries and therefore no C/2025 Y1 join",
+  "sha256": "ea22c7062e7349d9add34fb64835916d66705ad60a717cc7c86a0c47f5aa3040",
+  "size_bytes": 407447100,
+  "snapshot_file": "astorb.dat"
+}

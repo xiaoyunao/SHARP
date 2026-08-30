@@ -1,0 +1,149 @@
+{
+  "checks": [
+    {
+      "figure": "fig01_schmidt_field_and_asteroid_cutouts",
+      "notes": "reviewed at contact-sheet and full-panel scale",
+      "pdf_bytes": 125612,
+      "pdf_present": true,
+      "png_bytes": 1996308,
+      "png_height_px": 1650,
+      "png_resolution_check": "PASS",
+      "png_width_px": 2130,
+      "visual_qa": "PASS"
+    },
+    {
+      "figure": "fig02_moving_object_workflow",
+      "notes": "reviewed at contact-sheet and full-panel scale",
+      "pdf_bytes": 29419,
+      "pdf_present": true,
+      "png_bytes": 82464,
+      "png_height_px": 799,
+      "png_resolution_check": "PASS",
+      "png_width_px": 1710,
+      "visual_qa": "PASS"
+    },
+    {
+      "figure": "fig03_known_sky_distribution",
+      "notes": "reviewed at contact-sheet and full-panel scale",
+      "pdf_bytes": 92442,
+      "pdf_present": true,
+      "png_bytes": 473625,
+      "png_height_px": 791,
+      "png_resolution_check": "PASS",
+      "png_width_px": 1721,
+      "visual_qa": "PASS"
+    },
+    {
+      "figure": "fig04_known_orbital_distribution",
+      "notes": "reviewed at contact-sheet and full-panel scale",
+      "pdf_bytes": 53034,
+      "pdf_present": true,
+      "png_bytes": 331243,
+      "png_height_px": 921,
+      "png_resolution_check": "PASS",
+      "png_width_px": 1829,
+      "visual_qa": "PASS"
+    },
+    {
+      "figure": "fig04b_known_motion_geometry",
+      "notes": "reviewed at contact-sheet and full-panel scale",
+      "pdf_bytes": 29590,
+      "pdf_present": true,
+      "png_bytes": 88240,
+      "png_height_px": 875,
+      "png_resolution_check": "PASS",
+      "png_width_px": 1863,
+      "visual_qa": "PASS"
+    },
+    {
+      "figure": "fig04c_known_distances",
+      "notes": "reviewed at contact-sheet and full-panel scale",
+      "pdf_bytes": 24960,
+      "pdf_present": true,
+      "png_bytes": 72556,
+      "png_height_px": 862,
+      "png_resolution_check": "PASS",
+      "png_width_px": 1863,
+      "visual_qa": "PASS"
+    },
+    {
+      "figure": "fig04d_known_photometry",
+      "notes": "reviewed at contact-sheet and full-panel scale",
+      "pdf_bytes": 27027,
+      "pdf_present": true,
+      "png_bytes": 82605,
+      "png_height_px": 862,
+      "png_resolution_check": "PASS",
+      "png_width_px": 1863,
+      "visual_qa": "PASS"
+    },
+    {
+      "figure": "fig04e_known_astrometric_trends",
+      "notes": "reviewed at contact-sheet and full-panel scale",
+      "pdf_bytes": 30790,
+      "pdf_present": true,
+      "png_bytes": 100968,
+      "png_height_px": 874,
+      "png_resolution_check": "PASS",
+      "png_width_px": 1821,
+      "visual_qa": "PASS"
+    },
+    {
+      "figure": "fig04f_known_revisit_statistics",
+      "notes": "reviewed at contact-sheet and full-panel scale",
+      "pdf_bytes": 33022,
+      "pdf_present": true,
+      "png_bytes": 179203,
+      "png_height_px": 862,
+      "png_resolution_check": "PASS",
+      "png_width_px": 1813,
+      "visual_qa": "PASS"
+    },
+    {
+      "figure": "fig05_candidate_orbit_diagnostics",
+      "notes": "reviewed at contact-sheet and full-panel scale",
+      "pdf_bytes": 34000,
+      "pdf_present": true,
+      "png_bytes": 114378,
+      "png_height_px": 1002,
+      "png_resolution_check": "PASS",
+      "png_width_px": 1230,
+      "visual_qa": "PASS"
+    },
+    {
+      "figure": "fig05b_representative_tracks",
+      "notes": "reviewed at contact-sheet and full-panel scale",
+      "pdf_bytes": 19204,
+      "pdf_present": true,
+      "png_bytes": 105387,
+      "png_height_px": 945,
+      "png_resolution_check": "PASS",
+      "png_width_px": 2130,
+      "visual_qa": "PASS"
+    },
+    {
+      "figure": "fig05c_solution_families",
+      "notes": "reviewed at contact-sheet and full-panel scale",
+      "pdf_bytes": 18053,
+      "pdf_present": true,
+      "png_bytes": 70707,
+      "png_height_px": 945,
+      "png_resolution_check": "PASS",
+      "png_width_px": 2130,
+      "visual_qa": "PASS"
+    },
+    {
+      "figure": "fig06_candidate_three_frame_sequence",
+      "notes": "reviewed at contact-sheet and full-panel scale",
+      "pdf_bytes": 62776,
+      "pdf_present": true,
+      "png_bytes": 395242,
+      "png_height_px": 780,
+      "png_resolution_check": "PASS",
+      "png_width_px": 2130,
+      "visual_qa": "PASS"
+    }
+  ],
+  "figure_count": 13,
+  "status": "PASS"
+}
