@@ -1,3 +1,5 @@
-figure_count=13
+figure_count=12
 qa_status=PASS
-checksum_count=76
+pdf_pages=1_each
+poppler_render=PASS_12_of_12
+manual_visual_qa=PASS_12_of_12

@@ -1,8 +1,15 @@
 {
   "commit": "b1dfe45ff678c78158ab2e5c9e4c9de45b109a69",
   "dirty": true,
+  "repository": "/Users/yunaoxiao/Desktop/gotta_asteroid_1",
   "reference_figure_directory": "/Users/yunaoxiao/Desktop/gotta_asteroid_1/reviewer_figures_20260701",
-  "reference_script": "/Users/yunaoxiao/Desktop/gotta_asteroid_1/scripts/generate_paper_products.py",
-  "reference_script_sha256": "f41218d77d28cfd47f5b6f6805d852eaa98b56401fb11b167f217f5b8d2485e2",
-  "repository": "/Users/yunaoxiao/Desktop/gotta_asteroid_1"
+  "bundled_source_snapshots": {
+    "generate_paper_products.py": "f41218d77d28cfd47f5b6f6805d852eaa98b56401fb11b167f217f5b8d2485e2",
+    "make_ecliptic_healpix.py": "d77103e3093cdf8ce941d2f413d1a7b4bf3d4953ae0a29aa123bf35fa947981c",
+    "make_fig1_review.py": "11007615314a04e39287f3f52e43b0d182808ec24e3917eaf98a3941e8de2c0a",
+    "make_orbit_revision.py": "a47b3b119fe0e64086fb29f39c884e9dfddcd4b6fc6a92228e5470262570f708",
+    "redraw_text_only.py": "c256b99cf2f13d293e18757bc63522d3d2fcbd3f38f2599951c9994569c4cb8d"
+  },
+  "implementation": "scripts/redraw_image_figures.py and scripts/redraw_scientific_figures.py",
+  "mapping_document": "GOTTA_SOURCE_MAP.md"
 }

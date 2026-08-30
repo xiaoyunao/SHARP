@@ -1,7 +1,20 @@
-source_node,target_node
-0,1
-1,2
-2,3
-1,4
-4,5
-5,6
+source_node,target_node,edge_style
+scheduler,observing,solid
+observing,calibration,solid
+calibration,nightly_products,solid
+scheduler_state,scheduler,dotted
+nightly_products,known_query,solid
+nightly_products,gaia_mask,solid
+known_query,known_match,solid
+known_match,known_store,solid
+known_store,known_ades,solid
+gaia_mask,tracklets_links,solid
+tracklets_links,orbit_subtract,solid
+orbit_subtract,review_package,solid
+review_package,human_review,solid
+human_review,unknown_ades,solid
+review_state,review_package,dotted
+known_ades,mpc,solid
+unknown_ades,mpc,solid
+human_review,followup_state,dashed
+followup_state,scheduler,dashed feedback

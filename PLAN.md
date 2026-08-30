@@ -1,17 +1,23 @@
 # PLAN
 
-## Completed paper-analysis bundle (2026-08-30)
+## Corrected GOTTA-source figure bundle (2026-08-30)
 
-- 已完成独立目录 `SHARP_local_analysis_figures_20260830/`：
-  - 13 张 GOTTA 风格 PDF/PNG 正式图（真实 field/cutout、workflow、known sky/orbits/geometry/photometry/residual/revisit、candidate diagnostics/tracks/solution families、真实三帧序列）
+- 已完成并验收独立目录 `SHARP_local_analysis_figures_20260830/`：
+  - 12 张直接依据 GOTTA 源码重绘的 PDF/PNG 正式图；Figure 05c 已按作者要求删除
+  - Figure 01 使用 GOTTA 原始 zscale + 61-pixel median background subtraction，无 N/E
+  - Figure 02 恢复完整 SHARP production architecture 和 feedback loop
+  - Figure 03 使用 GOTTA rainbow/LogNorm HEALPix density map
+  - Figure 04 使用 GOTTA 原始八类 asteroid marker/color/order；04d/04e/04f 使用 GOTTA colorbar/marker grammar
+  - Figure 06 仅为作者指定 GIF 的原始三帧 1x3，不增加内容
   - 58-linkage candidate table、58,482-row orbit join audit、orbit-class summary 和完整 figure data
-  - code/catalog/baseline/image-source audit、QA contact sheet、机器 QA、运行脚本和全文件哈希
+  - GOTTA 源码快照、逐图映射、code/catalog/baseline/image-source audit、QA、运行脚本和全文件哈希
 - 已确认的边界：
   - 不修改 manuscript 或生产代码
   - 当前 orbit confirmation 仍是 868.221 m，scheduler/known matcher 是 960 m
   - 无可靠 PHA 标志；NEO 仅按 `q < 1.3 AU` 派生
   - 缺时域 calibrated-source manifests，因此 Figures 07/08 合理缺席
-- 下一步：上传桌面 `SHARP_local_analysis_figures_20260830.zip` 给 GPT Pro；后续仅在收到 `MISSING_INPUTS.md` 所列数据后补时域图。
+- 验收：12/12 单页 PDF 通过 Poppler 渲染，12 张全尺寸渲染和 contact sheet 人工复核通过，candidate table 58 行，checksum manifest 全量复验通过。
+- 下一步：上传新的桌面 `SHARP_local_analysis_figures_20260830.zip` 给 GPT Pro；旧 ZIP 不再使用。
 
 ## Completed side task (2026-08-27)
 

@@ -130,10 +130,10 @@ def build_known(root,snap,astorb_path):
     rhel=np.sqrt(x*x+y*y+z*z); earth=get_body_barycentric("earth",Time(ed.epoch_mjd.to_numpy(),format="mjd",scale="utc"))-get_body_barycentric("sun",Time(ed.epoch_mjd.to_numpy(),format="mjd",scale="utc"));eps=np.deg2rad(23.439291);xe=earth.x.to_value(u.au);ye=earth.y.to_value(u.au)*np.cos(eps)+earth.z.to_value(u.au)*np.sin(eps);ze=-earth.y.to_value(u.au)*np.sin(eps)+earth.z.to_value(u.au)*np.cos(eps);rgeo=np.sqrt((x-xe)**2+(y-ye)**2+(z-ze)**2)
     pd.DataFrame({"object_key":d.object_key,"epoch_mjd":d.epoch_mjd,"heliocentric_distance_au":rhel,"geocentric_distance_au":rgeo}).to_parquet(root/"figure_data/fig04c_known_distances.parquet",index=False)
     hist2("fig04c_known_distances",[rhel,rgeo],["Heliocentric distance (AU)","Geocentric distance (AU)"],(True,True))
-    hist2("fig04d_known_photometry",[d.mag_aper4,d.magerr_aper4],["Instrumental aperture magnitude","Aperture magnitude uncertainty (mag)"],(False,True))
+    hist2("fig04d_known_photometry",[d.mag_aper4,d.magerr_aper4],[r"$g_{\rm aper}$ (mag)",r"$\sigma(g_{\rm aper})$ (mag)"],(False,True))
     bm=binned_xy(d.mag_aper4,d.resid_arcsec,np.linspace(np.nanpercentile(d.mag_aper4,.5),np.nanpercentile(d.mag_aper4,99.5),18)); br=binned_xy(srt.angular_speed_arcsec_hr,srt.resid_arcsec,np.geomspace(max(.01,np.nanpercentile(srt.angular_speed_arcsec_hr.dropna(),.5)),np.nanpercentile(srt.angular_speed_arcsec_hr.dropna(),99.5),18));bm.to_csv(root/"figure_data/fig04e_residual_vs_magnitude.csv",index=False);br.to_csv(root/"figure_data/fig04e_residual_vs_rate.csv",index=False)
     fig,axs=plt.subplots(1,2,figsize=(7.1,3));
-    for ax,z,xlab in zip(axs,[bm,br],["Instrumental aperture magnitude","Angular speed (arcsec hr$^{-1}$)"]):
+    for ax,z,xlab in zip(axs,[bm,br],[r"$g_{\rm aper}$ (mag)","Angular speed (arcsec hr$^{-1}$)"]):
         ax.plot(z.bin_center,z["median"],color=BLUE,lw=1.4);ax.fill_between(z.bin_center,z.p16,z.p84,color=BLUE,alpha=.18);ax.axhline(1,color=ORANGE,ls="--",lw=1);ax.set(xlabel=xlab,ylabel="Astrometric residual (arcsec)",ylim=(0,1.08));ax.grid(alpha=.15)
     axs[1].set_xscale("log");save_fig(fig,root,"fig04e_known_astrometric_trends")
     revisit=j[["object_key","detection_count","night_count","time_baseline_days"]];revisit.to_csv(root/"figure_data/fig04f_known_revisit_statistics.csv",index=False)
@@ -147,10 +147,13 @@ def build_candidates(root,snap):
     det=det.merge(keep[["origin_night","trk_sub","linkage_id"]],left_on=["night","trk_sub","linkage_id"],right_on=["origin_night","trk_sub","linkage_id"],how="inner")
     conf=pd.read_csv(snap/"jpl_identification/second_pass/jpl_second_pass_confirmations.csv");conf["night"]=conf.night.astype(str)
     ckeys=set(zip(conf.night,conf.trk_sub,conf.linkage_id))
+    orbit_links=pd.read_parquet(snap/"frozen_products/orbit_links.parquet");orbit_links["night"]=orbit_links.night.astype(str)
     rows=[]
     for key,z in det.groupby(["night","trk_sub","linkage_id"],sort=False):
         z=z.sort_values("mjd"); arc=(z.mjd.max()-z.mjd.min())*24*60
-        rows.append({"night":key[0],"trk_sub":key[1],"linkage_id":key[2],"n_measurements":len(z),"n_tracklets":int(z.n_tracklets.iloc[0]),"arc_length_min":arc,"angular_speed_arcsec_hr":float(z.lin_speed_arcsec_per_day.iloc[0]/24),"direction_deg":float(z.lin_dir_deg.iloc[0]),"median_instrumental_mag":float(np.nanmedian(z.mag_aper4)),"best_distance_au":float(z.a_au.iloc[0]) if np.isfinite(z.a_au.iloc[0]) else np.nan,"rms_arcsec":float(z.rms_arcsec.iloc[0]),"median_residual_arcsec":float(z.med_arcsec.iloc[0]),"max_residual_arcsec":float(z.max_arcsec.iloc[0]),"linear_rms_arcsec":float(z.lin_rms_arcsec.iloc[0]),"is_c2025_y1":key in ckeys,"source_table":"frozen unknown_review_detections + posthoc review status"})
+        fit=orbit_links[(orbit_links.night==key[0])&(orbit_links.linkage_id==key[2])]
+        best_distance=float(fit.hypo_r_au.iloc[0]) if len(fit) else np.nan
+        rows.append({"night":key[0],"trk_sub":key[1],"linkage_id":key[2],"n_measurements":len(z),"n_tracklets":int(z.n_tracklets.iloc[0]),"arc_length_min":arc,"angular_speed_arcsec_hr":float(z.lin_speed_arcsec_per_day.iloc[0]/24),"direction_deg":float(z.lin_dir_deg.iloc[0]),"median_calibrated_mag":float(np.nanmedian(z.mag_aper4)),"best_distance_au":best_distance,"rms_arcsec":float(z.rms_arcsec.iloc[0]),"median_residual_arcsec":float(z.med_arcsec.iloc[0]),"max_residual_arcsec":float(z.max_arcsec.iloc[0]),"linear_rms_arcsec":float(z.lin_rms_arcsec.iloc[0]),"is_c2025_y1":key in ckeys,"source_table":"frozen unknown_review_detections + orbit_links + posthoc review status"})
     t=pd.DataFrame(rows);t.to_csv(root/"tables/candidate_linkage_diagnostics.csv",index=False)
     fig,ax=plt.subplots(figsize=(4.6,3.6));
     for flag,c,m,lbl in [(False,BLUE,"o","Other retained linkages"),(True,ORANGE,"D","C/2025 Y1 confirmations")]:

@@ -1,10 +1,6 @@
 {
-  "max_registered_reference_offset_arcsec": 0.44517225043902214,
-  "max_registered_reference_offset_px": 0.3854305198606252,
-  "pass_threshold_arcsec": 0.8,
-  "pixel_scale_arcsec": 1.155,
-  "reference_star_median_dec_deg": 20.107154464378507,
-  "reference_star_median_ra_deg": 8.974060674137586,
-  "reference_star_selection": "fixed, unsaturated (Flag=0), isolated catalog source present in all three frames",
-  "status": "PASS"
+  "source": "author-specified three-frame review GIF",
+  "registration_check": "not re-estimated; frames retained exactly as supplied",
+  "added_overlays": false,
+  "layout": "one row by three columns"
 }

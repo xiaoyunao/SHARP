@@ -1,15 +1,19 @@
-node_id,label,x,y
-0,"Calibrated
-science frames",0.04,0.62
-1,"Catalog extraction
-and masks",0.29,0.62
-2,"Known-object
-ephemeris match",0.54,0.62
-3,"Matched known
-associations",0.79,0.62
-4,"Unmatched-source
-tracklets",0.29,0.18
-5,"Heliocentric
-distance grid",0.54,0.18
-6,"Fit-quality cuts
-and visual audit",0.79,0.18
+node_id,label,x,y,width,height,category,shape,source_code
+scheduler_state,Plans + exposure history | + follow-up state,1.75,14.25,2.8,0.95,persistent,document,paper_analysis_20260803/scripts/make_fig01_architecture.py
+scheduler,Dynamic ecliptic-plane scheduler,7.0,14.25,4.2,0.9,automatic,round,paper_analysis_20260803/scripts/make_fig01_architecture.py
+observing,Telescope observing | 30 s survey exposures,7.0,12.95,4.0,0.95,external,parallelogram,paper_analysis_20260803/scripts/make_fig01_architecture.py
+calibration,External L1/L2 calibration | WCS + source extraction + photometry,7.0,11.55,5.15,1.05,external,parallelogram,paper_analysis_20260803/scripts/make_fig01_architecture.py
+nightly_products,Nightly L1 images + L2 catalogs | with FITS headers,7.0,10.15,4.7,1.0,persistent,document,paper_analysis_20260803/scripts/make_fig01_architecture.py
+known_query,Ephemeris query + | WCS detector footprint,3.45,8.65,4.45,0.95,automatic,round,paper_analysis_20260803/scripts/make_fig01_architecture.py
+known_match,1 arcsec source association | + photometric consistency,3.45,7.3,4.45,0.95,automatic,round,paper_analysis_20260803/scripts/make_fig01_architecture.py
+known_store,Matched detections | + nightly status,3.45,5.95,3.75,0.95,persistent,document,paper_analysis_20260803/scripts/make_fig01_architecture.py
+known_ades,Generate ADES PSV | + duplicate guard,3.45,4.6,3.75,0.95,automatic,round,paper_analysis_20260803/scripts/make_fig01_architecture.py
+gaia_mask,Quality prefilter | + Gaia source mask,9.45,8.65,4.55,0.95,automatic,round,paper_analysis_20260803/scripts/make_fig01_architecture.py
+tracklets_links,Two-point tracklets | + shared-endpoint links,9.45,7.3,4.55,0.95,automatic,round,paper_analysis_20260803/scripts/make_fig01_architecture.py
+orbit_subtract,Short-arc consistency | + 1.5 arcsec known subtraction,9.45,5.95,4.75,0.95,automatic,round,paper_analysis_20260803/scripts/make_fig01_architecture.py
+review_package,Review package | catalog + cutout GIFs,9.45,4.6,3.75,0.95,persistent,document,paper_analysis_20260803/scripts/make_fig01_architecture.py
+review_state,trkSub history | review signatures | submission ledger,12.42,4.6,2.05,1.05,persistent,document,paper_analysis_20260803/scripts/make_fig01_architecture.py
+human_review,Human candidate | vetting,9.45,3.25,3.6,1.15,human,diamond,paper_analysis_20260803/scripts/make_fig01_architecture.py
+unknown_ades,Generate unknown-object ADES PSV | + submission guard,8.65,1.95,4.05,0.95,automatic,round,paper_analysis_20260803/scripts/make_fig01_architecture.py
+followup_state,Conditional follow-up | queue + persistent | state,12.0,1.95,2.1,0.95,persistent,document,paper_analysis_20260803/scripts/make_fig01_architecture.py
+mpc,Minor Planet Center | submission + server replies,6.25,0.85,4.65,0.95,external,parallelogram,paper_analysis_20260803/scripts/make_fig01_architecture.py

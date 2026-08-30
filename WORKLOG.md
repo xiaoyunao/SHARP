@@ -2,6 +2,26 @@
 
 ## 2026-08-30
 
+- task: 根据作者复核意见，废弃首版画法并直接依据 GOTTA 源码完整重绘 SHARP 图件
+- files_changed:
+  - 重绘 `SHARP_local_analysis_figures_20260830/figures/` 中全部最终图；最终保留 12 组 PDF/PNG，删除 Figure 05c
+  - 新增 `scripts/redraw_image_figures.py`, `scripts/redraw_scientific_figures.py`, `scripts/export_workflow_data.py`, `scripts/gotta_reference_source/`, `GOTTA_SOURCE_MAP.md`
+  - 修正 candidate table 的 calibrated magnitude 命名和 orbit-link distance join；更新审计、README、GPT handoff、QA 和复现入口
+- commands_run:
+  - 逐个读取 GOTTA 的 `make_fig1_review.py`, `make_ecliptic_healpix.py`, `make_orbit_revision.py`, `generate_paper_products.py`, `redraw_text_only.py`，保存源文件快照与 SHA-256
+  - 按 GOTTA 原始 zscale/背景扣除、HEALPix、轨道类别 marker/color、density scatter/colorbar 和 histogram 代码重绘
+  - Figure 02 恢复早期完整 SHARP workflow；Figure 06 直接抽取作者指定 GIF 的 3 帧为 1x3，不增加内容
+- key_findings:
+  - 旧 linkage table 的 `best_distance_au` 误用了半长轴列；现已改为 join `orbit_links.parquet` 的 `hypo_r_au`
+  - 星等是定标后的 `g_aper`，不再使用 instrumental magnitude 描述
+  - Figure 05 原纵轴会裁掉 RMS=1.514 arcsec 的候选，现以全样本最大值设置上界
+- validation:
+  - GOTTA 五个源文件快照哈希已写入 `audit/gotta_style_provenance.json`
+  - 12/12 PDF 均为单页并通过 Poppler 渲染；12 张全尺寸渲染及完整 contact sheet 人工检查无裁切、重叠、空白或不可读面板
+  - Python `py_compile`、`sh -n`、58-row candidate table、12 PDF/12 PNG 配对和全目录 SHA-256 复验通过
+- remaining_issues: 时域 Figures 07/08 仍等待 `MISSING_INPUTS.md` 所列 calibrated-source manifests
+- next_step: 把新的桌面 ZIP 交给 GPT Pro，旧 ZIP 不再使用
+
 - task: 按 GPT Pro 新结构要求完成 SHARP 本地统计复核、GOTTA 风格正式图件和独立交接包
 - files_changed:
   - 新增 `SHARP_local_analysis_figures_20260830/`：13 张 PDF/PNG 图、3 张主表、完整 figure data、审计、脚本、QA 和 GPT handoff
