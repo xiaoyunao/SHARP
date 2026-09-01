@@ -2,6 +2,27 @@
 
 ## 2026-09-01
 
+- task: 深查 20260829/30 异常 Gaia-mask 星表、IERS 失败和 Slurm/资源竞争可能性
+- files_changed: `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 检查服务器 uptime/reboot、kernel OOM、Slurm preemption/accounting、sysstat CPU/内存及图减 daily job 启动时间
+  - 比较异常帧与同 field 相邻正常帧的 L1/L2 WCS、pixel scale、PV distortion、NMATCH、astrometric/photometric RMS 和源坐标最近邻
+  - 对 19 个 >5000-row Gaia residual 帧逐帧计算 WCS 网格差异，并按残留数整理 `/raw1` 原图路径
+- key_findings:
+  - 服务器自 2026-08-17 08:35 CST 连续运行；8 月 31 日 09:00 附近无 reboot/OOM。Slurm `PreemptMode=OFF`，09:10 load average 9.50/48 CPU、可用内存约 512 GB；图减 `daily` job 234332 到 13:40 才启动，因此没有证据支持断电、抢占或被图减任务挤掉。
+  - IERS 是 Astropy 用于地球自转、UT1 和极移修正的时标/定向表。20260829 的并行 known jobs 在缓存超过 30 天时有 192 次拒绝预测插值；新 `finals2000A.all` 于 2026-08-30 09:13:55 下载，之后帧及后续夜恢复。该问题独立于 L1 天测异常。
+  - 最严重帧 `20260830/OBJ_MP_1431_0072` 的 WCS pixel scale 为 1.494 arcsec/pix，正常相邻帧约 1.155；NMATCH=13（正常相邻帧 583），CCDZP/ZPRMS=29.0802/1.4982（正常 27.1387/0.0797）。去平移后的 WCS 网格相对正常帧中位差 1189 arcsec、最大 1871 arcsec，属于灾难性错解。
+  - 第二严重帧 `20260829/OBJ_MP_1430_0046` 为 1.285 arcsec/pix、NMATCH=14、ZPRMS=1.3713；WCS 网格中位差 505 arcsec、最大 798 arcsec，同样是灾难性错解。
+  - 其余 17 帧中心 pixel scale 约 1.155，但相对同 field 最佳帧的 WCS 网格 p90 差为约 1.54..12.62 arcsec、最大可达 34.57 arcsec；高阶畸变/局部天测误差足以让大量恒星落出 1.5 arcsec Gaia mask。
+  - 异常 WCS 已写在 `/processed1/<night>/L1/*.fits.gz` 的 IMG/FLG HDU，并原样进入 L2；根因位于上游 L1 astrometric calibration/quality gate，不是 unknown linkage 或 Gaia-mask 本身。原始图像仍需人工检查云、拖线或背景结构是否诱发错解。
+- validation:
+  - 灾难性帧与同 field 前后正常曝光独立比较；源提取预筛选量仍约 12.7 万，但 Gaia residual 达 108945，排除“真实源数突然增加”
+  - 19 帧均有 WCS 空间差异达到或超过 1.5 arcsec mask 尺度；两帧灾难性解同时被 pixel scale、NMATCH、ZPRMS 和跨曝光 WCS 四项证据确认
+- remaining_issues:
+  - 需检查 `/raw1` 原图确定云/拖线/读出结构等触发因素，并定位上游 astrometry solver 为何接受 NMATCH=13/14 的解
+  - 建议增加 pixel-scale、minimum NMATCH、ZPRMS、WCS cross-exposure consistency 和 Gaia residual fraction 的 L1/L2 发布门控
+- next_step: 用户先人工检查按残留数排序的原图；确认后再修改上游天测质量门控并在隔离目录重做 20260829/30
+
 - task: 调查今早对 20260830/20260831 两个观测夜连续上报，以及近期 unknown 未发布的问题
 - files_changed: `WORKLOG.md`, `PLAN.md`
 - commands_run:

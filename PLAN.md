@@ -3,6 +3,11 @@
 ## Production incident follow-up (2026-09-01)
 
 - 已确认 20260830/31 今早两次 known 上报分别对应两个观测夜，不是重复提交；20260830 是前一日 final export/submit 未完成后的 recovery 补交。
+- 已排除：服务器断电、kernel OOM、Slurm preemption 和 13:40 才启动的图减 daily job 对 09:10 finalizer 的资源挤占；首次 finalizer 精确异常仍因日志丢弃而不可恢复。
+- 已定位 unknown 爆量主因在上游 L1 天测质量：
+  - `OBJ_MP_1431_0072` 和 `OBJ_MP_1430_0046` 是 pixel scale/NMATCH/photometric RMS 均异常的灾难性 WCS 错解
+  - 其余异常帧有数角秒级空间畸变差，超过 Gaia mask 的 1.5 arcsec 半径
+  - IERS 缓存过期是 20260829 known matching 的另一项独立故障；缓存已于 8 月 30 日自动刷新
 - 当前待修复：
   - 为 known finalizer 保留独立 stdout/stderr、退出状态和 submission-attempt 记录
   - 为 MPC curl 增加有限超时、明确失败状态和安全重试，避免 daily 静默等待 8 小时
