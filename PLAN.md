@@ -1,5 +1,24 @@
 # PLAN
 
+## Production incident follow-up (2026-09-01)
+
+- 已确认 20260830/31 今早两次 known 上报分别对应两个观测夜，不是重复提交；20260830 是前一日 final export/submit 未完成后的 recovery 补交。
+- 当前待修复：
+  - 为 known finalizer 保留独立 stdout/stderr、退出状态和 submission-attempt 记录
+  - 为 MPC curl 增加有限超时、明确失败状态和安全重试，避免 daily 静默等待 8 小时
+  - 在 known status 中校验 expected manifest parts 与 completed parts，不能把部分成功写成 `known_complete=true`
+  - unknown 前增加 per-frame Gaia-mask 残留数异常门控，避免少数坏星表触发 tracklet/unknown 爆炸
+  - 固定或自动刷新 IERS 数据，避免 20260829 的 192 帧 known query/match 静默失败
+- 数据恢复：
+  - 20260831 review package 已正常生成：57 links / 178 observations / 57 GIFs
+  - 20260829 需先完成 known rematch；20260830 需先隔离异常 Gaia-mask 帧，再评估重建 unknown
+- 验收标准：
+  - 合成 finalizer 网络失败时能在持久日志/status 中看到原因，并在有限时间退出
+  - 缺 parts 时 known status 明确失败，unknown 不启动
+  - 异常单帧被隔离并报告，正常夜仍能自动发布 review package
+  - recovery 不会对已有有效 reply 的同一夜重复提交
+- 下一步：用户确认后实施上述最小修复，在临时目录回放 20260829/30，不直接覆盖生产结果。
+
 ## Corrected GOTTA-source figure bundle (2026-08-30)
 
 - 已完成并验收独立目录 `SHARP_local_analysis_figures_20260830/`：

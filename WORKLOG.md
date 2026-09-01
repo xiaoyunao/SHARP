@@ -1,5 +1,31 @@
 # WORKLOG
 
+## 2026-09-01
+
+- task: 调查今早对 20260830/20260831 两个观测夜连续上报，以及近期 unknown 未发布的问题
+- files_changed: `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 按多机器规则检查本地 git 状态/分支/远端历史，并读取 `WORKLOG.md`, `PLAN.md`
+  - 服务器只读检查 cron、daily/known/unknown 日志、L2/L4 时间戳、Slurm 队列、MPC reply、unknown summaries 和 review packages
+  - 对比 20260829..20260831 Gaia-mask 每帧残留数、known match 完整度及 unknown 阈值结果
+- key_findings:
+  - 20260830 已在 8 月 31 日 `09:09:58 CST` 完成 known merge，但最终 ADES/reply 未生成；daily 等待 8 小时后于 `17:02` 跳过 unknown。失败位于 final export/submit 阶段，不是未处理 L2。
+  - 9 月 1 日 7 天 recovery 先补交 20260830（submission ID `2026-09-01T01:01:23.006_0000CAD0`，2566 rows/695 objects），再正常提交 20260831（ID `2026-09-01T01:17:13.602_0000CAD4`，3949 rows/894 objects）；不是同夜重复上报。
+  - 首次 finalize 作业 stdout/stderr 配置到 `/dev/null`，Slurm accounting 未启用且 job 已清除，因此无法恢复其精确异常；当前证据只能定位到 merge 之后、report products ready 之前。
+  - 20260826 无 MP L2、20260827 无 L2、20260828 无 processed night；20260829/30 分别产生 325/847 个 unknown links，超过 `MAX_UNKNOWN_LINKS_AFTER_KNOWN=200`，因此安全停止、未生成 review package，并非候选为零。
+  - 20260829 known matching 有 192 次 IERS predictive-table 过期错误，363 帧仅 171 帧写出 all-asteroid parts，导致 known subtraction 不完整。
+  - 20260829 有 8 个、20260830 有 11 个 Gaia-mask 异常星表残留超过 5000 rows，分别贡献当晚残留的 50.11% 和 74.47%；同一 field 的相邻曝光可从约 600 rows 跳到 108945 rows，指向单帧 astrometry/reduction 异常并造成 tracklet 组合爆炸。
+  - 20260831 无 >5000-row 异常星表，得到 57 条 unknown/178 次观测；review package 和 57 个 GIF 于 `09:33 CST` 完整生成，submit watcher 已启动。
+- validation:
+  - 本地与服务器 6 个 daily/known/unknown 关键脚本 SHA-256 一致
+  - 两个 MPC reply、ADES 行数/对象数、L4/review 时间戳和 manifest 数量已独立复核
+  - 20260829..31 summary、mask log、known status 和实际文件数量相互闭合
+- remaining_issues:
+  - 修复前无法精确解释 20260830 首次 finalize 的异常类型；需要持久化 finalizer 日志、记录退出状态并为 MPC `curl` 设置超时/重试
+  - 需要在 unknown 前增加 per-frame Gaia-mask/L2 残留异常门控，并回查 20260829/30 的坏帧 astrometry/reduction
+  - 20260829 需更新/固定 IERS 数据后重跑完整 known subtraction，再决定是否重建 unknown package
+- next_step: 先设计最小生产修复并 dry-run 验证，再由用户确认是否部署及是否重跑 20260829/30
+
 ## 2026-08-30
 
 - task: 根据作者复核意见，废弃首版画法并直接依据 GOTTA 源码完整重绘 SHARP 图件
