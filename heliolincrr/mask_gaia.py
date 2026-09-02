@@ -13,8 +13,10 @@ Pipeline:
    that intersect a cone around the field center
 5) Proper-motion propagate Gaia (pmra/pmdec) from pm_zp (default 2016.0) to DATE-OBS epoch
 6) Cross-match within match_radius_arcsec (default 1.5") and remove matched L2 rows
-7) Write output catalog (rows removed, columns unchanged) to /pipeline/xiaoyunao/data/heliolincrr/<night>/mask_gaia/<same filename>
-8) Write a summary log file
+7) Reject the whole frame when the Gaia-masked residual count exceeds
+   max_residual_rows (default 2000); otherwise write the output catalog with
+   the SAME filename into /pipeline/xiaoyunao/data/heliolincrr/<night>/mask_gaia/
+8) Write a summary log file, including rejected frames
 
 Requirements:
 - numpy, astropy
@@ -88,6 +90,34 @@ def prefilter_l2(tab: Table, mag_psf_max=21.0, require_flag0=True) -> Table:
         m &= (tab["Mag_PSF"] <= float(mag_psf_max))
 
     return tab[m]
+
+
+def write_masked_catalog_or_reject(
+    out_tab: Table,
+    out_fn: str,
+    summary: dict,
+    max_residual_rows: int = 2000,
+):
+    """Write a masked catalog unless its residual count exceeds the frame gate."""
+    n_out = int(len(out_tab))
+    limit = int(max_residual_rows)
+    result = {
+        **summary,
+        "n_out": n_out,
+        "residual_limit": limit,
+        "output_written": False,
+    }
+
+    if limit > 0 and n_out > limit:
+        if os.path.exists(out_fn):
+            os.remove(out_fn)
+        result["status"] = "rejected_high_residual"
+        return result
+
+    os.makedirs(os.path.dirname(out_fn), exist_ok=True)
+    out_tab.write(out_fn, overwrite=True)
+    result["output_written"] = True
+    return result
 
 
 def parse_obsinfo_from_header(l2_fn: str, hdu_header: int = 1):
@@ -192,6 +222,7 @@ def mask_gaia_from_l2_file(
     hdu_header: int = 1,
     mag_psf_max: float = 21.0,
     require_flag0: bool = True,
+    max_residual_rows: int = 2000,
 ):
     """
     Returns a dict summary for logging.
@@ -202,10 +233,13 @@ def mask_gaia_from_l2_file(
 
     n_in = int(len(tab))
     if n_in == 0:
-        os.makedirs(os.path.dirname(out_fn), exist_ok=True)
-        tab.write(out_fn, overwrite=True)
-        return {"file": l2_fn, "status": "empty_after_prefilter", "n_in": 0, "n_out": 0,
-                "n_gaia": 0, "n_match": 0}
+        return write_masked_catalog_or_reject(
+            tab,
+            out_fn,
+            {"file": l2_fn, "status": "empty_after_prefilter", "n_in": 0,
+             "n_gaia": 0, "n_match": 0, "coord_pairs": ""},
+            max_residual_rows=max_residual_rows,
+        )
 
     radec_pairs = get_radec_col_pairs(tab)
 
@@ -217,16 +251,22 @@ def mask_gaia_from_l2_file(
     gaia = load_gaia_healpix_cone(ra0, dec0, gaia_cone_deg, gaia_dir, nside=32)
     n_gaia = int(len(gaia))
     if n_gaia == 0:
-        os.makedirs(os.path.dirname(out_fn), exist_ok=True)
-        tab.write(out_fn, overwrite=True)
-        return {"file": l2_fn, "status": "no_gaia_files", "n_in": n_in, "n_out": n_in,
-                "n_gaia": 0, "n_match": 0}
+        return write_masked_catalog_or_reject(
+            tab,
+            out_fn,
+            {"file": l2_fn, "status": "no_gaia_files", "n_in": n_in,
+             "n_gaia": 0, "n_match": 0, "coord_pairs": ""},
+            max_residual_rows=max_residual_rows,
+        )
 
     if ("ra" not in gaia.colnames) or ("dec" not in gaia.colnames):
-        os.makedirs(os.path.dirname(out_fn), exist_ok=True)
-        tab.write(out_fn, overwrite=True)
-        return {"file": l2_fn, "status": "gaia_missing_ra_dec", "n_in": n_in, "n_out": n_in,
-                "n_gaia": n_gaia, "n_match": 0}
+        return write_masked_catalog_or_reject(
+            tab,
+            out_fn,
+            {"file": l2_fn, "status": "gaia_missing_ra_dec", "n_in": n_in,
+             "n_gaia": n_gaia, "n_match": 0, "coord_pairs": ""},
+            max_residual_rows=max_residual_rows,
+        )
 
     # Proper-motion propagation (if pm columns exist)
     c_gaia = propagate_gaia_to_epoch(gaia, obstime, pm_zp=pm_zp)
@@ -246,20 +286,19 @@ def mask_gaia_from_l2_file(
     n_match = int(np.sum(hit))
 
     out_tab = tab[~hit]
-    n_out = int(len(out_tab))
-
-    os.makedirs(os.path.dirname(out_fn), exist_ok=True)
-    out_tab.write(out_fn, overwrite=True)
-
-    return {
-        "file": l2_fn,
-        "status": "ok",
-        "n_in": n_in,
-        "n_out": n_out,
-        "n_gaia": n_gaia,
-        "n_match": n_match,
-        "coord_pairs": ",".join(f"{ra}/{dec}" for ra, dec in radec_pairs),
-    }
+    return write_masked_catalog_or_reject(
+        out_tab,
+        out_fn,
+        {
+            "file": l2_fn,
+            "status": "ok",
+            "n_in": n_in,
+            "n_gaia": n_gaia,
+            "n_match": n_match,
+            "coord_pairs": ",".join(f"{ra}/{dec}" for ra, dec in radec_pairs),
+        },
+        max_residual_rows=max_residual_rows,
+    )
 
 
 # -----------------------------
@@ -287,6 +326,12 @@ def main():
 
     ap.add_argument("--mag-psf-max", type=float, default=21.0, help="prefilter: keep Mag_PSF<=this (if column exists)")
     ap.add_argument("--require-flag0", action="store_true", help="prefilter: require Flag==0 (if column exists)")
+    ap.add_argument(
+        "--max-residual-rows",
+        type=int,
+        default=2000,
+        help="reject a whole frame when the Gaia-masked residual count is greater than this; <=0 disables",
+    )
     ap.add_argument("--nproc", type=int, default=6, help="parallel processes")
     ap.add_argument("--log", default=None, help="write a summary log file")
 
@@ -319,6 +364,7 @@ def main():
             hdu_header=int(args.hdu_header),
             mag_psf_max=float(args.mag_psf_max),
             require_flag0=bool(args.require_flag0),
+            max_residual_rows=int(args.max_residual_rows),
         ))
 
     results = []
@@ -336,22 +382,27 @@ def main():
 
     n_ok = sum(r["status"] == "ok" for r in results)
     n_empty = sum(r["status"] == "empty_after_prefilter" for r in results)
+    n_rejected = sum(r["status"] == "rejected_high_residual" for r in results)
 
     with open(log_fn, "w", encoding="utf-8") as f:
         f.write(f"night={args.night}\n")
-        f.write(f"n_files={len(results)} n_ok={n_ok} n_empty_after_prefilter={n_empty}\n")
+        f.write(
+            f"n_files={len(results)} n_ok={n_ok} n_empty_after_prefilter={n_empty} "
+            f"n_rejected_high_residual={n_rejected}\n"
+        )
         f.write(f"input={in_l2}\noutput={out_l2}\n")
         f.write(f"gaia_dir={args.gaia_dir}\n")
         f.write(f"gaia_cone_deg={args.gaia_cone_deg} match_arcsec={args.match_arcsec} pm_zp={args.pm_zp} hdu_header={args.hdu_header}\n")
         f.write(f"prefilter: Flag==0={args.require_flag0} (if exists), Mag_PSF<={args.mag_psf_max} (if exists)\n")
+        f.write(f"frame_gate: reject Gaia residual rows > {args.max_residual_rows} (<=0 disables)\n")
         f.write(f"nproc={args.nproc}\n")
         f.write("=" * 120 + "\n")
-        f.write("status\tin\tout\tgaia\tmatch\tcoord_pairs\tfile\n")
+        f.write("status\tin\tout\tgaia\tmatch\tcoord_pairs\toutput_written\tresidual_limit\tfile\n")
         f.write("-" * 120 + "\n")
         for r in results:
             f.write(
                 f"{r['status']}\t{r['n_in']}\t{r['n_out']}\t{r['n_gaia']}\t{r['n_match']}\t"
-                f"{r.get('coord_pairs', '')}\t{r['file']}\n"
+                f"{r.get('coord_pairs', '')}\t{int(r['output_written'])}\t{r['residual_limit']}\t{r['file']}\n"
             )
 
 

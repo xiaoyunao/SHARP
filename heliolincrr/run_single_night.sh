@@ -12,6 +12,11 @@ if [[ $# -ne 1 ]]; then
 fi
 
 NIGHT="$1"
+if [[ ! "${NIGHT}" =~ ^[0-9]{8}$ ]]; then
+  echo "[fatal] NIGHT must be YYYYMMDD: ${NIGHT}"
+  exit 1
+fi
+
 CONDA_HOME_DEFAULT="${CONDA_HOME_DEFAULT:-/home/smtpipeline/Softwares/miniconda3}"
 HELIOLINC_ENV_NAME="${HELIOLINC_ENV_NAME:-heliolinc}"
 HELIOLINC_PYTHON_DEFAULT="${CONDA_HOME_DEFAULT}/envs/${HELIOLINC_ENV_NAME}/bin/python"
@@ -19,6 +24,7 @@ PYTHON_BIN="${PYTHON_BIN:-${HELIOLINC_PYTHON_DEFAULT}}"
 RUN_W15="${RUN_W15:-0}"
 PREP_W15_MISSING_NIGHTS="${PREP_W15_MISSING_NIGHTS:-1}"
 FORCE_MASK_GAIA="${FORCE_MASK_GAIA:-0}"
+MAX_GAIA_RESIDUAL_ROWS="${MAX_GAIA_RESIDUAL_ROWS:-2000}"
 SKIP_PLOTS="${SKIP_PLOTS:-0}"
 TRK_SUB_MAP="${TRK_SUB_MAP:-}"
 ASSIGN_UNKNOWN_TRKSUB="${ASSIGN_UNKNOWN_TRKSUB:-1}"
@@ -113,6 +119,7 @@ run_mask_gaia_step() {
     --hdu-header 1 \
     --mag-psf-max 21.0 \
     --require-flag0 \
+    --max-residual-rows "${MAX_GAIA_RESIDUAL_ROWS}" \
     --nproc 16 \
     --log "${mask_dir}/mask_gaia.log"
 }
@@ -165,7 +172,7 @@ ensure_nightly_all() {
   local nightly_all mask_n
   nightly_all="$(nightly_all_path "${night}")"
 
-  if is_valid_table "${nightly_all}"; then
+  if [[ "${FORCE_MASK_GAIA}" -ne 1 ]] && is_valid_table "${nightly_all}"; then
     echo "[info] valid nightly ALL already exists: ${nightly_all}"
     return 0
   fi
@@ -191,7 +198,11 @@ ensure_nightly_all() {
   fi
 }
 
-if is_valid_table "${NIGHTLY_ALL}"; then
+if [[ "${FORCE_MASK_GAIA}" -eq 1 ]]; then
+  echo "[force] remove reusable Gaia-mask and tracklet outputs for ${NIGHT}"
+  rm -rf -- "${MASK_GAIA_DIR}" "${TRACKLET_DIR}"
+  SKIP_PREP=0
+elif is_valid_table "${NIGHTLY_ALL}"; then
   echo "[info] nightly ALL already exists, skip Step1–3:"
   echo "       ${NIGHTLY_ALL}"
   SKIP_PREP=1

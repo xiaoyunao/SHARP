@@ -1,5 +1,22 @@
 # PLAN
 
+## Completed milestone: Gaia-residual unknown protection (2026-09-02)
+
+- 目标已完成：unknown 链生成前默认丢弃 Gaia 去除后残留数 `>2000` 的整帧星表。
+- 已部署并与本地仓库对齐：
+  - `heliolincrr/mask_gaia.py`
+  - `heliolincrr/run_single_night.sh`
+  - `heliolincrr/run_daily_unknown.sh`
+- 历史夜恢复已完成：
+  - `20260830`: 11 rejected frames，41 unknown links，41/41 GIF，125 review rows
+  - `20260901`: 20 rejected frames，56 unknown links，56/56 GIF，169 review rows
+- 验收已通过：保留帧残留数均不超过 2000；rejected 帧未进入最终 unknown；两份 review tar 可完整读取且 manifest 无 missing GIF。
+- 当前剩余工作：
+  - 人工填写两夜 review/submit CSV；本 milestone 未启动自动 MPC 提交
+  - 上游 L1 astrometry 仍需增加 pixel scale、NMATCH、RMS 和跨曝光一致性质量门控
+  - 20260829 需先修复/重跑因 IERS 过期而不完整的 known subtraction，再决定 unknown 重建
+- 下一步：完成人工复核后使用现有 reviewed-unknown watcher 导出、验证并提交；继续追踪上游天测修复。
+
 ## Production incident follow-up (2026-09-01)
 
 - 已确认 20260830/31 今早两次 known 上报分别对应两个观测夜，不是重复提交；20260830 是前一日 final export/submit 未完成后的 recovery 补交。

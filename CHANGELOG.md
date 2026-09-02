@@ -3,6 +3,21 @@
 本文件记录仓库中值得保留的版本级行为变化，重点覆盖服务器基线流程、
 调试中确认过的默认值变更，以及会影响结果解释的输出变化。
 
+## 2026-09-02
+
+### unknown 前 Gaia 残留坏帧门控
+
+- `mask_gaia.py` 新增逐帧 `max_residual_rows` 门控，默认值为 `2000`
+  - Gaia 去除后残留数严格大于阈值时，将整帧标记为 `rejected_high_residual`
+  - 被拒绝帧不写入 `mask_gaia`，并删除可能存在的同名旧输出
+  - `mask_gaia.log` 记录拒绝数量、阈值和逐帧是否写出
+- `run_single_night.sh` 与 `run_daily_unknown.sh` 新增并透传 `MAX_GAIA_RESIDUAL_ROWS`
+- `FORCE_MASK_GAIA=1` 现在会清理目标夜旧的 `mask_gaia` 和 `tracklets_linreproj` 后完整重建，避免历史异常输出被继续复用
+- 生产回放结果：
+  - `20260830`：拒绝 `11/331` 帧，unknown `847 -> 41`，复核包含 41 个 GIF/125 条观测
+  - `20260901`：拒绝 `20/392` 帧，unknown `1339 -> 56`，复核包含 56 个 GIF/169 条观测
+- 两夜复核包均无缺失 GIF，JSON/FITS/manifest/tar 完整性验证通过；本次未自动提交 MPC
+
 ## 2026-08-09
 
 ### SHARP PASP 冻结分析交付

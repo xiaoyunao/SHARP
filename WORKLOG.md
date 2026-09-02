@@ -1,5 +1,30 @@
 # WORKLOG
 
+## 2026-09-02
+
+- task: 增加 Gaia 残留数坏帧门控，并重建 20260830/20260901 unknown 复核包
+- files_changed: `heliolincrr/mask_gaia.py`, `heliolincrr/run_single_night.sh`, `heliolincrr/run_daily_unknown.sh`, `README.md`, `CHANGELOG.md`, `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 本地 `py_compile`、两个 shell 入口 `bash -n`，并用 2000/2001 行合成表验证阈值边界及旧输出删除
+  - 经 SSH 将三份运行程序部署到 `/pipeline/xiaoyunao/heliolincrr`，服务器环境复验后清理部署临时目录
+  - 对 20260830、20260901 设置 `FORCE_UNKNOWN=1 FORCE_MASK_GAIA=1 MAX_GAIA_RESIDUAL_ROWS=2000`，关闭 submit watcher/follow-up 后完整重建 mask、tracklet、link、orbit、unknown、GIF 和 review package
+  - 逐夜复核 JSON/FITS/catalog/manifest/GIF/tar 数量，完整读取 tar 成员并计算 SHA-256
+- key_findings:
+  - `mask_gaia.py` 现在默认整帧拒绝 Gaia 去除后残留数 `>2000` 的星表；被拒绝帧不写入 `mask_gaia`，日志记录 `rejected_high_residual`、阈值和是否写出
+  - `FORCE_MASK_GAIA=1` 现在先清理目标夜可再生的 `mask_gaia` 与 `tracklets_linreproj`，避免历史坏帧文件被复用；daily 入口显式透传阈值和 force 参数
+  - 20260830 拒绝 11/331 帧，unknown 从旧的 847 条降为 41 条；20260901 拒绝 20/392 帧，unknown 从旧的 1339 条降为 56 条
+  - 新结果与事前链成员诊断完全一致；两夜均降到 `MAX_UNKNOWN_LINKS_AFTER_KNOWN=200` 以下
+- validation:
+  - 本地与服务器三份运行程序 SHA-256 一致；服务器 `mask_gaia` 日志分别为 `320 accepted + 11 rejected` 和 `372 accepted + 20 rejected`
+  - 20260830/20260901 保留帧最大残留分别为 1183/1972；所有 rejected 帧与最终 unknown 链成员交集为空
+  - 20260830 package：41 links、41/41 GIF、125 ADES/full rows、0 missing；tar 29,203,333 bytes，SHA-256 `43ebe33d2d2b99829e0fcf8a91612f7056fba05a884d64c8eaaa82e2bbbe6aae`
+  - 20260901 package：56 links、56/56 GIF、169 ADES/full rows、0 missing；tar 39,660,083 bytes，SHA-256 `572628c1eb1fa0489a992bf81a88dce9cad6fec5330b93ffa908518ac72ff2ab`
+- remaining_issues:
+  - 上游 L1 天测错解本身尚未修复；当前门控是 unknown 侧的防爆保护
+  - 两夜复核 CSV 仍需人工判定，未启动 MPC submit watcher，也未自动提交 unknown
+  - 20260829 另有 IERS 过期造成的 known subtraction 不完整，不能直接套用本次两夜重建结果
+- next_step: 人工检查两个 review package 并填写 submit CSV；上游继续增加 astrometry 质量门控
+
 ## 2026-09-01
 
 - task: 深查 20260829/30 异常 Gaia-mask 星表、IERS 失败和 Slurm/资源竞争可能性
