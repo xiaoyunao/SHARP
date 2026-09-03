@@ -1,5 +1,29 @@
 # WORKLOG
 
+## 2026-09-03
+
+- task: 调查 20260902 的 167 条 unknown link，并将 Gaia 残留坏帧门限放宽到 3000
+- files_changed: `heliolincrr/mask_gaia.py`, `heliolincrr/run_single_night.sh`, `heliolincrr/run_daily_unknown.sh`, `README.md`, `CHANGELOG.md`, `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 对比 20260830..20260902 的 mask、tracklet、link 和 known-subtraction summary，按 field、曝光组合、轨道与运动方向拆分 20260902 unknown
+  - 检查 6 个门控拒绝帧的 N_WCS/NMATCH/WCS RMS，并对高产 field 候选做宽半径 Gaia 最近邻、当前 SkyBoT 和 GIF 抽查
+  - 本地执行 `py_compile`、两个 shell 入口 `bash -n` 及 3000/3001 行边界测试；经 SSH 分阶段部署三份程序并核对哈希
+- key_findings:
+  - 20260902 共 329 帧，旧门限保留 323 帧；得到 324279 个 Gaia 残留源、9078 个 tracklet、1359 条 link，其中 167 条为 unknown
+  - 167 条分散在 44 个 field，最高为 `0926=19`、`1328=14`、`1463=11`；159/167 仅含 3 次观测，不是单帧坏 WCS 导致的组合爆炸
+  - 相比 20260901，保留帧更少但 Gaia 残留总量高 25.3%、tracklet 高 22.9%；候选的黄道纬度绝对值中位数由 13.9 度降到 8.5 度，符合更密集的小天体视场
+  - 高产 field 候选到最近 Gaia 源的典型距离为数十角秒；对 `0926`/`1328` 共 33 条链的当前 SkyBoT 抽查无 30 角秒内已知目标，因此不是 Gaia 漏删或旧 astorb 位置小偏差的直接产物
+  - 服务器 `astorb.dat` 停留在 2026-04-02，仍需单独建立日常更新；167 条中 49 条短弧初轨不物理，最终真假仍以人工 GIF 复核为准
+  - 旧门限拒绝的 6 帧残留仅 2012..2219，且 WCS/NMATCH 正常，说明 2000 对正常密场偏保守
+- validation:
+  - 默认门限已统一为严格 `>3000`：3000 行保留、3001 行拒绝，同名旧输出删除测试通过
+  - 本地和服务器三份运行程序哈希一致；服务器暂存目录已清理
+  - 按用户要求未重跑或覆盖 20260902 的任何运行产物
+- remaining_issues:
+  - 需要观察下一个生产夜在 3000 门限下的 rejected 帧和 unknown 数量
+  - `astorb.dat` 自动更新及三点短弧的进一步质量判据尚未实现
+- next_step: 下一次 daily 完成后核对 mask 日志、异常帧天测指标和 review package；人工复核 20260902 的 167 条候选
+
 ## 2026-09-02
 
 - task: 增加 Gaia 残留数坏帧门控，并重建 20260830/20260901 unknown 复核包

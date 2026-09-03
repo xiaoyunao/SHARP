@@ -60,7 +60,7 @@ PYTHON_BIN=/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python bash
 当前单夜流程已改为：
 
 - `mask_gaia -> make_tracklet -> merge_tracklets_night`
-- `mask_gaia.py` 默认整帧拒绝 Gaia 去除后残留数 `>2000` 的 L2 星表，不把坏帧传入 tracklet；可用 `MAX_GAIA_RESIDUAL_ROWS` 覆盖阈值（`<=0` 禁用）
+- `mask_gaia.py` 默认整帧拒绝 Gaia 去除后残留数 `>3000` 的 L2 星表，不把坏帧传入 tracklet；可用 `MAX_GAIA_RESIDUAL_ROWS` 覆盖阈值（`<=0` 禁用）
 - 历史夜完整重建时设置 `FORCE_MASK_GAIA=1`，会先清理该夜可再生的 `mask_gaia` 和 `tracklets_linreproj` 目录，避免复用旧坏帧
 - `run_linear_links_from_tracklets.py` 生成 `/pipeline/xiaoyunao/data/heliolincrr/<night>/rr_links`
 - `orbit_confirm_links.py` 对 `rr_links` 做后验轨道确认并写入 `rr_links/orbit_confirm/`

@@ -14,7 +14,7 @@ Pipeline:
 5) Proper-motion propagate Gaia (pmra/pmdec) from pm_zp (default 2016.0) to DATE-OBS epoch
 6) Cross-match within match_radius_arcsec (default 1.5") and remove matched L2 rows
 7) Reject the whole frame when the Gaia-masked residual count exceeds
-   max_residual_rows (default 2000); otherwise write the output catalog with
+   max_residual_rows (default 3000); otherwise write the output catalog with
    the SAME filename into /pipeline/xiaoyunao/data/heliolincrr/<night>/mask_gaia/
 8) Write a summary log file, including rejected frames
 
@@ -96,7 +96,7 @@ def write_masked_catalog_or_reject(
     out_tab: Table,
     out_fn: str,
     summary: dict,
-    max_residual_rows: int = 2000,
+    max_residual_rows: int = 3000,
 ):
     """Write a masked catalog unless its residual count exceeds the frame gate."""
     n_out = int(len(out_tab))
@@ -222,7 +222,7 @@ def mask_gaia_from_l2_file(
     hdu_header: int = 1,
     mag_psf_max: float = 21.0,
     require_flag0: bool = True,
-    max_residual_rows: int = 2000,
+    max_residual_rows: int = 3000,
 ):
     """
     Returns a dict summary for logging.
@@ -329,7 +329,7 @@ def main():
     ap.add_argument(
         "--max-residual-rows",
         type=int,
-        default=2000,
+        default=3000,
         help="reject a whole frame when the Gaia-masked residual count is greater than this; <=0 disables",
     )
     ap.add_argument("--nproc", type=int, default=6, help="parallel processes")

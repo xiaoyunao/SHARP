@@ -1,5 +1,13 @@
 # PLAN
 
+## Current objective: monitor the 3000-row Gaia gate (2026-09-03)
+
+- 默认整帧门控已从 Gaia 残留 `>2000` 放宽为 `>3000`，本地仓库和服务器运行程序已对齐。
+- 20260902 已按旧门限完成，依用户要求不重跑；167 条 unknown 分散在 44 个 field，当前没有单帧坏天测或 Gaia 恒星漏删主导的证据。
+- 下一生产夜重点检查：rejected 帧残留数与 WCS/NMATCH、保留帧最大残留、unknown 总量及高产 field 是否出现共模伪运动。
+- 待办：为 2026-04-02 后未更新的 `astorb.dat` 设计安全自动更新与版本记录；评估是否为仅三次观测的 link 增加复核优先级或质量判据。
+- 验收标准：3000 行保留、3001 行拒绝；daily 日志明确记录门限；真实坏帧仍在进入 tracklet 前被删除；正常密场不再因 2000 边缘值被误删。
+
 ## Completed milestone: Gaia-residual unknown protection (2026-09-02)
 
 - 目标已完成：unknown 链生成前默认丢弃 Gaia 去除后残留数 `>2000` 的整帧星表。
