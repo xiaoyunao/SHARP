@@ -5,6 +5,12 @@
 
 ## 2026-09-03
 
+### 统一 known 与 survey 全天图的 RA 方向
+
+- 修正 `plot_known_asteroids.py` 中错误的 `180-RA` Aitoff 变换，改为与 survey 图一致的标准 `[-180,180)` RA wrap
+- known 的 survey coverage、全天已知小行星分布和 field yield 三类图统一显示 `210,240,270,300,330,0,30,...,150` 横轴标签
+- 该改动只影响绘图坐标和标签，不改变 scheduler 计划、天区编号、匹配结果或上报数据
+
 ### 放宽 Gaia 残留坏帧门控
 
 - 将 unknown 链生成前的整帧拒绝阈值从 `>2000` 调整为 `>3000`，减少正常密星场被保守丢弃

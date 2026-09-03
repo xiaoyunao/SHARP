@@ -1,12 +1,14 @@
 # PLAN
 
-## Current objective: monitor the 3000-row Gaia gate (2026-09-03)
+## Current objective: verify scheduler/follow-up alignment (2026-09-03)
 
-- 默认整帧门控已从 Gaia 残留 `>2000` 放宽为 `>3000`，本地仓库和服务器运行程序已对齐。
-- 20260902 已按旧门限完成，依用户要求不重跑；167 条 unknown 分散在 44 个 field，当前没有单帧坏天测或 Gaia 恒星漏删主导的证据。
-- 下一生产夜重点检查：rejected 帧残留数与 WCS/NMATCH、保留帧最大残留、unknown 总量及高产 field 是否出现共模伪运动。
-- 待办：为 2026-04-02 后未更新的 `astorb.dat` 设计安全自动更新与版本记录；评估是否为仅三次观测的 link 增加复核优先级或质量判据。
-- 验收标准：3000 行保留、3001 行拒绝；daily 日志明确记录门限；真实坏帧仍在进入 tracklet 前被删除；正常密场不再因 2000 边缘值被误删。
+- known 三类 Aitoff 图已与 survey 统一为标准 RA wrap 和 `210..330,0..150` 标签；服务器绘图代码已部署。
+- 20260902 实际观测的 80 个 field 是计划 102 个 field 的严格子集，视觉错位来自 known 图旧的 `180-RA` 反向映射，不是 scheduler 选错天区。
+- follow-up 机制已审计：review submit 完成后 watcher 尝试把真源插入当天计划；每夜 5 帧、需 2 个成功夜、10 天超时。
+- 下一验证：首次产生 true reviewed source 后，检查 `followup_state.json`、当天 `*_plan.json/current_plan.txt` 的 5 条 `MP_FU_*`，以及次日 L2 reconcile 结果。
+- 观测端待确认：运行中的控制程序是否动态 reload `current_plan.txt`；若只在开夜前读取，当天较晚完成的 review 只能可靠进入次日计划。
+- 同时继续监测 3000-row Gaia 门控：rejected 帧 WCS/NMATCH、保留帧最大残留、unknown 总量和高产 field 共模伪运动。
+- 后续候选：给 follow-up 增加月距约束与线性外推不确定度门控；为陈旧的 `astorb.dat` 建立安全自动更新与版本记录。
 
 ## Completed milestone: Gaia-residual unknown protection (2026-09-02)
 

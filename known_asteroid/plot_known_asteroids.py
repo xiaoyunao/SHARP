@@ -52,8 +52,18 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def wrap_ra_delta_deg(ra_deg: np.ndarray) -> np.ndarray:
-    return (180.0 - np.asarray(ra_deg, dtype=float) + 180.0) % 360.0 - 180.0
+AITOFF_TICKS_DEG = np.array([-150, -120, -90, -60, -30, 0, 30, 60, 90, 120, 150], dtype=float)
+AITOFF_RA_LABELS = ["210", "240", "270", "300", "330", "0", "30", "60", "90", "120", "150"]
+
+
+def wrap_ra_deg(ra_deg: np.ndarray) -> np.ndarray:
+    """Wrap ICRS right ascension onto the same Aitoff axis as the survey plots."""
+    return (np.asarray(ra_deg, dtype=float) + 180.0) % 360.0 - 180.0
+
+
+def style_aitoff_ra_axis(ax: plt.Axes) -> None:
+    ax.set_xticks(np.deg2rad(AITOFF_TICKS_DEG))
+    ax.set_xticklabels(AITOFF_RA_LABELS)
 
 
 def angular_sep_ra_deg(ra_a: np.ndarray, ra_b: np.ndarray) -> np.ndarray:
@@ -61,7 +71,7 @@ def angular_sep_ra_deg(ra_a: np.ndarray, ra_b: np.ndarray) -> np.ndarray:
 
 
 def split_wrapped_poly(ra_deg: np.ndarray, dec_deg: np.ndarray) -> list[np.ndarray]:
-    lon = np.deg2rad(wrap_ra_delta_deg(ra_deg))
+    lon = np.deg2rad(wrap_ra_deg(ra_deg))
     lat = np.deg2rad(dec_deg)
     breaks = np.where(np.abs(np.diff(lon)) > np.pi)[0] + 1
     indices = np.concatenate(([0], breaks, [len(lon)]))
@@ -157,7 +167,7 @@ def dynamic_mag_upper_from_moon_phase(dateobs_values: pd.Series) -> float:
 
 
 def ra_dec_to_aitoff(ra_deg: np.ndarray, dec_deg: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
-    return np.deg2rad(wrap_ra_delta_deg(ra_deg)), np.deg2rad(np.asarray(dec_deg, dtype=float))
+    return np.deg2rad(wrap_ra_deg(ra_deg)), np.deg2rad(np.asarray(dec_deg, dtype=float))
 
 
 def load_historical_all(all_matched_path: Path, night: str) -> Table | None:
@@ -182,6 +192,7 @@ def plot_survey_coverage(
 ) -> None:
     fig = plt.figure(figsize=(15, 8.5))
     ax = fig.add_subplot(111, projection="aitoff")
+    style_aitoff_ra_axis(ax)
     ax.grid(True, alpha=0.3)
 
     exposure_map = history.set_index("field_id")["exposure_count"].astype(float)
@@ -232,6 +243,7 @@ def plot_survey_coverage(
 def plot_known_asteroid_allsky(historical: Table | None, nightly: Table, out_path: Path, night: str) -> None:
     fig = plt.figure(figsize=(15, 8.5))
     ax = fig.add_subplot(111, projection="aitoff")
+    style_aitoff_ra_axis(ax)
     ax.grid(True, alpha=0.3)
 
     if historical is not None and len(historical) > 0:
@@ -430,6 +442,7 @@ def plot_field_yield_map(footprints: pd.DataFrame, nightly: Table, out_path: Pat
 
     fig = plt.figure(figsize=(15, 8.5))
     ax = fig.add_subplot(111, projection="aitoff")
+    style_aitoff_ra_axis(ax)
     ax.grid(True, alpha=0.3)
 
     active = []

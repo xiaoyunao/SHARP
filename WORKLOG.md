@@ -2,6 +2,29 @@
 
 ## 2026-09-03
 
+- task: 统计 20260902 图像的月距/高度/方位角，并修复 scheduler/known 全天图的 RA 坐标不一致；审计迟到复核的 follow-up 行为
+- files_changed: `known_asteroid/plot_known_asteroids.py`, `CHANGELOG.md`, `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 只读扫描服务器 329 个 L2 header，按台址和逐帧 `DATE-OBS` 计算月距、目标高度角、方位角；在本机 `/tmp` 生成三张临时分布图和逐帧表
+  - 比较 20260902 plan JSON 与实际 L2 field，并审计 survey/known 两套 Aitoff RA 变换
+  - 读取 `survey.followup`、`survey.apply_followup` 和 review watcher 的状态机；核对服务器 follow-up state、当日计划和 watcher 进程
+  - 本地 `py_compile`、RA 映射断言和合成图验证；部署 known 绘图修复后，在服务器 `/tmp` 生成真实 20260902 校正预览并立即清理
+- key_findings:
+  - unknown 链成员帧明显偏向较小月距：月距与每帧 link 使用次数 Pearson `r=-0.338`；40--50 度区间 89 帧中 67 帧进入 unknown 链，100--120 度区间为 66 帧中 18 帧
+  - 高度角相关性很弱 `r=+0.070`；方位角存在次级集中，220--240 度区间有 86% 帧进入 unknown 链，符合西南方向杂散光/鬼像的人工判断
+  - 20260902 实际 80 个 field 全部属于计划 102 个 field，`observed-not-planned=0`；仅有计划尾部 22 个 field 未执行，因此 scheduler 未指向错误天区
+  - known 图旧变换把 RA 做成 `180-RA`，例如 RA=300 度画到内部 -120 度；survey 使用标准 wrap，RA=300 度应在内部 -60 度并标为 300。该坐标反向是两图视觉错位的根因
+  - follow-up 在 review submit 完成后由 300 秒 watcher 立即把真源摄入状态机，并尝试写入当前北京时间日期的计划；发现夜晚于当前计划夜且年龄小于 10 天即可排程
+  - 每个源每夜要求 5 个可观测 slot、累计 2 个实际获得至少 5 张 L2 的成功夜；少于 5 张记失败并继续尝试，满 10 天放弃
+- validation:
+  - known 三类 Aitoff 图已统一采用 survey 的 `210,240,...,330,0,...,150` RA 轴；本地与服务器代码哈希一致，真实 20260902 校正预览显示 cyan detections 与计划天区方向一致
+  - 服务器临时预览已删除；月距/高度/方位角结果只保留在本机 `/tmp/smt-20260902-moon-geometry`，未在服务器留下分析脚本或结果
+  - 当前 follow-up state 为 0 个 source，20260903 plan 为 397 行且 0 个 follow-up；20260830、20260901、20260902 watcher 均带 follow-up 参数运行
+- remaining_issues:
+  - 若当天计划已被望远镜控制端缓存，review 后改写 `current_plan.txt` 不保证控制端会在当夜重新读取；需与观测端确认 reload 行为
+  - follow-up 两日外推仍是短弧线性模型，当前只检查高度角，不检查月距，也未显式传播位置不确定度
+- next_step: 等实际 review 产生 true source 后，核对当天/次日计划中的 `MP_FU_*` 行和次日 L2 成功计数；继续监测 3000-row Gaia 门控
+
 - task: 调查 20260902 的 167 条 unknown link，并将 Gaia 残留坏帧门限放宽到 3000
 - files_changed: `heliolincrr/mask_gaia.py`, `heliolincrr/run_single_night.sh`, `heliolincrr/run_daily_unknown.sh`, `README.md`, `CHANGELOG.md`, `WORKLOG.md`, `PLAN.md`
 - commands_run:
