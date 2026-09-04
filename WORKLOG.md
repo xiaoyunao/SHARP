@@ -2,6 +2,23 @@
 
 ## 2026-09-04
 
+- task: 核查 MPC 高 digest2 提醒中 20260902 linkage 226/446 与人工“否”标签不一致
+- files_changed: `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 对比服务器 `20260902_submit.csv`、`20260902_unknown_review.csv`、review manifest、masked JSON、ADES 和 watcher 提交日志
+  - 逐项核对 `linkage_id -> trkSub`，并检查两份 CSV 的时间戳、哈希、行序和全部 decision 差异
+- key_findings:
+  - 当前人工 review CSV 只接受 `00001nF`, `00001oj`, `00001oI`；226=`00001nP` 和 446=`00001o2` 均为 0
+  - 实际用于 MPC 的 submit CSV 把上述五个目标全部写成 1；masked JSON/ADES 与该 submit CSV 一致，因此 exporter 没有映射错位
+  - 两份 CSV 同为 167 行且仅 226/446 两处 decision 不同；submit CSV 10:28 写成、10:30 提交，当前 review CSV 15:29 才保存
+  - 现有流程缺少 review->submit 快照的来源哈希和逐项操作审计，无法仅从服务器区分“提交快照使用旧页面状态”和“提交后再把两项改为否”
+  - 226/446 已被错误的 submit 快照摄入 follow-up state，并在 20260904 最终计划中各占 5 条 exposure
+- validation:
+  - manifest 映射确认 226=`00001nP`、446=`00001o2`；最终 masked JSON 正好包含 submit CSV 的五个 accepted links
+- remaining_issues:
+  - 增加提交前 accepted 列表确认、review source hash/时间戳和不可变 submit snapshot 审计；在用户确认前不移除 226/446 的 follow-up
+- next_step: 用户确认 226/446 确为误报后，告知 MPC 只确认另外三个目标，并决定是否立即从 follow-up 状态/今晚计划移除这两个源
+
 - task: 修复多个 review watcher 并发覆写共享提交状态造成的 unknown 重复上报
 - files_changed: `heliolincrr/watch_submit_reviews.py`, `CHANGELOG.md`, `WORKLOG.md`, `PLAN.md`
 - commands_run:

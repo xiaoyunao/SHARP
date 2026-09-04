@@ -8,6 +8,8 @@
 - 已重画：20260904 plan 图现在基于最终 453 行计划，单独标出 55 条 follow-up；绘图代码能把 `MP_FU_*` 映射回实际 selected footprint。
 - 已修复：多个单夜 watcher 通过 state 专用跨进程锁串行执行；每轮在锁内 reload，并将完成检查、MPC 提交和状态写入作为一个事务。0830/0901/0902 首次有效 submission 记录已从日志恢复。
 - 下一验证：20260903 人工复核完成后，确认只产生一次 MPC submission，且后续其他 watcher 扫描不会抹掉该夜状态。
+- 新发现：20260902 的最终人工 review 把 linkage 226/446 标为 0，但更早生成并实际提交的 submit snapshot 把两者标为 1；需给 review->submit 交接增加 accepted 清单确认、源文件 hash/mtime 和审计记录。
+- 待用户确认：若 226/446 确为误报，应从 follow-up state 与尚未执行的计划中移除，并向 MPC 说明五个高 digest2 目标中只有其余三个可确认。
 - 3000-row 门控在 20260903 成功拒绝 17 个同类污染帧，保留帧最大残留 2518；继续监测正常密场误拒率和 unknown 数量。
 - 后续候选：给 follow-up 增加月距约束与线性外推不确定度门控；为陈旧的 `astorb.dat` 建立安全自动更新与版本记录。
 
