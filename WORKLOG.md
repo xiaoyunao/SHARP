@@ -2,6 +2,25 @@
 
 ## 2026-09-04
 
+- task: 修复多个 review watcher 并发覆写共享提交状态造成的 unknown 重复上报
+- files_changed: `heliolincrr/watch_submit_reviews.py`, `CHANGELOG.md`, `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 在 `watch_submit_reviews.py` 中为每个 state 增加独立 `*.lock`，每轮扫描在锁内重新读取状态，并把已完成检查、MPC 提交和原子状态落盘纳入同一事务
+  - 用 8 进程并发写入和 2 watcher 同 CSV dry-run 回放验证不会丢键或重复进入处理
+  - 服务器短暂停止 20260903 watcher，备份旧 state，部署新版后从 `review_submit_watch.log` 恢复与当前 CSV/manifest 签名一致的首个完成记录
+  - 恢复后使用原参数启动 20260903 watcher，并在服务器 `heliolinc` Python 下重复双进程 dry-run
+- key_findings:
+  - 状态已恢复为 `20260620`, `20260830`, `20260831`, `20260901`, `20260902` 五夜；0830/0901/0902 均为 `submitted`
+  - 0830 保留首次有效 `...CANm`、记录后续重复尝试 `...CAVp`；0902 保留首次有效 `...CANi`、记录后续重复尝试 `...CAVq`；0901 恢复 `...CAW0`
+  - 独立 lock 文件避免原子 rename 更换 state inode 后锁失效；锁覆盖外部提交，因而两个 watcher 不能同时通过“未提交”检查
+- validation:
+  - 本地和服务器双 watcher 回放均为 `concurrent_scan_exactly_once=PASS 1`；8 进程状态合并保留 8/8 个键
+  - 本地与服务器脚本 SHA-256 均为 `e684733968853c70f35fa6f9f702ee07d3415eea83d272c534687885f2c6e4f7`
+  - 新 watcher PID 2381984 正常运行；首次扫描后恢复的五夜记录仍完整，20260903 保持 pending，测试未调用 MPC
+- remaining_issues:
+  - 进程若恰好在 MPC 接收成功后、状态落盘前被强制终止，仍存在外部提交无法原子提交的固有小窗口；本次由旧快照覆写造成的确定性重复已消除
+- next_step: 等 20260903 人工复核生成 submit CSV 后，确认 watcher 只提交一次且 state 新增该夜记录；20260905 检查首晚 follow-up 数据
+
 - task: 修复 review watcher 的 follow-up Python 环境、重画 20260904 最终计划，并追查 unknown 重复上报
 - files_changed: `heliolincrr/watch_submit_reviews.py`, `heliolincrr/run_daily_unknown.sh`, `survey/visualize_nightly.py`, `CHANGELOG.md`, `WORKLOG.md`, `PLAN.md`
 - commands_run:

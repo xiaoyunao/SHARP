@@ -11,6 +11,12 @@
 - unknown 主流程继续使用 `heliolinc` 环境；只有 `survey.apply_followup` 切换到包含 `astroplan` 的 survey Python
 - 20260904 最终计划图已按注入后的 453 行重画；follow-up footprint 使用青绿色独立显示，标题记录 55 条 follow-up exposure
 
+### 防止并发 watcher 重复提交 unknown
+
+- `watch_submit_reviews.py` 现在使用与 state 相邻的专用文件锁；每轮扫描拿锁后重新加载最新状态
+- “检查是否完成—执行 MPC 提交—原子写回状态”在同一个跨进程事务内完成，避免多个单夜 watcher 用旧快照相互覆盖
+- 生产 state 已从 watcher 日志恢复 20260830、20260901、20260902 的首次有效提交记录，并保留两次重复尝试 ID 供审计
+
 ## 2026-09-03
 
 ### 统一 known 与 survey 全天图的 RA 方向

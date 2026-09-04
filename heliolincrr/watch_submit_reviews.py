@@ -2,14 +2,16 @@
 from __future__ import annotations
 
 import argparse
+import fcntl
 import json
 import os
 import subprocess
 import sys
 import time
+from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterator
 
 
 DONE_STATUSES = {"exported", "validated", "submitted", "no_observations", "dry_run"}
@@ -42,6 +44,19 @@ def save_state(path: Path, state: dict[str, Any]) -> None:
     tmp = path.with_suffix(path.suffix + ".tmp")
     tmp.write_text(json.dumps(state, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     tmp.replace(path)
+
+
+@contextmanager
+def locked_state(path: Path) -> Iterator[dict[str, Any]]:
+    """Lock, then reload the shared state for one complete scan transaction."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    lock_path = path.with_suffix(path.suffix + ".lock")
+    with lock_path.open("a+", encoding="utf-8") as lock_file:
+        fcntl.flock(lock_file.fileno(), fcntl.LOCK_EX)
+        try:
+            yield load_state(path)
+        finally:
+            fcntl.flock(lock_file.fileno(), fcntl.LOCK_UN)
 
 
 def submit_csv_signature(path: Path) -> dict[str, Any]:
@@ -328,50 +343,52 @@ def refresh_summary(
     return summary
 
 
-def scan_once(args: argparse.Namespace, state: dict[str, Any]) -> int:
-    only_new = set(args.only_night or [])
-    packages = discover_review_packages(Path(args.review_root), args.start, args.end, only_new)
-    for night, manifest_path in sorted(packages.items()):
-        manifest = load_manifest(manifest_path)
-        if manifest.get("manifest_error"):
-            continue
-        if manifest_unknown_count(manifest) == 0:
-            mark_empty_package(args, state, night, manifest_path, manifest)
+def scan_once(args: argparse.Namespace) -> tuple[int, dict[str, Any]]:
+    state_path = Path(args.state)
+    with locked_state(state_path) as state:
+        only_new = set(args.only_night or [])
+        packages = discover_review_packages(Path(args.review_root), args.start, args.end, only_new)
+        for night, manifest_path in sorted(packages.items()):
+            manifest = load_manifest(manifest_path)
+            if manifest.get("manifest_error"):
+                continue
+            if manifest_unknown_count(manifest) == 0:
+                mark_empty_package(args, state, night, manifest_path, manifest)
 
-    found = discover_submit_csvs(
-        Path(args.review_root),
-        args.start,
-        args.end,
-        only_new,
-        packages,
-        args.allow_missing_review_package,
-    )
-    nights_state = state.setdefault("nights", {})
-    processed = 0
-    for night, submit_csv in found:
-        signature = submit_csv_signature(submit_csv)
-        manifest_signature = file_signature(packages[night]) if night in packages else None
-        record = nights_state.get(night)
-        if already_done(record, signature, manifest_signature, args.retry_failed):
-            continue
-        result = run_one(args, night, submit_csv)
-        remove_invalid_submit_if_needed(result, submit_csv)
-        if result.get("status") in DONE_STATUSES:
-            result.update(run_followup_update(args, night))
-        result.update(
-            {
-                "night": night,
-                "submit_csv": signature,
-                "review_package": manifest_signature,
-                "updated_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-            }
+        found = discover_submit_csvs(
+            Path(args.review_root),
+            args.start,
+            args.end,
+            only_new,
+            packages,
+            args.allow_missing_review_package,
         )
-        nights_state[night] = result
-        save_state(Path(args.state), state)
-        processed += 1
-        print(json.dumps(result, ensure_ascii=False, sort_keys=True), flush=True)
-    refresh_summary(args, state, packages)
-    return processed
+        nights_state = state.setdefault("nights", {})
+        processed = 0
+        for night, submit_csv in found:
+            signature = submit_csv_signature(submit_csv)
+            manifest_signature = file_signature(packages[night]) if night in packages else None
+            record = nights_state.get(night)
+            if already_done(record, signature, manifest_signature, args.retry_failed):
+                continue
+            result = run_one(args, night, submit_csv)
+            remove_invalid_submit_if_needed(result, submit_csv)
+            if result.get("status") in DONE_STATUSES:
+                result.update(run_followup_update(args, night))
+            result.update(
+                {
+                    "night": night,
+                    "submit_csv": signature,
+                    "review_package": manifest_signature,
+                    "updated_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+                }
+            )
+            nights_state[night] = result
+            save_state(state_path, state)
+            processed += 1
+            print(json.dumps(result, ensure_ascii=False, sort_keys=True), flush=True)
+        summary = refresh_summary(args, state, packages)
+        return processed, summary
 
 
 def build_argparser() -> argparse.ArgumentParser:
@@ -421,11 +438,8 @@ def main() -> None:
     if args.start and args.end and args.start > args.end:
         raise SystemExit("--start must be <= --end")
 
-    state_path = Path(args.state)
-    state = load_state(state_path)
     while True:
-        processed = scan_once(args, state)
-        summary = state.get("summary") or {}
+        processed, summary = scan_once(args)
         if args.follow and args.exit_when_complete and summary.get("review_packages", 0) > 0:
             if summary.get("pending", 0) == 0 and summary.get("failed", 0) == 0 and summary.get("manifest_errors", 0) == 0:
                 print(
