@@ -1,5 +1,30 @@
 # WORKLOG
 
+## 2026-09-04
+
+- task: 核查 20260903 观测夜的 daily 运行、3000-row Gaia 门控和 follow-up 实际执行情况
+- files_changed: `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 只读检查服务器 L1/L2/L4 数量、survey/known/unknown 日志、Slurm/进程、known status 与 MPC reply
+  - 解析 `mask_gaia.log` 的 370 帧残留分布，并抽查 17 个 rejected frame 的 `N_WCS`/`NMATCH`
+  - 对照 20260903/20260904 plan JSON、`current_plan.txt`、L1/L2 `MP_FU_*` 和 `followup_state.json`
+  - 等待 106 个 unknown GIF 和 review package 完整生成，并逐成员读取 tar 验证
+- key_findings:
+  - 20260903 获得 370 张 L1/L2；known 于 09:13 完成，10139 条 matched associations，MPC submission ID `2026-09-04T01:13:13.382_0000CAVs`，无 IERS/traceback
+  - 3000-row 门控保留 353 帧、拒绝 17 帧；保留帧残留最大 2518，拒绝帧残留 3647..72761、中位 22118，17 帧集中在 8 个 field
+  - rejected 中 `OBJ_MP_1298_0042` 为明显异常解：`N_WCS=132`, `NMATCH=20`；其余多数 WCS 匹配量尚可但残留暴涨，符合杂散光/鬼像污染
+  - 353 帧合计 419178 个 Gaia residual detections，形成 1532 条 link；known subtraction 后 106 条 unknown，低于安全阈值 200
+  - 20260903 计划和实际 L1/L2 都没有 `MP_FU_*`，昨晚确实没有 follow-up 观测
+  - 20260904 状态机有 11 个 active source：20260830 六个、20260902 五个；今晚计划已插入 55 条 follow-up（每源 5 条），最终 453 行且与发布的 `current_plan.txt` 哈希一致
+  - review watcher 的即时 follow-up 调用使用 `heliolinc` Python，因缺少 `astroplan` 报错；本次 09:00 survey daily 使用默认 Python 成功摄入 11 源并排入今晚计划，因此目标未丢失，但 09:00 后复核的同日即时插入目前不可靠
+- validation:
+  - unknown daily 于 09:45 完成；review package 含 106/106 GIF、319 条观测、0 missing
+  - review tar 为 75006112 bytes、112 members，逐成员完整读取无错误；20260903 submit watcher 已启动
+- remaining_issues:
+  - 修复 review watcher 调用 follow-up 时的 Python 环境，使网页复核后能真正立即更新当天计划
+  - survey 图在基础 398 行计划生成后才注入 55 条 follow-up，因此当日 plan 图仍不包含 follow-up 标记，文本计划本身正确
+- next_step: 今晚后检查 11 个源各自是否获得 5 张 `MP_FU_*` L2，并修复/验证 watcher 的即时 follow-up 环境
+
 ## 2026-09-03
 
 - task: 统计 20260902 图像的月距/高度/方位角，并修复 scheduler/known 全天图的 RA 坐标不一致；审计迟到复核的 follow-up 行为

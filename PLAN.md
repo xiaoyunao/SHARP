@@ -1,13 +1,12 @@
 # PLAN
 
-## Current objective: verify scheduler/follow-up alignment (2026-09-03)
+## Current objective: verify first follow-up night (2026-09-04)
 
-- known 三类 Aitoff 图已与 survey 统一为标准 RA wrap 和 `210..330,0..150` 标签；服务器绘图代码已部署。
-- 20260902 实际观测的 80 个 field 是计划 102 个 field 的严格子集，视觉错位来自 known 图旧的 `180-RA` 反向映射，不是 scheduler 选错天区。
-- follow-up 机制已审计：review submit 完成后 watcher 尝试把真源插入当天计划；每夜 5 帧、需 2 个成功夜、10 天超时。
-- 下一验证：首次产生 true reviewed source 后，检查 `followup_state.json`、当天 `*_plan.json/current_plan.txt` 的 5 条 `MP_FU_*`，以及次日 L2 reconcile 结果。
-- 观测端待确认：运行中的控制程序是否动态 reload `current_plan.txt`；若只在开夜前读取，当天较晚完成的 review 只能可靠进入次日计划。
-- 同时继续监测 3000-row Gaia 门控：rejected 帧 WCS/NMATCH、保留帧最大残留、unknown 总量和高产 field 共模伪运动。
+- 20260904 计划已包含首批 follow-up：11 个 active source、每源 5 条，共 55 条 `MP_FU_*`；6 源来自 20260830，5 源来自 20260902。
+- 下一验证：20260905 早晨逐源统计昨晚 `MP_FU_*` L1/L2，确认每源是否达到 5 张并检查 reconcile 是否记录 success。
+- 待修复：review watcher 使用 `heliolinc` Python 调用 `survey.apply_followup` 时缺少 `astroplan`；应改用 survey 默认 Python 或解除不必要的 scheduler import，然后验证 09:00 后复核可即时更新当天计划。
+- 待改进：follow-up 注入后重新生成 plan 图，使图中包含实际发布的 follow-up 行；当前 `current_plan.txt` 正确，但 20260904 图只反映注入前 398 行基础计划。
+- 3000-row 门控在 20260903 成功拒绝 17 个同类污染帧，保留帧最大残留 2518；继续监测正常密场误拒率和 unknown 数量。
 - 后续候选：给 follow-up 增加月距约束与线性外推不确定度门控；为陈旧的 `astorb.dat` 建立安全自动更新与版本记录。
 
 ## Completed milestone: Gaia-residual unknown protection (2026-09-02)
