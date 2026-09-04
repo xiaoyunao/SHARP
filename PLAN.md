@@ -4,8 +4,9 @@
 
 - 20260904 计划已包含首批 follow-up：11 个 active source、每源 5 条，共 55 条 `MP_FU_*`；6 源来自 20260830，5 源来自 20260902。
 - 下一验证：20260905 早晨逐源统计昨晚 `MP_FU_*` L1/L2，确认每源是否达到 5 张并检查 reconcile 是否记录 success。
-- 待修复：review watcher 使用 `heliolinc` Python 调用 `survey.apply_followup` 时缺少 `astroplan`；应改用 survey 默认 Python 或解除不必要的 scheduler import，然后验证 09:00 后复核可即时更新当天计划。
-- 待改进：follow-up 注入后重新生成 plan 图，使图中包含实际发布的 follow-up 行；当前 `current_plan.txt` 正确，但 20260904 图只反映注入前 398 行基础计划。
+- 已修复：review watcher 调用 `survey.apply_followup` 时明确使用 survey 默认 Python；服务器 dry-run 和新 watcher 命令行已验证。
+- 已重画：20260904 plan 图现在基于最终 453 行计划，单独标出 55 条 follow-up；绘图代码能把 `MP_FU_*` 映射回实际 selected footprint。
+- 高优先级待修复：多个单夜 watcher 并发整体覆写共享 `review_submit_state.json`，会抹掉其他夜的 submitted 状态并导致重复上报；需引入跨进程锁和每轮 reload/transaction，并从日志恢复首次有效 submission 记录。
 - 3000-row 门控在 20260903 成功拒绝 17 个同类污染帧，保留帧最大残留 2518；继续监测正常密场误拒率和 unknown 数量。
 - 后续候选：给 follow-up 增加月距约束与线性外推不确定度门控；为陈旧的 `astorb.dat` 建立安全自动更新与版本记录。
 

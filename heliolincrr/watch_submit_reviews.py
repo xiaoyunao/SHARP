@@ -20,6 +20,7 @@ NON_RETRYABLE_FAILURE_PATTERNS = (
     "unknown is_real values",
     "duplicate review keys",
 )
+DEFAULT_FOLLOWUP_PYTHON = "/home/smtpipeline/Softwares/miniconda3/bin/python"
 
 
 def valid_night(value: str) -> bool:
@@ -194,7 +195,7 @@ def run_followup_update(args: argparse.Namespace, night: str) -> dict[str, Any]:
         return {"followup_status": "disabled"}
     repo_root = Path(__file__).resolve().parents[1]
     cmd = [
-        sys.executable,
+        args.followup_python,
         "-m",
         "survey.apply_followup",
         "--workspace",
@@ -395,6 +396,11 @@ def build_argparser() -> argparse.ArgumentParser:
     ap.add_argument("--exit-when-complete", action="store_true", help="In --follow mode, exit when all discovered review packages are done")
     ap.add_argument("--interval-sec", type=int, default=300)
     ap.add_argument("--enable-followup", action="store_true", help="Update the follow-up state and current survey plan after a submit CSV is processed.")
+    ap.add_argument(
+        "--followup-python",
+        default=DEFAULT_FOLLOWUP_PYTHON,
+        help="Python interpreter for survey.apply_followup; must provide the survey dependencies.",
+    )
     ap.add_argument("--followup-state", default="/pipeline/xiaoyunao/survey/runtime/followup/followup_state.json")
     ap.add_argument("--followup-start-night", default="20260624")
     ap.add_argument("--followup-workspace", default="/pipeline/xiaoyunao/survey/runtime")

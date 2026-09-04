@@ -2,6 +2,28 @@
 
 ## 2026-09-04
 
+- task: 修复 review watcher 的 follow-up Python 环境、重画 20260904 最终计划，并追查 unknown 重复上报
+- files_changed: `heliolincrr/watch_submit_reviews.py`, `heliolincrr/run_daily_unknown.sh`, `survey/visualize_nightly.py`, `CHANGELOG.md`, `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - 对照 9 月 3/4 日 `review_submit_watch.log`、submit CSV signature、MPC reply 和共享 state，复原 20260830/20260902 两批提交时间线
+  - 为 watcher 增加独立 `--followup-python`，daily 入口默认传 `/home/smtpipeline/Softwares/miniconda3/bin/python`
+  - 修改 survey plot 对 follow-up 行使用 `followup_selected_field_id`，并以青绿色单独标出 follow-up footprint
+  - 本地 `py_compile`、`bash -n`、mock command 断言；服务器 dry-run `survey.apply_followup`，重启 20260903 watcher并核对实际命令行
+  - 用最终 453 行 plan 重画 20260904 的 7 张 cycle PNG、总图、GIF 和 manifest
+- key_findings:
+  - `20260902` 首次正式 submission `2026-09-03T02:30:50.780_0000CANi`，次日同 CSV 重交为 `...CAVq`；`20260830` 首次 `2026-09-03T02:46:30.633_0000CANm`，次日重交为 `...CAVp`
+  - 多个单夜 watcher 启动时各自只加载一次共享 `review_submit_state.json`，随后每 5 分钟用自己的旧内存副本整体覆写；0901 watcher 在两次首次提交后把 0830/0902 的 submitted 记录抹掉，导致次日重启时再次提交
+  - 当前共享 state 只剩 `20260620`、`20260831`，甚至缺少今天已提交的 0830/0901/0902，说明重复风险仍存在；本任务按用户要求先确认原因，尚未改写状态并发模型
+  - follow-up 即时调用失败与重复提交是两个独立问题；前者已改为 survey 默认 Python，服务器 dry-run 不再缺 `astroplan`
+  - MPC 提醒的 `00001nF`, `00001nP`, `00001o2`, `00001oI`, `00001oj` 全部来自 20260902，分别对应 linkage 12/226/446/820/705
+- validation:
+  - 本地与服务器三份修改文件 SHA-256 一致；新 watcher PID 2380417 的命令行含 `--followup-python /home/smtpipeline/Softwares/miniconda3/bin/python`
+  - 20260904 新总图显示 `total_exposures=453`, `followup_exposures=55`，11 个 follow-up source 的 footprint 均可见；生产 PNG/GIF 已于 09:59 更新
+- remaining_issues:
+  - 必须给 `review_submit_state.json` 增加跨进程锁/事务式 reload，或改成每夜独立 state；在修复前 recovery watcher 仍可能再次提交已上报夜次
+  - 需要恢复 0830/0901/0902 已提交记录，且不能把 MPC 拒绝的第二个 ID误当成有效首次提交
+- next_step: 用户确认后修复共享提交状态的并发覆盖并从日志恢复首次 submission 记录；人工复核 20260902 五个高 digest2 候选后回复 MPC
+
 - task: 核查 20260903 观测夜的 daily 运行、3000-row Gaia 门控和 follow-up 实际执行情况
 - files_changed: `WORKLOG.md`, `PLAN.md`
 - commands_run:

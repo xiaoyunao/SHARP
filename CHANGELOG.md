@@ -3,6 +3,14 @@
 本文件记录仓库中值得保留的版本级行为变化，重点覆盖服务器基线流程、
 调试中确认过的默认值变更，以及会影响结果解释的输出变化。
 
+## 2026-09-04
+
+### 修复 review 后即时 follow-up 的运行环境
+
+- `watch_submit_reviews.py` 新增 `--followup-python`，默认使用 survey 运行环境 `/home/smtpipeline/Softwares/miniconda3/bin/python`
+- unknown 主流程继续使用 `heliolinc` 环境；只有 `survey.apply_followup` 切换到包含 `astroplan` 的 survey Python
+- 20260904 最终计划图已按注入后的 453 行重画；follow-up footprint 使用青绿色独立显示，标题记录 55 条 follow-up exposure
+
 ## 2026-09-03
 
 ### 统一 known 与 survey 全天图的 RA 方向

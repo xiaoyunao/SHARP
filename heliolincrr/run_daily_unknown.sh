@@ -11,6 +11,7 @@ ROOT_OUT="${ROOT_OUT:-/pipeline/xiaoyunao/data/heliolincrr}"
 PLOT_ROOT="${PLOT_ROOT:-/pipeline/xiaoyunao/heliolincrr/plots}"
 REVIEW_ROOT="${REVIEW_ROOT:-/pipeline/xiaoyunao/heliolincrr/review_packages}"
 PYTHON_BIN="${PYTHON_BIN:-/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python}"
+FOLLOWUP_PYTHON="${FOLLOWUP_PYTHON:-/home/smtpipeline/Softwares/miniconda3/bin/python}"
 LOG_DIR="${LOG_DIR:-${ROOT_OUT}/daily_logs}"
 WAIT_KNOWN_TIMEOUT_SEC="${WAIT_KNOWN_TIMEOUT_SEC:-28800}"
 WAIT_KNOWN_INTERVAL_SEC="${WAIT_KNOWN_INTERVAL_SEC:-120}"
@@ -139,6 +140,7 @@ start_submit_watcher() {
   if [[ "${ENABLE_FOLLOWUP}" == "1" ]]; then
     cmd+=(
       --enable-followup
+      --followup-python "${FOLLOWUP_PYTHON}"
       --followup-state "${FOLLOWUP_STATE}"
       --followup-start-night "${FOLLOWUP_START_NIGHT}"
       --followup-workspace "${FOLLOWUP_WORKSPACE}"

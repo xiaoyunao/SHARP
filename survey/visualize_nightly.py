@@ -117,6 +117,11 @@ def _draw_background(ax, footprints: Table, bg_count: np.ndarray, cmap, norm) ->
         add_polygon(ax, ra_deg, dec_deg, facecolor=cmap(norm(count)), edgecolor="none", linewidth=0.0, alpha=0.95)
 
 
+def plan_footprint_id(row: dict) -> str:
+    """Return the physical survey footprint used by a base or follow-up row."""
+    return str(row.get("followup_selected_field_id") or row["field_id"])
+
+
 def generate_plan_visualizations(
     plan: list[dict],
     history: Table,
@@ -154,21 +159,32 @@ def generate_plan_visualizations(
         _style_axes(ax)
         _draw_background(ax, footprints, bg_count, cmap, norm)
 
-        for idx, row in enumerate(rows):
-            sel = fp_by_id.get(str(row["field_id"]))
+        base_label_used = False
+        followup_label_used = False
+        for row in rows:
+            sel = fp_by_id.get(plan_footprint_id(row))
             if sel is None:
                 continue
             ra_deg, dec_deg = polygon_arrays(sel)
+            is_followup = str(row.get("mode", "")) == "followup"
             add_polygon(
                 ax,
                 ra_deg,
                 dec_deg,
-                facecolor="#d94801",
-                edgecolor="#7f2704",
-                linewidth=0.6,
-                alpha=0.35 if idx else 0.48,
-                label="Planned FoVs" if idx == 0 else None,
+                facecolor="#2a9d8f" if is_followup else "#d94801",
+                edgecolor="#005f73" if is_followup else "#7f2704",
+                linewidth=1.0 if is_followup else 0.6,
+                alpha=0.48 if is_followup else 0.35,
+                label=(
+                    "Follow-up FoVs"
+                    if is_followup and not followup_label_used
+                    else "Planned FoVs"
+                    if not is_followup and not base_label_used
+                    else None
+                ),
             )
+            followup_label_used = followup_label_used or is_followup
+            base_label_used = base_label_used or not is_followup
 
         ax.scatter(
             wrap_ra_rad(np.array([moon_coord.ra.deg])),
@@ -188,7 +204,9 @@ def generate_plan_visualizations(
         plot_altitude_30_line(ax, obstime, site, scheduler_config.min_altitude_deg)
         _dedupe_labels(ax)
         ax.set_title(
-            f"{night_tag} cycle {cycle_id:02d}/{len(groups)}\nmidpoint={obstime.isot}  n_fields={len(rows)}",
+            f"{night_tag} cycle {cycle_id:02d}/{len(groups)}\n"
+            f"midpoint={obstime.isot}  n_exposures={len(rows)}  "
+            f"followup={sum(str(row.get('mode', '')) == 'followup' for row in rows)}",
             fontsize=13,
             y=1.08,
         )
@@ -208,15 +226,21 @@ def generate_plan_visualizations(
     _style_axes(ax)
     _draw_background(ax, footprints, bg_count, cmap, norm)
 
-    unique_ids = []
-    seen_ids: set[str] = set()
+    base_ids: list[str] = []
+    followup_ids: list[str] = []
+    seen_base: set[str] = set()
+    seen_followup: set[str] = set()
     for row in plan:
-        field_id = str(row["field_id"])
-        if field_id not in seen_ids:
-            seen_ids.add(field_id)
-            unique_ids.append(field_id)
+        field_id = plan_footprint_id(row)
+        if str(row.get("mode", "")) == "followup":
+            if field_id not in seen_followup:
+                seen_followup.add(field_id)
+                followup_ids.append(field_id)
+        elif field_id not in seen_base:
+            seen_base.add(field_id)
+            base_ids.append(field_id)
 
-    for idx, field_id in enumerate(unique_ids):
+    for idx, field_id in enumerate(base_ids):
         sel = fp_by_id.get(field_id)
         if sel is None:
             continue
@@ -230,6 +254,22 @@ def generate_plan_visualizations(
             linewidth=0.9,
             alpha=0.40,
             label="Tonight Targets" if idx == 0 else None,
+        )
+
+    for idx, field_id in enumerate(followup_ids):
+        sel = fp_by_id.get(field_id)
+        if sel is None:
+            continue
+        ra_deg, dec_deg = polygon_arrays(sel)
+        add_polygon(
+            ax,
+            ra_deg,
+            dec_deg,
+            facecolor="#2a9d8f",
+            edgecolor="#005f73",
+            linewidth=1.2,
+            alpha=0.55,
+            label="Follow-up Targets" if idx == 0 else None,
         )
 
     if plan:
@@ -252,7 +292,14 @@ def generate_plan_visualizations(
         band = SkyCoord(lon=lon_vals, lat=np.full(len(lon_vals), lat_deg) * u.deg, frame=GeocentricTrueEcliptic()).icrs
         plot_line(ax, band, color="#1f78b4", linestyle=style, linewidth=1.1, alpha=0.8, label="Ecliptic ±20°" if lat_deg < 0 else None)
     _dedupe_labels(ax)
-    ax.set_title(f"{night_tag} all planned fields\nunique_fields={len(unique_ids)}  total_exposures={len(plan)}", fontsize=13, y=1.08)
+    unique_fields = len(set(base_ids) | set(followup_ids))
+    followup_exposures = sum(str(row.get("mode", "")) == "followup" for row in plan)
+    ax.set_title(
+        f"{night_tag} all planned fields\nunique_fields={unique_fields}  "
+        f"total_exposures={len(plan)}  followup_exposures={followup_exposures}",
+        fontsize=13,
+        y=1.08,
+    )
     dummy = ax.scatter([], [], c=[], cmap=cmap, s=5, marker="s", vmin=0.0, vmax=max(float(bg_count.max()), 1.0))
     cbar_ax = fig.add_axes([0.2, 0.12, 0.6, 0.02])
     cbar = fig.colorbar(dummy, cax=cbar_ax, orientation="horizontal")
