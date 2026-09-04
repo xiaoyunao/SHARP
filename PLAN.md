@@ -2,14 +2,14 @@
 
 ## Current objective: verify first follow-up night (2026-09-04)
 
-- 20260904 计划已包含首批 follow-up：11 个 active source、每源 5 条，共 55 条 `MP_FU_*`；6 源来自 20260830，5 源来自 20260902。
-- 下一验证：20260905 早晨逐源统计昨晚 `MP_FU_*` L1/L2，确认每源是否达到 5 张并检查 reconcile 是否记录 success。
+- 20260904 最终计划包含 7 个 active source、每源 5 条，共 35 条 `MP_FU_*`；6 源来自 20260830，20260902 只保留可能真实的 `00001nF`。
+- 下一验证：20260905 早晨逐源统计这 7 个源的昨晚 `MP_FU_*` L1/L2，确认每源是否达到 5 张并检查 reconcile 是否记录 success。
 - 已修复：review watcher 调用 `survey.apply_followup` 时明确使用 survey 默认 Python；服务器 dry-run 和新 watcher 命令行已验证。
-- 已重画：20260904 plan 图现在基于最终 453 行计划，单独标出 55 条 follow-up；绘图代码能把 `MP_FU_*` 映射回实际 selected footprint。
+- 已重画：20260904 plan 图现在基于人工停用后的最终 433 行计划，单独标出 35 条 follow-up；绘图代码能把 `MP_FU_*` 映射回实际 selected footprint。
 - 已修复：多个单夜 watcher 通过 state 专用跨进程锁串行执行；每轮在锁内 reload，并将完成检查、MPC 提交和状态写入作为一个事务。0830/0901/0902 首次有效 submission 记录已从日志恢复。
-- 下一验证：20260903 人工复核完成后，确认只产生一次 MPC submission，且后续其他 watcher 扫描不会抹掉该夜状态。
+- 已验证：20260903 的 106 条候选全部判否，watcher 记录 `no_observations` 后正常退出；共享 state 同时保留此前五夜记录。
 - 新发现：20260902 的最终人工 review 把 linkage 226/446 标为 0，但更早生成并实际提交的 submit snapshot 把两者标为 1；需给 review->submit 交接增加 accepted 清单确认、源文件 hash/mtime 和审计记录。
-- 待用户确认：若 226/446 确为误报，应从 follow-up state 与尚未执行的计划中移除，并向 MPC 说明五个高 digest2 目标中只有其余三个可确认。
+- 已确认并处理：`00001nP`, `00001o2`, `00001oI`, `00001oj` 均为假源，已从 follow-up state 与今晚计划停用；只有 `00001nF` 继续监测。
 - 3000-row 门控在 20260903 成功拒绝 17 个同类污染帧，保留帧最大残留 2518；继续监测正常密场误拒率和 unknown 数量。
 - 后续候选：给 follow-up 增加月距约束与线性外推不确定度门控；为陈旧的 `astorb.dat` 建立安全自动更新与版本记录。
 

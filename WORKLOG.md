@@ -2,6 +2,24 @@
 
 ## 2026-09-04
 
+- task: 按人工复核结论停用 20260902 四个假源 follow-up，仅保留 `00001nF`
+- files_changed: `WORKLOG.md`, `PLAN.md`; server runtime state/plan/plots updated
+- commands_run:
+  - 确认 20260904 尚无 L1/L2，备份 follow-up state、runtime/date/current 三份计划后执行人工停用
+  - 将 `00001nP`, `00001o2`, `00001oI`, `00001oj` 标为 `abandoned`，原因 `human_review_false_positive`，并把当晚 attempt 标为 `cancelled`
+  - 从 20260904 JSON/text/current plan 删除 20 条对应行，按每条 80 秒回收后续时间，并重新生成 7 张 cycle 图、总图和 GIF
+- key_findings:
+  - `00001nF` 保持 active 且今晚仍有 5 条；四个假源计划行均为 0
+  - 最终计划 433 行，其中 follow-up 35 行、7 个 source；相对旧计划回收 1600 秒
+  - 20260903 review 的 106 条候选全部判否，watcher 正常写入 `no_observations` 并退出；此前恢复的五夜提交状态未被覆盖
+- validation:
+  - runtime/date/current 三份文本计划均为 433 行且 SHA-256 相同；四个假源命中 0、`00001nF` 命中 5
+  - JSON 时间非递减；新总图标题为 `total_exposures=433`, `followup_exposures=35`
+  - 操作前快照保存在 `/pipeline/xiaoyunao/survey/runtime/followup/manual_pass_20260904T102257`
+- remaining_issues:
+  - 观测控制端是否会热加载更新后的 `current_plan.txt` 仍取决于控制端行为；本次在首条计划执行前约 9 小时完成发布
+- next_step: 回复 MPC：四个目标为假源，只有 `00001nF` 尚可能真实并继续监测；后续提交前加入 digest2 检查
+
 - task: 核查 MPC 高 digest2 提醒中 20260902 linkage 226/446 与人工“否”标签不一致
 - files_changed: `WORKLOG.md`, `PLAN.md`
 - commands_run:
