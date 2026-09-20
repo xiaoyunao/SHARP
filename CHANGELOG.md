@@ -5,6 +5,11 @@
 
 ## 2026-09-20
 
+### 区分 MPC 测试收件与格式验证
+
+- 根据真实测试回执新增 `test_received` 状态；Submission ID 不再误标拒绝，也不等同于格式通过。
+- HTTP 4xx 拒绝与网络不确定状态分开；已有收件 ID 的批次不会重发。生产上报流程未改动。
+
 ### 新增 digest2 独立测试工具
 
 - 固定 digest2 2.8.2，按 NoID NEO >=65 与人工真假决定生成 `neo candidate` / `unclassified` 测试批次。

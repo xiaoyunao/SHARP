@@ -2,6 +2,18 @@
 
 ## 2026-09-20
 
+- task: 实测 MPC 测试接口回执，区分请求接收与字段格式验证
+- files_changed: `heliolincrr/validate_neo_batches.py`, `heliolincrr/tests/test_digest2_rehearsal.py`, `heliolincrr/DIGEST2_TESTING.md`, `WORKLOG.md`, `PLAN.md`, `CHANGELOG.md`; 测试请求/回执保存在 outputs
+- commands_run: git status/branch/fetch/log；构建两目标六观测格式样本；仅向 `/submit_psv_test` 发送 2 个正常分类批和 2 个损坏格式对照；py_compile 与 25 项 unittest
+- key_findings:
+  - `neo candidate` / `unclassified` 分别收到测试 ID `2026-09-20T03:52:14.232_00000kOY` / `2026-09-20T03:52:16.547_00000kOZ`，正文没有格式通过声明
+  - 过短文本被 HTTP 400 size-range 检查拒绝；但有效长度/头部、RA=NOT_A_NUMBER 的批次仍得到 `2026-09-20T03:52:59.895_00000kOa`
+  - 原分类器仅识别 Submission format valid，错误地把收件 ID 判为 rejected；修复为 test_received / format_confirmed=false，禁止自动重发且不等同于 validated
+  - HTTP 4xx 明确拒绝与网络不确定状态分开记录；低分样本的临时 is_real=1 仅为格式 fixture，不修改真实复核为否的结论
+- validation: 本机 25/25 PASS；保存初始误分类账本及原回执后离线重判，两条正常请求无重发；真实正式提交请求数 0，服务器主流程无改动
+- remaining_issues: 即时测试 ID 不能证明 ADES 字段/schema 校验通过；尚未做真实上报或 NEOCP 发布，不能据此声称进入候选队列
+- next_step: 建立独立 ADES 字段/schema 校验，再准备生产接入与正式逐批回执处理；继续保持用户要求的隔离测试边界
+
 - task: 按用户要求实现 digest2 独立测试版，不改服务器 main pipeline
 - files_changed: `heliolincrr/score_unknown_digest2.py`, `heliolincrr/validate_neo_batches.py`, `heliolincrr/tests/test_digest2_rehearsal.py`, `heliolincrr/requirements-digest2-test.txt`, `heliolincrr/DIGEST2_TESTING.md`, `heliolincrr/NEO_INTEGRATION.md`, `heliolincrr/README.md`, `CHANGELOG.md`, `WORKLOG.md`, `PLAN.md`
 - commands_run:

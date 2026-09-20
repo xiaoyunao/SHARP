@@ -61,6 +61,9 @@ python3 -m venv /tmp/smt-digest2-test-env
 - 跨进程锁覆盖重新加载状态、检查、请求和原子/fsync 落盘。
 - 每批验证成功即落盘，下一批失败不影响成功批；重启不重发已成功批。
 - HTTP 200 / CurlID 不视为格式验证通过；须有明确的格式成功回复。
+- 只有 Submission ID 的回执记录为 `test_received`、`format_confirmed=false`，
+  不判为拒绝、不自动重发，也不判为格式通过；CLI 仍返回 2，避免调用方只凭退出码放行。
+- 明确 HTTP 4xx 记录为拒绝；超时、5xx 或不认识的回复保留为待核对。
 - 超时/异常/中断的请求标记 `needs_reconciliation`，不会盲目自动重试。
 - 被 MPC 明确拒绝的批次保存 `rejected`，修复后生成新快照/新批次。
 - 在第一个请求前检查所有批次：输入及 payload hash、评分与真假门控、
@@ -110,6 +113,35 @@ Linux/macOS 分流及模型/配置/ObsCodes hash 一致，分数差异小于 `1e
 包含 `mpc_seven_scores.csv`、`all_20260910_scores.csv`、输入 hash 清单、
 各场景 `routing.json`/PSV/依赖快照、双平台测试日志和环境版本，以及源码安装包。
 
+## 2026-09-20 MPC 测试接口实际回执
+
+经用户授权，从本机向 `https://minorplanetcenter.net/submit_psv_test` 发出
+4 次测试 POST，回执地址使用现有配置 `wsgp2024@163.com`。正式端点请求数为 0。
+服务器生产代码、数据、环境、定时任务均未修改。
+
+两个正常样本分别只有 3 条观测；低分样本 `00001u6` 的真实历史复核为否，
+本次仅用明确标记 FORMAT_TEST_ONLY 的假定复核 CSV 测试 ordinary 分支格式，
+没有更改其真实复核结论。测试结果：
+
+| 测试 | 即时回复 |
+| --- | --- |
+| `neo candidate`，00001ua | `2026-09-20T03:52:14.232_00000kOY` |
+| `unclassified`，00001u6 | `2026-09-20T03:52:16.547_00000kOZ` |
+| 故意过短的无效文本 | HTTP 400：data size 不在 200..1000000000 bytes 范围 |
+| 保留合法 header/长度，只把首行 RA 改为 NOT_A_NUMBER | `2026-09-20T03:52:59.895_00000kOa` |
+
+三份 ID 回执正文都只有 ACK 文本和 `Submission ID is ...`，没有
+`Submission format valid.`。由于错误 RA 也能收到 ID，不能据此声称 ADES
+字段级格式验证通过。官方命令行文档也说明测试接口返回 CurlID，且不会把测试批次
+送入正式处理：
+https://docs.minorplanetcenter.net/mpc-ops-docs/observations/command-line-submissions/
+
+已修正测试回执分类器：收件编号单独记为 `test_received`；对现有两条记录仅离线
+重判，没有重发。此前误标 rejected 的原账本已保留。加入真实回执与 400 对照的
+回归测试，本机 25/25 PASS。原始回执、请求样本和账本见
+`outputs/digest2_rehearsal_20260920/mpc_format_test/`。
+
 剩余上线工作：统一未来观测的曝光中点时间、复核页面分数展示、把评分门控接到
-所有正式入口、逐批正式回执和历史去重迁移；最后在 MPC 测试接口核验格式。
+所有正式入口、逐批正式回执和历史去重迁移；另外建立可证明的 ADES schema/字段
+校验，不能以测试 CurlID 作为通过证据。
 本次不修改任何生产入口，也不重新上报历史观测。

@@ -221,13 +221,42 @@ class RehearsalTests(unittest.TestCase):
 
     def test_transport_only_uses_test_url_and_exact_hashed_bytes(self):
         batch = {"obj_type": "neo candidate", "payload": b"exact payload\n"}
-        with patch("subprocess.run", return_value=subprocess.CompletedProcess([], 0, b"Submission format valid.", b"")) as run:
+        with patch("subprocess.run", return_value=subprocess.CompletedProcess([], 0, b"Submission format valid.\nSMT_HTTP_STATUS:200\n", b"")) as run:
             validation.test_transport(batch, "observer@example.invalid")
         args, kwargs = run.call_args
         self.assertIn("https://minorplanetcenter.net/submit_psv_test", args[0])
         self.assertNotIn("https://minorplanetcenter.net/submit_psv", args[0])
         self.assertIn("source=<-", args[0])
         self.assertEqual(kwargs["input"], batch["payload"])
+
+    def test_actual_mpc_receipt_is_neither_format_pass_nor_rejection(self):
+        reply = "[SMT digest2 offline integration format test].  Submission ID is 2026-09-20T03:52:14.232_00000kOY\n"
+        result = validation.classify_test_reply(reply)
+        self.assertEqual(result["status"], "test_received")
+        self.assertFalse(result["format_confirmed"])
+        self.assertEqual(result["test_request_id"], "2026-09-20T03:52:14.232_00000kOY")
+
+    def test_receipt_only_batch_is_not_resent(self):
+        plan = self.plan()
+        reply = "Submission ID is 2026-09-20T03:52:14.232_00000kOY\n"
+        state = validation.validate(plan, lambda b: reply, simulation=True)
+        self.assertEqual({b["status"] for b in state["batches"].values()}, {"test_received"})
+        validation.validate(plan, lambda b: self.fail("must not resend receipt-only batch"), simulation=True)
+
+    def test_actual_short_payload_http_400_is_definite_rejection(self):
+        body = b"error: data size (117 bytes) not in allowed range (200 to 1000000000) bytes\n\nSMT_HTTP_STATUS:400\n"
+        with patch("subprocess.run", return_value=subprocess.CompletedProcess([], 22, body, b"HTTP 400")):
+            with self.assertRaisesRegex(validation.TestRequestRejected, "HTTP 400.*data size"):
+                validation.test_transport({"obj_type": "unclassified", "payload": b"bad"}, "observer@example.invalid")
+
+    def test_explicit_rejection_and_unknown_reply_have_distinct_states(self):
+        plan = self.plan()
+        def transport(batch):
+            if batch["obj_type"] == "neo candidate":
+                raise validation.TestRequestRejected("HTTP 400: invalid")
+            return "unexpected service response"
+        state = validation.validate(plan, transport, simulation=True)
+        self.assertEqual({b["status"] for b in state["batches"].values()}, {"rejected", "needs_reconciliation"})
 
     def test_default_validator_cli_has_no_network(self):
         plan = self.plan()

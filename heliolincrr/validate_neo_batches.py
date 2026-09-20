@@ -19,6 +19,31 @@ from score_unknown_digest2 import json_hash, read_psv, sha256
 TEST_URL = "https://minorplanetcenter.net/submit_psv_test"
 
 
+class TestRequestRejected(RuntimeError):
+    """A definite HTTP client-error response, distinct from a transport timeout."""
+
+
+def classify_test_reply(reply: str) -> dict:
+    """A test CurlID acknowledges receipt; even malformed RA can receive one."""
+    valid = bool(re.search(r"\bSubmission format valid\.", reply, re.I))
+    failure = bool(re.search(r"\b(?:invalid|error|rejected|not valid)\b", reply, re.I))
+    receipt = re.search(
+        r"\bSubmission ID is\s+(\d{4}-\d{2}-\d{2}T[\d:.]+_[A-Za-z0-9]+)\b", reply,
+    )
+    if failure:
+        status = "rejected"
+    elif valid:
+        status = "validated"
+    elif receipt:
+        status = "test_received"
+    else:
+        status = "needs_reconciliation"
+    result = {"status": status, "format_confirmed": status == "validated"}
+    if receipt:
+        result["test_request_id"] = receipt.group(1)
+    return result
+
+
 def save_state(path: Path, data: dict) -> None:
     tmp = path.with_suffix(".tmp")
     with tmp.open("w") as stream:
@@ -87,17 +112,23 @@ def test_transport(batch: dict, email: str) -> str:
     # source=<- streams the already-hashed bytes, avoiding a read/send file race.
     proc = subprocess.run(
         ["curl", "-q", "--silent", "--show-error", "--fail-with-body", "--connect-timeout", "15",
-         "--max-time", "90", TEST_URL,
+         "--max-time", "90", "--write-out", "\nSMT_HTTP_STATUS:%{http_code}\n", TEST_URL,
          "--form-string", "ack=SMT digest2 offline integration format test",
          "--form-string", f"ac2={email}", "--form-string", f"obj_type={batch['obj_type']}",
          "-F", "source=<-"], input=batch["payload"], capture_output=True,
         timeout=100, check=False,
     )
-    if proc.returncode:
+    output = proc.stdout.decode(errors="replace")
+    marker = re.search(r"\nSMT_HTTP_STATUS:(\d{3})\n$", output)
+    http_status = int(marker.group(1)) if marker else 0
+    reply = output[:marker.start()] if marker else output
+    if 400 <= http_status < 500:
+        raise TestRequestRejected(f"MPC test HTTP {http_status}: {reply}")
+    if proc.returncode or not 200 <= http_status < 300:
         raise RuntimeError(f"Test request uncertain: curl={proc.returncode}; "
                            + proc.stderr.decode(errors="replace")[-2000:]
-                           + proc.stdout.decode(errors="replace")[-2000:])
-    return proc.stdout.decode(errors="replace")
+                           + reply[-2000:])
+    return reply
 
 
 def validate(plan_path: Path, transport, *, simulation: bool = False) -> dict:
@@ -115,7 +146,7 @@ def validate(plan_path: Path, transport, *, simulation: bool = False) -> dict:
             raise ValueError("Ledger mode mismatch")
         for batch in batches:
             old = state["batches"].get(batch["id"], {})
-            if old.get("status") in ("validated", "needs_reconciliation", "rejected"):
+            if old.get("status") in ("validated", "test_received", "needs_reconciliation", "rejected"):
                 continue
             if old.get("status") == "validating":
                 old["status"] = "needs_reconciliation"
@@ -129,10 +160,9 @@ def validate(plan_path: Path, transport, *, simulation: bool = False) -> dict:
             try:
                 reply = transport(batch)
                 entry["reply"] = reply
-                # A CurlID or HTTP 200 alone is NOT a format-validation success.
-                valid = bool(re.search(r"\bSubmission format valid\.", reply, re.I))
-                failure = bool(re.search(r"\b(?:invalid|error|rejected|not valid)\b", reply, re.I))
-                entry["status"] = "validated" if valid and not failure else "rejected"
+                entry.update(classify_test_reply(reply))
+            except TestRequestRejected as exc:
+                entry.update(status="rejected", format_confirmed=False, error=str(exc))
             except Exception as exc:
                 entry.update(status="needs_reconciliation", error=str(exc))
             entry["finished_utc"] = datetime.now(timezone.utc).isoformat()
