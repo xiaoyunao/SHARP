@@ -13,6 +13,13 @@
 - 未知单夜 link 的可视化已并入 `run_single_night.sh`，底层脚本为 `plot_unknown_links.py`，输出到 `heliolincrr/plots/YYYYMMDD/`
 - unknown ADES 导出脚本为 `export_unknown_ades.py`，默认只写 PSV，不自动提交 MPC
 
+## digest2 独立测试（尚未接入生产）
+
+`score_unknown_digest2.py` 对复制的 ADES PSV 评分并根据人工复核拆批；
+`validate_neo_batches.py` 默认仅做本地完整性检查，显式启用时也只访问 MPC
+测试接口。两者均未接入 daily/watcher，没有正式提交入口。
+隔离环境依赖、运行方法、限制和历史回放结果见 [DIGEST2_TESTING.md](DIGEST2_TESTING.md)。
+
 ## Unknown trkSub and review interface
 
 MPC ADES 的 unknown 临时标识使用 `trkSub`。本项目自动分配的 `trkSub`

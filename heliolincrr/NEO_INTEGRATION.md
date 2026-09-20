@@ -1,8 +1,8 @@
 # digest2 / NEW NEO 接入设计
 
-日期：2026-09-20。状态：已核对官方接口和仓库代码；尚未实现或部署。
-本地 `main` 与 fetch 后 `origin/main` 同为 `2dffff5e`；服务器 SSH 连接超时，
-因此尚不能确认服务器当前代码、环境和近期目标状态。
+日期：2026-09-20。状态：独立评分/拆批/测试账本已实现，见 `DIGEST2_TESTING.md`；
+生产入口尚未改动或部署。初次设计时 SSH 超时，后续已恢复并只读核对
+服务器 exporter / watcher 与本地一致；所有新功能先在隔离环境测试。
 
 ## 已确认的接口
 
@@ -42,8 +42,8 @@
    缺行、未知台址、异常返回必须显式标为评分失败。
 2. 与 `export_unknown_ades.py` 共用观测行构建逻辑，保证评分与最终提交的
    UTC 时间、RA/Dec、误差、星等和滤光片一致。可将这些行转换成 Python
-   `Observation`，使用 ADES 误差模式；不要假设 `classify_file()` 支持 PSV，
-   官方当前文档列出的是 MPC80 / ADES XML。
+   `Observation`，使用 ADES 误差模式。后续实测确认 digest2 2.8.2 已支持 PSV；
+   使用官方 parser 保留星等转换，并额外检查观测数，防止其静默跳过坏行。
 3. 在 `package_unknown_review.py` 的 manifest 添加 `digest2_neo_noid`、
    `digest2_neo_raw`、`neo_candidate`、`digest2_status`、评分版本及输入 hash；
    保持现有两列复核 CSV 兼容。网页消费者显示分数并优先展示高分候选；

@@ -1,0 +1,2 @@
+# Install only in an isolated test environment; not in production heliolinc yet.
+digest2==2.8.2

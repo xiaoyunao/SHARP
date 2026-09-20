@@ -2,6 +2,25 @@
 
 ## 2026-09-20
 
+- task: 按用户要求实现 digest2 独立测试版，不改服务器 main pipeline
+- files_changed: `heliolincrr/score_unknown_digest2.py`, `heliolincrr/validate_neo_batches.py`, `heliolincrr/tests/test_digest2_rehearsal.py`, `heliolincrr/requirements-digest2-test.txt`, `heliolincrr/DIGEST2_TESTING.md`, `heliolincrr/NEO_INTEGRATION.md`, `heliolincrr/README.md`, `CHANGELOG.md`, `WORKLOG.md`, `PLAN.md`
+- commands_run:
+  - git status/branch/fetch/log，创建 `codex/digest2-rehearsal`；只读 SSH 复制两夜 PSV/catalog/review 并核对 SHA-256，使用服务器 exporter 的 `build_obs_rows` 只读导出 20260910 全部未知观测到本机
+  - 本机临时 venv 安装 digest2 2.8.2；py_compile；21 项 unittest；七目标/整夜评分、官方 classify_file 对照、三次重复性及分流集合检查
+  - 在服务器 `/tmp/smt-digest2-rehearsal-20260920.4ihjJN` 建独立 Python 3.10 venv；PyPI 直连下载慢后改本机 wheelhouse + scp + 离线源码编译；运行相同 21 项测试及两夜 125 目标回放
+- key_findings:
+  - 七个 MPC 点名目标 NoID NEO 均 >=65：nF=70.9705, nP=99.4856, o2=99.7659, oI=99.8908, oj=73.5258, ua=99.9713, vy=99.2807
+  - 20260910 全部 120 轨迹/372 观测：107 高分、13 低分；真实历史 CSV 只允许 4 条进入候选批、116 条被人工门控排除。单独应用 09-04 假源决定后，nP/o2/oI/oj 四条虽高分仍被排除
+  - digest2 2.8.2 支持 PSV；采用官方 parser 保留 G->V 转换，并检查其是否丢行。NoID 与 Raw 不可混用，nF/oj 的 Raw 分别仅 40.65/16.92
+  - 固定输入、模型、配置和 ObsCodes；缺行/缺目标/重复历元/未知站点/非有限分数显式阻断；两个批次测试状态独立落盘，超时或中断不自动重发
+  - Linux/macOS 两夜 125 个目标的 Raw/NoID 分数差为 0，依赖文件 hash 与分流完全一致；服务器生产 heliolinc 仍未安装 digest2
+- validation:
+  - 本机和隔离服务器各 21/21 PASS；9 个历史上报目标与官方 classify_file 逐项完全一致；120 个目标三次评分一致
+  - 已验证 64.9/65/65.1 边界、真假门控、残缺观测、输入/payload 改动、模拟部分失败/中断、双进程恰好各批一次和默认无网络
+  - 测试前后生产 exporter/watcher hash 一致；无生产代码/定时任务/复核状态改动，无 MPC POST
+- remaining_issues: 未接入正式入口/网页展示；未调用真实 MPC 测试接口；未来曝光中点约定、NEOCP 身份分流和正式逐批提交账本/旧状态迁移仍待实施。历史回放保持原时间，不等于重新确认真源
+- next_step: 审阅 `heliolincrr/DIGEST2_TESTING.md` 与 `outputs/digest2_rehearsal_20260920/`；继续在隔离环境验证 MPC 测试回执，再准备正式接入补丁，按用户要求暂不部署主流程
+
 - task: 核查 `00001nF` 的 20260909/10 后随 tracklet 是否已跨晚关联
 - files_changed: `WORKLOG.md`, `PLAN.md`（仅本地记录；生产数据/代码未改）
 - commands_run: 只读 SSH 核对 follow-up state、09/10 unknown daily 日志、L4 unknown JSON、Gaia-mask 星表和逐晚 tracklet FITS；对两晚后随 tracklet 做线性外推交叉检查
