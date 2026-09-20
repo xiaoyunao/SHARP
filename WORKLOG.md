@@ -1,5 +1,20 @@
 # WORKLOG
 
+## 2026-09-20
+
+- task: 调查 MPC 高 digest2 来信要求，设计 unknown 的 NEW NEO 接入
+- files_changed: `heliolincrr/NEO_INTEGRATION.md`, `WORKLOG.md`, `PLAN.md`
+- commands_run: `git status/branch/fetch/log`; 阅读 unknown export/review/watcher/daily；浏览官方 digest2 教程及提交文档；GET `/submit_psv` 核对表单；SSH 连接超时
+- key_findings:
+  - main 与 origin/main 同为 `2dffff5e`，已有未跟踪 `outputs/` 保持不动
+  - exporter 当前整批使用 `obj_type=NEO`，没有 digest2；官方表单 New NEO Candidate 实际值为 `neo candidate`
+  - 分类应使用 NoID NEO >=65，保持人工真源门控；复用最终 ADES 观测输入，评分错误不能按低分放行
+  - 拆批要求逐批持久化回执/去重；当前 watcher 只有整夜状态且以进程退出码推断 submitted，需要一起改造
+  - 已有审计记录 unknown 时间早约 15 s；需核对当前服务器修复状态后统一评分/上报时间
+- validation: 已核对官方 HTML radio value、Python API 和本地调用链；本次仅文档设计，未运行 digest2、未调用 MPC POST、未修改生产代码
+- remaining_issues: SSH 无法连接，未核实生产版本/依赖及 `00001vy`、`00001ua`；网页分数展示需定位实际消费者
+- next_step: 按接入设计先做服务器基线核对和七目标离线回放，再实现评分、拆批和逐批账本
+
 ## 2026-09-04
 
 - task: 按人工复核结论停用 20260902 四个假源 follow-up，仅保留 `00001nF`

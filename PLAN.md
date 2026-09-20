@@ -1,6 +1,16 @@
 # PLAN
 
-## Current objective: verify first follow-up night (2026-09-04)
+## Current objective: digest2 / NEW NEO integration (2026-09-20)
+
+- 已完成官方接口和本地代码核查；具体设计见 `heliolincrr/NEO_INTEGRATION.md`。
+- 核心规则：人工真源且 digest2 **NoID NEO >=65** 使用 `obj_type=neo candidate`；低分未知源用 `unclassified`；评分失败暂停该目标提交。
+- 接入点：trkSub 分配后给 unknown 评分并写入 review manifest；最终提交前核对观测 hash、拆批、逐批保存 MPC 回执与状态。
+- 当前阻塞：服务器 SSH 超时，尚未验证生产代码/heliolinc Python 兼容性，也未复核 `00001vy` / `00001ua`。本次只有设计文档，没有生产代码改动或 MPC 提交。
+- 里程碑：服务器基线与时间约定核对 -> 固定 digest2 依赖和历史样本离线回放 -> 复核展示 -> 拆批/逐批账本 -> 测试接口验收 -> 新夜上线。
+- 验收：65 边界正确；真假门控不变；评分和提交观测一致；评分错误显式阻断；两批部分失败/并发不重复提交；历史 completed 记录保留。
+- 下一步：SSH 恢复后检查实际运行版本、ObsCodes 327、MPC.config，以及 unknown 曝光中点历史问题；在临时目录回放来信七个目标。
+
+## Previous objective: verify first follow-up night (2026-09-04)
 
 - 20260904 最终计划包含 7 个 active source、每源 5 条，共 35 条 `MP_FU_*`；6 源来自 20260830，20260902 只保留可能真实的 `00001nF`。
 - 下一验证：20260905 早晨逐源统计这 7 个源的昨晚 `MP_FU_*` L1/L2，确认每源是否达到 5 张并检查 reconcile 是否记录 success。
