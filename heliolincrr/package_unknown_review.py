@@ -6,14 +6,14 @@ import csv
 import json
 import shutil
 import tarfile
-from argparse import Namespace
 from pathlib import Path
 from typing import Any
 
 import numpy as np
 from astropy.table import Table
 
-from export_unknown_ades import build_obs_rows
+from export_unknown_ades import build_obs_rows, build_argparser as export_parser, write_psv
+from digest2_pipeline import score_snapshot
 
 DETAIL_COLUMNS = [
     ("trk_sub", "U7"),
@@ -239,29 +239,31 @@ def write_review_detail_fits(
     return str(fits_path), len(detail_rows)
 
 
-def write_review_ades_fits(args: argparse.Namespace, catalog: Path, out_dir: Path) -> tuple[str, int]:
+def write_review_ades_fits(args: argparse.Namespace, catalog: Path, out_dir: Path) -> tuple[str, int, dict]:
     fits_path = out_dir / f"{args.night}_unknown_review_ades.fits"
-    export_args = Namespace(
-        night=str(args.night),
-        processed_root=str(args.processed_root),
-        catalog=str(catalog),
-        review_csv="",
-        require_review=False,
-        mode="CCD",
-        obs_code="327",
-        prog="",
-        astcat="Gaia3E",
-        band="G",
-        photcat="Gaia3E",
-        err_unit="deg",
-    )
-    obs_rows, _ = build_obs_rows(export_args)
+    export_args = export_parser().parse_args([str(args.night), "--processed-root", str(args.processed_root),
+                                             "--catalog", str(catalog)])
+    obs_rows, stats, catalog_rows = build_obs_rows(export_args, return_catalog=True)
+    if stats["missing_detection_rows"] or stats["missing_trk_sub_links"]:
+        raise ValueError("Incomplete unknown observations; review package blocked")
+    report = {"scores": {}}
+    if catalog_rows:
+        export_args.out = str(out_dir / f"{args.night}_unknown_review_ades.psv")
+        write_psv(export_args, obs_rows)
+        _, report = score_snapshot(Path(export_args.out), catalog_rows,
+                                   Path(args.processed_root) / args.night / "L4" / "digest2")
+    (out_dir / "digest2_scores.json").write_text(json.dumps(report, indent=2) + "\n")
+    with (out_dir / "digest2_scores.csv").open("w") as stream:
+        writer = csv.writer(stream)
+        writer.writerow(["trkSub", "NEO_NoID", "NEO_Raw", "high_priority", "status"])
+        for key, score in sorted(report["scores"].items(), key=lambda kv: -kv[1]["neo_noid"]):
+            writer.writerow([key, score["neo_noid"], score["neo_raw"], int(score["neo_noid"] >= 65), score["status"]])
     cols = ["trkSub", "mode", "stn", "obsTime", "ra", "dec", "rmsRA", "rmsDec", "astCat", "mag", "rmsMag", "band", "photCat"]
     if obs_rows:
         Table(rows=[{col: row.get(col, "") for col in cols} for row in obs_rows]).write(fits_path, overwrite=True)
     else:
         Table({col: np.asarray([], dtype="U64") for col in cols}).write(fits_path, overwrite=True)
-    return str(fits_path), len(obs_rows)
+    return str(fits_path), len(obs_rows), report
 
 
 def build_package(args: argparse.Namespace) -> dict[str, Any]:
@@ -279,7 +281,7 @@ def build_package(args: argparse.Namespace) -> dict[str, Any]:
     rows = load_json_list(catalog)
     review_csv = out_dir / f"{night}_unknown_review.csv"
     manifest_json = out_dir / f"{night}_unknown_review_manifest.json"
-    review_ades_fits, review_ades_rows = write_review_ades_fits(args, catalog, out_dir)
+    review_ades_fits, review_ades_rows, digest2_report = write_review_ades_fits(args, catalog, out_dir)
     review_full_fits, review_full_rows = write_review_detail_fits(args, rows, out_dir)
 
     copied = 0
@@ -305,6 +307,7 @@ def build_package(args: argparse.Namespace) -> dict[str, Any]:
         manifest_rows.append(
             {
                 "tracklet_id": trk_sub,
+                "digest2": digest2_report["scores"].get(trk_sub),
                 "linkage_id": linkage_id,
                 "gif": str(dst_gif.relative_to(out_dir)) if src_gif.exists() else "",
                 "source_gif": str(src_gif),

@@ -2,6 +2,20 @@
 
 ## 2026-09-20
 
+- task: 按最新授权将 digest2 接入服务器 unknown 主流程，并交付原理/流程 PPT 与 Markdown
+- files_changed: `heliolincrr/digest2_pipeline.py`, `ades_submit.xsd`, `ades_submit.SOURCE.md`, exporter/package/watcher/wrapper、生产测试、README/设计文档、`DIGEST2_PIPELINE_UPDATE.md`；8 页 PPT 与验证回放产物放 outputs
+- commands_run: 固定官方 2017 schema；py_compile；本机/服务器各 36 项 unittest；独立 digest2 venv 离线安装；服务器真实 20260910 数据在 /tmp 回放 package/export；备份核对旧 hash 后部署；生产入口再次对临时目录本地验证；PPT Artifact Tool 创建、结构校验与逐页渲染检查
+- key_findings:
+  - 复核包先给全部 unknown 评分，最终接受集冻结复核决定并重算；NoID NEO >=65 自动 neo candidate，其余 unclassified；错误阻断
+  - --validate 改为本地 schema/完整性/评分校验，不把 MPC 测试收件 ID 当格式通过；正式提交逐批先落 sending，明确 ID 后 received，超时/中断不自动重发
+  - 修复历史 submitted 夜次因 review/manifest signature 改变而可重发的漏洞；共享状态和旧回执保护保留
+  - 现有参考 schema 实为2022，不能验证2017 PSV；另取官方 a66d4963 提交的2017原文并记录来源/hash
+  - runtime: /pipeline/xiaoyunao/data/heliolincrr/digest2_runtime/env；原 heliolinc 依赖未升级；备份: /pipeline/xiaoyunao/data/heliolincrr/digest2_deploy_20260920
+- validation: 36/36 双平台 PASS；120目标/372观测/120 GIF 完整包回放；真实人工4目标18观测进入候选批；部署后实际生产入口 --validate PASS；7个历史已上报夜次保护通过；共享 state SHA-256 未变；此次正式 POST=0；8页PPT通过结构/字体/布局检查
+- remaining_issues: 首个新夜的正式邮件/NEOCP结果待实际运行；网页分数列未新增（分数在包内CSV/JSON和manifest）；曝光起点与中点约15s的科学时间约定未修正；模型/配置升级需回放
+- closeout_note: 部署后烟测成功后，SSH在额外拉取日志/上传README与说明MD时超时（10s、15s重试均失败）；不影响已完成代码部署。服务器文档镜像同步待网络恢复；部署成功回显及9个代码hash复核已保存本地 outputs/digest2_production_20260920/deployment_receipt.json
+- next_step: 按原人工复核/cron入口运行，核对新夜的逐批正式回执；不重发本次历史测试数据
+
 - task: 实测 MPC 测试接口回执，区分请求接收与字段格式验证
 - files_changed: `heliolincrr/validate_neo_batches.py`, `heliolincrr/tests/test_digest2_rehearsal.py`, `heliolincrr/DIGEST2_TESTING.md`, `WORKLOG.md`, `PLAN.md`, `CHANGELOG.md`; 测试请求/回执保存在 outputs
 - commands_run: git status/branch/fetch/log；构建两目标六观测格式样本；仅向 `/submit_psv_test` 发送 2 个正常分类批和 2 个损坏格式对照；py_compile 与 25 项 unittest

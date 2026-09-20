@@ -5,7 +5,7 @@ import argparse
 import csv
 import json
 import re
-import subprocess
+import tempfile
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -13,8 +13,6 @@ import numpy as np
 from astropy.table import Table
 
 
-SUBMIT_URL = "https://minorplanetcenter.net/submit_psv"
-VALIDATE_URL = "https://www.minorplanetcenter.net/submit_psv_test"
 TRK_SUB_RE = re.compile(r"^[-A-Za-z0-9_]{1,7}$")
 
 
@@ -411,35 +409,6 @@ def write_psv(args: argparse.Namespace, obs_rows: list[dict[str, object]]) -> No
     out.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
-def run_curl(url: str, args: argparse.Namespace) -> None:
-    cmd = [
-        "curl",
-        "-sS",
-        "-L",
-        url,
-        "-F",
-        f"ack={args.ack}",
-        "-F",
-        f"ac2={args.ac2_email}",
-        "-F",
-        f"obj_type={args.obj_type}",
-        "-F",
-        f"source=@{args.out}",
-    ]
-    print("[RUN]", " ".join(cmd))
-    proc = subprocess.run(cmd, text=True, capture_output=True)
-    if proc.returncode != 0:
-        if proc.stderr.strip():
-            print("[CURL-ERR]", proc.stderr.strip())
-        raise RuntimeError(f"curl failed with return code {proc.returncode}")
-    reply = proc.stdout.strip()
-    print("[MPC-REPLY]")
-    print(reply)
-    if args.response_out:
-        Path(args.response_out).write_text(reply + "\n", encoding="utf-8")
-        print(f"[OK] Wrote reply: {args.response_out}")
-
-
 def build_argparser() -> argparse.ArgumentParser:
     ap = argparse.ArgumentParser(description="Export fit_ok unknown single-night links to ADES PSV using trkSub.")
     ap.add_argument("night", help="Target night in YYYYMMDD format")
@@ -482,7 +451,7 @@ def build_argparser() -> argparse.ArgumentParser:
     ap.add_argument("--collaborators", default="Yun-Ao Xiao;Niu Li;Jingyi Zhang;Wenxiong Li;Zhaobin Chen;Shufei Liu;WSGP Team")
     ap.add_argument(
         "--funding-source",
-        default="The 60/90-cm Schmidt telescope situated at the Xinglong station is overseen by the research team of the Wide-field Survey and Galaxy Physics (WSGP) at NAOC.",
+        default="Wide-field Survey and Galaxy Physics (WSGP), NAOC; Xinglong 60/90-cm Schmidt telescope.",
     )
     ap.add_argument("--astcat", default="Gaia3E")
     ap.add_argument("--band", default="G")
@@ -492,7 +461,7 @@ def build_argparser() -> argparse.ArgumentParser:
     ap.add_argument("--include-logsnr", action="store_true", help="Include logSNR when flux columns exist")
     ap.add_argument("--ac2-email", default="wsgp2024@163.com")
     ap.add_argument("--ack", default="Unknown-object ADES submission")
-    ap.add_argument("--obj-type", default="NEO")
+    ap.add_argument("--obj-type", default="auto", choices=["auto"], help="Automatically route by digest2 NoID NEO")
     ap.add_argument("--response-out", default="")
     ap.add_argument("--validate", action="store_true")
     ap.add_argument("--submit", action="store_true")
@@ -526,7 +495,28 @@ def main() -> None:
         if args.stats_out is None:
             args.stats_out = str(l4_dir / f"{args.night}_unknown_links_submit_stats.json")
 
-    obs_rows, stats, kept_rows = build_obs_rows(args, return_catalog=True)
+    if args.validate or args.submit:
+        if not args.review_csv or not args.require_review or not args.require_complete_review:
+            raise ValueError("Submission/validation requires complete explicit human review")
+        if args.submit:
+            from digest2_pipeline import guard_legacy
+            guard_legacy(args.night, l4_dir)
+    # Read the exact same frozen decisions during export and scoring.
+    with tempfile.TemporaryDirectory(prefix="smt_review_") as review_tmp:
+        source_review = args.review_csv
+        if source_review:
+            frozen_review = Path(review_tmp) / "review.csv"
+            frozen_review.write_bytes(Path(source_review).read_bytes())
+            args.review_csv = str(frozen_review)
+        obs_rows, stats, kept_rows = build_obs_rows(args, return_catalog=True)
+        review_bytes = Path(args.review_csv).read_bytes() if args.review_csv else None
+        args.review_csv = source_review
+        stats["review_csv"] = source_review
+        if review_bytes is not None:
+            from score_unknown_digest2 import sha256
+            stats["review_sha256"] = sha256(review_bytes)
+    if stats["missing_detection_rows"] or stats["missing_trk_sub_links"]:
+        raise ValueError("Incomplete unknown observations; export/submission blocked")
     if args.filtered_catalog:
         write_filtered_catalog(args.filtered_catalog, kept_rows)
         stats["filtered_catalog"] = args.filtered_catalog
@@ -543,10 +533,13 @@ def main() -> None:
     if not obs_rows:
         print("[SKIP] No unknown ADES obsData rows exported; skip validate/submit")
         return
-    if args.validate:
-        run_curl(VALIDATE_URL, args)
-    if args.submit:
-        run_curl(SUBMIT_URL, args)
+    if args.validate or args.submit:
+        from digest2_pipeline import process_export
+        with tempfile.TemporaryDirectory(prefix="smt_review_") as review_tmp:
+            frozen_review = Path(review_tmp) / "review.csv"
+            frozen_review.write_bytes(review_bytes)
+            args.review_csv = str(frozen_review)
+            process_export(args, kept_rows, l4_dir)
 
 
 if __name__ == "__main__":

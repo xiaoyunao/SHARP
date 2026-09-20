@@ -17,6 +17,9 @@ from typing import Any, Iterator
 DONE_STATUSES = {"exported", "validated", "submitted", "no_observations", "dry_run"}
 PENDING_STATUSES = {"invalid_submit_removed"}
 NON_RETRYABLE_FAILURE_PATTERNS = (
+    "manual reconciliation required",
+    "historical resubmission blocked",
+    "Existing legacy MPC reply",
     "blank is_real values",
     "missing is_real values",
     "unknown is_real values",
@@ -142,6 +145,8 @@ def already_done(
 ) -> bool:
     if not record:
         return False
+    if record.get("status") == "submitted":
+        return True
     if submit_signature is not None and record.get("submit_csv") != submit_signature:
         return False
     if manifest_signature is not None and record.get("review_package") != manifest_signature:
@@ -314,6 +319,8 @@ def refresh_summary(
         current_record = bool(record.get("review_package") == manifest_sig)
         if status != "no_observations" and submit_sig is not None:
             current_record = current_record and bool(record.get("submit_csv") == submit_sig)
+        if status == "submitted":
+            current_record = True
         if status == "failed" and current_record:
             failed.append(night)
             continue

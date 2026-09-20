@@ -16,7 +16,7 @@ def build_argparser() -> argparse.ArgumentParser:
     ap.add_argument("--review-root", default="/pipeline/xiaoyunao/heliolincrr/review_packages")
     ap.add_argument("--submit-csv", default="", help="Default: <review-root>/<night>/<night>_submit.csv")
     ap.add_argument("--out", default="", help="Optional ADES PSV output path")
-    ap.add_argument("--validate", action="store_true", help="Send the generated PSV to MPC test validation")
+    ap.add_argument("--validate", action="store_true", help="Validate ADES schema and digest2 routing locally (no MPC request)")
     ap.add_argument("--submit", action="store_true", help="Submit the generated PSV to MPC")
     ap.add_argument("--no-stats", action="store_true", help="Do not write the default stats JSON")
     ap.add_argument("--no-logsnr", action="store_true", help="Do not include ADES logSNR in the generated PSV")

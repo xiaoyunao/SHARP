@@ -1,8 +1,8 @@
 # digest2 / NEW NEO 接入设计
 
-日期：2026-09-20。状态：独立评分/拆批/测试账本已实现，见 `DIGEST2_TESTING.md`；
-生产入口尚未改动或部署。初次设计时 SSH 超时，后续已恢复并只读核对
-服务器 exporter / watcher 与本地一致；所有新功能先在隔离环境测试。
+日期：2026-09-20。本文保留最初接入设计与当时基线。现已完成主流程接入和服务器部署；
+最终实现（包括部分更保守的门控、manifest 字段名和本地 validate 语义）以
+[DIGEST2_PIPELINE_UPDATE.md](DIGEST2_PIPELINE_UPDATE.md) 为准。
 
 ## 已确认的接口
 
@@ -26,9 +26,9 @@
 - https://docs.minorplanetcenter.net/mpc-ops-docs/observations/command-line-submissions/
 - https://docs.minorplanetcenter.net/mpc-ops-docs/astrometry/reporting-observations/
 
-## 当前流程与最小改动
+## 改动前流程与初始方案
 
-当前：known subtraction -> unknown catalog / trkSub -> GIF/review package ->
+改动前：known subtraction -> unknown catalog / trkSub -> GIF/review package ->
 人工 submit CSV -> watcher -> export -> validate -> submit。
 `export_unknown_ades.py` 默认 `--obj-type NEO`，整夜一个 PSV；
 `submit_reviewed_unknown.py` 未提供分类分流；watcher 只记录整夜结果。

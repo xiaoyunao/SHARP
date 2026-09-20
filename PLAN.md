@@ -6,18 +6,17 @@
 - 主链只生成逐晚 tracklet/link；回挂步骤仅匹配 L4 unknown link，且只考虑 `active` 源。20260910 数据进入回挂前，本源已被 L2 数量判为 `complete`，产生时序漏检。
 - 下一步先人工/离线确认后随图像中的同一移动源，并检验三夜轨道一致性；随后让回挂可处理刚 `complete` 的源，避免把“图像数量达标”误当成“链已关联”。
 
-## Current objective: digest2 / NEW NEO integration (2026-09-20)
+## Completed milestone: digest2 / NEW NEO production integration (2026-09-20)
 
-- 已完成独立评分/拆批/测试账本实现与双平台回放；设计见 `heliolincrr/NEO_INTEGRATION.md`，测试方法和结果见 `heliolincrr/DIGEST2_TESTING.md`。
-- 核心规则：人工真源且 digest2 **NoID NEO >=65** 使用 `obj_type=neo candidate`；低分未知源用 `unclassified`；评分失败暂停该目标提交。
-- 接入点：trkSub 分配后给 unknown 评分并写入 review manifest；最终提交前核对观测 hash、拆批、逐批保存 MPC 回执与状态。
-- 用户约束：不改服务器 main pipeline；新程序未接 daily/watcher/exporter，生产环境不安装依赖。服务器仅 `/tmp/smt-digest2-rehearsal-20260920.4ihjJN` 中建立测试 venv。
-- 已验证：服务器 Python 3.10.20 源码编译 digest2 2.8.2 成功；本机/服务器各 21 项测试通过，125 个目标跨平台分数完全相同。七个点名目标都达到65；ua/vy 已定位到20260910，但未重新做图像真假确认。
-- 已验证：20260910 全夜 120 条评分成功；107 高分/13 低分；真实复核只允许 4 条进入候选批，116 条排除。09-04 已判四个假源的高分不会绕过门控。
-- 里程碑：基线核对/固定依赖/离线回放已完成 -> 复核展示与未来曝光中点约定 -> 正式拆批/提交账本及历史迁移 -> MPC 测试接口验收 -> 经后续部署安排后新夜上线。
-- 验收：65 边界正确；真假门控不变；评分和提交观测一致；评分错误显式阻断；两批部分失败/并发不重复提交；历史 completed 记录保留。
-- 已实测 MPC 测试接口：两分类样本均收到测试 ID；过短输入返回 400，但 RA=NOT_A_NUMBER 仍获得 ID。因此只能确认测试接收，不能把 ID 当成字段格式验证通过。回执分类器已修复，本机 25 项测试通过；没有正式上报。
-- 下一步：保留独立测试边界，建立可证明的 ADES 字段/schema 校验，再准备正式接入补丁及逐批回执处理；测试接收不等于正式接收、NEOCP 发布或真源确认。
+- 最新授权已覆盖此前隔离测试限制；主流程接入和服务器部署完成，详见 `heliolincrr/DIGEST2_PIPELINE_UPDATE.md`。
+- 流程：复核包全部预评分 -> 完整人工决定 -> 最终 ADES schema 校验与重算 -> NoID NEO >=65 使用 neo candidate，否则 unclassified -> 逐批正式回执账本。
+- 保留真假门控、统一 masked JSON/FITS 和原后随入口；失败阻断，不以高分证明真源。--validate 为本地校验，不发请求。
+- 36项双平台测试通过；真实20260910临时目录完整回放120目标372观测120 GIF，最终4目标18观测进入候选批；部署后真实入口本地验证通过。
+- 历史7个submitted夜次保持终态；原共享state hash不变；此次正式POST=0。独立runtime与备份均位于 `/pipeline/xiaoyunao/data/heliolincrr/`。
+- 交付：8页PPT在 `outputs/digest2_production_20260920/deliverables/`；MD记录本地原理、固定版本细节、运行路径与异常处理。
+- 收尾：部署及烟测完成后SSH连接超时，额外服务器文档镜像同步待恢复；PPT/MD本地交付已完成。
+- 后续：首个新夜正式邮件/NEOCP状态需运行后核对；网页分数列、已有NEOCP身份自动路由、模型定期升级与曝光中点约定另行处理。
+- 验收已完成：65边界、真假门控、完整观测与hash、schema错误、部分失败/并发去重、历史状态保护、部署路径烟测、PPT逐页检查。
 
 ## Previous objective: verify first follow-up night (2026-09-04)
 

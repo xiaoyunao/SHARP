@@ -13,12 +13,13 @@
 - 未知单夜 link 的可视化已并入 `run_single_night.sh`，底层脚本为 `plot_unknown_links.py`，输出到 `heliolincrr/plots/YYYYMMDD/`
 - unknown ADES 导出脚本为 `export_unknown_ades.py`，默认只写 PSV，不自动提交 MPC
 
-## digest2 独立测试（尚未接入生产）
+## digest2 / NEW NEO 主流程
 
-`score_unknown_digest2.py` 对复制的 ADES PSV 评分并根据人工复核拆批；
-`validate_neo_batches.py` 默认仅做本地完整性检查，显式启用时也只访问 MPC
-测试接口。两者均未接入 daily/watcher，没有正式提交入口。
-隔离环境依赖、运行方法、限制和历史回放结果见 [DIGEST2_TESTING.md](DIGEST2_TESTING.md)。
+已接入复核包预评分与最终提交分流。人工接受且 NoID NEO >=65 的未知目标
+使用 `neo candidate`，低分使用 `unclassified`；错误阻断，正式请求逐批记账去重。
+`--validate` 只做本地 schema/评分检查；`--submit` 才发送正式请求。
+运行原理、部署路径、复核产物和异常处理见 [DIGEST2_PIPELINE_UPDATE.md](DIGEST2_PIPELINE_UPDATE.md)。
+独立测试工具与历史实验记录见 [DIGEST2_TESTING.md](DIGEST2_TESTING.md)。
 
 ## Unknown trkSub and review interface
 

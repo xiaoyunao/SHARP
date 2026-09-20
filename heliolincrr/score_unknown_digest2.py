@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Offline digest2 rehearsal on an immutable copy of unknown ADES PSV.
 
-No production entry point imports this module. This program cannot submit to MPC.
+Used by the production worker and offline rehearsal. This program cannot submit to MPC.
 The catalog must describe exactly the objects represented by the input PSV (use
 the matching submit_masked catalog when replaying a historical submission).
 """
