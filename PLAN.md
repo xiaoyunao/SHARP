@@ -1,5 +1,11 @@
 # PLAN
 
+## Follow-up linkage investigation (2026-09-20)
+
+- `00001nF` 的 20260909/10 后随 L2 数量达标，但没有完成跨晚目标确认：`associated_links=[]`，运动模型仍只有 20260902 的 3 个测量点。
+- 主链只生成逐晚 tracklet/link；回挂步骤仅匹配 L4 unknown link，且只考虑 `active` 源。20260910 数据进入回挂前，本源已被 L2 数量判为 `complete`，产生时序漏检。
+- 下一步先人工/离线确认后随图像中的同一移动源，并检验三夜轨道一致性；随后让回挂可处理刚 `complete` 的源，避免把“图像数量达标”误当成“链已关联”。
+
 ## Current objective: digest2 / NEW NEO integration (2026-09-20)
 
 - 已完成官方接口和本地代码核查；具体设计见 `heliolincrr/NEO_INTEGRATION.md`。

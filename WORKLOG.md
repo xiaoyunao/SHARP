@@ -2,6 +2,18 @@
 
 ## 2026-09-20
 
+- task: 核查 `00001nF` 的 20260909/10 后随 tracklet 是否已跨晚关联
+- files_changed: `WORKLOG.md`, `PLAN.md`（仅本地记录；生产数据/代码未改）
+- commands_run: 只读 SSH 核对 follow-up state、09/10 unknown daily 日志、L4 unknown JSON、Gaia-mask 星表和逐晚 tracklet FITS；对两晚后随 tracklet 做线性外推交叉检查
+- key_findings:
+  - 两晚各有 5 张 L2 后随星表；09/10 分别有 61/59 条两端均来自 `MP_FU_00001nF` 图像的逐晚 tracklet，但两晚 L4 unknown link 均无对应图像，`associated_links=[]`，运动模型仍只拟合 20260902 的 3 个测量点
+  - 09 日数据的自动关联在 09 月 10 日 09:41 运行；全夜匹配 1 条（非本源）。10 日数据的关联在 09 月 11 日 09:46 运行；全夜匹配 3 条，但本源已于 09:00 reconcile 达到两晚成功而设为 `complete`，关联函数只遍历 `active` 源，因此未检查本源
+  - `complete` 只由每晚 L2 文件数是否至少 5 决定；现有主流程只做逐晚 link，后续启发式回挂仅消费当晚 unknown link，不做原始 tracklet 的跨晚轨道拟合
+  - 按 09 月 02 日三点线性外推，09/10 后随去 Gaia 星表在预测点 30″ 内均无源；两晚 61×59 条 tracklet 的互相线性外推虽有 2 对落在 30″ 内，但位置远离原目标外推轨迹，不能认定为 `00001nF`
+- validation: 只读核查；未修改服务器状态、代码或观测产物，未确认目标跨晚关联
+- remaining_issues: 需人工确认后随图像中的真实目标并用三夜测量做轨道/非线性拟合；修正 `complete` 源在后随数据进入 L4 前被关联逻辑排除的时序问题
+- next_step: 如需继续，先定位后随图像中的同一移动源，再离线检验 09 月 02/09/10 的轨道一致性，验证后再改自动流程
+
 - task: 调查 MPC 高 digest2 来信要求，设计 unknown 的 NEW NEO 接入
 - files_changed: `heliolincrr/NEO_INTEGRATION.md`, `WORKLOG.md`, `PLAN.md`
 - commands_run: `git status/branch/fetch/log`; 阅读 unknown export/review/watcher/daily；浏览官方 digest2 教程及提交文档；GET `/submit_psv` 核对表单；SSH 连接超时
