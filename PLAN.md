@@ -1,5 +1,13 @@
 # PLAN
 
+## Digest2 post-deployment observation (2026-09-23)
+
+- 20260921：15 个 unknown 均完成本地评分，13 个 NoID NEO ≥65；人工最终全部判否，正式上报数 0，watcher 状态 `no_observations`。
+- 20260922：unknown 数为 0，空评分 CSV/复核包正常生成，daily 正常结束。20260920 无观测目录，正常跳过。
+- 两日相关日志无 ERROR/WARN/Traceback；9 个生产文件 hash 与部署记录一致。上一轮未完成的服务器说明文档同步已于 2026-09-23 完成。
+- 当前待验：首个被人工接受的未知目标进入正式拆批、MPC 收件和后续邮件处理；不能把这两天空的上报结果当作正式接口已验收。
+- 审计原始摘要：`outputs/digest2_health_20260923/remote_report.json`；下次有新提交时先查 `/processed1/<night>/L4/<night>_unknown_mpc_batches.json` 与 `review_submit_state.json`。
+
 ## Follow-up linkage investigation (2026-09-20)
 
 - `00001nF` 的 20260909/10 后随 L2 数量达标，但没有完成跨晚目标确认：`associated_links=[]`，运动模型仍只有 20260902 的 3 个测量点。
@@ -14,7 +22,7 @@
 - 36项双平台测试通过；真实20260910临时目录完整回放120目标372观测120 GIF，最终4目标18观测进入候选批；部署后真实入口本地验证通过。
 - 历史7个submitted夜次保持终态；原共享state hash不变；此次正式POST=0。独立runtime与备份均位于 `/pipeline/xiaoyunao/data/heliolincrr/`。
 - 交付：8页PPT在 `outputs/digest2_production_20260920/deliverables/`；MD记录本地原理、固定版本细节、运行路径与异常处理。
-- 收尾：部署及烟测完成后SSH连接超时，额外服务器文档镜像同步待恢复；PPT/MD本地交付已完成。
+- 收尾：部署及烟测完成后 SSH 曾超时；额外服务器文档镜像已于 2026-09-23 同步。PPT/MD 本地交付已完成。
 - 后续：首个新夜正式邮件/NEOCP状态需运行后核对；网页分数列、已有NEOCP身份自动路由、模型定期升级与曝光中点约定另行处理。
 - 验收已完成：65边界、真假门控、完整观测与hash、schema错误、部分失败/并发去重、历史状态保护、部署路径烟测、PPT逐页检查。
 

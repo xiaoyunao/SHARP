@@ -1,5 +1,20 @@
 # WORKLOG
 
+## 2026-09-23
+
+- task: 审计 digest2 上线后两晚 unknown 流程的实际运行状态
+- files_changed: `WORKLOG.md`, `PLAN.md`；服务器仅同步 README/设计/说明文档，未改生产代码或数据；只读审计快照在 `outputs/digest2_health_20260923/remote_report.json`
+- commands_run: git status/branch/fetch/log 与计划恢复；SSH 读取 20260921/22 复核包、评分 CSV/manifest、submit CSV、逐夜状态/账本和 20260921–23 日志；核对服务器九个已部署文件 SHA-256；对比逐目标分数；恢复 SSH 后备份旧 README 并同步三份说明文档
+- key_findings:
+  - 20260920 没有观测夜目录，daily 正常跳过；20260921 有 15 unknown/45 观测/15 GIF，15 个成功评分，其中 13 个 NoID NEO ≥65；CSV 与 manifest 分数逐项一致
+  - 20260921 完整人工决定把 15 个全部判为 0；watcher 正常记为 `no_observations`，无正式 MPC 账本/POST，符合真假门控
+  - 20260922 unknown 为 0，复核包和空评分 CSV 正常生成；未启动提交 watcher 是现有 `unknown_count=0` 分支的预期行为
+  - 20260922/23 的 daily 与 unknown 日志无异常栈/ERROR/WARN；九个生产源码与部署 hash 一致；没有运行中的 digest2/unknown watcher
+  - 上次 SSH 超时遗留的服务器说明文档已同步，原 README 备份在 `digest2_deploy_20260920/README_before_docsync_20260923.md`
+- validation: 全部 15 条评分状态为 ok，15/15 manifest 对账一致；人工 15/15 判否；两日 pipeline 都运行至 `daily pipeline done`；docs 同步前后 SHA-256 核对
+- remaining_issues: 两夜没有人工接受的 unknown，因此正式 `neo candidate` 拆批、MPC 回执与 NEOCP 后续处理尚无生产样本可验
+- next_step: 首个接受真源的新夜出现后，按逐批账本和 MPC 邮件核对 `obj_type`、Submission ID 与后续处理
+
 ## 2026-09-20
 
 - task: 按最新授权将 digest2 接入服务器 unknown 主流程，并交付原理/流程 PPT 与 Markdown
