@@ -1,5 +1,22 @@
 # WORKLOG
 
+## 2026-10-05
+
+- task: 核查同行反馈未被后随找回的 `00001AE/BL/Bx/CB/Ck`，提取原始 GIF 和逐帧截图，排查 tracklet 伪源线索
+- files_changed: `WORKLOG.md`, `PLAN.md`；原始 GIF、截图、复核/上报证据和只读诊断脚本保存在 `outputs/tracklet_audit_20261005/`；服务器代码、人工决定、提交和 follow-up 状态未改
+- commands_run: git status/branch/fetch/log（当前分支比 origin/main 前进 6 commits，无远端待合并提交）；SSH/SCP 读取三夜 review package、L4 JSON/PSV/逐批收件账本、16 张 L2 星表局部邻星与 Gaia；对源外邻星做 RANSAC+迭代裁剪仿射像素配准；Pillow 原始 GIF 逐帧截取；SHA-256 和 ZIP CRC 检查
+- key_findings:
+  - 映射：AE=20261002/link254；BL=20261003/link725；Bx=20261003/link590；CB=20261004/link390；Ck=20261004/link98。五源均在人工接受集和正式 neo candidate 收件账本内；未发现这五项编号/观测映射串错
+  - 5 张 GIF 共 16 个不同曝光帧，源文件完整；本地/服务器 5 个相关生产源码 hash 一致
+  - 初看 AE/BL/Ck 近似静止的印象被定量配准推翻：AE/BL/Bx/CB/Ck 相对恒星速度分别约 14.71/15.23/28.71/23.23/19.74 arcsec/h，与星表运动一致。每个非参考帧使用 234–394 颗邻星，配准 RMS 0.14–0.17 pixel；不能归因为整场 WCS 平移或把它们直接判作静止恒星
+  - 仍有共同伪影疑点：候选 FWHM / 同帧局部 15<Mag_PSF<19、MagErr_PSF<0.1 源的 FWHM 中位数，AE=1.72–2.42、BL=1.46–1.71、Bx=1.56–1.74、CB=1.16–1.84、Ck=2.06–2.90；这些慢速源在 30 s 曝光内的预测拖线只有约 0.12–0.24 arcsec
+  - 候选在探测器上的首末帧位移，与仿射配准推得的局部恒星漂移近乎反向（方向余弦 -0.88 至 -0.99），提示随指向变化的反射/ghost 等伪影，尚未找到具体母星或光学/图减成因
+  - 次夜 20261004/link111=`00001Cm` 在 Bx 同一天区呈近似重复轨迹；按相同 UTC 时刻在 Bx 前夜弧内插值，三点相距约 2.1/4.1/5.4 arcsec。这是异常重复线索，不是已确认跨夜关联，也不能仅凭单夜线性外推排除真实近地天体
+  - `mask_gaia.py` 做 Flag/Mag/Gaia/整帧残留门控，`make_tracklet_linreproj.py` 保留 FWHM 但不按像形筛选；当前链路缺少针对这类移动非恒星伪影的专门门控。没有证据把具体软件 bug 或五源全假作为定论
+- validation: 5/5 原始 GIF 远端/本地 SHA-256 相同；16/16 GIF 帧可解码；ZIP CRC 通过；逐帧拼图和 Bx/Cm 对照图已目视检查；局部像素配准和星表运动互相一致
+- remaining_issues: 需查看 L1/L0 像形与亮星/ghost 几何关系、更多同场曝光的完整轨迹；未获取同行跟随的具体目标/时刻/搜索范围，未验证其未检出原因；未更改生产筛选规则、撤回上报或向同行发送消息
+- next_step: 先交付 5 GIF 和截图供同行复核；优先用 Bx/Ck/Cm 同场连续数据追溯伪影来源，再在隔离环境验证形态/ghost 门控及真实小行星保留率
+
 ## 2026-09-23
 
 - task: 审计 digest2 上线后两晚 unknown 流程的实际运行状态
