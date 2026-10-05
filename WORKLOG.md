@@ -2,6 +2,21 @@
 
 ## 2026-10-05
 
+- task: 评估 PSF/像形能否拦截本次疑似 ghost，做原图拟合与三夜已知小行星隔离回放
+- files_changed: `WORKLOG.md`, `PLAN.md`；5 个只读诊断/汇总脚本、原生 L1 stamps、拟合残差图和 JSON/CSV 在 `outputs/psf_feasibility_20261005/`；生产代码/阈值/真假决定/上报状态未修改
+- commands_run: SSH 读取 20261002/03/04 L2 与 known matched；先比对 19 帧/378 条 known 对照，再以 6 workers 只读评分 975 张 L2；提取 5 张 L1 的 194 个 51x51 stamps；本地 scipy 经验 PSF 拟合；py_compile、独立样本/计数断言与图件目视检查
+- key_findings:
+  - L2 已含 `Chi2_PSF`, `FWHM`, `Class_ANN`，unknown 前处理未做像形门控；现有 `Chi2_PSF` 约 1e-11..1e-9，定义未追溯，不能当作标准约化 chi-square 套固定阈值
+  - 原图试验：每帧最近的 20 颗孤立高信噪比恒星构建经验 PSF（最远约 554–1459 pix），候选/已知对照未参与模板；另 50 颗恒星独立检验。共拟合 5 个候选单帧、39 个已知小行星单帧、50 颗留出恒星，94/94 拟合收敛
+  - AE/BL/Bx/CB/Ck 相对经验 PSF 的自由宽化系数约 2.01/1.46/1.55/1.44/1.87；50 颗留出恒星约 0.92–1.04。候选固定 PSF 的约化 chi-square 仍约 0.99–1.55，qfit 与暗弱 known 有重叠，故单独 chi-square/qfit 无法可靠剔除
+  - 探索规则：同帧局部干净恒星 FWHM 中位数归一化后 ratio>1.5 且 Class_ANN<0.1，至少 3 次有效观测、至少 2 次且 >=2/3 帧同时异常才标记轨迹。AE/BL/Bx/CB/Ck 分别命中 2/3、3/3、3/4、2/3、3/3，追加 Cm 为 3/3；这是风险标记，不是 ghost 成因或天体真伪确认
+  - 三夜共 18,156 条 known match；Flag=0、14<Mag_PSF<21 后 16,982 条参与评分，314 条缺足够局部参考星，211 条检测触发单帧规则
+  - 按 object-night 汇总，3022 组 >=3 次有效检测中 1 组触发；该分母会被长序列稀释，不能直接等同于三点 tracklet 误杀率
+  - 更贴近 unknown 的验证：按同一已知天体时间排序，取连续三帧、跨度 <=2 h、参考星均有效的 6353 个窗口，11 个触发（0.173%，涉及 8 个 object-night）。这些窗口重叠且相关，不是独立抽样或未来 NEO 完备率保证；已知匹配身份沿用生产匹配结果
+- validation: 194/194 原生 stamps 形状/有限值通过；94/94 独立测试源不在各自 20 星模板内，拟合收敛且指标有限；三夜评分去重、总数和窗口统计对账通过；5 个诊断脚本 parse 通过；残差图只展示圆形拟合区域，已目视复核
+- remaining_issues: 尚未验证快移 NEO/拖线 PSF、彗星、拥挤重叠及跨季节数据；未追溯原 Chi2_PSF 定义；尚未把原图 PSF 残差计算批量接入生产；假源样本仍小且未确认成因，不可声称所有鬼像都能清除
+- next_step: 将像形作为上报前可解释的风险隔离条件，保留原始检测；先回看 11 个误拦窗口并补拖线/混合源模型及历史/注入测试，再决定生产门控。当前证据支持隔离复核，不支持永久自动删源
+
 - task: 核查同行反馈未被后随找回的 `00001AE/BL/Bx/CB/Ck`，提取原始 GIF 和逐帧截图，排查 tracklet 伪源线索
 - files_changed: `WORKLOG.md`, `PLAN.md`；原始 GIF、截图、复核/上报证据和只读诊断脚本保存在 `outputs/tracklet_audit_20261005/`；服务器代码、人工决定、提交和 follow-up 状态未改
 - commands_run: git status/branch/fetch/log（当前分支比 origin/main 前进 6 commits，无远端待合并提交）；SSH/SCP 读取三夜 review package、L4 JSON/PSV/逐批收件账本、16 张 L2 星表局部邻星与 Gaia；对源外邻星做 RANSAC+迭代裁剪仿射像素配准；Pillow 原始 GIF 逐帧截取；SHA-256 和 ZIP CRC 检查

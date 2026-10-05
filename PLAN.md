@@ -1,5 +1,15 @@
 # PLAN
 
+## Current priority: PSF/morphology screening feasibility (2026-10-05)
+
+- 已完成隔离试验，证据目录：`outputs/psf_feasibility_20261005/`。生产流程未改；原始检测和人工标签保持现状。
+- 5 个可疑目标各 1 帧的独立经验 PSF 拟合，宽化系数约 1.44–2.01；直接 chi-square/qfit 与正常暗弱源重叠，不能单独阈值剔除。
+- 多帧像形试验规则可标出截图 5 个目标和追加 Cm：`FWHM/local_star_FWHM > 1.5 && Class_ANN < 0.1`，至少 3 次有效曝光且 >=2/3 曝光同时异常。阈值仍为探索值，不是经过最终验收的生产配置。
+- 975 张 L2 / 16,982 条已知检测回放完成；314 条缺参考星应视为未评估。连续三帧、跨度 <=2 h 的 6353 个有效已知窗口中，11 个触发，涉及 8 个 object-night；不可用 3022 组整夜聚合的更低比例代替短弧误拦率。
+- 下一步：检查误拦的 2001 QK154、1999 XX78、Grachevka、2000 QJ169、1999 TH256、Honeycutt、2001 OH105、Ikeuchisatoru；增加与预测拖线一致的 PSF 模型、混合源标记和历史/注入保留率验证。
+- 生产接入目标：在 unknown 复核包/自动上报前输出可解释的像形风险及残差图，异常候选隔离复核；不在 Gaia mask 阶段简单删除宽源。真实彗星/拖线源应保留专门复核通道。
+- 验收标准：明确误拦与未评估分母，覆盖快速/暗弱/拖线目标，确认审核无法绕过未解决质量问题；ghost 来源及候选最终真伪仍需独立图像证据。
+
 ## Current priority: reported-candidate image audit (2026-10-05)
 
 - 已取回 `00001AE/BL/Bx/CB/Ck` 五张原始 GIF（16 帧），生成手机可看逐帧总图与 ZIP：`outputs/tracklet_audit_20261005/`。只读审计结束，生产状态未改。
