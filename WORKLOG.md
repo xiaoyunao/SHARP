@@ -14,7 +14,8 @@
   - 新增持久 MPC hold：`/pipeline/xiaoyunao/data/MPC_SUBMISSION_HOLD`；unknown 账本/transport 与 known formal transport 均检查；daily 在 hold 期间只提取，unknown 不启动 submit watcher。未改 cron、假源规则、人工决定或历史提交状态
 - validation: 本机 3 个 daily/hold 回归通过；隔离服务器 39 个 digest2 测试与 3 个 daily/hold 测试通过；89/89 真实回放成功，其余 88 条分数记录完全一致，未生成提交批；生产 Python/Bash 语法检查及 known/unknown hold 实测通过，无 MPC POST
 - deployment: 2026-10-11 09:49 CST；备份 `/pipeline/xiaoyunao/data/heliolincrr/incident_20261011_f1q_hiwq`，6 个源码新旧 hash 已记账；部署前后历史 MPC 账本与 review_submit_state hash 相同
-- recovery: 正在只重建 20261006 package，并以每夜 12 个 Slurm task 上限补跑 20261007/08/10 known，随后串行 unknown；强制 hold、关闭 watcher/follow-up，逐夜检查 match 日志完成数与错误；详情 `recovery_status.json`
+- recovery: 20261006 package 已恢复并验收：89 个候选、269 条 obs、89/89 GIF、无缺图；89/89 分数成功，tar 98 个 members 可完整读取；历史 MPC state hash 再验未变。正在以每夜 12 个 Slurm task 上限补跑 20261007/08/10 known，随后串行 unknown；强制 hold、关闭 watcher/follow-up，逐夜检查 match 日志完成数与错误；详情 `recovery_status.json`
+- independent_check: 按 JPL SB Identification 官方文档对 AE 首帧尝试 327/.1 deg halfwidth/two-pass/24 mag 查询，90s 读取超时即停止，其余对象未请求；没有获得新的独立已知身份结论，证据保存在 outputs 下，不接入生产
 - remaining_issues: 本次修复只解决数值边界/调度中断与停止新提交，未解决 MPC 所指测量质量；假源研究按用户要求暂停；未向 MPC/Jira 发消息，未恢复上报；复核包补跑待验收
 - next_step: 验收补跑的 manifest/GIF/评分、确认所有正式提交账本未变化；进一步身份核验或天测整改需结合具体证据推进，不把 digest2 高分当作新发现证明
 
