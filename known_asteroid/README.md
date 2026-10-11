@@ -54,6 +54,40 @@ object submission workflow.
 - `band`: `G`
 - `err-unit`: `deg`
 
+## Local report validation and quality cuts
+
+Every nonempty export is now checked against the pinned ADES 2017 submission
+schema before the PSV is published. `--validate` is entirely local; it no longer
+sends a test submission. The formal transport revalidates and sends the exact
+validated payload. The shared `MPC_SUBMISSION_HOLD` continues to block submission.
+
+The exporter requires `Flag == 0`, finite positive aperture flux and flux error,
+valid photometry (excluding the `99` sentinel), valid coordinates/time, and
+strictly positive uncertainties both before and after PSV formatting. Invalid
+measurements are excluded without inventing an uncertainty floor. The minimum
+three observations per object is enforced after quality cuts and deduplication.
+Each export includes `<out>.audit.json` and `<out>.excluded.csv` with row-level
+reasons; counts for independent quality failures can overlap. These gates do not
+establish an astrometric systematic-error model or certify source reality.
+
+`validate_ades.py` uses `../heliolincrr/ades_submit.xsd`; provenance is recorded in
+`../heliolincrr/ades_submit.SOURCE.md`. The exporter still runs in the default
+known-asteroid Python. Only the XSD worker uses the existing isolated environment
+`/pipeline/xiaoyunao/data/heliolincrr/digest2_runtime/env/bin/python`, which already
+contains `lxml`; no production environment is upgraded. For isolated tests,
+`MPC_ADES_VALIDATOR_PYTHON` can select another Python with `lxml` installed.
+
+To inspect an existing PSV locally on the server (no network request):
+
+```bash
+/pipeline/xiaoyunao/data/heliolincrr/digest2_runtime/env/bin/python \
+  /pipeline/xiaoyunao/known_asteroid/validate_ades.py --psv /path/to/report.psv
+```
+
+An immediate Submission ID means receipt only. Later rejection notices must be
+reconciled separately; retain the original PSV/reply and build a correction in a
+separate audit directory. Do not automatically retry a rejected or uncertain batch.
+
 ## Default header layout
 
 The exporter writes:

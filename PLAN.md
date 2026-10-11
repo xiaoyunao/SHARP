@@ -1,14 +1,16 @@
 # PLAN
 
-## Current priority: MPC incident containment and daily recovery (2026-10-11)
+## Current priority: known ADES rejection and daily recovery (2026-10-11)
 
-- 暂停假源/PSF 分支。用户提供的 MPC 邮件指出四批 11 个 NEO 候选后随未确认，并暂停处理台站 327；邮件没有认定它们为已知天体。
+- 本对话继续处理 known ADES 拒收与积压恢复；鬼像/PSF 筛选留给用户回到上一对话处理。用户已澄清封禁邮件系候选后随未确认，不再按已知身份误判方向追查。
+- 已修复/部署 known 导出质量和本地 XSD 门控；CF58/CFL1 对应 20261005/06 各 4 条质量标志异常观测，正的小误差被格式化为 0.0000。14 项双平台回归通过。
+- 两夜隔离纠正稿分别 6152/6659 条，全部保留行与旧报告一致，每对象 >=3；完整 XSD 通过。原 PSV/回执保留，MPC 状态仍为 rejected，未重报；纠正稿、审计、拒收记录在 incident_20261011_f1q_hiwq/known_ades_rejection_dsfe87d4。
 - 已止血：服务器 `/pipeline/xiaoyunao/data/MPC_SUBMISSION_HOLD` 已启用；known/unknown 正式 transport 均阻断，提取和计划可继续。未发送 Jira/邮件，未恢复提交。
 - 已修复并部署：digest2 `100.00000000000001` 端点舍入使整夜打包失败；daily 现在按夜隔离失败并保留非零退出/夜次错误。39 个评分/上报回归通过，89 条真实回放成功，88 个其他分数不变。
 - 计划核查：20261010 471 条、20261011 474 条已生成并发布到 `/pipeline/xiaoyunao/script/`；待确认观测助手查看的是望远镜计划还是候选复核页面。
 - 已恢复并验收：20261006 package，89 个候选/269 条 obs/89 GIF，全部评分成功且 tar 完整。正在恢复：20261007/08/10 先 known 后 unknown，保持提交暂停。20261009 无 MP L2。恢复记录 `/pipeline/xiaoyunao/data/heliolincrr/incident_20261011_f1q_hiwq/recovery_status.json`。
 - 验收标准：每夜 known manifest 和完成日志一致、无 query/match 错误；复核包包含全部 GIF、manifest、评分；历史 MPC 账本和人工状态不变；故障夜不阻塞后续夜且失败明确可见。
-- 尚未解决：MPC 候选测量质量；旧 astorb 更新与独立身份核查；已发现旧 known status 仅凭 partial merge 也可称 complete 的历史风险尚未改动，本次 recovery 另作逐帧日志审计。保留原始数据和上报证据，不以本次软件恢复宣称天测问题已解决。
+- 尚未解决：MPC 候选测量质量与重新获准处理；旧 astorb 更新作为历史维护事项保留；已发现旧 known status 仅凭 partial merge 也可称 complete 的历史风险尚未改动，本次 recovery 另作逐帧日志审计。保留原始数据和上报证据，不以本次软件恢复宣称天测问题已解决。
 - 下一步：完成补跑验收并记录结果；在明确整改证据和恢复上报授权前维持 hold。
 
 ## Paused by user (2026-10-11): compare PSF confirmation with the joint morphology rule (2026-10-05)
