@@ -25,6 +25,13 @@ SUBMIT_URL = 'https://minorplanetcenter.net/submit_psv'
 SCHEMA = Path(__file__).with_name('ades_submit.xsd')
 
 
+def require_submission_enabled() -> None:
+    hold = Path(os.environ.get('MPC_SUBMISSION_HOLD_FILE',
+                               '/pipeline/xiaoyunao/data/MPC_SUBMISSION_HOLD'))
+    if hold.exists():
+        raise RuntimeError(f'MPC submission paused: {hold}; no request sent')
+
+
 def validate_schema(payload: bytes) -> None:
     """Lossless single-block conversion for our exporter, then ADES 2017 XSD."""
     from lxml import etree
@@ -99,6 +106,7 @@ def guard_legacy(night: str, l4: Path) -> None:
 
 
 def post_batch(batch: dict, email: str, ack: str) -> str:
+    require_submission_enabled()
     proc = subprocess.run(
         ['curl', '-q', '--silent', '--show-error', '--fail-with-body',
          '--connect-timeout', '15', '--max-time', '90',
@@ -118,6 +126,7 @@ def post_batch(batch: dict, email: str, ack: str) -> str:
 
 def submit_batches(plan_path: Path, ledger_path: Path, transport) -> dict:
     """Persist before I/O. An ambiguous attempt is never automatically retried."""
+    require_submission_enabled()
     with Path(str(ledger_path) + '.lock').open('a+') as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)
         batches = checked_batches(plan_path)
@@ -144,6 +153,7 @@ def submit_batches(plan_path: Path, ledger_path: Path, transport) -> dict:
                 if old['status'] == 'received':
                     continue
                 raise RuntimeError('MPC attempt unresolved; manual reconciliation required; do not resend')
+            require_submission_enabled()
             entry = {k: v for k, v in batch.items() if k != 'payload'}
             entry.update(status='sending', plan=str(plan_path),
                          started_utc=datetime.now(timezone.utc).isoformat())

@@ -84,6 +84,26 @@ class RehearsalTests(unittest.TestCase):
         self.assertEqual(sum(b["n_obs"] for b in batches), 9)
         self.assertEqual({k for b in batches for k in b["trkSub"]}, {"T0", "T1", "T2"})
 
+    def test_production_float_roundoff_keeps_score_and_audit(self):
+        value = 100.00000000000001  # Actual 20261006 / 00001F9 C result.
+        result = SimpleNamespace(noid=SimpleNamespace(NEO=value), raw=SimpleNamespace(NEO=value))
+        with patch("digest2.Digest2", FakeEngine), patch.object(FakeEngine, 'classify_tracklet', return_value=result):
+            report = scoring.prepare(self.args)
+        for score in report['scores'].values():
+            self.assertEqual(score['status'], 'ok')
+            self.assertEqual(score['neo_noid'], 100.0)
+            self.assertEqual(score['route'], 'neo candidate')
+            self.assertEqual(score['score_before_roundoff_correction']['neo_noid'], value)
+        self.assertEqual(sum(b['n_obs'] for b in validation.checked_batches(self.args.out_dir / 'routing.json')), 9)
+
+    def test_roundoff_does_not_admit_invalid_scores_or_move_threshold(self):
+        self.assertEqual(scoring.bounded_score(-1e-14), 0.0)
+        for value in (64.9, 65.0, 65.1):
+            self.assertEqual(scoring.bounded_score(value), value)
+        for value in (-1e-6, 100.000001, float('nan'), float('inf'), -float('inf')):
+            with self.subTest(value=value), self.assertRaises(ValueError):
+                scoring.bounded_score(value)
+
     def test_rejected_high_score_and_pending_are_not_exported(self):
         self.review.write_text("tracklet_id,is_real\nT0,\nT1,0\nT2,1\n")
         report = self.prepare()

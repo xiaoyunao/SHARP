@@ -1,6 +1,17 @@
 # PLAN
 
-## Current priority: compare PSF confirmation with the joint morphology rule (2026-10-05)
+## Current priority: MPC incident containment and daily recovery (2026-10-11)
+
+- 暂停假源/PSF 分支。用户提供的 MPC 邮件指出四批 11 个 NEO 候选后随未确认，并暂停处理台站 327；邮件没有认定它们为已知天体。
+- 已止血：服务器 `/pipeline/xiaoyunao/data/MPC_SUBMISSION_HOLD` 已启用；known/unknown 正式 transport 均阻断，提取和计划可继续。未发送 Jira/邮件，未恢复提交。
+- 已修复并部署：digest2 `100.00000000000001` 端点舍入使整夜打包失败；daily 现在按夜隔离失败并保留非零退出/夜次错误。39 个评分/上报回归通过，89 条真实回放成功，88 个其他分数不变。
+- 计划核查：20261010 471 条、20261011 474 条已生成并发布到 `/pipeline/xiaoyunao/script/`；待确认观测助手查看的是望远镜计划还是候选复核页面。
+- 正在恢复：20261006 只补 package；20261007/08/10 先 known 后 unknown，保持提交暂停。20261009 无 MP L2。恢复记录 `/pipeline/xiaoyunao/data/heliolincrr/incident_20261011_f1q_hiwq/recovery_status.json`。
+- 验收标准：每夜 known manifest 和完成日志一致、无 query/match 错误；复核包包含全部 GIF、manifest、评分；历史 MPC 账本和人工状态不变；故障夜不阻塞后续夜且失败明确可见。
+- 尚未解决：MPC 候选测量质量；旧 astorb 更新与独立身份核查；已发现旧 known status 仅凭 partial merge 也可称 complete 的历史风险尚未改动，本次 recovery 另作逐帧日志审计。保留原始数据和上报证据，不以本次软件恢复宣称天测问题已解决。
+- 下一步：完成补跑验收并记录结果；在明确整改证据和恢复上报授权前维持 hold。
+
+## Paused by user (2026-10-11): compare PSF confirmation with the joint morphology rule (2026-10-05)
 
 - 最新用户要求是先试验追加 PSF；隔离对照已完成，未接入生产或自动剔除。沿用普通恒星 PSF，按用户要求不另开发快速目标拖线 PSF；拖尾识别另有图像方案。
 - 基线证据：`outputs/psf_feasibility_20261005/`。单帧 `FWHM/local_star_FWHM > 1.5 && Class_ANN < 0.1`，至少 3 帧且 >=2/3 帧异常；5 个原候选及 Cm 均触发。975 张 L2 / 16,982 条 known 检测中，314 条缺参考星；6353 个有效连续三帧窗口有 11 个误拦，涉及 8 个 object-night。
@@ -11,7 +22,7 @@
 - 下一步：冻结待比较规则，在独立历史夜次/更多真实及伪源上检验；区分普通点源、拥挤混合、拖尾与 PSF 缺失，验证与用户已有拖尾识别的衔接。生产接入位置仍是 candidate 识别之后、人工复核之前，先有验证结果再冻结参数。
 - 验收标准：明确误拦/未评估分母与独立留出样本；校验跨帧数据映射、模板自包含排除和边界稳定性；明确拟合失败处理及真实快速/暗弱目标保留率。当前里程碑仅为完成隔离比较。
 
-## Current priority: reported-candidate image audit (2026-10-05)
+## Paused by user (2026-10-11): reported-candidate image audit (2026-10-05)
 
 - 已取回 `00001AE/BL/Bx/CB/Ck` 五张原始 GIF（16 帧），生成手机可看逐帧总图与 ZIP：`outputs/tracklet_audit_20261005/`。只读审计结束，生产状态未改。
 - 五源的图像/编号/提交映射一致；局部恒星配准确认相对运动，排除“只因整场 WCS 漂移而把静止星连成链”的简单解释。

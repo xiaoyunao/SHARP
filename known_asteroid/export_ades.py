@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 import subprocess
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -376,6 +377,10 @@ def export_psv(args: argparse.Namespace) -> int:
 
 
 def run_curl(url: str, args: argparse.Namespace) -> None:
+    hold = Path(os.environ.get('MPC_SUBMISSION_HOLD_FILE',
+                               '/pipeline/xiaoyunao/data/MPC_SUBMISSION_HOLD'))
+    if url == SUBMIT_URL and hold.exists():
+        raise RuntimeError(f'MPC submission paused: {hold}; no request sent')
     cmd = [
         "curl",
         "-sS",

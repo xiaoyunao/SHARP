@@ -7,6 +7,7 @@ PROCESSED_ROOT="${PROCESSED_ROOT:-/processed1}"
 LOG_DIR="${WORKSPACE}/logs"
 MAX_PARALLEL="${MAX_PARALLEL:-24}"
 PYTHON="${PYTHON:-/home/smtpipeline/Softwares/miniconda3/bin/python}"
+MPC_SUBMISSION_HOLD_FILE="${MPC_SUBMISSION_HOLD_FILE:-/pipeline/xiaoyunao/data/MPC_SUBMISSION_HOLD}"
 mkdir -p "${LOG_DIR}"
 
 RUN_DATE="${1:-$(TZ=Asia/Shanghai date +%F)}"
@@ -49,19 +50,25 @@ import json, sys
 from pathlib import Path
 status = json.loads(Path("${STATUS_JSON}").read_text(encoding="utf-8"))
 matched = status.get("matched_asteroids", {})
-ok = bool(status.get("known_complete")) and int(matched.get("rows") or 0) == 0
+held = Path("${MPC_SUBMISSION_HOLD_FILE}").exists()
+ok = bool(status.get("known_complete")) and (held or int(matched.get("rows") or 0) == 0)
 sys.exit(0 if ok else 1)
 PY
     then
-      echo "[SKIP] known extraction complete with zero 1.0 arcsec matched detections for ${TARGET_NIGHT}"
+      echo "[SKIP] known extraction complete; submission held or zero matched detections for ${TARGET_NIGHT}"
       exit 0
     fi
   fi
 
   echo "[RUN] submit night ${TARGET_NIGHT} with max_parallel=${MAX_PARALLEL}"
+  submit_mpc=true
+  if [[ -e "${MPC_SUBMISSION_HOLD_FILE}" ]]; then
+    submit_mpc=false
+    echo "[HOLD] MPC submission paused: ${MPC_SUBMISSION_HOLD_FILE}; extraction only"
+  fi
   PYTHON="${PYTHON}" "${ROOT_DIR}/submit_pipeline_slurm.sh" \
     --batch false \
-    --submit-mpc true \
+    --submit-mpc "${submit_mpc}" \
     --max-parallel "${MAX_PARALLEL}" \
     "${TARGET_NIGHT}"
 } 2>&1 | tee -a "${LOG_PATH}"

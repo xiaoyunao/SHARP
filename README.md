@@ -29,6 +29,17 @@
 
 ## 服务器运行
 
+### MPC 提交暂停
+
+存在 `/pipeline/xiaoyunao/data/MPC_SUBMISSION_HOLD` 时，known/unknown 正式提交
+都会在网络请求前阻断。daily 继续本地提取、评分和复核包生成，不启动提交 watcher；
+望远镜观测计划仍正常生成。隔离测试可用 `MPC_SUBMISSION_HOLD_FILE` 指定临时标志路径。
+恢复提交前需核对事件记录、历史账本及获准恢复的范围，再由负责人解除标志；
+不能将重新生成复核包或本地校验成功视作恢复上报的条件。
+
+daily 的历史恢复按夜隔离错误：失败夜停止后续步骤，其余夜继续；任何一夜失败，
+整轮最终返回非零。诊断入口为 `data/heliolincrr/daily_logs/<运行日>_daily_pipeline.log`。
+
 ### survey
 
 ```bash

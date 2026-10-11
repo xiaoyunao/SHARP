@@ -1,5 +1,23 @@
 # WORKLOG
 
+## 2026-10-11
+
+- task: 暂停假源/PSF 研究，排查 MPC 暂停处理与新列表缺失；修复确定的 daily 中断并冻结正式提交
+- files_changed: `heliolincrr/{score_unknown_digest2.py,digest2_pipeline.py,run_daily_pipeline.sh,run_daily_unknown.sh,tests/}`, `known_asteroid/{export_ades.py,run_daily.sh}`, `README.md`, `CHANGELOG.md`, `PLAN.md`, `WORKLOG.md`；证据与一次性 recovery 脚本在 `outputs/incident_20261011/`
+- commands_run: git status/branch/fetch/log（origin/main 无新增，当前分支 ahead 9）；SSH 检查 cron、Slurm、daily/submit 日志、L4/复核包、计划文件与生产源码 hash；逐帧只读比对 15 条已上报轨迹；隔离测试、真实 20261006 评分回放、备份后原子部署
+- key_findings:
+  - 用户提供的 MPC 原文是因四批亮 NEO 候选未获定向后随确认，暂停处理台站 327 的观测并转入 whatcode；不是“确认已知小行星”或账号登录封禁的证据。四批为 0000CET4/CEe1/CEuM/CF5v，共 11 个 trkSub：AE；BL/Bx；CB/Ck/Dv；DK/DW/E5/EM/F5（均前缀 00001）
+  - 20261002–05 共 15 条已上报轨迹/46 次检测（11 个 neo candidate、4 个 unclassified）均无同 frame/objID 的 mask15 记录；当夜保存的旧库预测最近也相差至少 65.27 arcsec。不能据此确认 known 漏扣，也不能据旧库排除已知身份；`astorb.dat` mtime 仍为 2026-04-02，未更新
+  - 20261007–11 每天计划正常生成并发布；20261010 为 471 行，`/pipeline/xiaoyunao/script/20261010_plan.txt` 与 runtime 同 hash。20261011 为 474 行。助手实际查看路径/所指列表尚待确认
+  - 20261006/00001F9 的 digest2 Raw/NoID 均复现为 `100.00000000000001`；严格 `<=100` 检查导致 20261007–11 每天重复评分失败。89 个 unknown 中其余 88 个有效。package 异常通过 `set -e` 终止整轮 daily，20261007/08/10 的 360/445/426 张 MP L2 因而未进入 known/unknown；20261009 无 MP L2
+  - 修复仅允许 [0,100] 端点 1e-12 内舍入并保存未修正分数；非有限/实质越界仍阻断。daily 按夜隔离失败，失败夜内部仍立即停止，后续夜继续且整轮最终非零退出
+  - 新增持久 MPC hold：`/pipeline/xiaoyunao/data/MPC_SUBMISSION_HOLD`；unknown 账本/transport 与 known formal transport 均检查；daily 在 hold 期间只提取，unknown 不启动 submit watcher。未改 cron、假源规则、人工决定或历史提交状态
+- validation: 本机 3 个 daily/hold 回归通过；隔离服务器 39 个 digest2 测试与 3 个 daily/hold 测试通过；89/89 真实回放成功，其余 88 条分数记录完全一致，未生成提交批；生产 Python/Bash 语法检查及 known/unknown hold 实测通过，无 MPC POST
+- deployment: 2026-10-11 09:49 CST；备份 `/pipeline/xiaoyunao/data/heliolincrr/incident_20261011_f1q_hiwq`，6 个源码新旧 hash 已记账；部署前后历史 MPC 账本与 review_submit_state hash 相同
+- recovery: 正在只重建 20261006 package，并以每夜 12 个 Slurm task 上限补跑 20261007/08/10 known，随后串行 unknown；强制 hold、关闭 watcher/follow-up，逐夜检查 match 日志完成数与错误；详情 `recovery_status.json`
+- remaining_issues: 本次修复只解决数值边界/调度中断与停止新提交，未解决 MPC 所指测量质量；假源研究按用户要求暂停；未向 MPC/Jira 发消息，未恢复上报；复核包补跑待验收
+- next_step: 验收补跑的 manifest/GIF/评分、确认所有正式提交账本未变化；进一步身份核验或天测整改需结合具体证据推进，不把 digest2 高分当作新发现证明
+
 ## 2026-10-05
 
 - task: 按最新“先试试”要求，隔离比较联合像形规则与追加原图 PSF 确认；未部署
