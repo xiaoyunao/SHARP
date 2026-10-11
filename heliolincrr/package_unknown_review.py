@@ -14,6 +14,7 @@ from astropy.table import Table
 
 from export_unknown_ades import build_obs_rows, build_argparser as export_parser, write_psv
 from digest2_pipeline import score_snapshot
+from unknown_morphology import approved_rows, paths_for, read_current_report
 
 DETAIL_COLUMNS = [
     ("trk_sub", "U7"),
@@ -271,14 +272,16 @@ def build_package(args: argparse.Namespace) -> dict[str, Any]:
     processed_root = Path(args.processed_root)
     plot_root = Path(args.plot_root)
     out_root = Path(args.out_root)
-    catalog = Path(args.catalog) if args.catalog else processed_root / night / "L4" / f"{night}_unknown_links.json"
+    morphology = read_current_report(night, processed_root)
+    catalog = Path(args.catalog) if args.catalog else paths_for(night, processed_root)['passed']
+    rows = load_json_list(catalog)
+    approved_rows(night, processed_root, rows, strict=True)
     plot_dir = plot_root / night
     out_dir = Path(args.out_dir) if args.out_dir else out_root / night
     gif_out_dir = out_dir / "gifs"
     out_dir.mkdir(parents=True, exist_ok=True)
     gif_out_dir.mkdir(parents=True, exist_ok=True)
 
-    rows = load_json_list(catalog)
     review_csv = out_dir / f"{night}_unknown_review.csv"
     manifest_json = out_dir / f"{night}_unknown_review_manifest.json"
     review_ades_fits, review_ades_rows, digest2_report = write_review_ades_fits(args, catalog, out_dir)
@@ -334,6 +337,10 @@ def build_package(args: argparse.Namespace) -> dict[str, Any]:
 
     manifest = {
         "night": night,
+        "morphology_policy": morphology['policy']['version'],
+        "morphology_counts": morphology['counts'],
+        "morphology_report": str(paths_for(night, processed_root)['report']),
+        "morphology_quarantine": str(paths_for(night, processed_root)['quarantine']),
         "catalog": str(catalog),
         "plot_dir": str(plot_dir),
         "out_dir": str(out_dir),

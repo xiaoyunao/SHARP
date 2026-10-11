@@ -23,6 +23,48 @@
 
 ## Unknown trkSub and review interface
 
+Unknown candidate 生成并分配 trkSub 后，主流程调用 `unknown_morphology.py`，
+在人工复核打包之前完成形态与经验 PSF 筛选。参数固定为 2026-10-05 试验采用的组合：
+
+- 单帧形态异常：同帧局部恒星归一化 `FWHM ratio > 1.5` 且 `Class_ANN < 0.1`。
+- 至少 3 次观测、至少 2 次且 >=2/3 观测异常的候选，才对全部曝光拟合 PSF。
+- 单帧 PSF 异常：局部经验 PSF 的宽化系数 `>1.3` 且固定/自由宽度模型 `delta_chi2>=9`。
+- 两套规则分别在轨迹级达到 >=2/3 才 `reject`；支持两套规则的帧不必相同。
+- `review` 表示缺数据、参考星不足或拟合异常会影响多数判定；与 `reject` 一同隔离。
+  `pass` 只表示未触发本规则，不代表已确认真源。没有新增拖尾 PSF 或依赖。
+
+原始 `<night>_unknown_links.json/.fits` 保留。L4 旁生成：
+
+- `<night>_unknown_links_screened.json`：通过集，复核包与 follow-up 关联默认读取。
+- `<night>_unknown_links_quarantine.json`：疑似伪源和待复核集，保留原因及原始观测索引。
+- `<night>_unknown_morphology.json`：逐帧指标、模板验证、完整判定、输入签名和规则版本。
+
+未知源 CLI 导出、正式上报前均核对筛选版本、原始 catalog hash 与 L1/L2 签名，
+即使旧人工 CSV 标为 1，也不能绕过筛选。签名过期须重跑，证据不足不进入正常上报队列。
+原始 GIF 仍生成并保留；历史回放不覆盖人工 CSV、历史复核包、原始 PSV 或 MPC 回执。
+已有复核包的 daily 快速路径也会补齐筛选；旧包的显示内容保留，但导出仍按通过集过滤。
+
+在服务器使用 heliolinc Python；默认 4 个进程，可通过 `MORPHOLOGY_WORKERS` 调整主流程：
+
+```bash
+cd /pipeline/xiaoyunao/heliolincrr
+OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 \
+  /home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python \
+  unknown_morphology.py 20261010 --workers 4
+```
+
+仅回放已有 unknown 并对账真正有收件证据的已上报轨迹，不重跑 linking、不发网络请求：
+
+```bash
+OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 \
+  /home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python \
+  replay_unknown_morphology.py --start 20260830 --end 20261010 --workers 4 \
+  --out-dir /pipeline/xiaoyunao/data/heliolincrr/morphology_replay_20261011
+```
+
+回放输出逐夜、全部候选及已上报候选 CSV，`status.json` 支持查看进度；当前结果可复用，
+原始受保护文件 hash 变化时停止复用。统计中的 reject 是规则命中，不是独立证实的假源率。
+
 MPC ADES 的 unknown 临时标识使用 `trkSub`。本项目自动分配的 `trkSub`
 采用 7 位 62 进制，满足 MPC 当前要求的 no more than 7 characters：
 
@@ -116,7 +158,7 @@ tracklet_id,is_real
 000001fV,0
 ```
 
-`<night>_submit.csv` 表示该夜已经完成最终判定。程序会要求每个 unknown
+`<night>_submit.csv` 表示该夜已经完成最终判定。程序会要求每个通过形态筛选的 unknown
 `tracklet_id` 都有明确的 `0/1`，然后只保留 `is_real=1` 的条目生成 reviewed/masked
 产物和 ADES PSV。默认输出：
 

@@ -1,5 +1,15 @@
 # PLAN
 
+## Current priority: deploy unknown morphology screening and replay history (2026-10-11)
+
+- 最新授权：直接将轨迹级形态 AND PSF 规则接入主流程，从 20260830 起重筛已有 unknown；真源误拦概率研究按用户要求留到后续。
+- 固定采用 FWHM ratio>1.5、Class_ANN<0.1 和 PSF width>1.3、delta_chi2>=9；两套判据分别要求至少 3 帧、>=2/3 异常，不要求异常帧完全相同。
+- 代码已加入 raw 旁通过/隔离/审计输出，复核包、follow-up 关联、导出/正式 transport 共用门控；历史人工标签/PSV/账本保留，MPC hold 继续有效。
+- 当前执行：必要的软件回归、服务器暂存运行、20260830..20261010 全量已有 unknown 回放、接入部署和实际入口核验。服务器源码基线与本地一致，新分支 `codex/unknown-morphology`。
+- 统计标准：正式收件证据与冻结 catalog/PSV 逐项对应；已上报候选初步对账 47 条，不以当前人工标签替代历史提交事实。reject/pass/review 分开报告，不把规则命中等同独立真伪确认。
+- 验收：原始数据与人工/提交文件 hash 不变；筛选后轨迹多数逻辑正确、输入/规则过期和隔离集不能绕过上报；新复核包只含通过集；回放逐夜无遗漏或明确记录缺 catalog。
+- 当前产物：`outputs/morphology_deployment_20261011/`；服务器暂存与日志 `/pipeline/xiaoyunao/data/heliolincrr/morphology_deploy_20261011.sm1jt1/`，回放 `/pipeline/xiaoyunao/data/heliolincrr/morphology_replay_20261011/`。
+
 ## Current priority: known ADES rejection and daily recovery (2026-10-11)
 
 - 本对话继续处理 known ADES 拒收与积压恢复；鬼像/PSF 筛选留给用户回到上一对话处理。用户已澄清封禁邮件系候选后随未确认，不再按已知身份误判方向追查。

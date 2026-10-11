@@ -176,12 +176,17 @@ def submit_batches(plan_path: Path, ledger_path: Path, transport) -> dict:
 
 
 def process_export(args, kept_rows: list[dict], l4: Path) -> None:
+    from unknown_morphology import approved_rows
+    approved_rows(str(args.night), Path(args.processed_root), kept_rows, strict=True)
     plan, report = score_snapshot(Path(args.out), kept_rows, l4 / 'digest2', Path(args.review_csv))
     print('[DIGEST2]', plan)
     print('[LOCAL-VALIDATED] ADES schema, complete observations, human acceptance and digest2 routes')
     if args.submit:
         ledger = l4 / f'{args.night}_unknown_mpc_batches.json'
-        result = submit_batches(plan, ledger, lambda batch: post_batch(batch, args.ac2_email, args.ack))
+        def guarded_transport(batch):
+            approved_rows(str(args.night), Path(args.processed_root), kept_rows, strict=True)
+            return post_batch(batch, args.ac2_email, args.ack)
+        result = submit_batches(plan, ledger, guarded_transport)
         print('[MPC-RECEIVED]', json.dumps(result, ensure_ascii=False))
         if args.response_out:
             save_state(Path(args.response_out), result)

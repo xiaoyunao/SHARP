@@ -183,6 +183,8 @@ main() {
     return 0
   fi
   if [[ "${FORCE_UNKNOWN}" != "1" && -s "${unknown_json}" && -s "${review_manifest}" ]]; then
+    OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 "${PYTHON_BIN}" "${SCRIPT_DIR}/unknown_morphology.py" \
+      "${TARGET_NIGHT}" --processed-root "${PROCESSED_ROOT}" --workers "${MORPHOLOGY_WORKERS:-4}"
     log "[SKIP] unknown review package already exists: ${review_manifest}"
     if [[ "${ENABLE_FOLLOWUP}" == "1" ]]; then
       section "associate follow-up links"

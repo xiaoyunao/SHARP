@@ -317,11 +317,18 @@ def build_obs_rows(
     review, review_meta = read_review_csv(args.review_csv, require_values=require_complete_review)
     require_review = bool(args.require_review)
     rows = load_unknown_rows(catalog_path)
+    morphology_stats = {}
+    if getattr(args, 'require_morphology', False):
+        from unknown_morphology import approved_rows
+        rows, report = approved_rows(str(args.night), processed_root, rows)
+        morphology_stats = {'morphology_counts': report['counts'],
+                            'morphology_policy': report['policy']['version']}
     export_rows, review_stats = filter_catalog_rows(rows, review, require_review, require_complete_review)
 
     obs_rows: list[dict[str, object]] = []
     stats: dict[str, object] = {
         **review_stats,
+        **morphology_stats,
         "review_csv": str(args.review_csv or ""),
         "review_csv_rows": review_meta["rows"],
         "review_csv_decisions": review_meta["decisions"],
@@ -470,6 +477,9 @@ def build_argparser() -> argparse.ArgumentParser:
 
 def main() -> None:
     args = build_argparser().parse_args()
+    # CLI exports and submissions always enforce the current candidate gate.
+    # The pure build_obs_rows helper also serves isolated diagnostics/fixtures.
+    args.require_morphology = True
     l4_dir = Path(args.processed_root) / args.night / "L4"
     if args.catalog is None:
         args.catalog = str(l4_dir / f"{args.night}_unknown_links.json")

@@ -2,6 +2,19 @@
 
 ## 2026-10-11
 
+- task: 按用户授权将轨迹级形态 AND PSF 筛选接入主流程，并从 20260830 起回放已有 unknown；暂不扩展真源误拦概率研究
+- files_changed: 新增 `heliolincrr/unknown_morphology.py`, `replay_unknown_morphology.py`, `tests/test_unknown_morphology.py`；修改单夜/daily、package、export、digest2 transport、follow-up 关联与 README；同步本日志/PLAN/CHANGELOG
+- commands_run: git status/branch/fetch/log；核对服务器源码 hash，建立 `codex/unknown-morphology`；Python/Bash 语法、10 项门控回归、3 项 daily/hold 回归、服务器独立 digest2 runtime 39 项回归；5 个旧试验 stamp 拟合数值逐项对齐；真实 20260830 通过集临时 package 回放
+- key_findings:
+  - 固定规则沿用上次试验：形态 ratio>1.5 && Class_ANN<0.1，PSF width>1.3 && delta_chi2>=9；两套规则分别 >=2/3 帧、至少 3 帧，轨迹级 AND。只拟合形态可疑轨迹的全部曝光，不新增拖线 PSF
+  - 原始 unknown JSON/FITS 保留；L4 新增 screened/quarantine JSON 和逐帧审计。pass 进正常复核，reject/review 隔离；输入/规则过期阻断，最终导出及实际 transport 重检，旧人工 1 不能绕过
+  - 从正式 batch 冻结 catalog/PSV/hash 与旧收件回执/导出快照确认，20260830..20261010 已上报 unknown 为 47 条轨迹；回放工具验证提交快照与原始候选一致，单独报告通过/规则剔除/证据不足
+  - 第一夜 20260830：41 条候选为 pass21/reject15/review5；6 条已上报中 pass4/reject2。临时复核包仅 21 条通过轨迹/63 观测/21 GIF，未覆盖历史复核文件
+- validation: 新增 10 项在本机/服务器 heliolinc 均通过；3 项 daily/hold 本机通过；39 项 digest2/transport 在服务器已有隔离 runtime 通过（仅模拟 transport，测试进程使用独立 hold 路径）。本机完整旧 suite 因 digest2 缺失未通过；服务器初次混用 site-packages/生产 hold 的尝试后改用正确环境完成既有回归，生产环境未安装或升级依赖
+- deployment: 2026-10-11 12:34 CST，9 个源码/测试文件逐一核对原 hash、备份后原子替换，新 hash 全一致；备份 `/pipeline/xiaoyunao/data/heliolincrr/morphology_deploy_20261011.sm1jt1/backup`，receipt 同目录；README 已备份同步；MPC_SUBMISSION_HOLD 保持
+- remaining_issues: 全历史回放正在服务器以 4 workers 顺序执行，输出 `/pipeline/xiaoyunao/data/heliolincrr/morphology_replay_20261011`；旧人工复核包显示内容保留，导出按新通过集过滤。规则命中仅称疑似假源，不当作独立真伪确认或真源误拦概率
+- next_step: 完成生产入口烟测与全部回放，核对受保护原始/人工/提交文件 hash，汇总全部候选与已上报 47 条的结果并更新本记录
+
 - task: 核查并修复 known ADES 两批因 rmsRA/rmsDec=0.0000 被拒收；用户明确仍不上报，鬼像筛选留在另一个对话
 - files_changed: `known_asteroid/export_ades.py`, `known_asteroid/validate_ades.py`, `known_asteroid/tests/test_export_quality.py`, `known_asteroid/README.md`, `WORKLOG.md`, `PLAN.md`, `CHANGELOG.md`；原始逐行审计、修正版/排除表/校验结果保存在 `outputs/known_ades_rejection_20261011/`
 - commands_run: git status/branch/fetch/log；SSH 对账 MPC ID/原始 PSV/FITS；重现旧 PSV 的 XSD 错误；py_compile、双平台质量/传输回归；默认 known Python 调用已有隔离 lxml worker 对两夜离线重导出，部署后再次烟测

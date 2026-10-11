@@ -23,7 +23,9 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
-    catalog = Path(args.catalog) if args.catalog else Path(args.processed_root) / args.night / "L4" / f"{args.night}_unknown_links.json"
+    from unknown_morphology import approved_rows, paths_for
+    catalog = Path(args.catalog) if args.catalog else paths_for(args.night, Path(args.processed_root))['passed']
+    approved_rows(args.night, Path(args.processed_root), json.loads(catalog.read_text()), strict=True)
     state_path = Path(args.state)
     state = load_state(state_path)
     stats = associate_unknown_links(

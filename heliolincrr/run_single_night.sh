@@ -310,7 +310,13 @@ else
 fi
 
 # =============================
-# Step 6b: optional unknown ADES export / submission
+# Step 6b: morphology + empirical-PSF gate (raw candidates remain intact)
+# =============================
+OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 "${PYTHON_BIN}" unknown_morphology.py "${NIGHT}" \
+  --processed-root "${ROOT_RAW}" --workers "${MORPHOLOGY_WORKERS:-4}"
+
+# =============================
+# Step 6c: optional unknown ADES export / submission
 # =============================
 if [[ "${EXPORT_UNKNOWN_ADES}" -eq 1 ]]; then
   UNKNOWN_ADES_OUT="${ROOT_RAW}/${NIGHT}/L4/${NIGHT}_unknown_links_ades.psv"
