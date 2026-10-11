@@ -1,13 +1,17 @@
 # PLAN
 
-## Current priority: serial morphology then PSF acceptance (2026-10-11)
+## Completed current milestone: serial morphology then PSF acceptance (2026-10-11)
 
 - 最新明确要求：全部 unknown 先做形态；异常直接 reject 且不拟合，正常才进入 PSF；PSF 异常 reject，两关正常才 pass。证据不足 review 隔离，不进入常规人工候选；不限定 NEO。
 - 数值阈值与至少 3 帧、>=2/3 异常规则保持；新 policy `serial-morphology-psf-20261011` 自动使旧缓存失效。上版“双异常才剔除”结果保留作对照。
-- 已完成：最小代码/原因/文档修改，本机/服务器各 12 项针对性回归；13:35 CST 备份后部署。20260830..20261010 历史重筛运行中，形态分类为异常761/正常727/不足101，仅 727 条进入 PSF。
+- 已完成：本机/服务器各 12 项针对性回归，13:35 CST 备份后部署，约 14:25 CST 完成 20260830..20261010 的 22 夜重筛；8 个无保存 catalog 的夜目录明确保留为缺失，未重建 linking。
+- 全体结果：1589 条中 reject842/pass274/review473；形态拒绝 761/不足 101，727 条正常进入 PSF 后拒绝 81/通过 274/不足 372。剔除率 53.0%，21 个非空夜平均 40.1 条、中位数 37；通过仍须人工确认。
+- 已上报结果：47 条为 reject31/pass16/review0（规则命中 66.0%）；NEO 10/11、unclassified 4/4、历史未分流 unknown 17/32 被拒绝。旧假源 nP 新增被 PSF 拦住，oI/oj 仍双通过，不能宣称鬼像问题已完全解决。
 - 路径：服务器部署/旧结果备份 `serial_morphology_deploy_20261011.s1t1upg5`、回放 `serial_morphology_replay_20261011`（均在 `/pipeline/xiaoyunao/data/heliolincrr/`）；本地执行凭据 `outputs/serial_morphology_20261011/`。
-- 验收：形态异常不进入 PSF，正常不能跳过 PSF；报告逐关原因与每日统计；原始/人工/提交文件未变；旧筛选备份；MPC hold 保留，无任何正式/测试上报或撤回消息。
+- 验收完成：1589 条串联路径重算，形态测量与上版一致；22 夜输入有效、202 个原始/人工/提交文件未变、3 个生产文件 hash 匹配。实际复核包 9 条/27 观测/9 GIF；旧人工选择导出 2 条/8 观测并完整本地校验。旧筛选备份、MPC hold 保留，无正式/测试上报或撤回消息。
+- 交付：`outputs/serial_morphology_20261011/audit/` 的逐夜分关统计、47 条已上报明细、31 条规则命中待看图名单、逐帧指标及核验记录；完整 tar.gz SHA256 已核对，源码提交 `d0e70ce8`。
 - 真源误拦率研究仍按用户要求暂不开展；MPC 撤回问题只核实官方流程，等待明确发出请求的授权。
+- 下一步：本次工作完成；保留漏检证据，按后续用户要求决定 MPC 联系、规则改进及真源保留率研究。
 
 ## Superseded milestone: joint morphology/PSF rejection and history replay (2026-10-11)
 

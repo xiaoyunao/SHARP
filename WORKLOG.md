@@ -8,8 +8,14 @@
 - key_findings: 上版是两关均异常才剔除，与用户此次明确的串联接纳不同；新版本 `serial-morphology-psf-20261011` 保持原逐帧阈值与 >=2/3 多数规则，增加逐关原因。形态不足直接 review，形态通过而 PSF 不足也是 review；不把拟合失败当假源
 - validation: 本机/服务器 heliolinc 各 12 项通过，包含形态拒绝时 PSF 不执行、形态正常时 PSF 强制执行、两关各自拒绝、缺失隔离、生产导出/打包/transport 不能绕过筛选
 - deployment: 13:35 CST 原子部署 3 个文件并核对 hash；源码和 22 夜旧筛选输出均备份至 `/pipeline/xiaoyunao/data/heliolincrr/serial_morphology_deploy_20261011.s1t1upg5`；回放前 202 个受保护文件与上次完全一致，MPC hold 存在。按服务器 48 核空闲情况使用 3 夜×8 workers 回放，主 pipeline 默认仍为 4 workers
-- remaining_issues: 新版历史重筛正在运行，输出 `/pipeline/xiaoyunao/data/heliolincrr/serial_morphology_replay_20261011`；旧 565/1589、22/47 为上版统计，不能沿用为新版结果。原形态分级为 abnormal761/normal727/review101，新版只拟合中间 727 条。用户问能否撤回只作流程核实，未授权向 MPC 发出撤回请求
-- next_step: 完成新版全量回放并记录逐关数量、逐夜均值/比例、已上报命中变化；保留原始/人工/提交文件及旧版审计，维持 MPC hold
+- replay_execution: 辅助预计算增加两组各 6 workers，复用同一源码与逐夜锁，历史回放并发上限 36；`ps`/`/proc/pressure/io`/mount 核实耗时主要为 NFS 原图读取，未改挂载或生产并发。约 14:25 CST 全部完成，服务器已无本次计算进程
+- results: 20260830..20261010 的 22 个保存夜次共 1589 条 = reject842/pass274/review473。形态直接拒绝 761、形态不足 101；727 条形态正常全部进入 PSF，其中拒绝 81、通过 274、不足 372。剔除率 53.0%；21 个非空夜平均 40.1 条/夜、中位数 37、范围 2..125；隔离 29.8%，两关通过 17.2%。8 个无保存 catalog 的夜目录沿用缺失清单，未重建 linking
+- submitted_results: 47 条已上报 = reject31/pass16/review0，规则命中 66.0%；NEO candidate 11 条 = reject10/pass1，unclassified 4 条全 reject，旧分类 unknown 32 条 = reject17/pass15。20261002–05 共 15 条 = reject14/pass1（F5 通过），Di/Do 是新增 PSF 拒绝；旧人工假源 nP 新增被 PSF 拦下，o2 被形态拦下，oI/oj 仍双通过，保留漏检证据
+- final_validation: 1589 条串联路径/判定重算通过，形态结果逐条与上版一致；761 个形态拒绝及 101 个不足均未拟合，727 个正常轨迹全部尝试 PSF；22 夜输入签名有效、202 个受保护文件 hash 不变、3 个部署文件 hash 匹配。实际 20261010 复核包为 9 条/27 观测/9 GIF，tar 全部可读；20260909 旧人工接受 5 条经新门控只导出 2 条/8 观测，实际 CLI --validate 的本地 ADES/digest2 校验通过，无提交或撤回请求
+- artifacts: 服务器 `/pipeline/xiaoyunao/data/heliolincrr/serial_morphology_replay_20261011`；本地 `outputs/serial_morphology_20261011/audit/` 含逐夜分关统计、全体/47 条已上报的旧新对照、31 条待看图确认清单、22 份逐帧报告与验证记录。37-member 审计包已下载、安全解包并核对 SHA256 `9cfabc4c80c20c3b28950289db8669262f8db46375b724a3d84353d7f5332e45`
+- mpc_guidance: 查到官方 NEOCP Observations 工单入口 https://mpc-service.atlassian.net/servicedesk/customer/portal/12/create/160 与 General Support https://mpc-service.atlassian.net/servicedesk/customer/portal/13/create/144；可请求 MPC 核查/撤回或标错，未查到公开自动撤回接口。用户问能否撤回只作流程核实，本次未发工单/消息，也未改提交账本
+- remaining_issues: 两个已有人工假源 oI/oj 仍漏检；reject 是规则筛出的疑似假源，review 是证据不足，均不等同独立真伪确认。上版 565/1589、22/47 仅保留为历史对照；不开展阈值扩展或真源误拦率试验，历史人工包/后随状态保留
+- next_step: 本次串联接入及重筛已完成；维持 MPC hold。后续是否联系 MPC 撤回、处理已知漏检或研究真源保留率，按用户进一步要求执行
 
 - task: 按用户授权将轨迹级形态 AND PSF 筛选接入主流程，并从 20260830 起回放已有 unknown；暂不扩展真源误拦概率研究
 - files_changed: 新增 `heliolincrr/unknown_morphology.py`, `replay_unknown_morphology.py`, `tests/test_unknown_morphology.py`；修改单夜/daily、package、export、digest2 transport、follow-up 关联与 README；同步本日志/PLAN/CHANGELOG
