@@ -1,14 +1,16 @@
 # PLAN
 
-## Current priority: deploy unknown morphology screening and replay history (2026-10-11)
+## Completed milestone: deploy unknown morphology screening and replay history (2026-10-11)
 
 - 最新授权：直接将轨迹级形态 AND PSF 规则接入主流程，从 20260830 起重筛已有 unknown；真源误拦概率研究按用户要求留到后续。
 - 固定采用 FWHM ratio>1.5、Class_ANN<0.1 和 PSF width>1.3、delta_chi2>=9；两套判据分别要求至少 3 帧、>=2/3 异常，不要求异常帧完全相同。
 - 代码已加入 raw 旁通过/隔离/审计输出，复核包、follow-up 关联、导出/正式 transport 共用门控；历史人工标签/PSV/账本保留，MPC hold 继续有效。
-- 当前执行：必要的软件回归、服务器暂存运行、20260830..20261010 全量已有 unknown 回放、接入部署和实际入口核验。服务器源码基线与本地一致，新分支 `codex/unknown-morphology`。
-- 统计标准：正式收件证据与冻结 catalog/PSV 逐项对应；已上报候选初步对账 47 条，不以当前人工标签替代历史提交事实。reject/pass/review 分开报告，不把规则命中等同独立真伪确认。
-- 验收：原始数据与人工/提交文件 hash 不变；筛选后轨迹多数逻辑正确、输入/规则过期和隔离集不能绕过上报；新复核包只含通过集；回放逐夜无遗漏或明确记录缺 catalog。
-- 当前产物：`outputs/morphology_deployment_20261011/`；服务器暂存与日志 `/pipeline/xiaoyunao/data/heliolincrr/morphology_deploy_20261011.sm1jt1/`，回放 `/pipeline/xiaoyunao/data/heliolincrr/morphology_replay_20261011/`。
+- 已完成：12:34 CST 原子部署并核对 hash；20260830..20261010 共 22 个有保存 catalog 的夜次回放成功。1589 条候选 = pass839/reject565/review185；8 个无保存 catalog 的夜目录明确记录，不重建 linking/orbit。生产源码与分支 `codex/unknown-morphology` 一致。
+- 提交对账：正式收件证据与冻结 catalog/PSV 逐项对应，共 47 条 = pass25/reject22/review0；22/47=46.8% 是规则命中率。MPC 此次 11 个 NEO 候选中拦住 9 个，00001EM/00001F5 未触发，不据此确认真实。
+- 已知局限：历史人工确认假源 00001nP/00001oI/00001oj 未满足形态多数，未进入 PSF 而通过；00001o2 拦住。明细保留人工标签/拟合执行情况，pass 不能当作真源。真源误拦概率与规则扩展按用户要求留待后续，不在本次继续试验。
+- 验收完成：10 项新回归双平台、3 项 daily/hold、服务器独立 runtime 39 项评分/transport 回归；真实旧人工接受集导出由 6 条减至 4 条/12 观测且本地 ADES/digest2 校验通过。202 个原始/人工/提交文件未变、9 个部署文件 hash 一致、1589 个判定重新核算、22 份输入签名有效；本次无网络上报。
+- 当前产物：`outputs/morphology_replay_20261011/` 含 CSV/逐帧报告/验证记录/完整审计归档；部署凭据 `outputs/morphology_deployment_20261011/`。服务器部署与备份 `/pipeline/xiaoyunao/data/heliolincrr/morphology_deploy_20261011.sm1jt1/`，回放 `/pipeline/xiaoyunao/data/heliolincrr/morphology_replay_20261011/`。
+- 下一步：接入及回放任务已完成；保持 MPC hold，等待用户另行要求真源误拦研究或授权恢复上报。以下旧试验状态仅作历史依据，以本节部署结果为准。
 
 ## Current priority: known ADES rejection and daily recovery (2026-10-11)
 
@@ -23,16 +25,16 @@
 - 尚未解决：MPC 候选测量质量与重新获准处理；旧 astorb 更新作为历史维护事项保留；已发现旧 known status 仅凭 partial merge 也可称 complete 的历史风险尚未改动，本次 recovery 另作逐帧日志审计。保留原始数据和上报证据，不以本次软件恢复宣称天测问题已解决。
 - 下一步：完成补跑验收并记录结果；在明确整改证据和恢复上报授权前维持 hold。
 
-## Paused by user (2026-10-11): compare PSF confirmation with the joint morphology rule (2026-10-05)
+## Historical experiment: PSF confirmation and joint morphology rule (2026-10-05)
 
-- 最新用户要求是先试验追加 PSF；隔离对照已完成，未接入生产或自动剔除。沿用普通恒星 PSF，按用户要求不另开发快速目标拖线 PSF；拖尾识别另有图像方案。
+- 当时完成隔离 PSF 对照；2026-10-11 用户已授权采用并部署，详见本文件首节。沿用普通恒星 PSF，按用户要求不另开发快速目标拖线 PSF；拖尾识别另有图像方案。
 - 基线证据：`outputs/psf_feasibility_20261005/`。单帧 `FWHM/local_star_FWHM > 1.5 && Class_ANN < 0.1`，至少 3 帧且 >=2/3 帧异常；5 个原候选及 Cm 均触发。975 张 L2 / 16,982 条 known 检测中，314 条缺参考星；6353 个有效连续三帧窗口有 11 个误拦，涉及 8 个 object-night。
 - 新证据：`outputs/psf_confirmation_20261005/`。全部 19 次候选观测 + 11 个误拦窗口的 27 次 known 观测；45/46 PSF 有效，225 次留出恒星拟合收敛。另一个 Honeycutt 曝光参考星不足，显式未评估；它不影响所属窗口多数判定。
 - 有希望的组合是在轨迹级作 AND：先满足基线，再要求全部观测中 >=2/3 通过 PSF 宽化判据 `width_scale>1.3 && delta_chi2>=9`（探索值）。5 个原候选 + Cm 都仍触发，11 个已知误拦均消除；原先未触发的 6342 个窗口不可能被附加 AND 新增剔除，因此未对它们重做 PSF。
 - 不能改成严格的“同一帧四条件全满足”多数票：同门限下 CB 会被放过。不能只用 reduced chi-square/qfit；与暗弱真源重叠，delta_chi2 也不是已校准显著性。
 - 尚未解决：方案在同一小样本上探索且窗口重叠，不构成零误杀或前瞻完备率保证；Bx 一帧贴近宽度阈值，100 次模板重采样仅 82 次仍过阈值；宽度提高至 1.35 或 delta_chi2 至 16 分别放过 Bx/CB。5 个候选的 ghost 身份仍待独立确认。
-- 下一步：冻结待比较规则，在独立历史夜次/更多真实及伪源上检验；区分普通点源、拥挤混合、拖尾与 PSF 缺失，验证与用户已有拖尾识别的衔接。生产接入位置仍是 candidate 识别之后、人工复核之前，先有验证结果再冻结参数。
-- 验收标准：明确误拦/未评估分母与独立留出样本；校验跨帧数据映射、模板自包含排除和边界稳定性；明确拟合失败处理及真实快速/暗弱目标保留率。当前里程碑仅为完成隔离比较。
+- 后续研究（用户要求暂不开展）：在独立真实及伪源上检验；区分普通点源、拥挤混合、拖尾与 PSF 缺失，验证与已有拖尾识别的衔接及真实快速/暗弱目标保留率。当前固定参数已在 candidate 识别之后、人工复核之前接入。
+- 保留原试验边界：需要独立留出样本和明确误拦/未评估分母才能估计保留率；跨帧映射、模板自包含排除、拟合失败处理已纳入本次软件验收，不把历史小样本表现等同生产精度保证。
 
 ## Paused by user (2026-10-11): reported-candidate image audit (2026-10-05)
 

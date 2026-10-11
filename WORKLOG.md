@@ -10,10 +10,16 @@
   - 原始 unknown JSON/FITS 保留；L4 新增 screened/quarantine JSON 和逐帧审计。pass 进正常复核，reject/review 隔离；输入/规则过期阻断，最终导出及实际 transport 重检，旧人工 1 不能绕过
   - 从正式 batch 冻结 catalog/PSV/hash 与旧收件回执/导出快照确认，20260830..20261010 已上报 unknown 为 47 条轨迹；回放工具验证提交快照与原始候选一致，单独报告通过/规则剔除/证据不足
   - 第一夜 20260830：41 条候选为 pass21/reject15/review5；6 条已上报中 pass4/reject2。临时复核包仅 21 条通过轨迹/63 观测/21 GIF，未覆盖历史复核文件
+  - 全部回放完成：20260830..20261010 共 22 个有保存 catalog 的夜次（含 20260922 空表），1589 条候选 = pass839/reject565/review185；47 条正式收件轨迹 = pass25/reject22/review0，规则命中率 22/47=46.8%，不是独立确认的假源比例
+  - MPC 此次质疑的 11 个 NEO 候选中 reject9/pass2，未拦住 00001EM/00001F5；20261002–05 全部 15 条已上报轨迹为 reject11/pass4
+  - 复查已有人工假源标签：00001o2 被剔除，但 00001nP/00001oI/00001oj 通过；它们形态异常帧数未达多数，因此未进入 PSF，属于现规则已知漏检。带原始人工标签与 PSF 是否执行的 47 条明细在 submitted_candidates_annotated.csv；不能把 pass 当真源
+  - 20260904/05/13/15/16/17/23 和 20261009 共 8 个已有夜目录没有保存的 unknown catalog，已明确列为 no_saved_catalog；本次不重建 linking/orbit，不扩展真源误拦率试验
 - validation: 新增 10 项在本机/服务器 heliolinc 均通过；3 项 daily/hold 本机通过；39 项 digest2/transport 在服务器已有隔离 runtime 通过（仅模拟 transport，测试进程使用独立 hold 路径）。本机完整旧 suite 因 digest2 缺失未通过；服务器初次混用 site-packages/生产 hold 的尝试后改用正确环境完成既有回归，生产环境未安装或升级依赖
 - deployment: 2026-10-11 12:34 CST，9 个源码/测试文件逐一核对原 hash、备份后原子替换，新 hash 全一致；备份 `/pipeline/xiaoyunao/data/heliolincrr/morphology_deploy_20261011.sm1jt1/backup`，receipt 同目录；README 已备份同步；MPC_SUBMISSION_HOLD 保持
-- remaining_issues: 全历史回放正在服务器以 4 workers 顺序执行，输出 `/pipeline/xiaoyunao/data/heliolincrr/morphology_replay_20261011`；旧人工复核包显示内容保留，导出按新通过集过滤。规则命中仅称疑似假源，不当作独立真伪确认或真源误拦概率
-- next_step: 完成生产入口烟测与全部回放，核对受保护原始/人工/提交文件 hash，汇总全部候选与已上报 47 条的结果并更新本记录
+- final_validation: 部署后的真实 20260830 export --validate 从旧人工接受的 6 条中过滤为 4 条/12 观测，完整本地 ADES/digest2 校验通过，network_requests=0；1589 条轨迹判定重新核算、22 份输入签名有效、202 个原始/人工/提交/hold 文件 hash 未变、9 个已部署文件 hash 匹配。所有回放/预计算进程结束，32-member 审计归档已取回并安全解包验证
+- artifacts: 服务器 `/pipeline/xiaoyunao/data/heliolincrr/morphology_replay_20261011`；本地 `outputs/morphology_replay_20261011/` 含全候选/已上报/逐夜 CSV、22 份逐帧报告、audit_summary.json、verification.json 和完整 tar.gz；归档 SHA256 `1f449db71ab38cba293916a4448160bcda3978d2baa1cf1d5adb6a8d6af6f21b`；生产入口验收在 `outputs/morphology_deployment_20261011/smoke_verification.json`
+- remaining_issues: 旧人工复核包显示内容保留，导出按新通过集过滤；规则存在上述已知漏检，reject 仍只称疑似假源，185 条 review 因不足以判定而隔离。未恢复 MPC 上报、未改历史标签/后随状态、未发送消息
+- next_step: 本次接入与历史回放已交付；保持 MPC hold，真源误拦概率研究待用户另行提出；后续规则改进须保留本次固定版本与漏检证据
 
 - task: 核查并修复 known ADES 两批因 rmsRA/rmsDec=0.0000 被拒收；用户明确仍不上报，鬼像筛选留在另一个对话
 - files_changed: `known_asteroid/export_ades.py`, `known_asteroid/validate_ades.py`, `known_asteroid/tests/test_export_quality.py`, `known_asteroid/README.md`, `WORKLOG.md`, `PLAN.md`, `CHANGELOG.md`；原始逐行审计、修正版/排除表/校验结果保存在 `outputs/known_ades_rejection_20261011/`
