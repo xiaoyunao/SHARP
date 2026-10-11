@@ -42,18 +42,63 @@ class MorphologyTests(unittest.TestCase):
         }
         morphology.atomic_json(self.paths['report'], self.report)
 
-    def test_independent_majorities_keep_cb_evidence(self):
-        self.assertEqual(morphology.decide([True, True, False], [True, False, True]), 'reject')
+    def test_abnormal_catalog_rejects_without_psf(self):
+        self.assertEqual(morphology.decide([True, True, False], []), 'reject')
+        self.assertEqual(morphology.decide([True]*3, [False]*3), 'reject')
+
+    def test_normal_catalog_requires_psf_pass(self):
+        self.assertEqual(morphology.decide([False]*3, [False]*3), 'pass')
+        self.assertEqual(morphology.decide([False]*3, [True]*3), 'reject')
+        self.assertEqual(morphology.decide([False]*3, []), 'review')
+        self.assertEqual(morphology.decide([False]*3, [None]*3), 'review')
 
     def test_three_of_four_required(self):
-        self.assertEqual(morphology.decide([True]*4, [True, True, False, False]), 'pass')
-        self.assertEqual(morphology.decide([True]*4, [True, True, True, False]), 'reject')
+        self.assertEqual(morphology.decide([False]*4, [True, True, False, False]), 'pass')
+        self.assertEqual(morphology.decide([False]*4, [True, True, True, False]), 'reject')
+        self.assertEqual(morphology.decide([True, True, False, False], [False]*4), 'pass')
+        self.assertEqual(morphology.decide([True, True, True, False], []), 'reject')
 
     def test_missing_evidence_is_not_a_normal_measurement(self):
         self.assertEqual(morphology.decide([True, None, False], [True]*3), 'review')
-        self.assertEqual(morphology.decide([True]*3, [True, None, False]), 'review')
-        self.assertEqual(morphology.decide([True]*3, [False, None, False]), 'pass')
+        self.assertEqual(morphology.decide([False]*3, [True, None, False]), 'review')
+        self.assertEqual(morphology.decide([False]*3, [False, None, False]), 'pass')
         self.assertEqual(morphology.decide([True, True], [True, True]), 'review')
+
+    def test_screen_routes_only_catalog_normal_candidates_to_psf(self):
+        images = [f'frame{i}.fits.gz' for i in range(3)]
+        rows = [{'linkage_id': oid, 'trk_sub': f'TEST{oid:03d}', 'n_obs': 3,
+                 'image_names': ';'.join(images), 'objids': ';'.join([str(oid)]*3),
+                 'mjds': '61000;61000.01;61000.02'} for oid in range(1, 6)]
+        morphology.atomic_json(self.paths['raw'], rows)
+        calls = []
+
+        def measured_frames(function, tasks, workers):
+            calls.append(function.__name__)
+            frames = []
+            for _, _, name, ids in tasks:
+                if function is morphology.catalog_frame:
+                    measurements = {str(oid): {'catalog_bad': {1: True, 2: False, 3: False,
+                                                               4: None, 5: False}[oid]} for oid in ids}
+                else:
+                    self.assertEqual(ids, [2, 3, 5])
+                    measurements = {str(oid): {'psf_bad': {2: True, 3: False, 5: None}[oid]}
+                                    for oid in ids}
+                frames.append({'image_name': name, 'observations': measurements, 'inputs': []})
+            return frames
+
+        with patch.object(morphology, 'run_frames', side_effect=measured_frames):
+            report = morphology.screen_night(self.night, self.root, force=True)
+        self.assertEqual(calls, ['catalog_frame', 'psf_frame'])
+        candidates = report['candidates']
+        self.assertEqual([r['status'] for r in candidates], ['reject', 'reject', 'pass', 'review', 'review'])
+        self.assertEqual([r['reason'] for r in candidates], [
+            'catalog_majority_abnormal', 'psf_majority_abnormal', 'both_stages_normal',
+            'catalog_evidence_insufficient', 'psf_evidence_insufficient'])
+        self.assertTrue(all('psf_bad' not in o for r in (candidates[0], candidates[3])
+                            for o in r['observations']))
+        self.assertEqual(json.loads(self.paths['passed'].read_text()), [rows[2]])
+        self.assertEqual(morphology.read_current_report(self.night, self.root)['counts'],
+                         {'pass': 1, 'reject': 2, 'review': 2})
 
     def test_fixed_and_broadened_psf_fit(self):
         rng = np.random.default_rng(42)

@@ -1,6 +1,15 @@
 # PLAN
 
-## Completed milestone: deploy unknown morphology screening and replay history (2026-10-11)
+## Current priority: serial morphology then PSF acceptance (2026-10-11)
+
+- 最新明确要求：全部 unknown 先做形态；异常直接 reject 且不拟合，正常才进入 PSF；PSF 异常 reject，两关正常才 pass。证据不足 review 隔离，不进入常规人工候选；不限定 NEO。
+- 数值阈值与至少 3 帧、>=2/3 异常规则保持；新 policy `serial-morphology-psf-20261011` 自动使旧缓存失效。上版“双异常才剔除”结果保留作对照。
+- 已完成：最小代码/原因/文档修改，本机/服务器各 12 项针对性回归；13:35 CST 备份后部署。20260830..20261010 历史重筛运行中，形态分类为异常761/正常727/不足101，仅 727 条进入 PSF。
+- 路径：服务器部署/旧结果备份 `serial_morphology_deploy_20261011.s1t1upg5`、回放 `serial_morphology_replay_20261011`（均在 `/pipeline/xiaoyunao/data/heliolincrr/`）；本地执行凭据 `outputs/serial_morphology_20261011/`。
+- 验收：形态异常不进入 PSF，正常不能跳过 PSF；报告逐关原因与每日统计；原始/人工/提交文件未变；旧筛选备份；MPC hold 保留，无任何正式/测试上报或撤回消息。
+- 真源误拦率研究仍按用户要求暂不开展；MPC 撤回问题只核实官方流程，等待明确发出请求的授权。
+
+## Superseded milestone: joint morphology/PSF rejection and history replay (2026-10-11)
 
 - 最新授权：直接将轨迹级形态 AND PSF 规则接入主流程，从 20260830 起重筛已有 unknown；真源误拦概率研究按用户要求留到后续。
 - 固定采用 FWHM ratio>1.5、Class_ANN<0.1 和 PSF width>1.3、delta_chi2>=9；两套判据分别要求至少 3 帧、>=2/3 异常，不要求异常帧完全相同。

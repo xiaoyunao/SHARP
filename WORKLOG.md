@@ -2,6 +2,15 @@
 
 ## 2026-10-11
 
+- task: 按用户澄清改为串联接纳：形态异常直接剔除且不拟合；形态正常才做 PSF；两关均正常才进入人工环节，覆盖所有 unknown
+- files_changed: `heliolincrr/unknown_morphology.py`, `tests/test_unknown_morphology.py`, `heliolincrr/README.md`, `WORKLOG.md`, `PLAN.md`, `CHANGELOG.md`
+- commands_run: SSH 核对现网源码/hold；py_compile 与本机 12 项针对性回归通过；读取上一版逐夜/逐目标审计，查阅 MPC 官方文档
+- key_findings: 上版是两关均异常才剔除，与用户此次明确的串联接纳不同；新版本 `serial-morphology-psf-20261011` 保持原逐帧阈值与 >=2/3 多数规则，增加逐关原因。形态不足直接 review，形态通过而 PSF 不足也是 review；不把拟合失败当假源
+- validation: 本机/服务器 heliolinc 各 12 项通过，包含形态拒绝时 PSF 不执行、形态正常时 PSF 强制执行、两关各自拒绝、缺失隔离、生产导出/打包/transport 不能绕过筛选
+- deployment: 13:35 CST 原子部署 3 个文件并核对 hash；源码和 22 夜旧筛选输出均备份至 `/pipeline/xiaoyunao/data/heliolincrr/serial_morphology_deploy_20261011.s1t1upg5`；回放前 202 个受保护文件与上次完全一致，MPC hold 存在。按服务器 48 核空闲情况使用 3 夜×8 workers 回放，主 pipeline 默认仍为 4 workers
+- remaining_issues: 新版历史重筛正在运行，输出 `/pipeline/xiaoyunao/data/heliolincrr/serial_morphology_replay_20261011`；旧 565/1589、22/47 为上版统计，不能沿用为新版结果。原形态分级为 abnormal761/normal727/review101，新版只拟合中间 727 条。用户问能否撤回只作流程核实，未授权向 MPC 发出撤回请求
+- next_step: 完成新版全量回放并记录逐关数量、逐夜均值/比例、已上报命中变化；保留原始/人工/提交文件及旧版审计，维持 MPC hold
+
 - task: 按用户授权将轨迹级形态 AND PSF 筛选接入主流程，并从 20260830 起回放已有 unknown；暂不扩展真源误拦概率研究
 - files_changed: 新增 `heliolincrr/unknown_morphology.py`, `replay_unknown_morphology.py`, `tests/test_unknown_morphology.py`；修改单夜/daily、package、export、digest2 transport、follow-up 关联与 README；同步本日志/PLAN/CHANGELOG
 - commands_run: git status/branch/fetch/log；核对服务器源码 hash，建立 `codex/unknown-morphology`；Python/Bash 语法、10 项门控回归、3 项 daily/hold 回归、服务器独立 digest2 runtime 39 项回归；5 个旧试验 stamp 拟合数值逐项对齐；真实 20260830 通过集临时 package 回放

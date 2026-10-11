@@ -24,14 +24,17 @@
 ## Unknown trkSub and review interface
 
 Unknown candidate 生成并分配 trkSub 后，主流程调用 `unknown_morphology.py`，
-在人工复核打包之前完成形态与经验 PSF 筛选。参数固定为 2026-10-05 试验采用的组合：
+在人工复核打包之前完成形态与经验 PSF 串联筛选，适用于全部 unknown，不区分 NEO。
+2026-10-11 按用户最新要求改为两关均通过才接纳；沿用既有数值阈值：
 
 - 单帧形态异常：同帧局部恒星归一化 `FWHM ratio > 1.5` 且 `Class_ANN < 0.1`。
-- 至少 3 次观测、至少 2 次且 >=2/3 观测异常的候选，才对全部曝光拟合 PSF。
+- 至少 3 次观测；至少 2 次且 >=2/3 观测形态异常时直接 `reject`，不做 PSF。
+- 形态判定通过的候选才对全部曝光拟合 PSF；形态证据不足则 `review`，暂不拟合。
 - 单帧 PSF 异常：局部经验 PSF 的宽化系数 `>1.3` 且固定/自由宽度模型 `delta_chi2>=9`。
-- 两套规则分别在轨迹级达到 >=2/3 才 `reject`；支持两套规则的帧不必相同。
+- PSF 异常也按同一 >=2/3 规则判为 `reject`；仅形态、PSF 两关均判正常才 `pass`。
 - `review` 表示缺数据、参考星不足或拟合异常会影响多数判定；与 `reject` 一同隔离。
-  `pass` 只表示未触发本规则，不代表已确认真源。没有新增拖尾 PSF 或依赖。
+  缺失观测只有在不可能改变该关多数结论时才不影响判定。
+  `pass` 表示通过两关自动筛选，仍须人工确认。没有新增拖尾 PSF 或依赖。
 
 原始 `<night>_unknown_links.json/.fits` 保留。L4 旁生成：
 
@@ -59,7 +62,7 @@ OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 \
 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 \
   /home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python \
   replay_unknown_morphology.py --start 20260830 --end 20261010 --workers 4 \
-  --out-dir /pipeline/xiaoyunao/data/heliolincrr/morphology_replay_20261011
+  --out-dir /pipeline/xiaoyunao/data/heliolincrr/serial_morphology_replay_20261011
 ```
 
 回放输出逐夜、全部候选及已上报候选 CSV，`status.json` 支持查看进度；当前结果可复用，

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Candidate-level morphology + empirical-PSF gate, with immutable raw catalogs.
 
-The two majorities are independent: their abnormal exposures need not coincide.
-Only catalog-suspicious candidates need image fitting. Missing evidence that can
-change a majority is quarantined for review, never silently treated as a pass.
+Candidates must pass catalog morphology first, then empirical PSF confirmation.
+An abnormal catalog majority is rejected without image fitting. Missing evidence
+that can change either decision is quarantined, never treated as a pass.
 """
 from __future__ import annotations
 
@@ -27,7 +27,8 @@ from scipy.optimize import least_squares
 from scipy.spatial import cKDTree
 
 POLICY = {
-    'version': 'joint-psf-tracklet-20261011', 'min_observations': 3,
+    'version': 'serial-morphology-psf-20261011', 'min_observations': 3,
+    'psf_candidate_selection': 'catalog_normal', 'acceptance': 'both_stages_normal',
     'fraction': '2/3', 'fwhm_ratio_gt': 1.5, 'class_ann_lt': 0.1,
     'psf_width_gt': 1.3, 'delta_chi2_ge': 9.0,
     'local_reference_min': 20, 'local_radii_pix': [1000, 1800],
@@ -114,8 +115,8 @@ def majority(values: list[bool | None]) -> str:
 
 def decide(catalog_values: list[bool | None], psf_values: list[bool | None]) -> str:
     state = majority(catalog_values)
-    if state != 'abnormal':
-        return 'pass' if state == 'normal' else 'review'
+    if state != 'normal':
+        return 'reject' if state == 'abnormal' else 'review'
     if len(psf_values) != len(catalog_values):
         return 'review'
     state = majority(psf_values)
@@ -402,7 +403,7 @@ def screen_night(night: str, processed_root=Path('/processed1'), workers=4, forc
                 observation.update(measurements[(observation['image_name'], observation['objID'])])
             state = majority([o['catalog_bad'] for o in record['observations']])
             record['catalog_vote'] = state
-            if state == 'abnormal':
+            if state == 'normal':
                 for o in record['observations']:
                     psf_ids[o['image_name']].add(o['objID'])
         tasks = [(str(processed_root), night, name, sorted(ids)) for name, ids in sorted(psf_ids.items())]
@@ -415,15 +416,24 @@ def screen_night(night: str, processed_root=Path('/processed1'), workers=4, forc
                     raise RuntimeError('L2 changed between catalog and PSF stages')
                 inputs[s['path']] = s
         for record in candidates:
-            for o in record['observations']:
-                o.update(psf.get((o['image_name'], o['objID']), {}))
+            if record['catalog_vote'] == 'normal':
+                for o in record['observations']:
+                    o.update(psf.get((o['image_name'], o['objID']), {}))
+                record['psf_vote'] = majority([o.get('psf_bad') for o in record['observations']])
+            else:
+                record['psf_vote'] = 'not_attempted'
             record['status'] = decide([o['catalog_bad'] for o in record['observations']],
                                       [o.get('psf_bad') for o in record['observations']])
             record['catalog_bad_count'] = sum(o['catalog_bad'] is True for o in record['observations'])
             record['psf_bad_count'] = sum(o.get('psf_bad') is True for o in record['observations'])
-            record.setdefault('reason', {'pass': 'joint_rule_not_confirmed',
-                                         'reject': 'catalog_and_psf_majorities_abnormal',
-                                         'review': 'insufficient_evidence_for_majority'}[record['status']])
+            if record['catalog_vote'] == 'abnormal':
+                reason = 'catalog_majority_abnormal'
+            elif record['catalog_vote'] == 'review':
+                reason = 'catalog_evidence_insufficient'
+            else:
+                reason = {'pass': 'both_stages_normal', 'reject': 'psf_majority_abnormal',
+                          'review': 'psf_evidence_insufficient'}[record['status']]
+            record.setdefault('reason', reason)
         if paths['raw'].read_bytes() != raw_bytes or any(s != signature(Path(s['path'])) for s in inputs.values()):
             raise RuntimeError('Inputs changed during screening; outputs not published')
         passed = [row for row, record in zip(rows, candidates) if record['status'] == 'pass']
