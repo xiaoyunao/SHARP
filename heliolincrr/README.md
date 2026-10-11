@@ -25,27 +25,30 @@
 
 Unknown candidate 生成并分配 trkSub 后，主流程调用 `unknown_morphology.py`，
 在人工复核打包之前完成形态与经验 PSF 串联筛选，适用于全部 unknown，不区分 NEO。
-2026-10-11 按用户最新要求改为两关均通过才接纳；沿用既有数值阈值：
+2026-10-11 采用串联筛选；两关均通过或证据不足均进入人工复核，明确异常直接剔除：
 
 - 单帧形态异常：同帧局部恒星归一化 `FWHM ratio > 1.5` 且 `Class_ANN < 0.1`。
 - 至少 3 次观测；至少 2 次且 >=2/3 观测形态异常时直接 `reject`，不做 PSF。
 - 形态判定通过的候选才对全部曝光拟合 PSF；形态证据不足则 `review`，暂不拟合。
 - 单帧 PSF 异常：局部经验 PSF 的宽化系数 `>1.3` 且固定/自由宽度模型 `delta_chi2>=9`。
 - PSF 异常也按同一 >=2/3 规则判为 `reject`；仅形态、PSF 两关均判正常才 `pass`。
-- `review` 表示缺数据、参考星不足或拟合异常会影响多数判定；与 `reject` 一同隔离。
+- `review` 表示缺数据、参考星不足或拟合异常会影响多数判定；进入常规人工复核并保留原因。
   缺失观测只有在不可能改变该关多数结论时才不影响判定。
   `pass` 表示通过两关自动筛选，仍须人工确认。没有新增拖尾 PSF 或依赖。
 
 原始 `<night>_unknown_links.json/.fits` 保留。L4 旁生成：
 
-- `<night>_unknown_links_screened.json`：通过集，复核包与 follow-up 关联默认读取。
-- `<night>_unknown_links_quarantine.json`：疑似伪源和待复核集，保留原因及原始观测索引。
+- `<night>_unknown_links_screened.json`：两关通过集；自动 follow-up 关联仍只读取此集。
+- `<night>_unknown_links_quarantine.json`：保留 reject/review 数值审计；文件名沿用，但 review 不再隔离出人工队列。
 - `<night>_unknown_morphology.json`：逐帧指标、模板验证、完整判定、输入签名和规则版本。
 
 未知源 CLI 导出、正式上报前均核对筛选版本、原始 catalog hash 与 L1/L2 签名，
-即使旧人工 CSV 标为 1，也不能绕过筛选。签名过期须重跑，证据不足不进入正常上报队列。
-原始 GIF 仍生成并保留；历史回放不覆盖人工 CSV、历史复核包、原始 PSV 或 MPC 回执。
-已有复核包的 daily 快速路径也会补齐筛选；旧包的显示内容保留，但导出仍按通过集过滤。
+即使旧人工 CSV 标为 1，也不能绕过 reject。签名过期须重跑。
+`unknown_review_gate.py` 将 pass+review 路由给人工，正式导出和 transport 要求明确人工接受；
+不会把 review 的数值状态改成 pass，也不改变 PSF 缓存。复核包含独立 candidates JSON，
+manifest 每行标注 morphology_status/reason，两列人工 CSV 保持兼容。
+已有复核包的 daily 快速路径会补齐筛选并刷新未上报的过期包；刷新前备份，保留已有人工决定。
+有历史提交记录的包保留；原始 catalog/GIF、submit CSV、PSV、MPC 回执和账本均不改。
 
 在服务器使用 heliolinc Python；默认 4 个进程，可通过 `MORPHOLOGY_WORKERS` 调整主流程：
 
@@ -161,7 +164,7 @@ tracklet_id,is_real
 000001fV,0
 ```
 
-`<night>_submit.csv` 表示该夜已经完成最终判定。程序会要求每个通过形态筛选的 unknown
+`<night>_submit.csv` 表示该夜已经完成最终判定。程序会要求每个 pass/review 的 unknown
 `tracklet_id` 都有明确的 `0/1`，然后只保留 `is_real=1` 的条目生成 reviewed/masked
 产物和 ADES PSV。默认输出：
 

@@ -14,6 +14,7 @@ import unknown_morphology as morphology
 import export_unknown_ades as exporter
 import digest2_pipeline as pipeline
 import package_unknown_review as package
+import unknown_review_gate as review_gate
 
 
 class MorphologyTests(unittest.TestCase):
@@ -138,13 +139,13 @@ class MorphologyTests(unittest.TestCase):
 
     def test_incomplete_review_is_checked_after_automatic_filter(self):
         review = self.root / 'review.csv'
-        review.write_text('tracklet_id,is_real\nTEST000,0\n')
+        review.write_text('tracklet_id,is_real\nTEST000,0\nTEST002,0\n')
         args = SimpleNamespace(catalog=str(self.paths['raw']), processed_root=str(self.root),
                                night=self.night, require_morphology=True, review_csv=str(review),
                                require_review=True, require_complete_review=True)
         observations, stats, rows = exporter.build_obs_rows(args, return_catalog=True)
         self.assertEqual((observations, rows), ([], []))
-        self.assertEqual(stats['catalog_links'], 1)
+        self.assertEqual(stats['catalog_links'], 2)
         self.assertEqual(stats['review_missing_links'], 0)
 
     def test_production_process_cannot_score_or_send_quarantine(self):
@@ -159,6 +160,62 @@ class MorphologyTests(unittest.TestCase):
             self.night, '--processed-root', str(self.root), '--catalog', str(self.paths['raw'])])
         with self.assertRaises(ValueError):
             package.build_package(args)
+
+    def test_unresolved_goes_to_review_but_reject_cannot_override(self):
+        rows, _ = review_gate.reviewable_rows(self.night, self.root, self.rows)
+        self.assertEqual(rows, [self.rows[0], self.rows[2]])
+        with self.assertRaisesRegex(ValueError, 'rejected'):
+            review_gate.reviewable_rows(self.night, self.root, self.rows, strict=True)
+        review = self.root / 'review.csv'
+        review.write_text('tracklet_id,is_real\nTEST000,1\nTEST001,1\n')
+        with self.assertRaisesRegex(ValueError, 'human acceptance'):
+            review_gate.require_human_acceptance(rows, review)
+        review.write_text('tracklet_id,is_real\nTEST000,1\nTEST002,1\n')
+        review_gate.require_human_acceptance(rows, review)
+
+    def test_missing_unresolved_decision_blocks_complete_export(self):
+        review = self.root / 'review.csv'
+        review.write_text('tracklet_id,is_real\nTEST000,0\n')
+        args = SimpleNamespace(catalog=str(self.paths['raw']), processed_root=str(self.root),
+                               night=self.night, require_morphology=True, review_csv=str(review),
+                               require_review=True, require_complete_review=True)
+        with self.assertRaises(ValueError):
+            exporter.build_obs_rows(args, return_catalog=True)
+
+    def test_reviewed_unresolved_can_reach_local_validation(self):
+        review = self.root / 'review.csv'
+        review.write_text('tracklet_id,is_real\nTEST002,1\n')
+        args = SimpleNamespace(night=self.night, processed_root=str(self.root),
+                               review_csv=str(review), out=str(self.root / 'out.psv'),
+                               submit=False, response_out='')
+        with patch.object(pipeline, 'score_snapshot', return_value=(self.root / 'plan', {})) as score:
+            pipeline.process_export(args, self.rows[2:], self.paths['raw'].parent)
+            score.assert_called_once()
+        review.write_text('tracklet_id,is_real\nTEST002,0\n')
+        with patch.object(pipeline, 'score_snapshot') as score:
+            with self.assertRaisesRegex(ValueError, 'human acceptance'):
+                pipeline.process_export(args, self.rows[2:], self.paths['raw'].parent)
+            score.assert_not_called()
+
+    def test_package_includes_unresolved_and_preserves_decisions(self):
+        out = self.root / 'package'
+        out.mkdir()
+        (out / 'gifs').mkdir()
+        (out / 'gifs/TEST001_link0001_20261002.gif').write_bytes(b'old gif')
+        review = out / f'{self.night}_unknown_review.csv'
+        review.write_text('tracklet_id,is_real\nTEST000,0\nTEST001,1\nTEST002,1\n')
+        args = package.build_argparser().parse_args([
+            self.night, '--processed-root', str(self.root), '--out-dir', str(out),
+            '--plot-root', str(self.root / 'plots')])
+        with patch.object(package, 'write_review_ades_fits', return_value=('', 0, {'scores': {}})), \
+             patch.object(package, 'write_review_detail_fits', return_value=('', 0)):
+            result = package.build_package(args)
+        manifest = json.loads(Path(result['manifest_json']).read_text())
+        self.assertEqual([r['morphology_status'] for r in manifest['rows']], ['pass', 'review'])
+        self.assertEqual(review.read_text(), 'tracklet_id,is_real\nTEST000,0\nTEST002,1\n')
+        self.assertEqual(manifest['n_catalog_rows'], 2)
+        self.assertFalse(list((out / 'gifs').glob('*.gif')))
+        self.assertEqual(len(list(self.root.glob(f'{self.night}_excluded_gifs_*/*.gif'))), 1)
 
 
 if __name__ == '__main__':

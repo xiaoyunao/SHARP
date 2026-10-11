@@ -1,6 +1,17 @@
 # PLAN
 
-## Completed current milestone: serial morphology then PSF acceptance (2026-10-11)
+## Current priority: human review routing and MPC correction request (2026-10-11)
+
+- 用户最新规则：形态异常直接拒绝、不做 PSF；形态正常才拟合 PSF，PSF 异常拒绝。两关正常的 pass 和证据不足的 review 均进入人工核验；reject 不进。适用于全部 unknown。
+- 已部署独立路由模块，不改变数值引擎/cache：747 条可人工核验，842 条拒绝；人工接受是最终提交的必要条件，旧标签不能绕过明确拒绝。
+- 每天 09:00 和 reboot cron、单夜 Step6b、已有包续跑入口已核实；续跑会补筛选并备份刷新未上报旧包，保留人工决定；有提交记录的历史包保持。
+- 验证：本机/服务器各 16 项门控，39 项隔离评分/提交回归，本机 3 项 daily/hold 已通过；真实复核包刷新/导出和 213 文件保护校验进行中。
+- MPC 用户已授权直接联系、撤回或标错并请求台站 327 恢复处理条件；不代表恢复 astronomy submissions。已准备 33 条/105 次撤回/标错清单 + F5 的 3 次继续暂停，见 `outputs/mpc_request_20261011/`。
+- 当前外部阻塞：Jira 浏览器操作持续超时；用户指定使用 wsgp2024@163.com，明确先不用 Gmail。163 尚未连接；已安排登录页，等待用户完成登录，不索取聊天明文密码/验证码。没有发出消息。
+- 用户最新限制：先展示正文并获明确确认后才可发送邮件或 Jira；163 登录尚未完成，用户提供的登录凭据不得写入项目文件/日志/Git。
+- 下一步：结束生产刷新/验收并提交里程碑；正文确认后再登录 163、核实 Reply-To、发送并记录回执。实际隔离 CLI pass+review 验收已 local_validated/network_requests=0。继续保留 MPC hold，不开展误拦率研究或声称天测全面修复。
+
+## Previous milestone: serial morphology then PSF acceptance (2026-10-11)
 
 - 最新明确要求：全部 unknown 先做形态；异常直接 reject 且不拟合，正常才进入 PSF；PSF 异常 reject，两关正常才 pass。证据不足 review 隔离，不进入常规人工候选；不限定 NEO。
 - 数值阈值与至少 3 帧、>=2/3 异常规则保持；新 policy `serial-morphology-psf-20261011` 自动使旧缓存失效。上版“双异常才剔除”结果保留作对照。

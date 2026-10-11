@@ -185,7 +185,11 @@ main() {
   if [[ "${FORCE_UNKNOWN}" != "1" && -s "${unknown_json}" && -s "${review_manifest}" ]]; then
     OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 "${PYTHON_BIN}" "${SCRIPT_DIR}/unknown_morphology.py" \
       "${TARGET_NIGHT}" --processed-root "${PROCESSED_ROOT}" --workers "${MORPHOLOGY_WORKERS:-4}"
-    log "[SKIP] unknown review package already exists: ${review_manifest}"
+    "${PYTHON_BIN}" "${SCRIPT_DIR}/package_unknown_review.py" "${TARGET_NIGHT}" \
+      --processed-root "${PROCESSED_ROOT}" --root-out "${ROOT_OUT}" \
+      --plot-root "${PLOT_ROOT}" --out-root "${REVIEW_ROOT}" \
+      --make-tar --refresh-if-needed
+    log "[INFO] unknown screening and human-review routing current: ${review_manifest}"
     if [[ "${ENABLE_FOLLOWUP}" == "1" ]]; then
       section "associate follow-up links"
       PYTHONPATH="$(cd "${SCRIPT_DIR}/.." && pwd)${PYTHONPATH:+:${PYTHONPATH}}" \

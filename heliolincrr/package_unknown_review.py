@@ -14,7 +14,8 @@ from astropy.table import Table
 
 from export_unknown_ades import build_obs_rows, build_argparser as export_parser, write_psv
 from digest2_pipeline import score_snapshot
-from unknown_morphology import approved_rows, paths_for, read_current_report
+from unknown_morphology import paths_for, read_current_report, row_hash, digest, atomic_json
+from unknown_review_gate import reviewable_rows, ROUTING_VERSION
 
 DETAIL_COLUMNS = [
     ("trk_sub", "U7"),
@@ -273,9 +274,9 @@ def build_package(args: argparse.Namespace) -> dict[str, Any]:
     plot_root = Path(args.plot_root)
     out_root = Path(args.out_root)
     morphology = read_current_report(night, processed_root)
-    catalog = Path(args.catalog) if args.catalog else paths_for(night, processed_root)['passed']
-    rows = load_json_list(catalog)
-    approved_rows(night, processed_root, rows, strict=True)
+    source_catalog = Path(args.catalog) if args.catalog else paths_for(night, processed_root)['raw']
+    rows, morphology = reviewable_rows(night, processed_root, load_json_list(source_catalog),
+                                      strict=bool(args.catalog))
     plot_dir = plot_root / night
     out_dir = Path(args.out_dir) if args.out_dir else out_root / night
     gif_out_dir = out_dir / "gifs"
@@ -284,6 +285,17 @@ def build_package(args: argparse.Namespace) -> dict[str, Any]:
 
     review_csv = out_dir / f"{night}_unknown_review.csv"
     manifest_json = out_dir / f"{night}_unknown_review_manifest.json"
+    previous_decisions = {}
+    if review_csv.exists():
+        with review_csv.open(newline='') as stream:
+            for old in csv.DictReader(stream):
+                key = old['tracklet_id']
+                if key in previous_decisions:
+                    raise ValueError(f'Duplicate prior review decision: {key}')
+                previous_decisions[key] = old['is_real']
+    catalog = out_dir / f'{night}_unknown_review_candidates.json'
+    atomic_json(catalog, rows)
+    measurements = {r['row_sha256']: r for r in morphology['candidates']}
     review_ades_fits, review_ades_rows, digest2_report = write_review_ades_fits(args, catalog, out_dir)
     review_full_fits, review_full_rows = write_review_detail_fits(args, rows, out_dir)
 
@@ -291,6 +303,7 @@ def build_package(args: argparse.Namespace) -> dict[str, Any]:
     missing = 0
     review_rows: list[dict[str, Any]] = []
     manifest_rows: list[dict[str, Any]] = []
+    selected_gifs = set()
 
     for row in rows:
         linkage_id = int(row["linkage_id"])
@@ -298,6 +311,7 @@ def build_package(args: argparse.Namespace) -> dict[str, Any]:
         src_gif = plot_dir / gif_name_for_link(night, linkage_id)
         dst_gif_name = f"{trk_sub}_link{linkage_id:04d}_{night}.gif"
         dst_gif = gif_out_dir / dst_gif_name
+        selected_gifs.add(dst_gif_name)
         if src_gif.exists():
             shutil.copy2(src_gif, dst_gif)
             copied += 1
@@ -306,10 +320,13 @@ def build_package(args: argparse.Namespace) -> dict[str, Any]:
             missing += 1
             gif_status = "missing"
 
-        review_rows.append({"tracklet_id": trk_sub, "is_real": ""})
+        measurement = measurements[row_hash(row)]
+        review_rows.append({"tracklet_id": trk_sub, "is_real": previous_decisions.get(trk_sub, '')})
         manifest_rows.append(
             {
                 "tracklet_id": trk_sub,
+                "morphology_status": measurement['status'],
+                "morphology_reason": measurement.get('reason', ''),
                 "digest2": digest2_report["scores"].get(trk_sub),
                 "linkage_id": linkage_id,
                 "gif": str(dst_gif.relative_to(out_dir)) if src_gif.exists() else "",
@@ -338,10 +355,13 @@ def build_package(args: argparse.Namespace) -> dict[str, Any]:
     manifest = {
         "night": night,
         "morphology_policy": morphology['policy']['version'],
+        "review_routing_policy": ROUTING_VERSION,
+        "morphology_report_sha256": digest(paths_for(night, processed_root)['report'].read_bytes()),
         "morphology_counts": morphology['counts'],
         "morphology_report": str(paths_for(night, processed_root)['report']),
         "morphology_quarantine": str(paths_for(night, processed_root)['quarantine']),
         "catalog": str(catalog),
+        "source_catalog": str(source_catalog),
         "plot_dir": str(plot_dir),
         "out_dir": str(out_dir),
         "review_csv": str(review_csv),
@@ -355,6 +375,14 @@ def build_package(args: argparse.Namespace) -> dict[str, Any]:
         "rows": manifest_rows,
     }
     manifest_json.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+    # Refreshed packages must not retain rejected GIFs for glob-based viewers.
+    stale = [p for p in gif_out_dir.glob('*.gif') if p.name not in selected_gifs]
+    if stale:
+        import tempfile
+        backup = Path(tempfile.mkdtemp(prefix=f'{night}_excluded_gifs_', dir=out_dir.parent))
+        for path in stale:
+            shutil.move(str(path), str(backup / path.name))
 
     tar_path = ""
     if args.make_tar:
@@ -390,12 +418,44 @@ def build_argparser() -> argparse.ArgumentParser:
     ap.add_argument("--out-dir", default="")
     ap.add_argument("--catalog", default="", help="Default: /processed1/<night>/L4/<night>_unknown_links.json")
     ap.add_argument("--make-tar", action="store_true", help="Also write <night>_unknown_review.tar.gz under out-root")
+    ap.add_argument('--refresh-if-needed', action='store_true',
+                    help='Refresh stale unsent packages; preserve prior decisions and submitted history')
     return ap
+
+
+def refresh_package(args: argparse.Namespace) -> dict:
+    night = str(args.night)
+    root = Path(args.processed_root)
+    report = read_current_report(night, root)
+    out_dir = Path(args.out_dir) if args.out_dir else Path(args.out_root) / night
+    manifest = out_dir / f'{night}_unknown_review_manifest.json'
+    if manifest.exists():
+        old = json.loads(manifest.read_text())
+        report_hash = digest(paths_for(night, root)['report'].read_bytes())
+        if (old.get('review_routing_policy') == ROUTING_VERSION and
+                old.get('morphology_report_sha256') == report_hash):
+            return {'night': night, 'status': 'current', 'n_catalog_rows': old['n_catalog_rows']}
+        from digest2_pipeline import guard_legacy
+        l4 = paths_for(night, root)['raw'].parent
+        ledger = l4 / f'{night}_unknown_mpc_batches.json'
+        if ledger.exists() and json.loads(ledger.read_text()).get('batches'):
+            return {'night': night, 'status': 'preserved_submission_history'}
+        try:
+            guard_legacy(night, l4)
+        except RuntimeError:
+            return {'night': night, 'status': 'preserved_submission_history'}
+        # Preserve all prior files, including decisions for newly rejected rows.
+        import tempfile
+        backup = Path(tempfile.mkdtemp(prefix=f'{night}_before_review_routing_',
+                                       dir=out_dir.parent))
+        shutil.copytree(out_dir, backup / night)
+    return build_package(args)
 
 
 def main() -> None:
     args = build_argparser().parse_args()
-    print(json.dumps(build_package(args), indent=2, sort_keys=True))
+    result = refresh_package(args) if args.refresh_if_needed else build_package(args)
+    print(json.dumps(result, indent=2, sort_keys=True))
 
 
 if __name__ == "__main__":

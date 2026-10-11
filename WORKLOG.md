@@ -2,6 +2,18 @@
 
 ## 2026-10-11
 
+- task: 将证据不足的 review 候选纳入常规人工核验，核实未来入口，并按用户授权准备 MPC 撤回/错误观测与台站恢复处理请求
+- files_changed: 新增 `heliolincrr/unknown_review_gate.py`；修改 package/export/digest2/daily、门控测试与 README；同步 WORKLOG/PLAN/CHANGELOG
+- commands_run: SSH 核对 cron/生产 SHA；16 项门控回归本机/服务器通过，39 项 digest2 回归隔离环境通过，本机 3 项 daily/hold 通过；备份后原子部署；实际复核包刷新与导出验收进行中
+- key_findings: 数值筛选引擎及 PSF 缓存保持不变；pass+review 进入人工，共 747/1589，reject842 继续剔除。manifest 保留逐源 status/reason；完整人工决定和 transport 复查防止旧 CSV 绕过 reject，review 必须人工接受才能提交
+- deployment: 14:48 CST 7 个文件部署，备份与 receipt 在 `/pipeline/xiaoyunao/data/heliolincrr/review_routing_deploy_20261011.u7OYWBi9`；锁定 213 个原始/审计/提交/hold 文件 hash，未改数值源码。未上报旧包刷新前备份，保留现有决定；过期 GIF 移到包外备份，有提交记录的历史包不覆盖
+- schedule: 服务器 cron 每天 09:00 和 reboot recovery 调用 run_daily_pipeline -> run_daily_unknown；单夜 Step6b、existing-package 快速路径均执行筛选；快速路径新增复核路由刷新。普通 unknown 与 NEO 共用入口
+- mpc_request: 已整理英文正文、34 条轨迹/108 次观测附件。33 条/105 次请求撤回或标错（4 条人工确认假源/13 次；29 条自动可疑/92 次），F5 的 3 次单列继续 hold；包含普通 unknown、精确时刻/坐标/大小写编号和历史重复批 ID；未把自动拒绝等同独立真伪确认
+- external_status: Jira 门户导航成功但 DOM/AX/截图连续超时，未提交任何表单。Gmail 与 QQ 代理邮箱均未找到原信；用户明确先不用 Gmail，只用既有 `wsgp2024@163.com`。未发现已连接的 163 权限，已排队打开 163 登录页并请求用户登录；尚无邮件或工单发出
+- remaining_issues: 复核包刷新/实际导出验收待完成；MPC 联系等待 163 登录或可用 Jira 操作。MPC_SUBMISSION_HOLD 继续保留，不能把此次联系视为获准恢复上报
+- latest_instruction: 用户随后要求邮件正文必须先确认；任何邮件/Jira 发送均等待此次正文的明确确认。163 登录尝试未完成，未发送；凭据不写入文件、日志或 Git。实际生产 CLI 的隔离 pass+review 双目标验收已 local_validated，network_requests=0，模拟人工标签仅在临时验收目录。
+- next_step: 完成服务器刷新和 hash/人审决定核验，记录最终结果；先展示正文等待用户确认，再继续 163 登录、核实原信 Reply-To 和发送/工单回执
+
 - task: 按用户澄清改为串联接纳：形态异常直接剔除且不拟合；形态正常才做 PSF；两关均正常才进入人工环节，覆盖所有 unknown
 - files_changed: `heliolincrr/unknown_morphology.py`, `tests/test_unknown_morphology.py`, `heliolincrr/README.md`, `WORKLOG.md`, `PLAN.md`, `CHANGELOG.md`
 - commands_run: SSH 核对现网源码/hold；py_compile 与本机 12 项针对性回归通过；读取上一版逐夜/逐目标审计，查阅 MPC 官方文档

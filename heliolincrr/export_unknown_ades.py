@@ -319,10 +319,11 @@ def build_obs_rows(
     rows = load_unknown_rows(catalog_path)
     morphology_stats = {}
     if getattr(args, 'require_morphology', False):
-        from unknown_morphology import approved_rows
-        rows, report = approved_rows(str(args.night), processed_root, rows)
+        from unknown_review_gate import reviewable_rows, ROUTING_VERSION
+        rows, report = reviewable_rows(str(args.night), processed_root, rows)
         morphology_stats = {'morphology_counts': report['counts'],
-                            'morphology_policy': report['policy']['version']}
+                            'morphology_policy': report['policy']['version'],
+                            'review_routing_policy': ROUTING_VERSION}
     export_rows, review_stats = filter_catalog_rows(rows, review, require_review, require_complete_review)
 
     obs_rows: list[dict[str, object]] = []
