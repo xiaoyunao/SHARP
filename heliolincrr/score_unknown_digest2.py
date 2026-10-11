@@ -149,6 +149,19 @@ def route(decision: int | None, score: dict) -> str:
     return "neo candidate" if score["neo_noid"] >= THRESHOLD else "unclassified"
 
 
+def bounded_score(value: float) -> float:
+    """Accept only floating-point roundoff at the probability endpoints."""
+    if not math.isfinite(value):
+        raise ValueError("digest2 returned an invalid score")
+    if -1e-12 <= value < 0:
+        return 0.0
+    if 100 < value <= 100 + 1e-12:
+        return 100.0
+    if not 0 <= value <= 100:
+        raise ValueError("digest2 returned an invalid score")
+    return value
+
+
 def ground_sites(path: Path) -> set[str]:
     sites = set()
     for line in path.read_text().splitlines():
@@ -222,9 +235,10 @@ def prepare(args: argparse.Namespace) -> dict:
                     raise ValueError("Official parser dropped observations")
                 result = engine.classify_tracklet(obs, classes=["NEO"], is_ades=True)
                 noid, raw = float(result.noid.NEO), float(result.raw.NEO)
-                if not all(math.isfinite(v) and 0 <= v <= 100 for v in (noid, raw)):
-                    raise ValueError("digest2 returned an invalid score")
-                item.update(status="ok", neo_noid=noid, neo_raw=raw)
+                bounded_noid, bounded_raw = bounded_score(noid), bounded_score(raw)
+                if (bounded_noid, bounded_raw) != (noid, raw):
+                    item["score_before_roundoff_correction"] = {"neo_noid": noid, "neo_raw": raw}
+                item.update(status="ok", neo_noid=bounded_noid, neo_raw=bounded_raw)
             except (ValueError, RuntimeError, KeyError, TypeError, OverflowError) as exc:
                 item["error"] = str(exc)
             item["decision"] = decisions.get(key)

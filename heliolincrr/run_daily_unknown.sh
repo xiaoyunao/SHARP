@@ -28,6 +28,7 @@ SUBMIT_WATCH_VALIDATE="${SUBMIT_WATCH_VALIDATE:-1}"
 SUBMIT_WATCH_SUBMIT="${SUBMIT_WATCH_SUBMIT:-1}"
 SUBMIT_WATCH_NO_LOGSNR="${SUBMIT_WATCH_NO_LOGSNR:-0}"
 SUBMIT_WATCH_RETRY_FAILED="${SUBMIT_WATCH_RETRY_FAILED:-1}"
+MPC_SUBMISSION_HOLD_FILE="${MPC_SUBMISSION_HOLD_FILE:-/pipeline/xiaoyunao/data/MPC_SUBMISSION_HOLD}"
 ENABLE_FOLLOWUP="${ENABLE_FOLLOWUP:-1}"
 FOLLOWUP_STATE="${FOLLOWUP_STATE:-/pipeline/xiaoyunao/survey/runtime/followup/followup_state.json}"
 FOLLOWUP_START_NIGHT="${FOLLOWUP_START_NIGHT:-20260624}"
@@ -111,6 +112,10 @@ PY
 }
 
 start_submit_watcher() {
+  if [[ -e "${MPC_SUBMISSION_HOLD_FILE}" ]]; then
+    log "[HOLD] MPC submission paused: ${MPC_SUBMISSION_HOLD_FILE}; no submit watcher started"
+    return 0
+  fi
   local night="$1"
   local watcher_log="${SUBMIT_WATCH_LOG}"
   local cmd=(

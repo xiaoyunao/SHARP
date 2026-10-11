@@ -13,6 +13,7 @@ PROCESSED_ROOT="${PROCESSED_ROOT:-/processed1}"
 KNOWN_PYTHON="${KNOWN_PYTHON:-/home/smtpipeline/Softwares/miniconda3/bin/python}"
 WAIT_KNOWN_REPORT_TIMEOUT_SEC="${WAIT_KNOWN_REPORT_TIMEOUT_SEC:-28800}"
 WAIT_KNOWN_REPORT_INTERVAL_SEC="${WAIT_KNOWN_REPORT_INTERVAL_SEC:-120}"
+MPC_SUBMISSION_HOLD_FILE="${MPC_SUBMISSION_HOLD_FILE:-/pipeline/xiaoyunao/data/MPC_SUBMISSION_HOLD}"
 
 mkdir -p "${LOG_DIR}"
 LOG_PATH="${LOG_DIR}/${RUN_DATE//-/}_daily_pipeline.log"
@@ -57,11 +58,12 @@ import json, sys
 from pathlib import Path
 status = json.loads(Path("${status}").read_text(encoding="utf-8"))
 matched = status.get("matched_asteroids", {})
-ok = bool(status.get("known_complete")) and int(matched.get("rows") or 0) == 0
+held = Path("${MPC_SUBMISSION_HOLD_FILE}").exists()
+ok = bool(status.get("known_complete")) and (held or int(matched.get("rows") or 0) == 0)
 sys.exit(0 if ok else 1)
 PY
     then
-      echo "[INFO] known complete with zero 1.0 arcsec matched detections for ${night}"
+      echo "[INFO] known extraction complete; submission held or zero matched detections for ${night}"
       return 0
     fi
   fi
@@ -130,11 +132,24 @@ main() {
   fi
 
   if [[ "${ENABLE_RECOVERY_PROCESSING}" == "1" ]]; then
-    local offset night
+    local offset night status failures=0
     for ((offset=RECOVERY_LOOKBACK_DAYS; offset>=1; offset--)); do
       night="$(night_for_offset "${offset}")"
-      run_processing_for_night "${night}"
+      # Do not put the function in an if/|| condition: Bash would disable
+      # errexit inside it, allowing unknown work after a failed known step.
+      set +e
+      (set -e; run_processing_for_night "${night}")
+      status=$?
+      set -e
+      if (( status != 0 )); then
+        echo "[ERROR] processing failed for ${night}: exit_code=${status}; continue remaining nights"
+        failures=$((failures + 1))
+      fi
     done
+    if (( failures > 0 )); then
+      section "daily pipeline incomplete: ${failures} failed nights"
+      return 1
+    fi
   else
     run_processing_for_night "$(night_for_offset 1)"
   fi

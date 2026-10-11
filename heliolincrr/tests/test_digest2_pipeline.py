@@ -144,6 +144,19 @@ class ProductionTests(unittest.TestCase):
         self.assertNotIn('-L',args.args[0])
         self.assertEqual(args.kwargs['timeout'],100)
 
+    def test_submission_hold_blocks_before_ledger_or_network(self):
+        plan = self.plan()
+        hold = self.root / 'HOLD'
+        hold.write_text('327 suspended')
+        with patch.dict(os.environ, {'MPC_SUBMISSION_HOLD_FILE':str(hold)}):
+            with self.assertRaisesRegex(RuntimeError, 'submission paused'):
+                pipeline.submit_batches(plan, self.ledger, lambda b: self.fail('must not send'))
+            self.assertFalse(self.ledger.exists())
+            with patch.object(pipeline.subprocess, 'run') as run:
+                with self.assertRaisesRegex(RuntimeError, 'submission paused'):
+                    pipeline.post_batch({'payload':b'x', 'obj_type':'neo candidate'}, 'x', 'x')
+                run.assert_not_called()
+
 
 if __name__ == '__main__':
     unittest.main()

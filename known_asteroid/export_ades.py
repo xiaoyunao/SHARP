@@ -4,7 +4,12 @@
 from __future__ import annotations
 
 import argparse
+import csv
+import hashlib
+import json
+import os
 import subprocess
+import tempfile
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 import re
@@ -230,6 +235,9 @@ def export_psv(args: argparse.Namespace) -> int:
         "DECErr_Win",
         "Mag_Aper4",
         "MagErr_Aper4",
+        "Flag",
+        "Flux_Aper4",
+        "FluxErr_Aper4",
     ]
     missing = [col for col in required if col not in table.colnames]
     if missing:
@@ -239,11 +247,14 @@ def export_psv(args: argparse.Namespace) -> int:
     prov_id = np.array([clean_provid(v) for v in table["name"]], dtype=object)
     obj_key = np.where(perm_id != "", perm_id, prov_id).astype(object)
 
-    obs_time = mjd_to_obs_time_z(np.array(table["epoch"], dtype=float))
-    ra = np.array(table["RA_Win"], dtype=float)
-    dec = np.array(table["DEC_Win"], dtype=float)
-    rms_ra = np.array(table["RAErr_Win"], dtype=float)
-    rms_dec = np.array(table["DECErr_Win"], dtype=float)
+    def numeric(name: str) -> np.ndarray:
+        return np.asarray(np.ma.filled(np.ma.asarray(table[name], dtype=float), np.nan))
+
+    obs_time = mjd_to_obs_time_z(numeric("epoch"))
+    ra = numeric("RA_Win")
+    dec = numeric("DEC_Win")
+    rms_ra = numeric("RAErr_Win")
+    rms_dec = numeric("DECErr_Win")
     if args.err_unit == "deg":
         rms_ra *= 3600.0
         rms_dec *= 3600.0
@@ -253,8 +264,15 @@ def export_psv(args: argparse.Namespace) -> int:
     elif args.err_unit != "arcsec":
         raise ValueError("err-unit must be one of: arcsec, deg, mas")
 
-    mag = np.array(table["Mag_Aper4"], dtype=float)
-    rms_mag = np.array(table["MagErr_Aper4"], dtype=float)
+    mag = numeric("Mag_Aper4")
+    rms_mag = numeric("MagErr_Aper4")
+    flux = numeric("Flux_Aper4")
+    flux_err = numeric("FluxErr_Aper4")
+    # Gate the actual serialized values as well as the input uncertainties.
+    # Do not invent a precision floor for invalid/saturated detections.
+    rms_ra_text = np.array([f"{v:.4f}" for v in rms_ra])
+    rms_dec_text = np.array([f"{v:.4f}" for v in rms_dec])
+    rms_mag_text = np.array([f"{v:.3f}" for v in rms_mag])
 
     has_id = obj_key != ""
     finite_core = (
@@ -264,19 +282,29 @@ def export_psv(args: argparse.Namespace) -> int:
         & np.isfinite(rms_dec)
         & np.isfinite(mag)
         & np.isfinite(rms_mag)
+        & (rms_ra > 0.0)
+        & (rms_dec > 0.0)
         & (rms_mag > 0.0)
     )
-    ok = has_id & finite_core
-
-    counts = {}
-    for key in obj_key[ok]:
-        counts[key] = counts.get(key, 0) + 1
-    per_object_count = np.array([counts.get(key, 0) for key in obj_key], dtype=int)
-    ok &= per_object_count >= int(args.min_observations)
+    gates = {
+        'missing_identity': has_id,
+        'invalid_core_or_uncertainty': finite_core,
+        'invalid_time_or_coordinates': (obs_time != '') & (ra >= 0) & (ra < 360) & (dec >= -90) & (dec <= 90),
+        'nonzero_or_missing_flag': numeric('Flag') == 0,
+        'invalid_photometry': np.isfinite(flux) & (flux > 0) & np.isfinite(flux_err) & (flux_err > 0)
+                              & (mag != 99.0) & (rms_mag < 99.0),
+        'uncertainty_rounds_to_zero': (rms_ra_text.astype(float) > 0) & (rms_dec_text.astype(float) > 0)
+                                     & (rms_mag_text.astype(float) > 0),
+    }
+    ok = np.logical_and.reduce(list(gates.values()))
+    reasons = [';'.join(name for name, valid in gates.items() if not valid[i]) for i in range(len(table))]
 
     idx = np.where(ok)[0]
     quality = row_quality(rms_ra, rms_dec, rms_mag)
+    before = set(idx)
     idx, duplicate_rows = dedup_current_rows(idx, obj_key, obs_time, quality)
+    for i in before - set(idx):
+        reasons[i] = 'duplicate_object_epoch'
 
     history_removed = 0
     if args.dedup_history_root:
@@ -291,7 +319,19 @@ def export_psv(args: argparse.Namespace) -> int:
                 dtype=bool,
             )
             history_removed = int(np.count_nonzero(~keep_mask))
+            for i in idx[~keep_mask]:
+                reasons[i] = 'present_in_history'
             idx = idx[keep_mask]
+
+    # Minimum arc length applies after quality cuts and both deduplication steps.
+    counts: dict[str, int] = {}
+    for key in obj_key[idx]:
+        counts[key] = counts.get(key, 0) + 1
+    keep = np.array([counts[obj_key[i]] >= int(args.min_observations) for i in idx], dtype=bool)
+    dropped_singletons = len(set(obj_key[idx[~keep]]))
+    for i in idx[~keep]:
+        reasons[i] = 'below_minimum_observations_after_filtering'
+    idx = idx[keep]
 
     header = build_header(args)
 
@@ -341,11 +381,11 @@ def export_psv(args: argparse.Namespace) -> int:
                 obs_time[i],
                 f"{ra[i]:.10f}",
                 f"{dec[i]:.10f}",
-                f"{rms_ra[i]:.4f}",
-                f"{rms_dec[i]:.4f}",
+                rms_ra_text[i],
+                rms_dec_text[i],
                 args.astcat,
                 f"{mag[i]:.3f}",
-                f"{rms_mag[i]:.3f}",
+                rms_mag_text[i],
                 args.band,
                 args.photcat,
             ]
@@ -356,10 +396,30 @@ def export_psv(args: argparse.Namespace) -> int:
 
     out_path = Path(args.out)
     out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    payload = "\n".join(lines) + "\n"
+    proof = validate_payload(payload) if len(idx) else {'status': 'no_observations', 'network_requests': 0}
+    # Never replace an existing report with an invalid or partially written PSV.
+    with tempfile.NamedTemporaryFile('w', encoding='utf-8', dir=out_path.parent, delete=False) as stream:
+        temp = Path(stream.name)
+        stream.write(payload)
+    temp.chmod(out_path.stat().st_mode & 0o777 if out_path.exists() else 0o644)
+    temp.replace(out_path)
+    stats = {'input_fits': str(args.fits), 'input_rows': len(table), 'exported_rows': len(idx),
+             'exported_objects': len(set(obj_key[idx])), 'dropped_rows': len(table) - len(idx),
+             'quality_failures': {name: int(np.count_nonzero(~v)) for name, v in gates.items()},
+             'duplicate_rows': duplicate_rows, 'history_removed': history_removed,
+             'objects_below_minimum_after_filtering': dropped_singletons, 'validation': proof}
+    Path(str(out_path) + '.audit.json').write_text(json.dumps(stats, indent=2) + '\n')
+    with Path(str(out_path) + '.excluded.csv').open('w') as stream:
+        writer = csv.writer(stream)
+        writer.writerow(['fits_row', 'object', 'obsTime', 'source_file', 'objID', 'reason'])
+        for i, reason in enumerate(reasons):
+            if reason:
+                writer.writerow([i, obj_key[i], obs_time[i],
+                                 safe_str(table['source_file'][i]) if 'source_file' in table.colnames else '',
+                                 safe_str(table['objID'][i]) if 'objID' in table.colnames else '', reason])
 
     exported_objects = len(set(obj_key[idx]))
-    dropped_singletons = len(set(obj_key[has_id & (per_object_count < int(args.min_observations))]))
     print(f"[OK] Read FITS: {args.fits}")
     print(f"[OK] Wrote PSV: {args.out}")
     print(
@@ -375,7 +435,26 @@ def export_psv(args: argparse.Namespace) -> int:
     return int(len(idx))
 
 
+def validate_payload(payload: str) -> dict:
+    python = os.environ.get('MPC_ADES_VALIDATOR_PYTHON',
+                            '/pipeline/xiaoyunao/data/heliolincrr/digest2_runtime/env/bin/python')
+    proc = subprocess.run([python, str(Path(__file__).with_name('validate_ades.py')), '--stdin'],
+                          input=payload, text=True, capture_output=True, timeout=120)
+    if proc.returncode:
+        raise ValueError('Local ADES validation failed; no submission allowed:\n' + proc.stderr)
+    proof = json.loads(proc.stdout)
+    if proof.get('status') != 'local_validated' or proof.get('psv_sha256') != hashlib.sha256(payload.encode()).hexdigest():
+        raise ValueError('Local ADES validation did not confirm the exact PSV payload')
+    return proof
+
+
 def run_curl(url: str, args: argparse.Namespace) -> None:
+    hold = Path(os.environ.get('MPC_SUBMISSION_HOLD_FILE',
+                               '/pipeline/xiaoyunao/data/MPC_SUBMISSION_HOLD'))
+    if url == SUBMIT_URL and hold.exists():
+        raise RuntimeError(f'MPC submission paused: {hold}; no request sent')
+    payload = Path(args.out).read_text()
+    validate_payload(payload)
     cmd = [
         "curl",
         "-sS",
@@ -388,10 +467,10 @@ def run_curl(url: str, args: argparse.Namespace) -> None:
         "-F",
         f"obj_type={args.obj_type}",
         "-F",
-        f"source=@{args.out}",
+        "source=<-",
     ]
     print("[RUN]", " ".join(cmd))
-    proc = subprocess.run(cmd, text=True, capture_output=True)
+    proc = subprocess.run(cmd, input=payload, text=True, capture_output=True)
     if proc.returncode != 0:
         if proc.stderr.strip():
             print("[CURL-ERR]", proc.stderr.strip())
@@ -451,7 +530,7 @@ def build_argparser() -> argparse.ArgumentParser:
     ap.add_argument("--ack", default="Known-object ADES submission")
     ap.add_argument("--obj-type", default="MBA")
     ap.add_argument("--response-out", default="")
-    ap.add_argument("--validate", action="store_true")
+    ap.add_argument("--validate", action="store_true", help="Local ADES schema validation only; no network request (also applied to every nonempty export)")
     ap.add_argument("--submit", action="store_true")
     ap.add_argument("--dedup-history-root", default="", help="Optional processed root used to filter rows already present in prior ADES files")
     ap.add_argument("--current-night", default="", help="Optional YYYYMMDD used to exclude the current night from history dedup")
@@ -465,7 +544,7 @@ def main() -> None:
         print("[SKIP] No ADES obsData rows exported; skip validate/submit")
         return
     if args.validate:
-        run_curl(VALIDATE_URL, args)
+        print('[LOCAL-VALIDATED] ADES schema and measurement quality; no network request')
     if args.submit:
         run_curl(SUBMIT_URL, args)
 

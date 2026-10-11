@@ -1,5 +1,45 @@
 # WORKLOG
 
+## 2026-10-11
+
+- task: 按用户要求隔离发布本次事故修复，并监测 20261007/08/10 积压恢复
+- files_changed: 仅本对话三次提交的修复及记录；不带入 10 月 5 日假源审计/PSF 研究的 WORKLOG/PLAN 内容或 outputs
+- commands_run: git fetch/log/diff；从 ef1f882c 生产基线构建独立暂存索引，核对所有非记忆文件与 08843b03 字节一致
+- validation: 生产代码沿用上轮双平台回归；发布树排除 83147a9f/2e6bd2f9/16848d6f，原工作目录及分支不切换
+- remaining_issues: 7/8/10 尚在 known 阶段；Slurm 短暂 InvalidAccount 已自行恢复启动，未改调度配置
+- next_step: 推送 codex/mpc-incident-20261011；定时检查完成日志、复核产物和原 MPC 状态，验收后通知用户并停止监测；保持 hold
+
+- task: 核查并修复 known ADES 两批因 rmsRA/rmsDec=0.0000 被拒收；用户明确仍不上报，鬼像筛选留在另一个对话
+- files_changed: `known_asteroid/export_ades.py`, `known_asteroid/validate_ades.py`, `known_asteroid/tests/test_export_quality.py`, `known_asteroid/README.md`, `WORKLOG.md`, `PLAN.md`, `CHANGELOG.md`；原始逐行审计、修正版/排除表/校验结果保存在 `outputs/known_ades_rejection_20261011/`
+- commands_run: git status/branch/fetch/log；SSH 对账 MPC ID/原始 PSV/FITS；重现旧 PSV 的 XSD 错误；py_compile、双平台质量/传输回归；默认 known Python 调用已有隔离 lxml worker 对两夜离线重导出，部署后再次烟测
+- key_findings:
+  - `2026-10-06T01:10:32.969_0000CF58` = 20261005；`2026-10-07T01:33:48.200_0000CFL1` = 20261006。原 PSV 分别 6759/7352 条，各 4 条坏观测；本地 ADES 2017 schema 重现邮件全部 7/8 项零误差字段错误
+  - 源 FITS 的 RAErr_Win/DECErr_Win 非零；转 arcsec 后约 2.4e-5..5.7e-5，四位小数使其中 15 个字段变成 0.0000。8 条均 Flag!=0；6 条 Mag_Aper4=99 且负 flux，另 2 条 Mag_Aper4 约 2.64/2.88。exporter 只检查有限值且只对 rmsMag 检查 >0，没有 Flag/flux/99/格式化后误差门控
+  - 修复：要求 Flag==0、正且有限 flux/fluxErr、有效测光/坐标/时刻，以及序列化前后严格正的三个误差；不添加人为误差下限。质量筛选与两级去重后重新要求每个对象 >=3 次观测；逐行写 excluded.csv 和统计 audit.json
+  - 每个非空 PSV 在原子落盘前用固定官方 2017 XSD 本地验证；--validate 不再向 MPC 测试接口发请求；正式 transport 再验证并发送同一内存快照。服务器 known 默认 Python 没有 lxml，使用已经部署的 digest2_runtime 独立 Python 作 schema worker，没有安装/升级依赖
+  - 20261005 修正版 6152 条/1559 个对象；原上报剔除 607 条，其中质量相关 339 条、其余 268 条因对象不足 3 次。20261006 修正版 6659 条/1546 个对象；剔除 693 条，其中质量相关 385 条、其余 308 条因对象不足 3 次。没有新增观测，所有保留行逐字段未变
+- validation: 本机/服务器各 14 项针对性回归通过；之前 3 项 daily/hold 回归仍通过；两夜原始 PSV 分别稳定失败 7/8 项、修正版完整 XSD 通过；每对象 >=3，所有 rms 严格正且无 mag=99；生产路径重导出与隔离 PSV 逐字节一致；部署前后原 PSV/回执 hash 未变，hold 实测阻断，无 MPC 正式或测试请求
+- deployment: 2026-10-11 10:08 CST；备份与纠正稿 `/pipeline/xiaoyunao/data/heliolincrr/incident_20261011_f1q_hiwq/known_ades_rejection_dsfe87d4`；新增 rejected_submissions.json 按用户邮件记录已拒收，两份旧回执作为收件证据保留；纠正稿未覆盖 L4 原件，也未重报
+- remaining_issues: schema 通过不是天测科学质量保证，未拟合系统误差；这两批在 MPC 仍为 rejected；上次 20261007/08/10 补跑继续，尚未全部验收。用户已澄清封禁邮件是候选未被后随确认，不再按已知身份误判方向追查
+- next_step: 保持 MPC hold；完成积压复核包验收，等待独立鬼像筛选/天测质量整改与明确恢复上报指令后再对账重报
+
+- task: 暂停假源/PSF 研究，排查 MPC 暂停处理与新列表缺失；修复确定的 daily 中断并冻结正式提交
+- files_changed: `heliolincrr/{score_unknown_digest2.py,digest2_pipeline.py,run_daily_pipeline.sh,run_daily_unknown.sh,tests/}`, `known_asteroid/{export_ades.py,run_daily.sh}`, `README.md`, `CHANGELOG.md`, `PLAN.md`, `WORKLOG.md`；证据与一次性 recovery 脚本在 `outputs/incident_20261011/`
+- commands_run: git status/branch/fetch/log（origin/main 无新增，当前分支 ahead 9）；SSH 检查 cron、Slurm、daily/submit 日志、L4/复核包、计划文件与生产源码 hash；逐帧只读比对 15 条已上报轨迹；隔离测试、真实 20261006 评分回放、备份后原子部署
+- key_findings:
+  - 用户提供的 MPC 原文是因四批亮 NEO 候选未获定向后随确认，暂停处理台站 327 的观测并转入 whatcode；不是“确认已知小行星”或账号登录封禁的证据。四批为 0000CET4/CEe1/CEuM/CF5v，共 11 个 trkSub：AE；BL/Bx；CB/Ck/Dv；DK/DW/E5/EM/F5（均前缀 00001）
+  - 20261002–05 共 15 条已上报轨迹/46 次检测（11 个 neo candidate、4 个 unclassified）均无同 frame/objID 的 mask15 记录；当夜保存的旧库预测最近也相差至少 65.27 arcsec。不能据此确认 known 漏扣，也不能据旧库排除已知身份；`astorb.dat` mtime 仍为 2026-04-02，未更新
+  - 20261007–11 每天计划正常生成并发布；20261010 为 471 行，`/pipeline/xiaoyunao/script/20261010_plan.txt` 与 runtime 同 hash。20261011 为 474 行。助手实际查看路径/所指列表尚待确认
+  - 20261006/00001F9 的 digest2 Raw/NoID 均复现为 `100.00000000000001`；严格 `<=100` 检查导致 20261007–11 每天重复评分失败。89 个 unknown 中其余 88 个有效。package 异常通过 `set -e` 终止整轮 daily，20261007/08/10 的 360/445/426 张 MP L2 因而未进入 known/unknown；20261009 无 MP L2
+  - 修复仅允许 [0,100] 端点 1e-12 内舍入并保存未修正分数；非有限/实质越界仍阻断。daily 按夜隔离失败，失败夜内部仍立即停止，后续夜继续且整轮最终非零退出
+  - 新增持久 MPC hold：`/pipeline/xiaoyunao/data/MPC_SUBMISSION_HOLD`；unknown 账本/transport 与 known formal transport 均检查；daily 在 hold 期间只提取，unknown 不启动 submit watcher。未改 cron、假源规则、人工决定或历史提交状态
+- validation: 本机 3 个 daily/hold 回归通过；隔离服务器 39 个 digest2 测试与 3 个 daily/hold 测试通过；89/89 真实回放成功，其余 88 条分数记录完全一致，未生成提交批；生产 Python/Bash 语法检查及 known/unknown hold 实测通过，无 MPC POST
+- deployment: 2026-10-11 09:49 CST；备份 `/pipeline/xiaoyunao/data/heliolincrr/incident_20261011_f1q_hiwq`，6 个源码新旧 hash 已记账；部署前后历史 MPC 账本与 review_submit_state hash 相同
+- recovery: 20261006 package 已恢复并验收：89 个候选、269 条 obs、89/89 GIF、无缺图；89/89 分数成功，tar 98 个 members 可完整读取；历史 MPC state hash 再验未变。正在以每夜 12 个 Slurm task 上限补跑 20261007/08/10 known，随后串行 unknown；强制 hold、关闭 watcher/follow-up，逐夜检查 match 日志完成数与错误；详情 `recovery_status.json`
+- independent_check: 按 JPL SB Identification 官方文档对 AE 首帧尝试 327/.1 deg halfwidth/two-pass/24 mag 查询，90s 读取超时即停止，其余对象未请求；没有获得新的独立已知身份结论，证据保存在 outputs 下，不接入生产
+- remaining_issues: 本次修复只解决数值边界/调度中断与停止新提交，未解决 MPC 所指测量质量；假源研究按用户要求暂停；未向 MPC/Jira 发消息，未恢复上报；复核包补跑待验收
+- next_step: 验收补跑的 manifest/GIF/评分、确认所有正式提交账本未变化；进一步身份核验或天测整改需结合具体证据推进，不把 digest2 高分当作新发现证明
+
 ## 2026-09-23
 
 - task: 审计 digest2 上线后两晚 unknown 流程的实际运行状态
