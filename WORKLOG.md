@@ -2,6 +2,15 @@
 
 ## 2026-10-19
 
+- task: 按用户论文初稿修订展示Word为纯中文正文加图，取消报告排版/来源与审计说明，补充多夜HelioLinC和streak机器学习
+- files_changed: `WORKLOG.md`, `PLAN.md`；最终稿 `outputs/exhibition_20261019/SHARP小行星巡天项目_中文介绍_20261019.docx`，新数据/绘图脚本/4图/验收在 `revision/`，初版保留
+- commands_run: 读取用户20260830论文PDF及原绘图脚本；SSH只读重提727133行所需列和10/18 Hapke三幅L1原生280像素裁切；运行原fig03及相同photometry/revisit绘图段；bundled python-docx和render_docx
+- key_findings: 实际论文科学图为Times New Roman/rainbow/viridis等redraw脚本风格；新HEALPix NSIDE64全计数727133、对象75967、至少2夜43763；三帧保持原review灰度/绿色十字/DejaVu Serif，原点0定位验证通过
+- content: 只保留项目科学叙述和最新主要观测数字；加入15日窗口多夜关联及streak机器学习研究，不添加训练性能或多夜成功数量；图注孔径星等不误称实际g滤光片
+- validation: 三张统计图原绘图段/字体及合计检查通过；最终4页全部目视检查，4幅英文图，无表格、页眉页脚、手动分页；DOCX SHA256 `5d238fdb962884e8d000d9c76b721805e5875735c8cd46b41e1ca9bfe5e7d4b0`
+- remaining_issues: 无本次文档交付阻塞；生产状态和MPC hold未改
+- next_step: 以此纯文本加图稿为当前交付；后续按用户文字修改继续沿用论文插图样式，更新数据重绘
+
 - task: 为正在进行的 SMT 黄道面小行星巡天制作中文 Word 展板内容稿，全部图表按服务器最新数据重绘
 - files_changed: `WORKLOG.md`, `PLAN.md`；交付、只读提取脚本、快照、6幅PNG/SVG及渲染验收均在 `outputs/exhibition_20261019/`，不提交运行/图像产物
 - commands_run: git status/branch/fetch/log；当前分支无 upstream，相对 origin/main ahead17/behind0，未合并其他工作分支；读取 `codex/mpc-incident-20261011` 的最新巡检记录；SSH只读列举raw/L2、读取逐夜known/unknown与L1；本地重新制图、bundled python-docx生成及render_docx逐页验收

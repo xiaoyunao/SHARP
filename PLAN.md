@@ -1,6 +1,15 @@
 # PLAN
 
-## Latest completed task: Chinese exhibition document and fresh data snapshot (2026-10-19)
+## Latest completed task: Plain Chinese project introduction with manuscript-style figures (2026-10-19)
+
+- 当前交付：`outputs/exhibition_20261019/SHARP小行星巡天项目_中文介绍_20261019.docx`，4页普通段落加4图；取消初稿表格、来源说明、审计措辞和版式建议。
+- 用户风格要求：图内全部英文，字体/配色/图形参数沿用提供的20260830论文；后续修改继续遵守，不重新设计图表。
+- 已完成：用截至20261018的全量known数据重画黄道天空分布、孔径测光和重访统计；最新Hapke三帧以原review风格重绘；补充15日HelioLinC多夜关联和streak机器学习研究。
+- 验收：全量727133条/75967对象及HEALPix合计一致；字体/绘图代码与论文一致；DOCX四页逐页检查通过，无表格、页眉页脚或手动分页。
+- 未解决事项：无本次文稿阻塞。运行快照、可复现脚本及检查文件均保留于`outputs/exhibition_20261019/revision/`，不提交运行产物。
+- 下一步：按用户后续意见修改正文；数据变化时沿用论文原函数重画。生产问题和MPC暂停继续由原主线单独处理。
+
+## Previous draft: Chinese exhibition document and fresh data snapshot (2026-10-19)
 
 - 当前交付已完成：7页中文Word、6幅新图、可直接上展板的短文和来源说明；主文件在 `outputs/exhibition_20261019/SMT小行星巡天项目_中文展板内容与最新统计_20261019.docx`。
 - 数据冻结：2026-10-19 15:34–15:38 CST只读提取；观测截至20261018，完整unknown筛选截至20261015。标准raw49853帧/161夜/1444场；known727133匹配行/75967目录身份/157夜；至少2夜43763个身份。
