@@ -1,8 +1,17 @@
 # PLAN
 
-## Latest completed task: Expanded survey science with 16 manuscript-style figures (2026-10-19)
+## Latest completed task: Selected figures and GOTTA light-curve addition (2026-10-19)
 
-- 当前交付：`outputs/exhibition_20261019/SHARP小行星巡天项目_中文介绍_20261019.docx`，14页普通中文段落与16幅英文图；按用户意见补回论文的科学统计，不做展板排版。
+- 当前交付：`outputs/exhibition_20261019/SHARP小行星巡天项目_中文介绍_20261019.docx`，12页/13图，继续保持纯中文正文加英文图。
+- 已完成：删除上版图11/13/14并连续编号；图1换20260901天区；图10两个纵轴均0–1角秒；原图15（现图12）换为当前形态和PSF均pass、人工确认为真源的00001mX三帧。
+- 光变内容：参考 `gotta_asteroid_1/revise1/main.tex` 补充GOTTA原型与兴隆施密特联合观测、周期分析方法、24目标先导样本与12/12分类；不自行修订该项目待合作者确认的具体周期和误差。
+- 验收：只读核对现行筛选报告raw SHA及3帧双normal/人审is_real=1；13图内嵌hash与删除项检查通过；最终12页逐页目视通过。记录在 `expanded/qa/selected_final_validation.json`，16图旧稿已备份。
+- 未解决事项：无本次文档阻塞；fetch因GitHub TLS失败未更新远端引用，本轮只提交本地记忆，不改生产或GOTTA项目。
+- 下一步：以本次13图稿为当前版本，按用户后续意见继续修订。
+
+## Previous draft: Expanded survey science with 16 manuscript-style figures (2026-10-19)
+
+- 当时交付：14页普通中文段落与16幅英文图；按用户意见补回论文的科学统计，不做展板排版；已备份为 `outputs/exhibition_20261019/expanded/previous_sixteen_figure_document.docx`。
 - 已完成：已知小行星天空/轨道类别/速度/太阳距角/距离/测光/名义匹配比例/天测残差/重复观测；未知候选数量/筛选/弧长与RMS/亮度速度/真实轨迹与三帧；新增月度观测、最新宽场和合成streak示意，保留多夜HelioLinC、机器学习、光变与相减研究。
 - 当前数据：观测至20261018，49853帧/161夜/1444场/约10481平方度；known727133条/75967颗；初选9538条，当前保留84条/269测量/47夜；近期1873条筛选分为reject1021/pass303/review549。
 - 风格要求：纯中文正文加图，图内英文，沿论文原字体/配色/图形参数；不添加来源、审计说明、空泛总结。新图使用当前数据，streak明确标为合成示意。

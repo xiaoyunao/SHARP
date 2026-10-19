@@ -2,6 +2,15 @@
 
 ## 2026-10-19
 
+- task: 按用户指定删原图11/13/14，换9月天区及双筛选真源，图10纵轴改0–1，并补充GOTTA联合光变研究
+- files_changed: `WORKLOG.md`, `PLAN.md`；原路径Word改为12页/13图；`expanded/`新增9月宽场、00001mX原生裁切/筛选证据/绘图脚本；16图旧稿与builder已备份
+- commands_run: git status/branch/fetch/log及项目记忆；fetch遇GitHub TLS失败，未影响本地编辑；只读查看 `gotta_asteroid_1/revise1/main.tex` 及WORKLOG/PLAN；SSH读取20260901 L1和当前筛选、人审表；目标重绘、bundled python-docx及render_docx
+- findings: 图1选择20260901 `OBJ_MP_1318_0151`（Kazbegi/Al Chwarizmi/2004 CZ50/2000 WT12）；原图15改为00001mX（现图12），约17.20等、28.64角秒/小时、61分钟三帧；现行serial-morphology-psf-20261011报告三帧形态与PSF均normal，人审is_real=1，raw SHA与筛选一致
+- content: 删除三图但保留相关科学统计文字；GOTTA部分补充原型望远镜和兴隆施密特的联合光变、LS/PDM及P/2P、24目标先导样本和12/12分类；未自行改合作者负责的物理周期或不确定度，未改GOTTA项目
+- validation: 两个天测残差面板纵轴0–1；三幅替换图逐图检查；最终12页全部目视通过，13幅图连续编号，已删图hash不在DOCX；无表格/页眉页脚/手动分页；SHA256 `2ad4f7c70d268dc636aa4d6bba1d9619709ce17cd74ecdd7206540e63eb2962d`
+- remaining_issues: 无文档交付阻塞；生产程序/数据/人审/hold未改
+- next_step: 以本次13图稿为当前交付，按用户后续修改继续处理
+
 - task: 按用户反馈恢复论文的完整科学内容，扩充已知小行星/未知候选统计并新增streak示意，保留纯中文正文加英文图
 - files_changed: `WORKLOG.md`, `PLAN.md`；当前Word仍为 `outputs/exhibition_20261019/SHARP小行星巡天项目_中文介绍_20261019.docx`；新增脚本/数据/16图及验收位于 `expanded/`，四图旧稿已备份
 - commands_run: 逐项核对论文12图与科学章节；SSH只读提取当前轨道/候选/逐帧预报和L1图像；Python重算/原论文函数制图；bundled python-docx生成及render_docx两轮；三人分担全部14页目视检查
