@@ -1,5 +1,18 @@
 # WORKLOG
 
+## 2026-10-19
+
+- task: 为正在进行的 SMT 黄道面小行星巡天制作中文 Word 展板内容稿，全部图表按服务器最新数据重绘
+- files_changed: `WORKLOG.md`, `PLAN.md`；交付、只读提取脚本、快照、6幅PNG/SVG及渲染验收均在 `outputs/exhibition_20261019/`，不提交运行/图像产物
+- commands_run: git status/branch/fetch/log；当前分支无 upstream，相对 origin/main ahead17/behind0，未合并其他工作分支；读取 `codex/mpc-incident-20261011` 的最新巡检记录；SSH只读列举raw/L2、读取逐夜known/unknown与L1；本地重新制图、bundled python-docx生成及render_docx逐页验收
+- findings: 截至20261018，标准raw49853帧/161夜/1444场，标准L2=49169，全部MP L2=49535（158夜）；known157夜727133匹配行/75967目录身份，43763个身份至少2夜；累计表8个关键列逐夜精确一致。匹配行含6条同身份重复和11条同检测多身份额外行，未称独立发现/完整高质量天测
+- screening: 20260830..20261015的25份报告共1873条=reject1021/pass303/review549；可人工852。20261018的255条触发>200数量门控，未进入完整筛选/复核，不并入分母；MPC hold仍在
+- figures: 最新raw天区图、当前流程图、月度曝光与known累计、known跨夜次数、20261018 (3549) Hapke真实三帧、近期候选分流；三帧从L1重新裁切并对齐天球窗口，未复用旧图/GIF
+- validation: 核对各层算术、known逐列一致性、25份筛选输入SHA；独立文案审查后修正流程顺序/重筛措辞；7页最终PNG全部目视通过，DOCX内6幅图无缺失。首次渲染缺中文字体，任务级fontconfig指向系统字体后解决，未改生产环境
+- deliverable: `outputs/exhibition_20261019/SMT小行星巡天项目_中文展板内容与最新统计_20261019.docx`；核验 `qa/final_validation.json`；附可直接上展板的中文短文、来源索引和统计边界
+- remaining_issues: 展板尺寸、单位署名/标识尚未指定；本次为内容与图表Word稿。生产质量问题和hold均保留，未重跑、未发消息、未恢复上报
+- next_step: 本次文档交付完成；后续按展板尺寸与团队署名安排正式大幅排版，数据更新时重跑只读提取并重新核验，不能沿用旧数
+
 ## 2026-10-11
 
 - task: 将证据不足的 review 候选纳入常规人工核验，核实未来入口，并按用户授权准备 MPC 撤回/错误观测与台站恢复处理请求
