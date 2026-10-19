@@ -1,8 +1,18 @@
 # PLAN
 
-## Latest completed task: Plain Chinese project introduction with manuscript-style figures (2026-10-19)
+## Latest completed task: Expanded survey science with 16 manuscript-style figures (2026-10-19)
 
-- 当前交付：`outputs/exhibition_20261019/SHARP小行星巡天项目_中文介绍_20261019.docx`，4页普通段落加4图；取消初稿表格、来源说明、审计措辞和版式建议。
+- 当前交付：`outputs/exhibition_20261019/SHARP小行星巡天项目_中文介绍_20261019.docx`，14页普通中文段落与16幅英文图；按用户意见补回论文的科学统计，不做展板排版。
+- 已完成：已知小行星天空/轨道类别/速度/太阳距角/距离/测光/名义匹配比例/天测残差/重复观测；未知候选数量/筛选/弧长与RMS/亮度速度/真实轨迹与三帧；新增月度观测、最新宽场和合成streak示意，保留多夜HelioLinC、机器学习、光变与相减研究。
+- 当前数据：观测至20261018，49853帧/161夜/1444场/约10481平方度；known727133条/75967颗；初选9538条，当前保留84条/269测量/47夜；近期1873条筛选分为reject1021/pass303/review549。
+- 风格要求：纯中文正文加图，图内英文，沿论文原字体/配色/图形参数；不添加来源、审计说明、空泛总结。新图使用当前数据，streak明确标为合成示意。
+- 验收：论文12图与主要科学内容逐项对照完成；三人检查全部14页，无缺图/乱码/裁切；16张内嵌图、无表格/页眉页脚/手动分页；统计独立复核，修正太阳距角参考系和不同对象极值措辞。
+- 未解决事项：无本次文档交付阻塞。提取/绘图脚本及验证在 `outputs/exhibition_20261019/expanded/`；运行图像产物不提交，生产问题和MPC暂停另由原主线处理。
+- 下一步：以此扩充稿为准，按用户后续文字意见修订；数据变化时沿用原论文绘图方法重算。
+
+## Previous draft: Plain Chinese project introduction with four figures (2026-10-19)
+
+- 当时交付为4页普通段落加4图；取消初稿表格、来源说明、审计措辞和版式建议；现保留为 `outputs/exhibition_20261019/expanded/previous_four_figure_document.docx`。
 - 用户风格要求：图内全部英文，字体/配色/图形参数沿用提供的20260830论文；后续修改继续遵守，不重新设计图表。
 - 已完成：用截至20261018的全量known数据重画黄道天空分布、孔径测光和重访统计；最新Hapke三帧以原review风格重绘；补充15日HelioLinC多夜关联和streak机器学习研究。
 - 验收：全量727133条/75967对象及HEALPix合计一致；字体/绘图代码与论文一致；DOCX四页逐页检查通过，无表格、页眉页脚或手动分页。

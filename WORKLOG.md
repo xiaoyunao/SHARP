@@ -2,6 +2,17 @@
 
 ## 2026-10-19
 
+- task: 按用户反馈恢复论文的完整科学内容，扩充已知小行星/未知候选统计并新增streak示意，保留纯中文正文加英文图
+- files_changed: `WORKLOG.md`, `PLAN.md`；当前Word仍为 `outputs/exhibition_20261019/SHARP小行星巡天项目_中文介绍_20261019.docx`；新增脚本/数据/16图及验收位于 `expanded/`，四图旧稿已备份
+- commands_run: 逐项核对论文12图与科学章节；SSH只读提取当前轨道/候选/逐帧预报和L1图像；Python重算/原论文函数制图；bundled python-docx生成及render_docx两轮；三人分担全部14页目视检查
+- known_results: 727133条/75967颗；主带72829、近地207；角速度中位28.28角秒/小时、太阳距角151.49度、日心/地心距离2.51/1.65 AU；名义匹配727127/15733526=4.62%；残差中位0.252角秒；至少2夜43763颗
+- candidate_results: 初选9538条；当前人工接受且排除既有假源/当前规则reject后保留84条、269次测量、47夜，其中6条对应C/2025 Y1；弧长中位75.76分钟、拟合RMS 0.155角秒、星等17.99、角速度17.37角秒/小时；00001L5三帧直接取20261013 L1
+- observing_results: 49853帧/161夜/1444天区；沿论文NSIDE512 footprint并集算法重算面积10480.8105平方度；新增月度统计、20261018宽场及四个真实目标裁切
+- scientific_fixes: 太阳距角采用同一地心GCRS目标与太阳方向，修正旧脚本转ICRS导致的原点混淆；分开表述不同天体的最大180次测量与最多25夜；streak明确为相同总光量的PSF运动卷积合成示意，不虚构机器学习性能
+- validation: 论文12幅图对应内容均有当前图；新增月度/名义匹配比例/候选亮度速度/streak共16图；14页全部目视通过，正文4477字符，无表格/页眉页脚/手动分页；最终DOCX SHA256 `30775a85cafe94b80782081954a4722accd12c3eb58e4917efa7c7ed40e70c39`
+- remaining_issues: 无本次文稿阻塞；光变、图像相减、多夜及streak研究仅按实际进展叙述；生产程序/数据/人工决定/MPC hold未改
+- next_step: 以扩充的16图稿为当前交付；后续按用户意见修订或沿论文样式更新数据
+
 - task: 按用户论文初稿修订展示Word为纯中文正文加图，取消报告排版/来源与审计说明，补充多夜HelioLinC和streak机器学习
 - files_changed: `WORKLOG.md`, `PLAN.md`；最终稿 `outputs/exhibition_20261019/SHARP小行星巡天项目_中文介绍_20261019.docx`，新数据/绘图脚本/4图/验收在 `revision/`，初版保留
 - commands_run: 读取用户20260830论文PDF及原绘图脚本；SSH只读重提727133行所需列和10/18 Hapke三幅L1原生280像素裁切；运行原fig03及相同photometry/revisit绘图段；bundled python-docx和render_docx
