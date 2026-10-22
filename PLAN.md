@@ -1,5 +1,14 @@
 # PLAN
 
+## Current task: Slew calibration feasibility (2026-10-22)
+
+- 目标：判断能否利用相邻曝光header，扣除曝光与用户给定14.47s平均读出，分别估计RA/Dec slew速度。
+- 已完成：服务器20261021原始header和现行survey配置只读核验；确认有不同轴位移比例的样本。当前只得出方法可行性，未完成全夜速度拟合。
+- 方法：假设两轴并行，拟合`T=t0+max(dRA/vRA,dDec/vDec)`，由模型确定主导轴；机械RA轴角不乘cos(dec)，与天空移动速度分开。若要物理轴速，须用HA/LST核对跟踪与轴角定义。
+- 待核实：DATE开快门时间仅整数秒；OBS_DATE毫秒时间注释为控制系统发送时刻。稳定/等待、加减速、读出波动与中途未保存曝光可能混入曝光间隔；单对曝光不能解出两轴速度。
+- 验证标准：完整曝光流按真实时标排序，检查缺帧与异常间隔；两种主导分支均有足够位移跨度，拟合参数可辨识，残差与跨夜预测可接受；区分有效速度与机械峰值速度。
+- 下一步：按后续数值标定范围提取全夜/多夜header，核实时标与控制逻辑，再拟合及评估不确定度。现有生产readout15s/slew35s参数未改。
+
 ## Latest completed task: Selected figures and GOTTA light-curve addition (2026-10-19)
 
 - 当前交付：`outputs/exhibition_20261019/SHARP小行星巡天项目_中文介绍_20261019.docx`，12页/13图，继续保持纯中文正文加英文图。

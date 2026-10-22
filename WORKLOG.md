@@ -1,5 +1,16 @@
 # WORKLOG
 
+## 2026-10-22
+
+- task: 判断能否仅从巡天相邻曝光 header 反推 RA/Dec slew 速度
+- files_changed: `WORKLOG.md`, `PLAN.md`；未改生产程序或原始数据
+- commands_run: git status/branch/fetch/log（fetch成功；当前分支无upstream，相对origin/main ahead21/behind0）；SSH只读检查20261021原始FITS的11份header及服务器survey配置
+- findings: raw含DATE（注释为UTC开快门、整数秒）、OBS_DATE（毫秒、注释为控制系统发送时刻）、EXPOSURE、OBJ_RA/DEC、TEL_RA/DEC、HOURANG/OBLST；RA数值按小时解释。服务器scheduler仍固定readout15s/slew35s。用户给定读出均值14.47s且读出不slew
+- validation: 按序号抽查最早8帧，DATE递增；首两次目标位移分别为(2.691°,0.1049°)/(0.8205°,2.6366°)，减前帧EXPOSURE及14.47s后剩27.527/31.527s。仅为样本核验，未测得机械速度或完成全夜拟合
+- method: 在赤道仪且两轴同时启动/独立到位的假设下，整体拟合T=t0+max(|ΔRA|/vRA,|ΔDec|/vDec)，不预标主导轴；轴角不乘cos(dec)，天空角距另算。真实机械RA位移还涉及HA/LST与跟踪定义；加减速、稳定/等待及读出波动可能混入T
+- remaining_issues: 两轴是否并行、时标语义、固定开销、位移范围/主导分支覆盖尚待核实；单对曝光不足以唯一反演，纯运动速度/加速度不能由端点时间直接确定
+- next_step: 如继续数值标定，提取完整曝光流并核验时标，先拟合含固定开销的两轴有效模型，检查两分支覆盖、残差与可辨识性，再决定是否增加加速度项；暂不修改调度参数
+
 ## 2026-10-19
 
 - task: 按用户指定删原图11/13/14，换9月天区及双筛选真源，图10纵轴改0–1，并补充GOTTA联合光变研究
