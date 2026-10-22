@@ -1,6 +1,18 @@
 # PLAN
 
-## Current caveat: RA small-angle adjustment may be slow (2026-10-22)
+## Latest completed slew task: Weekly validation (2026-10-22)
+
+- 目标已完成：按用户要求扩展20261015..20261021一周；10/16、17未找到OBJ，实际5夜2050份header、2037对有效科学转场。
+- 当前正常转场公式：`T=9.1148+max(11.9542*sqrt(dRA),12.3044*sqrt(dDec))`，角度以deg、时间以s计；T已减曝光及14.47s读出。相对单夜系数稳定；不改生产调度参数。
+- 模式核对：117对RA、1920对Dec主导（94.26%）；与按RA排序导致小RA、大Dec位移的巡天几何一致，主导标签仍有模型条件。
+- 验收：10种模型比较；留整夜绝对误差中位0.530s、P90=1.293s，逐夜中位0.501..0.551s；500次整夜bootstrap及幅度/vmax剖面、坐标/时间/长间隔敏感性；完整端到端运行、合成参数恢复、独立重算预测和4张图目视通过。
+- 小RA边界：1682对RA<1deg的Dec均>=2.496deg；最小RA0.00275deg，但两轴都小的对照仍缺失。非单调微调项没有实质跨夜预测提升，不能把拟合幅度当机械微调耗时。
+- 偶发延迟：14个有效转场|residual|>5s均保留；10/20两组相同几何平时约38.4/43s、偶发135.1/161.1s，重复对照已保存。另两次>180s科学间隔单列，纳入后正常公式几乎不变。
+- 机械峰速：RA>30deg仅5对，vmax对这几对极敏感；不报告优化器返回值为实测机械最高速度。正常模型不能解释全部长尾。
+- 交付：`outputs/slew_calibration_20261022/week/{results.json,weekly_validation.png,slew_fit.png,slew_diagnostics.png,small_ra_diagnostics.png,small_ra_anomaly_repeats.csv,validation.json}`；7份header JSON保留在父目录。
+- 下一步：本次周分析已完成；后续需要物理成因时，以已定位异常时间对照控制/编码器/到位日志；需要机械vmax或微调标定时优先补足几何与控制模式覆盖。
+
+## Previous caveat: RA small-angle adjustment may be slow (2026-10-22)
 
 - 用户补充：RA小角度微调可能反复修正/卡住；保留为控制模式假设，不能将旧测试图的长耗时分支直接当异常。
 - 已核验：本夜393对RA<1deg转场全部同时移动Dec至少2.573deg，没有RA<1deg且Dec<2deg的对照；小RA时间可被max中的Dec分量遮蔽。旧模型的主导轴标签是单调假设下的结果。

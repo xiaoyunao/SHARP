@@ -61,6 +61,14 @@ def predict(model, p, x, y):
         return p[0] + p[1] * x + p[2] * y
     if model == "parallel_sqrt":
         return p[0] + np.maximum(p[1] * np.sqrt(x), p[2] * np.sqrt(y))
+    if model.startswith("parallel_micro_"):
+        scale = float(model.removeprefix("parallel_micro_"))
+        # An exploratory adjustment delay, allowed to increase toward small
+        # positive RA steps. Its scale is fixed rather than fitted to avoid
+        # hiding arbitrary amplitudes below the smallest observed angle.
+        basis = np.where(x > 1e-8, np.exp(-(x / scale)**2), 0.)
+        return p[0] + np.maximum(p[1] * np.sqrt(x) + p[3] * basis,
+                                 p[2] * np.sqrt(y))
     if model == "sequential_sqrt":
         return p[0] + p[1] * np.sqrt(x) + p[2] * np.sqrt(y)
     if model == "parallel_power":
@@ -73,10 +81,17 @@ def predict(model, p, x, y):
 
 def fit(model, x, y, time, start=None):
     initial, lower, upper, _ = MODELS[model]
-    return least_squares(lambda p: predict(model, p, x, y) - time,
-                         initial if start is None else start,
-                         bounds=(lower, upper), loss="soft_l1", f_scale=1.,
-                         x_scale="jac", max_nfev=2000)
+    starts = [initial if start is None else start]
+    if model.startswith("parallel_micro_"):
+        starts += [[9., 12., 12., amplitude] for amplitude in (0., 30., 60.)]
+    best = None
+    for guess in starts:
+        result = least_squares(lambda p: predict(model, p, x, y) - time,
+                               guess, bounds=(lower, upper), loss="soft_l1", f_scale=1.,
+                               x_scale="jac", max_nfev=2000)
+        if best is None or result.cost < best.cost:
+            best = result
+    return best
 
 
 def error_metrics(observed, predicted):
@@ -156,7 +171,14 @@ def main():
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--readout", type=float, default=14.47)
     parser.add_argument("--bootstrap", type=int, default=300)
+    parser.add_argument("--micro-ra", action="store_true",
+                        help="Compare exploratory small-RA delays at fixed 0.1, 0.3 and 1 deg scales")
     args = parser.parse_args()
+    if args.micro_ra:
+        for scale in (.1, .3, 1.):
+            MODELS[f"parallel_micro_{scale}"] = (
+                [9., 12., 12., 30.], [0., 0., 0., 0.], [60., 100., 100., 180.],
+                ["overhead_s", "ra_s_per_sqrt_deg", "dec_s_per_sqrt_deg", "micro_delay_amplitude_s"])
     out = args.output
     out.mkdir(parents=True, exist_ok=True)
     frames, pairs, metadata = make_pairs(args.snapshots, args.readout)
@@ -170,6 +192,7 @@ def main():
     mapping = {key: i % 5 for i, key in enumerate(shuffled)}
     geometry_folds = transition.map(mapping).to_numpy()
     time_folds = np.minimum(np.arange(len(time)) * 5 // len(time), 4)
+    night_folds, unique_nights = pd.factorize(eligible.night, sort=True)
     eligible["geometry_fold"] = geometry_folds
     eligible["time_fold"] = time_folds
     results, fitted = {}, {}
@@ -193,6 +216,10 @@ def main():
                           "in_sample": error_metrics(time, pred),
                           "geometry_grouped_cv": error_metrics(time, geo_pred),
                           "contiguous_time_cv": error_metrics(time, temporal_pred)}
+        if len(unique_nights) > 1:
+            night_pred = cross_validate(model, x, y, time, night_folds)
+            eligible[model + "_night_oof_s"] = night_pred
+            results[model]["leave_one_night_out_cv"] = error_metrics(time, night_pred)
         print(model, json.dumps(results[model]), flush=True)
     chosen = "parallel_sqrt"
     p = fitted[chosen]
@@ -201,8 +228,10 @@ def main():
     eligible["axis_margin_s"] = abs(ra_component - dec_component)
     eligible["residual_s"] = time - predict(chosen, p, x, y)
     eligible["anomaly_abs_residual_gt5_s"] = abs(eligible.residual_s) > 5
-    # Bootstrapping blocks of 15 adjacent transitions retains short-time dependence.
-    blocks = np.arange(len(time)) // 15
+    # A week uses whole-night resampling; a one-night pilot uses blocks of 15
+    # adjacent transitions. Neither makes unobserved nights independent data.
+    bootstrap_unit = "whole_night" if len(unique_nights) > 1 else "15_adjacent_transitions"
+    blocks = night_folds if len(unique_nights) > 1 else np.arange(len(time)) // 15
     unique_blocks = np.unique(blocks)
     bootstrap = []
     for _ in range(args.bootstrap):
@@ -213,8 +242,8 @@ def main():
     bootstrap = np.asarray(bootstrap)
     np.savetxt(out / "bootstrap_parameters.csv", bootstrap, delimiter=",",
                header=",".join(MODELS[chosen][3]), comments="")
-    intervals = {name: {"value": float(p[i]), "block_bootstrap_95pct":
-                        np.quantile(bootstrap[:, i], [.025, .975]).tolist()}
+    intervals = {name: {"value": float(p[i]), "bootstrap_unit": bootstrap_unit,
+                        "bootstrap_95pct": np.quantile(bootstrap[:, i], [.025, .975]).tolist()}
                  for i, name in enumerate(MODELS[chosen][3])}
     sensitivity = {}
     for label, sx, sy, st in (
@@ -226,6 +255,13 @@ def main():
         estimate = fit(chosen, sx, sy, st).x
         sensitivity[label] = {"parameters": estimate.tolist(),
                               "in_sample": error_metrics(st, predict(chosen, estimate, sx, sy))}
+    if (pairs.selection == "time_outside_0_180_s").any():
+        extended = pairs[pairs.selection.isin(["eligible", "time_outside_0_180_s"]) & (pairs.time_s > 0)]
+        estimate = fit(chosen, extended.ra_deg.to_numpy(), extended.dec_deg.to_numpy(), extended.time_s.to_numpy()).x
+        sensitivity["include_long_science_intervals"] = {
+            "n": len(extended), "parameters": estimate.tolist(),
+            "intervals_s": pairs.loc[(pairs.selection == "time_outside_0_180_s") &
+                                     (pairs.time_s > 0), "time_s"].tolist()}
     # Profile cruise speed while re-fitting all remaining parameters. A flat
     # high-speed profile explicitly demonstrates absence of an upper constraint.
     profile = []
@@ -246,8 +282,41 @@ def main():
             profile.append({"axis": axis, "vmax_deg_s": velocity,
                             "robust_cost": result.cost})
     pd.DataFrame(profile).to_csv(out / "vmax_profile.csv", index=False)
+    geometry_sensitivity = []
+    if len(unique_nights) > 1:
+        selections = {
+            "all": np.ones(len(eligible), dtype=bool),
+            "without_RA_gt30deg": x <= 30.,
+            "without_0937_to0955": ~(eligible.previous_name.str.contains("OBJ_MP_0937_") &
+                                      eligible.name.str.contains("OBJ_MP_0955_")),
+        }
+        for label, keep in selections.items():
+            best = None
+            for vr, vd in ((.5, .5), (1., 1.), (2., 2.), (5., 5.)):
+                estimate = fit("parallel_trapezoid", x[keep], y[keep], time[keep], [9., vr, .027, vd, .027])
+                if best is None or estimate.cost < best.cost:
+                    best = estimate
+            geometry_sensitivity.append({"selection": label, "n": int(np.sum(keep)),
+                                         "parameters": dict(zip(MODELS["parallel_trapezoid"][3], best.x.tolist())),
+                                         "robust_cost": float(best.cost)})
+        (out / "vmax_geometry_sensitivity.json").write_text(json.dumps(geometry_sensitivity, indent=2))
+    nightly = []
+    for night, group in eligible.groupby("night", sort=True):
+        local_x, local_y, local_t = [group[c].to_numpy(float) for c in ("ra_deg", "dec_deg", "time_s")]
+        local_p = fit(chosen, local_x, local_y, local_t).x
+        row = {"night": str(night), "pairs": len(group),
+               "parameters": dict(zip(MODELS[chosen][3], local_p.tolist())),
+               "dominant_axis_counts": group.dominant_axis.value_counts().to_dict(),
+               "small_ra_lt1_dec_lt2_pairs": int(((group.ra_deg < 1) & (group.dec_deg < 2)).sum()),
+               "in_sample": error_metrics(local_t, predict(chosen, local_p, local_x, local_y))}
+        if len(unique_nights) > 1:
+            row["held_out_night"] = error_metrics(local_t, group[chosen + "_night_oof_s"].to_numpy())
+        nightly.append(row)
     audit = {
         "source": metadata, "readout_s": args.readout,
+        "observed_nights": [str(n) for n in unique_nights],
+        "nightly": nightly, "bootstrap_unit": bootstrap_unit,
+        "vmax_geometry_sensitivity": geometry_sensitivity,
         "frame_count": len(frames), "standard_mp_frames": int(frames.standard_mp.sum()),
         "header_error_count": int(frames.get("error", pd.Series(dtype=str)).notna().sum()),
         "pair_selection_counts": pairs.selection.value_counts().to_dict(),
@@ -270,10 +339,11 @@ def main():
             "OBS_DATE differences cancel any constant timestamp offset; variable delay does not cancel.",
             "No fit residual is used to exclude an eligible pair. Robust loss includes all pairs.",
             "The chosen square-root model is a parsimonious effective interpolation over this sample.",
-            "The slightly more accurate free-exponent model does not materially improve contiguous-time validation.",
+            "Small-angle RA delays may be masked by Dec; dominance labels are conditional on the baseline model.",
+            "Optional micro-delay models are exploratory, with fixed angle scales and multiple amplitude starts.",
             "Its coefficients have a kinematic acceleration interpretation only under the symmetric-ramp assumption.",
             "Cruise velocity is not measured if the high-speed profile is flat; do not report a fitted plateau as vmax.",
-            "Block bootstrap describes within-night statistical variation, not cross-night or hardware systematics.",
+            "Bootstrap units are explicitly recorded; statistical intervals do not include hardware systematics.",
             "Coordinate changes describe motion relative to tracking, not calibrated encoder trajectories.",
         ],
     }
@@ -282,6 +352,10 @@ def main():
     eligible.to_csv(out / "fitted_pairs.csv", index=False)
     frames.drop(columns=["timestamp", "date_timestamp"]).to_csv(out / "frames.csv", index=False)
     draw_figures(eligible, fitted, intervals, pd.DataFrame(profile), out)
+    if len(unique_nights) > 1:
+        draw_weekly_figures(eligible, fitted, nightly, out)
+    if args.micro_ra:
+        audit_small_ra(eligible, fitted, out)
     print("FINAL", json.dumps({"intervals": intervals, "axes": audit["dominant_axis_counts"],
                                "anomalies": len(audit["anomalies"])}), flush=True)
 
@@ -322,8 +396,9 @@ def draw_figures(data, fitted, intervals, profile, out):
     ax.scatter(elapsed, data.time_s - data.parallel_sqrt_geometry_oof_s, s=19, color=blue)
     ax.axhline(0, color="#252A30", lw=1)
     ax.set(xlabel="Hours since first eligible pair", ylabel="Observed - held-out prediction [s]",
-           title="Residuals across the night (all eligible pairs)")
-    fig.suptitle(f"SMT survey slew calibration | {data.night.min()} | {len(data)} consecutive science pairs", fontsize=15)
+           title="Residuals across observed nights (all eligible pairs)")
+    period = str(data.night.min()) if data.night.min() == data.night.max() else f"{data.night.min()} to {data.night.max()}"
+    fig.suptitle(f"SMT survey slew calibration | {period} | {len(data)} consecutive science pairs", fontsize=14)
     fig.savefig(out / "slew_fit.png", dpi=180)
     fig.savefig(out / "slew_fit.pdf")
     plt.close(fig)
@@ -355,8 +430,128 @@ def draw_figures(data, fitted, intervals, profile, out):
     outside = int(np.sum(abs(residual) > 4))
     axes[2].set(xlabel="Held-out residual [s]", ylabel="Number of transitions",
                 title=f"Residual core; {outside} pairs outside +/-4 s")
-    fig.suptitle("One-night limits: effective timing is measurable; cruise speed may not be", fontsize=14)
+    fig.suptitle("Effective timing and maximum-speed identifiability | " + period, fontsize=14)
     fig.savefig(out / "slew_diagnostics.png", dpi=180)
+    plt.close(fig)
+
+
+def draw_weekly_figures(data, fitted, nightly, out):
+    """Cross-night prediction and geometric coverage, with no residual trimming."""
+    blue, orange = "#246A9E", "#CA722C"
+    fig, axes = plt.subplots(2, 2, figsize=(12, 9), layout="constrained")
+    ax = axes[0, 0]
+    for model, color, label in (("parallel_linear", orange, "Constant axis speed"),
+                                 ("parallel_sqrt", blue, "Square-root motion")):
+        pred = data[model + "_night_oof_s"]
+        ax.scatter(pred, data.time_s, s=14, color=color, alpha=.4, label=label)
+    ax.plot([0, 180], [0, 180], "--", color="#252A30", lw=1)
+    ax.set(xlabel="Leave-one-night-out prediction [s]", ylabel="Observed transition time [s]",
+           title="An entire night is excluded from each training fit", xlim=(0, 180), ylim=(0, 180))
+    ax.legend(fontsize=9)
+    ax = axes[0, 1]
+    ax.scatter(data.ra_deg, data.dec_deg, s=15, color="#9A9FA5", alpha=.4)
+    small = (data.ra_deg < 1) & (data.dec_deg < 2)
+    ax.scatter(data.loc[small, "ra_deg"], data.loc[small, "dec_deg"], s=30,
+               marker="s", facecolors="none", edgecolors=orange, label=f"RA<1, Dec<2 deg: {int(small.sum())}")
+    ax.axvline(1, ls="--", color=orange, lw=1)
+    ax.axhline(2, ls="--", color=orange, lw=1)
+    ax.set_xscale("symlog", linthresh=1.)
+    ax.set_yscale("symlog", linthresh=1.)
+    ax.set(xlim=(-.01, 180), ylim=(-.01, 180),
+           xlabel="|Delta RA| [deg]; linear below 1 deg", ylabel="|Delta Dec| [deg]; linear below 1 deg",
+           title="Geometry available to constrain a small-RA branch")
+    ax.legend(fontsize=9)
+    ax = axes[1, 0]
+    x = np.arange(len(nightly))
+    ra_counts = [r["dominant_axis_counts"].get("RA", 0) for r in nightly]
+    dec_counts = [r["dominant_axis_counts"].get("Dec", 0) for r in nightly]
+    ax.bar(x, dec_counts, color=blue, label="Dec (baseline model)")
+    ax.bar(x, ra_counts, bottom=dec_counts, color=orange, hatch="//", label="RA (baseline model)")
+    ax.set_xticks(x, [r["night"][4:6] + "/" + r["night"][6:] for r in nightly])
+    ax.set(xlabel="Observing night", ylabel="Number of eligible transitions",
+           title="Axis dominance reflects the scan geometry")
+    ax.legend(fontsize=9)
+    ax = axes[1, 1]
+    for key, color, label in (("median_abs_error_s", blue, "Median absolute error"),
+                               ("p90_abs_error_s", orange, "90th percentile")):
+        ax.plot(x, [r["held_out_night"][key] for r in nightly], color=color,
+                 marker="o" if color == blue else "^", label=label)
+    ax.set_xticks(x, [r["night"][4:6] + "/" + r["night"][6:] for r in nightly])
+    ax.set(xlabel="Held-out observing night", ylabel="Absolute prediction error [s]",
+           title="Cross-night errors; all eligible pairs retained", ylim=(0, None))
+    ax.legend(fontsize=9)
+    fig.suptitle(f"SMT weekly slew check | {data.night.min()} to {data.night.max()} | {len(data)} pairs", fontsize=14)
+    fig.savefig(out / "weekly_validation.png", dpi=180)
+    plt.close(fig)
+
+
+def audit_small_ra(data, fitted, out):
+    """Compare nonmonotone delay candidates without treating a flat fit as a measurement."""
+    x, y, time = [data[c].to_numpy(float) for c in ("ra_deg", "dec_deg", "time_s")]
+    baseline = fitted["parallel_sqrt"]
+    rows = []
+    for scale in (.1, .3, 1.):
+        model = f"parallel_micro_{scale}"
+        grid = np.unique(np.r_[np.arange(0., 81., 2.), fitted[model][3]])
+        for amplitude in grid:
+            candidates = [least_squares(
+                lambda q: predict(model, np.r_[q, amplitude], x, y) - time,
+                initial, bounds=([0., 0., 0.], [60., 100., 100.]),
+                loss="soft_l1", f_scale=1., x_scale="jac", max_nfev=1000)
+                for initial in (baseline, fitted[model][:3])]
+            result = min(candidates, key=lambda result: result.cost)
+            rows.append({"scale_deg": scale, "amplitude_s": amplitude,
+                         "robust_cost": float(result.cost)})
+    profile = pd.DataFrame(rows)
+    profile.to_csv(out / "micro_delay_profile.csv", index=False)
+    bins = pd.cut(data.ra_deg, [0., .01, .03, .1, .3, 1., 2., 5., 20., 180.], include_lowest=True)
+    table = data.assign(ra_bin=bins).groupby("ra_bin", observed=True).agg(
+        pairs=("time_s", "size"), min_dec_deg=("dec_deg", "min"),
+        median_dec_deg=("dec_deg", "median"), median_time_s=("time_s", "median"),
+        median_baseline_residual_s=("residual_s", "median"))
+    table.to_csv(out / "small_ra_bins.csv")
+    small = data[(data.ra_deg < 1) & (data.dec_deg < 2)]
+    small.to_csv(out / "small_both_axes.csv", index=False)
+    transitions = data.assign(
+        from_field=data.previous_name.str.extract(r"OBJ_MP_(\d+)_", expand=False),
+        to_field=data.name.str.extract(r"OBJ_MP_(\d+)_", expand=False))
+    repeated, examples = [], []
+    for _, anomaly in transitions[(transitions.ra_deg < 1) & (transitions.residual_s > 5)].iterrows():
+        same = transitions[(transitions.from_field == anomaly.from_field) &
+                           (transitions.to_field == anomaly.to_field)]
+        other = same[~((same.night == anomaly.night) & (same.name == anomaly["name"]))]
+        examples.append({"night": str(anomaly.night), "name": anomaly["name"],
+                         "ra_deg": float(anomaly.ra_deg), "dec_deg": float(anomaly.dec_deg),
+                         "time_s": float(anomaly.time_s), "other_repeat_count": len(other),
+                         "other_repeat_median_s": float(other.time_s.median()) if len(other) else None})
+        for _, row in same.iterrows():
+            repeated.append({**row.to_dict(), "reference_anomaly_night": str(anomaly.night),
+                             "reference_anomaly_name": anomaly["name"]})
+    pd.DataFrame(repeated).to_csv(out / "small_ra_anomaly_repeats.csv", index=False)
+    summary = {"small_ra_lt1_pairs": int(np.sum(x < 1)),
+               "small_ra_lt1_dec_min_deg": float(np.min(y[x < 1])),
+               "small_ra_lt1_dec_lt2_pairs": len(small),
+               "minimum_ra_deg": float(np.min(x)),
+               "model": "T=t0+max(kRA*sqrt(dRA)+A*exp(-(dRA/scale)^2), kDec*sqrt(dDec)); no delay for exactly zero RA step",
+               "fixed_scales_deg": [.1, .3, 1.],
+               "small_ra_positive_anomalies_with_repeat_controls": examples,
+               "interpretation": "Exploratory shape and profile objective, not a measured control-loop mechanism or a confidence interval. A flat amplitude range indicates delays hidden by the other axis."}
+    (out / "small_ra_audit.json").write_text(json.dumps(summary, indent=2, ensure_ascii=False))
+    fig, axes = plt.subplots(1, 2, figsize=(11, 4.8), layout="constrained")
+    for scale, color, style in ((.1, "#246A9E", "-"), (.3, "#CA722C", "--"), (1., "#555C63", ":")):
+        sub = profile[profile.scale_deg == scale]
+        axes[0].plot(sub.amplitude_s, sub.robust_cost - sub.robust_cost.min(),
+                     color=color, ls=style, label=f"Fixed scale = {scale:g} deg")
+    axes[0].set(xlabel="Assumed extra small-RA delay amplitude [s]",
+                ylabel="Increase in robust objective", title="Delay identifiability at fixed angle scales", ylim=(0, 100))
+    axes[0].legend(fontsize=9)
+    sub = data[data.ra_deg < 2]
+    axes[1].scatter(sub.ra_deg, sub.residual_s, s=16, color="#246A9E", alpha=.5)
+    axes[1].axhline(0, color="#252A30", lw=1)
+    axes[1].set(xlabel="|Delta RA| [deg]", ylabel="Observed - baseline prediction [s]",
+                title="Small-RA residuals\nDec motion can mask RA delays", xscale="log")
+    fig.suptitle("Small-RA adjustment delays: exploratory sensitivity, not a hardware diagnosis", fontsize=12)
+    fig.savefig(out / "small_ra_diagnostics.png", dpi=180)
     plt.close(fig)
 
 

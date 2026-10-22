@@ -129,3 +129,22 @@ RA 小时乘 15 后处理跨零，不乘 `cos(Dec)`。得到的是相对跟踪�
 其主导轴标签也是模型条件下的判断。小 RA 与大 Dec 同时移动时，微调延迟可能被
 `max()` 遮蔽，良好的总耗时预测不能排除该分支。辨识它需要小 RA、小 Dec 的转场
 覆盖，或控制/编码器时序；不能仅靠增加同类转场的重复数量。
+
+多夜分析会额外做留整夜交叉验证，并按完整夜次 bootstrap，逐夜记录参数、主导轴
+计数与预测误差；没有 OBJ 数据的日期可用空 `rows` 的提取 JSON 保留在来源清单中。
+另做长科学曝光间隔的纳入敏感性检查，避免 180 秒常规转场上限决定拟合结论。
+多夜最高速度敏感性会检查移除极少数大 RA 转场后参数是否仍受约束。
+
+提取多夜 JSON 后可执行：
+
+```bash
+python survey/analyze_slew.py outputs/slew_calibration/headers_202610{15,16,17,18,19,20,21}.json \
+  --output outputs/slew_calibration/week --micro-ra --bootstrap 500
+```
+
+`--micro-ra` 增加固定角尺度 0.1、0.3、1 度的候选附加延迟
+`A*exp(-(dRA/scale)^2)`（仅正位移），允许 RA 耗时非单调；使用多个初值并做跨夜验证。
+该函数只是探索性描述。`micro_delay_profile.csv` 记录固定尺度下的幅度剖面目标函数，
+不是统计置信区间；被另一轴遮蔽时，优化器返回的幅度不能作为实测微调时间。
+`small_ra_audit.json` 和 `small_ra_anomaly_repeats.csv` 同时保留小 RA 长耗时转场与
+相同天区转场的重复对照，不能仅凭端点 header 将附加等待归因于某一轴。
