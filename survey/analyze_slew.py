@@ -128,6 +128,7 @@ def make_pairs(snapshots, readout):
     pairs["dt_obs_s"] = (frames.timestamp - previous.timestamp).dt.total_seconds()
     pairs["dt_date_s"] = (frames.date_timestamp - previous.date_timestamp).dt.total_seconds()
     pairs["previous_exposure_s"] = previous.EXPOSURE
+    pairs["current_exposure_s"] = frames.EXPOSURE
     pairs["time_s"] = pairs.dt_obs_s - previous.EXPOSURE - readout
     pairs["time_date_s"] = pairs.dt_date_s - previous.EXPOSURE - readout
     pairs["signed_ra_deg"] = wrap(15 * (frames.OBJ_RA - previous.OBJ_RA))
@@ -352,12 +353,42 @@ def main():
     eligible.to_csv(out / "fitted_pairs.csv", index=False)
     frames.drop(columns=["timestamp", "date_timestamp"]).to_csv(out / "frames.csv", index=False)
     draw_figures(eligible, fitted, intervals, pd.DataFrame(profile), out)
+    draw_axis_fits_only(eligible, fitted, out)
     if len(unique_nights) > 1:
         draw_weekly_figures(eligible, fitted, nightly, out)
     if args.micro_ra:
         audit_small_ra(eligible, fitted, out)
     print("FINAL", json.dumps({"intervals": intervals, "axes": audit["dominant_axis_counts"],
                                "anomalies": len(audit["anomalies"])}), flush=True)
+
+
+def draw_axis_fits_only(data, fitted, out):
+    """The two fitted axis panels, without validation or residual panels."""
+    plt.rcParams.update({"font.family": "DejaVu Sans", "font.size": 11,
+                         "axes.spines.top": False, "axes.spines.right": False,
+                         "axes.grid": True, "grid.alpha": .18})
+    p = fitted["parallel_sqrt"]
+    fig, axes = plt.subplots(1, 2, figsize=(12, 4.8), layout="constrained", sharey=True)
+    for axis, col, coef, color, marker, ax in (
+        ("RA", "ra_deg", p[1], "#246A9E", "o", axes[0]),
+        ("Dec", "dec_deg", p[2], "#CA722C", "^", axes[1]),
+    ):
+        ax.scatter(data[col], data.time_s, color="#AAAEB3", s=17, alpha=.45,
+                   label="All eligible pairs")
+        use = (data.dominant_axis == axis) & (data.axis_margin_s > 2)
+        ax.scatter(data.loc[use, col], data.loc[use, "time_s"], s=27,
+                   color=color, marker=marker, label=f"{axis} slower by >2 s (model)")
+        angle = np.linspace(data.loc[use, col].min(), data.loc[use, col].max(), 300)
+        ax.plot(angle, p[0] + coef * np.sqrt(angle), color="#252A30", lw=1.8,
+                label=f"{p[0]:.2f} + {coef:.2f} sqrt(angle)")
+        ax.set(xlabel=f"|Delta {axis}| [deg]", title=f"{axis} branch: joint fit")
+        ax.legend(fontsize=9, loc="upper left")
+    axes[0].set_ylabel("Gap minus exposure and readout [s]")
+    period = str(data.night.min()) if data.night.min() == data.night.max() else f"{data.night.min()} to {data.night.max()}"
+    fig.suptitle(f"SMT survey slew calibration | {period} | {len(data)} pairs", fontsize=14)
+    fig.savefig(out / "slew_axis_fits.png", dpi=200)
+    fig.savefig(out / "slew_axis_fits.pdf")
+    plt.close(fig)
 
 
 def draw_figures(data, fitted, intervals, profile, out):

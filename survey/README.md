@@ -148,3 +148,26 @@ python survey/analyze_slew.py outputs/slew_calibration/headers_202610{15,16,17,1
 不是统计置信区间；被另一轴遮蔽时，优化器返回的幅度不能作为实测微调时间。
 `small_ra_audit.json` 和 `small_ra_anomaly_repeats.csv` 同时保留小 RA 长耗时转场与
 相同天区转场的重复对照，不能仅凭端点 header 将附加等待归因于某一轴。
+
+`analyze_slew.py` 同时导出只含 RA、Dec 两个拟合子图的
+`slew_axis_fits.png` / `slew_axis_fits.pdf`，保留两轴拟合图中的样本与曲线。
+
+全年小 RA 检索使用冻结文件清单 `expanded/archive_inventory.json`
+（`rows` 中保存 `night`、`directory`、`files`）。几何预筛选采用服务器的
+`survey_fov_footprints_with_visibility.fits`，再以真实 header 核验，不能仅按文件名
+推定实际指向。保留其他科学程序、同场重复、坏 header 和非标准指向各自的审计。
+
+```bash
+python survey/collect_slew_archive.py --source outputs/slew_calibration_20261022 --workers 8
+python survey/investigate_small_ra.py --source outputs/slew_calibration_20261022 --use-archive
+```
+
+收集器通过 SSH 只读主 header 的 2880 字节块直至 END，不读取图像像素；优先复用
+已冻结快照，也可在前次收集停止后重跑以恢复，勿与仍在运行的同一收集任务重叠。
+调查脚本使用同一夜、0.5 度 Dec 位移分层对照，分别比较 RA<1 度、<0.1 度和
+<0.03 度，记录组内中位时间差、额外等待比例及整夜 bootstrap 区间。主比较仅使用
+两端均约30秒曝光且符合正式天区指向的转场，长正间隔仍保留在等待分析中。
+跨日期目录中相同时间、指向、曝光和通道的重复 header 会选择一个规范记录；
+重复别名及其相邻转场不进入主比较，不在删除记录后重新连接前后帧。
+这些是总转场时间的条件关联；不能把被 Dec 遮蔽的 RA 微调、人工/软件等待或
+净位移为零的重复曝光直接解释为机械轴运动。零事件时不输出退化的零宽风险区间。
