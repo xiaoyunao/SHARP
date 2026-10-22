@@ -1,5 +1,13 @@
 # PLAN
 
+## Current caveat: RA small-angle adjustment may be slow (2026-10-22)
+
+- 用户补充：RA小角度微调可能反复修正/卡住；保留为控制模式假设，不能将旧测试图的长耗时分支直接当异常。
+- 已核验：本夜393对RA<1deg转场全部同时移动Dec至少2.573deg，没有RA<1deg且Dec<2deg的对照；小RA时间可被max中的Dec分量遮蔽。旧模型的主导轴标签是单调假设下的结果。
+- 模型边界：下面平方根模型仅为本夜正常转场的有效描述，不能据此排除非单调小RA分支，也不能用其小角度外推声称RA微调速度已测出。
+- 后续方法：允许独立的小角度微调延迟/超时分支；若继续扩大到已允许的一周，应优先寻找两轴位移都小的样本、控制Dec位移和方向。只有端点header无法验证反复修正的具体机制。
+- 产物：`one_night/small_ra_bins.csv`, `small_ra_pairs.csv`, `small_ra_identifiability.json`；额外延迟数字仅是遮蔽的构造示例，不是实测卡顿时间。
+
 ## Latest slew result: One-night pilot completed (2026-10-22)
 
 - 用户范围：先做一夜，不够再做一周；本次20261021的有效耗时/平均速度模型已完成，未扩周。

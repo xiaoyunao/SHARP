@@ -2,6 +2,15 @@
 
 ## 2026-10-22
 
+- task: 按用户补充复核RA小角度可能反复微调/卡顿，修正单调模型的解释边界
+- files_changed: `survey/README.md`, `WORKLOG.md`, `PLAN.md`；新增小RA分箱CSV及可辨识性JSON至现有one_night产物目录；未改拟合参数或生产代码
+- commands_run: 复查461对的RA分箱、Dec位移、交叉验证残差；构造被max完全遮蔽的附加RA延迟，逐箱独立数值核验预测不变
+- findings: RA<1deg共393对，Dec位移2.573..17.227deg；RA<1deg且Dec<2deg为0对。最小RA位移0.06983deg，更小角度无样本。旧模型的RA/Dec主导标签以单调假设为条件，不能当作微调慢分支不存在的证据
+- validation: RA0.2..0.5deg的228对，即使在旧模型RA分量上统一增加11.84s，max后的整段耗时仍完全不变；该数字是构造的不可辨识性示例，不是实测微调延迟。其余小RA分箱同样存在遮蔽区间
+- interpretation: 用户报告是重要先验；RA小角度可以有非单调微调/等待分支，不能强制sqrt外推到该区间。端点header只能反映总耗时，不能确认是否反复修正、回差或具体控制故障
+- remaining_issues: 本夜不能独立标定小RA微调耗时；正常分支拟合与交叉验证数值保持，机械解释及主导轴标签须附条件
+- next_step: 若继续小角度分支标定，在已允许的一周范围优先寻找RA小且Dec也小的转场，匹配Dec位移及移动方向比较；缺这种几何覆盖时，仅增加重复曝光不能解决可辨识性，需控制日志/编码器或已有单轴原始测试
+
 - task: 按用户收窄范围，用20261021一夜真实巡天header精细标定slew，先不扩周
 - files_changed: 新增 `survey/extract_slew_headers.py`, `survey/analyze_slew.py`；更新 `survey/README.md`, `WORKLOG.md`, `PLAN.md`；快照/CSV/JSON/PNG/PDF位于 `outputs/slew_calibration_20261022/`，不提交产物
 - commands_run: SSH默认Python只读提取全部OBJ主header；本机py_compile、稳健多模型拟合、按110种有向天区转场分组及连续时间块各5折验证、300次15转场块bootstrap、两轴vmax剖面；独立合成/边界检查与图片目视验收
