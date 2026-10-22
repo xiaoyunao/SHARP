@@ -2,6 +2,18 @@
 
 ## 2026-10-22
 
+- task: 按用户收窄范围，用20261021一夜真实巡天header精细标定slew，先不扩周
+- files_changed: 新增 `survey/extract_slew_headers.py`, `survey/analyze_slew.py`；更新 `survey/README.md`, `WORKLOG.md`, `PLAN.md`；快照/CSV/JSON/PNG/PDF位于 `outputs/slew_calibration_20261022/`，不提交产物
+- commands_run: SSH默认Python只读提取全部OBJ主header；本机py_compile、稳健多模型拟合、按110种有向天区转场分组及连续时间块各5折验证、300次15转场块bootstrap、两轴vmax剖面；独立合成/边界检查与图片目视验收
+- data: 463帧=462标准MP+1测试帧，序号41..503连续、header错误0；461对连续科学曝光全部进入稳健拟合/验证，无按残差删点。OBS_DATE有毫秒；DATE逐帧恰为其向下取整秒，时间差差异std0.393s；同字段固定时间偏移做差抵消
+- result: `T=9.102+max(12.086*sqrt(dRA),12.369*sqrt(dDec))`，角度deg、时间s，T已减前帧曝光与14.47s读出。RA/Dec主导27/434对（模型判断）；主导角范围RA2.27..62.05deg、Dec2.55..20.00deg，长RA端稀疏
+- validation: 平方根模型天区分组CV绝对误差中位0.523s/P90=1.400s，恒速并行线性0.800/2.068s；连续时间CV为0.532/1.373s。自由幂律指数约0.557/0.554，复杂梯形模型未明显改善预测；平方根为本次选定的简约有效模型。全样本CV RMSE5.284s，长尾不能用典型误差掩盖
+- uncertainty: 300次块bootstrap条件95%区间t0[8.872,9.358]、kRA[11.957,12.333]、kDec[12.258,12.475]；仅反映本夜/模型统计变化。改用TEL坐标系数差<0.001；读出均值±1s只平移t0∓1s。两轴vmax高速端目标函数平坦，不能报告机械最高速度；sqrt形状与加减速主导一致，但不是独立加速度实测
+- anomalies: 0168→0169=-15.82s、0217→0218=+108.33s、0437→0438=+18.50s、0442→0443=-14.44s（相对模型）；原始header目标和实际坐标均正常，原因未明。两次短时偏差接近一个读出时间，不能据此认定读出重叠或改写用户给定假设
+- validation_details: RA跨零、无噪声参数恢复、梯形分段连续性、固定时标偏移抵消、测试帧打断邻接均通过；最终两张PNG逐张目视通过；未改生产脚本/调度参数/观测数据
+- remaining_issues: 一夜可标定常见角度的有效平均速度/耗时，不能确认机械峰值、极小位移或跨夜稳定性；常数项不等同于直接测得稳定时间
+- next_step: 本次一夜试验完成；若后续需要跨夜泛化或机械vmax，按用户允许扩最近一周并优先检查大角度RA/Dec转场与分段速度可辨识性，不仅增加重复小角度样本
+
 - task: 判断能否仅从巡天相邻曝光 header 反推 RA/Dec slew 速度
 - files_changed: `WORKLOG.md`, `PLAN.md`；未改生产程序或原始数据
 - commands_run: git status/branch/fetch/log（fetch成功；当前分支无upstream，相对origin/main ahead21/behind0）；SSH只读检查20261021原始FITS的11份header及服务器survey配置

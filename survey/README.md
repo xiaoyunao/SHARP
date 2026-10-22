@@ -95,3 +95,32 @@ PYTHONPATH=/pipeline/xiaoyunao \
   - processed：`/processed1`
   - 日志：`/pipeline/xiaoyunao/survey/logs/YYYYMMDD.log`
   - 图像：`/pipeline/xiaoyunao/survey/plots/YYYYMMDD/`
+
+## 离线 slew 标定
+
+`extract_slew_headers.py` 只读服务器原始 OBJ FITS 的主 header，不读取像素；
+保留测试帧等完整序列，避免筛选科学帧后错误地跨帧配对。
+`analyze_slew.py` 对连续科学曝光拟合两轴并行/串行线性、平方根、自由幂律和
+加速—恒速—减速模型，输出分组交叉验证、块 bootstrap、最高速度剖面及诊断图。
+这些工具不修改 scheduler 参数，也不由 daily 流程调用。
+
+在仓库根目录执行（提取在服务器默认 Python 运行，拟合在本机运行）：
+
+```bash
+mkdir -p outputs/slew_calibration
+ssh -p 20093 smtpipeline@www.xinglong-naoc.cn \
+  '/home/smtpipeline/Softwares/miniconda3/bin/python - 20261021' \
+  < survey/extract_slew_headers.py > outputs/slew_calibration/headers_20261021.json
+python survey/analyze_slew.py outputs/slew_calibration/headers_20261021.json \
+  --readout 14.47 --output outputs/slew_calibration/one_night
+```
+
+提取依赖 `astropy`；拟合另需本机已有的 `pandas`（表格和时间差）与 `scipy`
+（稳健非线性优化），以及 `numpy`、`matplotlib`。这两个分析依赖不加入生产调度器的
+必需依赖。可传入多份逐夜 JSON，输出中保留各夜与快照 SHA256。
+
+时间差使用同一 `OBS_DATE` 字段，减前一帧 `EXPOSURE` 和平均读出时间；同一时间字段
+的固定偏移会抵消，逐帧变化的延迟不会。`DATE` 整数秒和 `TEL_RA/DEC` 用于敏感性检查。
+RA 小时乘 15 后处理跨零，不乘 `cos(Dec)`。得到的是相对跟踪的有效位移耗时关系，
+不是编码器记录的机械运动曲线。最高速度剖面若在高速端平坦，不能把优化器返回值当作
+测得的最高速度；常数项也不等同于独立测得的稳定时间。

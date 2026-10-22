@@ -1,13 +1,15 @@
 # PLAN
 
-## Current task: Slew calibration feasibility (2026-10-22)
+## Latest slew result: One-night pilot completed (2026-10-22)
 
-- 目标：判断能否利用相邻曝光header，扣除曝光与用户给定14.47s平均读出，分别估计RA/Dec slew速度。
-- 已完成：服务器20261021原始header和现行survey配置只读核验；确认有不同轴位移比例的样本。当前只得出方法可行性，未完成全夜速度拟合。
-- 方法：假设两轴并行，拟合`T=t0+max(dRA/vRA,dDec/vDec)`，由模型确定主导轴；机械RA轴角不乘cos(dec)，与天空移动速度分开。若要物理轴速，须用HA/LST核对跟踪与轴角定义。
-- 待核实：DATE开快门时间仅整数秒；OBS_DATE毫秒时间注释为控制系统发送时刻。稳定/等待、加减速、读出波动与中途未保存曝光可能混入曝光间隔；单对曝光不能解出两轴速度。
-- 验证标准：完整曝光流按真实时标排序，检查缺帧与异常间隔；两种主导分支均有足够位移跨度，拟合参数可辨识，残差与跨夜预测可接受；区分有效速度与机械峰值速度。
-- 下一步：按后续数值标定范围提取全夜/多夜header，核实时标与控制逻辑，再拟合及评估不确定度。现有生产readout15s/slew35s参数未改。
+- 用户范围：先做一夜，不够再做一周；本次20261021的有效耗时/平均速度模型已完成，未扩周。
+- 数据：463份完整OBJ主header，462标准科学帧；461对连续科学曝光、110种有向天区转场；序号连续、无header读取失败。
+- 公式：`T=9.102+max(12.086*sqrt(dRA),12.369*sqrt(dDec))`；角度以deg、时间以s计；T为同一OBS_DATE差减前帧EXPOSURE与14.47s平均读出。RA小时乘15、跨零、不乘cos(dec)。
+- 验收：7种模型对照；天区转场分组/连续时间块各5折，平方根模型绝对误差中位0.523/0.532s、P90=1.400/1.373s；300次块bootstrap；时间字段/实际指向/读出均值敏感性；vmax剖面；合成边界检查和最终图目视通过。
+- 产物：`outputs/slew_calibration_20261022/headers_20261021.json` 和 `one_night/{results.json,fitted_pairs.csv,slew_fit.png,slew_diagnostics.png}`；复现入口见 `survey/README.md`。
+- 可用范围：RA主导27对、Dec主导434对；各自主导角范围RA2.27..62.05deg（长端很稀疏）、Dec2.55..20.00deg。有效运动平均速度为`sqrt(angle)/k`，含常数开销的转场速度应另算`angle/(t0+k*sqrt(angle))`。
+- 未解决：vmax高速端无明确上限约束，不能把梯形模型最优值当实测峰速；常数项不是独立测得稳定时间。4次异常转场保留在所有拟合与验证中，长尾导致全样本分组CV RMSE5.284s；尚无跨夜验证或小于约2deg主导样本。
+- 下一步：本次单夜交付完成；后续如要求跨夜泛化/机械最高速度，按已允许范围扩最近一周，重点增加大位移与恒速分支证据、核查异常时序。当前生产readout15s/slew35s未改。
 
 ## Latest completed task: Selected figures and GOTTA light-curve addition (2026-10-19)
 
