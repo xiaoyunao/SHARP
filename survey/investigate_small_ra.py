@@ -190,14 +190,22 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source", type=Path, required=True)
     parser.add_argument("--recent-start", default="20260829")
+    parser.add_argument("--direct-ra-max", type=float, default=2.,
+                        help="Upper RA displacement in degrees for direct small-Dec cases (default: 2)")
+    parser.add_argument("--output", type=Path,
+                        help="Separate result directory; frozen header inputs remain under source/expanded")
     parser.add_argument("--use-archive", action="store_true",
                         help="Audit conditional delays over all collected MP headers; retain recent calibration separately")
     args = parser.parse_args()
+    if not 0 < args.direct_ra_max <= 3:
+        parser.error("--direct-ra-max must be in (0, 3] degrees")
     source = args.source
-    out = source / "expanded"
-    inventory = json.loads((out / "archive_inventory.json").read_text())
-    geometry = json.loads((out / "geometry_inventory.json").read_text())
-    direct = json.loads((out / "isolated_headers.json").read_text())
+    inputs = source / "expanded"
+    out = args.output or inputs
+    out.mkdir(parents=True, exist_ok=True)
+    inventory = json.loads((inputs / "archive_inventory.json").read_text())
+    geometry = json.loads((inputs / "geometry_inventory.json").read_text())
+    direct = json.loads((inputs / "isolated_headers.json").read_text())
     direct_rows = []
     for row in direct["rows"]:
         values = pair_values(row["previous"]["header"], row["current"]["header"])
@@ -206,10 +214,11 @@ def main():
         direct_rows.append({"night": row["night"], "previous_name": row["previous_name"],
                             "name": row["name"], **values})
     direct_pairs = pd.DataFrame(direct_rows)
+    direct_pairs = direct_pairs[direct_pairs.ra_deg < args.direct_ra_max].copy()
     full_archive, archive_summary = None, None
     if args.use_archive:
-        full_archive, archive_summary = archive_pairs(out)
-        all_direct = full_archive[(full_archive.ra_deg > 1e-5) & (full_archive.ra_deg < 1) &
+        full_archive, archive_summary = archive_pairs(inputs)
+        all_direct = full_archive[(full_archive.ra_deg > 1e-5) & (full_archive.ra_deg < args.direct_ra_max) &
                                   (full_archive.dec_deg < 2) & (full_archive.time_s > 0)].copy()
         all_direct.to_csv(out / "archive_small_ra_all_exposures.csv", index=False)
         direct_pairs = all_direct[all_direct.previous_exposure_s.between(29.9, 30.1) &
@@ -280,20 +289,32 @@ def main():
         ("lt0.1_vs_0.3to1", events.ra_deg < .1, events.ra_deg.between(.3, 1., inclusive="left")),
         ("lt1_vs_1to3", events.ra_deg < 1., events.ra_deg.between(1., 3., inclusive="left")),
         ("lt0.03_vs_0.3to1", events.ra_deg < .03, events.ra_deg.between(.3, 1., inclusive="left")),
+        ("lt2_vs_2to3", events.ra_deg < 2., events.ra_deg.between(2., 3., inclusive="left")),
+        ("1to2_vs_2to3", events.ra_deg.between(1., 2., inclusive="left"), events.ra_deg.between(2., 3., inclusive="left")),
     ):
         comparisons[label] = matched_comparison(events, low, reference, out / f"matched_{label}.csv")
 
-    ancillary, probe_count, probe_errors = ancillary_pairs(out / "other_science_headers.jsonl")
+    ancillary, probe_count, probe_errors = ancillary_pairs(inputs / "other_science_headers.jsonl")
     ancillary.to_csv(out / "ancillary_adjacent_pairs.csv", index=False)
-    small_ancillary = ancillary[(ancillary.ra_deg > 1e-5) & (ancillary.ra_deg < 1) &
+    small_ancillary = ancillary[(ancillary.ra_deg > 1e-5) & (ancillary.ra_deg < args.direct_ra_max) &
                                 (ancillary.dec_deg < 2) & (ancillary.time_s > 0)] if len(ancillary) else ancillary
     small_ancillary.to_csv(out / "ancillary_small_ra_pairs.csv", index=False)
+    # Round only the reporting key: equivalent header coordinates can differ
+    # at floating-point precision. All timing calculations use original values.
+    direct_summary = direct_pairs.assign(ra_geometry_deg=direct_pairs.ra_deg.round(6)).groupby("ra_geometry_deg").agg(
+        pairs=("time_s", "size"), nights=("night", "nunique"), dec_deg=("dec_deg", "median"),
+        median_s=("time_s", "median"), min_s=("time_s", "min"), max_s=("time_s", "max")).reset_index()
+    direct_summary.to_csv(out / "isolated_small_ra_summary.csv", index=False)
     result = {
         "inventory_nights": len(inventory["rows"]), "inventory_frames": sum(r["frames"] for r in inventory["rows"]),
         "inventory_start": inventory["rows"][0]["night"], "inventory_end": inventory["rows"][-1]["night"],
         "archive_header_audit": archive_summary,
+        "direct_selection": {"ra_deg_exclusive_max": args.direct_ra_max, "dec_deg_exclusive_max": 2.,
+                             "exposure_s_range": [29.9, 30.1], "positive_time_without_upper_cap": True,
+                             "use_archive": args.use_archive,
+                             "candidate_source": "All collected MP headers" if args.use_archive else "Original <1-degree targeted probes only"},
         "isolated_mp_pairs": len(direct_pairs), "isolated_mp_nights": direct_pairs.night.nunique(),
-        "isolated_mp_summary": direct_pairs.groupby("ra_deg").time_s.agg(["size", "median", "min", "max"]).reset_index().to_dict("records"),
+        "isolated_mp_summary": direct_summary.to_dict("records"),
         "same_field_inventory_pairs": len(geometry["same_field_transitions"]),
         "recent_source": metadata, "recent_frames": len(frames), "recent_fit_pairs": len(fit_data),
         "recent_nights": fit_data.night.nunique(),
@@ -304,28 +325,34 @@ def main():
         "ancillary_adjacent_science_pairs": len(ancillary),
         "ancillary_nonzero_small_ra_pairs": len(small_ancillary),
         "limits": ["A full filename/grid search locates potential field transitions; candidate movements are verified against raw headers.",
-                   "Two isolated RA angles do not identify a general nonmonotone small-angle curve.",
+                   "A few distinct small-RA geometries do not identify an arbitrary nonmonotone curve; simultaneous Dec motion remains.",
                    "Repeated same-field exposures do not establish commanded small RA motion.",
                    "Ancillary observations have different scheduling modes and are not pooled with MP survey calibration.",
                    "Bootstrap intervals condition on the sampled nights, geometry and matched cohorts; they are not mechanical-axis response confidence bands.",
                    "Total excess waiting cannot identify which motor or software stage caused it."]}
     (out / "small_ra_results.json").write_text(json.dumps(result, indent=2, ensure_ascii=False, allow_nan=False))
-    draw_small_ra(direct_pairs, comparisons, out)
+    draw_small_ra(direct_pairs, comparisons, out, p)
     print(json.dumps(result, ensure_ascii=False, indent=2))
 
 
-def draw_small_ra(direct, comparisons, out):
-    fig, axes = plt.subplots(1, 2, figsize=(11, 4.7), layout="constrained")
+def draw_small_ra(direct, comparisons, out, normal_parameters=None):
+    fig, axes = plt.subplots(1, 2, figsize=(12, 5.5), layout="constrained")
     for sign, marker, color, label in ((-1, "o", "#246A9E", "Decreasing RA"),
                                        (1, "^", "#CA722C", "Increasing RA")):
         use = np.sign(direct.signed_ra_deg) == sign
         axes[0].scatter(direct.loc[use, "ra_deg"], direct.loc[use, "time_s"],
                          marker=marker, color=color, s=40, label=label)
-    axes[0].set(xlabel="|Delta RA| [deg]", ylabel="Gap minus exposure and readout [s]",
-                title="Direct small-RA cases with small Dec movement", ylim=(0, None))
+    if normal_parameters is not None and len(direct):
+        angles = np.linspace(direct.ra_deg.min(), direct.ra_deg.max(), 200)
+        axes[0].plot(angles, normal_parameters[0] + normal_parameters[1] * np.sqrt(angles),
+                     color="#666666", ls="--", lw=1.4, label="Recent normal-RA model (reference)")
+    axes[0].set(xlabel="|Delta RA| [deg]", ylabel="Gap minus exposure and 14.47 s readout [s]",
+                title=f"Small Dec movement (<2 deg)\n{len(direct)} pairs, {direct.night.nunique()} nights", ylim=(0, None))
     axes[0].legend(fontsize=9)
     labels, positions = [], []
-    for i, (key, label) in enumerate((("lt1_vs_1to3", "<1 vs 1-3 deg"),
+    for i, (key, label) in enumerate((("lt2_vs_2to3", "<2 vs 2-3 deg"),
+                                     ("1to2_vs_2to3", "1-2 vs 2-3 deg"),
+                                     ("lt1_vs_1to3", "<1 vs 1-3 deg"),
                                      ("lt0.1_vs_0.3to1", "<0.1 vs 0.3-1 deg"),
                                      ("lt0.03_vs_0.3to1", "<0.03 vs 0.3-1 deg"))):
         row = comparisons.get(key)
@@ -345,6 +372,7 @@ def draw_small_ra(direct, comparisons, out):
     axes[1].margins(y=.3)
     fig.suptitle("Archived small-RA investigation | net transition times, not motor telemetry", fontsize=12)
     fig.savefig(out / "small_ra_evidence.png", dpi=180)
+    fig.savefig(out / "small_ra_evidence.pdf")
     plt.close(fig)
 
 

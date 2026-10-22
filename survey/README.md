@@ -159,13 +159,21 @@ python survey/analyze_slew.py outputs/slew_calibration/headers_202610{15,16,17,1
 
 ```bash
 python survey/collect_slew_archive.py --source outputs/slew_calibration_20261022 --workers 8
-python survey/investigate_small_ra.py --source outputs/slew_calibration_20261022 --use-archive
+python survey/investigate_small_ra.py --source outputs/slew_calibration_20261022 --use-archive --direct-ra-max 2 --output outputs/slew_calibration_20261022/expanded/ra_under2
 ```
 
 收集器通过 SSH 只读主 header 的 2880 字节块直至 END，不读取图像像素；优先复用
 已冻结快照，也可在前次收集停止后重跑以恢复，勿与仍在运行的同一收集任务重叠。
-调查脚本使用同一夜、0.5 度 Dec 位移分层对照，分别比较 RA<1 度、<0.1 度和
-<0.03 度，记录组内中位时间差、额外等待比例及整夜 bootstrap 区间。主比较仅使用
+调查脚本的直接样本默认取非零 RA<2 度且 Dec<2 度；`--direct-ra-max 1` 可复现旧阈值，
+`--output` 可另存图表而保留之前结果。扩大直接样本范围需要 `--use-archive`；不加时仅复用
+最初14对RA<1度的定向探针。2026-10-22全年归档筛选得到70对、13夜、6种角度，
+原RA<1度的14对完全保留；逐角度统计见 `isolated_small_ra_summary.csv`。
+图中虚线为近期正常模型的参考外推，不是小角度数据强制单调拟合。
+调查脚本使用同一夜、0.5 度 Dec 位移分层对照，分别比较 RA<2度与2–3度、1–2度与2–3度，
+以及原来的 RA<1 度、<0.1 度和 <0.03 度对照，记录组内中位时间差、额外等待比例及整夜
+bootstrap 区间。前两项本次分别为+0.029s（95%[-0.115,+0.182]）和-0.018s
+（95%[-0.271,+0.187]）；没有检出总转场系统性额外变慢，不等于排除被Dec遮蔽的RA微调。
+主比较仅使用
 两端均约30秒曝光且符合正式天区指向的转场，长正间隔仍保留在等待分析中。
 跨日期目录中相同时间、指向、曝光和通道的重复 header 会选择一个规范记录；
 重复别名及其相邻转场不进入主比较，不在删除记录后重新连接前后帧。

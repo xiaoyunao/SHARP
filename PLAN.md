@@ -1,5 +1,15 @@
 # PLAN
 
+## Latest completed task: Small-RA threshold expanded to 2 degrees (2026-10-22)
+
+- 当前范围：按用户最新补充，小RA取非零<2deg；直接样本还要求Dec<2deg、两端30s及原有邻接/指向/唯一性条件，正时间无上限。
+- 直接证据：70对、13夜、6种角度，较旧<1deg新增56对；实际Dec<0.81deg，各角度中位耗时随RA0.396..1.851deg从17.35增加到23.50s，整体16.11..26.03s，未出现明显小角度慢分支。
+- 分层对照：RA<2 vs2..3deg：26夜483/300对，+0.029s、95%[-0.115,+0.182]；1..2 vs2..3deg：18夜241/211对，-0.018s、95%[-0.271,+0.187]。按整夜bootstrap；不能以总时间无增加排除被Dec遮蔽的微调。
+- 交付：`outputs/slew_calibration_20261022/expanded/ra_under2/` 下的 `small_ra_evidence.png/.pdf`、`isolated_small_ra_pairs.csv`、`isolated_small_ra_summary.csv`、`small_ra_results.json`、`validation.json`；原结果完整保留，一周双子图路径不变。
+- 验收：py_compile、端到端重跑、70对原始header算术及邻接检查、旧14对/原匹配队列/正常参数不变、新效应独立重算、图目视通过。
+- 剩余边界：仅6种几何，<1deg仍14对，不能测出任意非单调小角度曲线或确认往复修正；后续成因核实依赖控制/编码器日志。
+- 下一步：本次2deg范围更新已完成，按用户后续反馈继续；生产调度参数保持原状。
+
 ## Latest completed task: Two-axis figures and annual small-RA audit (2026-10-22)
 
 - 用户要求：拟合图只保留RA/Dec两子图，并扩大范围直到有足够小RA证据；已完成双子图，并穷尽20251101..20261021可用巡天文件。微调机制的可辨识性仍受实际观测几何限制，不能宣称已测出完整小角度响应。

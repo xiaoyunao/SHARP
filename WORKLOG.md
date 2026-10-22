@@ -2,6 +2,15 @@
 
 ## 2026-10-22
 
+- task: 按用户补充将小RA范围放宽到2deg，重新检查直接样本与匹配耗时
+- files_changed: `survey/investigate_small_ra.py`、`survey/README.md`、WORKLOG/PLAN/CHANGELOG；新产物另存 `outputs/slew_calibration_20261022/expanded/ra_under2/`，旧<1deg结果保留
+- commands_run: `python3 -m py_compile survey/investigate_small_ra.py`；离线调查 `--use-archive --direct-ra-max 2 --output .../ra_under2`；70对原始header独立算术/严格邻接复核、原队列一致性和新分层效应独立重算；图目视检查
+- findings: RA非零<2且Dec<2、两端约30s、唯一曝光且标准指向共70对/13夜/6种几何（原<1为14对/5夜，新增加56对）。实际Dec均<0.81deg，RA0.396/0.763/1.105/1.294/1.469/1.851deg；各组T中位17.352/18.121/19.969/21.849/23.015/23.505s；全部范围16.114..26.025s。T扣除前帧曝光与14.47s读出，筛选没有正时间上限，未见这批样本的长耗时分支
+- conditional_comparison: 同夜/0.5deg Dec层（每组>=5对），RA<2 vs2..3共26夜483/300对，耗时差+0.02936s、整夜bootstrap95%[-0.11461,+0.18226]；1..2 vs2..3共18夜241/211对，-0.01805s、区间[-0.27114,+0.18696]。原<1/<0.1/<0.03队列及正常模型数值不变；主比较未检出额外总耗时上升
+- validation: 70对全部从冻结原始header重算时间/RA跨零/Dec，邻接与质量标志通过；14对旧样本完全保留；6种角度仅报告时四舍五入，数值计算仍用原精度；新统计独立重算通过，PNG/PDF导出及PNG目视通过。源码与离线输出有hash记录，未再读取远程像素或改变生产参数
+- remaining_issues: 仅6种小角度几何，<1deg仍14对；同时Dec运动与端点时间不能确认中途往复修正，未检出慢分支不能排除偶发微调故障
+- next_step: 交付2deg范围证据图与结果，后续若需机械成因再核对控制/编码器日志
+
 - task: 按用户要求绘制仅RA/Dec两个拟合子图，并扩展至全部近一年可用巡天文件调查小RA慢分支
 - files_changed: `survey/analyze_slew.py`, 新增 `collect_slew_archive.py`、`investigate_small_ra.py`，更新README/WORKLOG/PLAN/CHANGELOG；所有快照、逐帧/逐对CSV、PNG/PDF、核验在 `outputs/slew_calibration_20261022/expanded/`，一周双子图在 `week/slew_axis_fits.*`
 - commands_run: git状态/分支/fetch/log；SSH清点20251101..20261021所有OBJ文件；服务器现用1855天区表筛选后核验原始header；复用11388份快照、8线程只读主header块补齐39644份；另读7146份其他科学流及邻帧header；近期留整夜正常拟合、全年同夜/Dec分层比较、500次整夜bootstrap
