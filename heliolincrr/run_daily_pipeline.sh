@@ -9,6 +9,7 @@ UNKNOWN_DIR="${UNKNOWN_DIR:-${BASE_DIR}/heliolincrr}"
 LOG_DIR="${LOG_DIR:-/pipeline/xiaoyunao/data/heliolincrr/daily_logs}"
 RECOVERY_LOOKBACK_DAYS="${RECOVERY_LOOKBACK_DAYS:-7}"
 ENABLE_RECOVERY_PROCESSING="${ENABLE_RECOVERY_PROCESSING:-1}"
+ENABLE_SURVEY_PLAN="${ENABLE_SURVEY_PLAN:-1}"
 PROCESSED_ROOT="${PROCESSED_ROOT:-/processed1}"
 KNOWN_PYTHON="${KNOWN_PYTHON:-/home/smtpipeline/Softwares/miniconda3/bin/python}"
 WAIT_KNOWN_REPORT_TIMEOUT_SEC="${WAIT_KNOWN_REPORT_TIMEOUT_SEC:-28800}"
@@ -121,12 +122,22 @@ run_processing_for_night() {
 }
 
 main() {
+  local survey_status=0 processing_status=0
   section "daily pipeline start"
   echo "[INFO] run_date=${RUN_DATE} recovery_lookback_days=${RECOVERY_LOOKBACK_DAYS}"
 
   section "survey plan"
-  if [[ -x "${SURVEY_DIR}/run_daily.sh" ]]; then
-    bash "${SURVEY_DIR}/run_daily.sh" "${RUN_DATE}"
+  if [[ "${ENABLE_SURVEY_PLAN}" != "1" ]]; then
+    echo "[SKIP] survey plan disabled: ENABLE_SURVEY_PLAN=${ENABLE_SURVEY_PLAN}"
+  elif [[ -x "${SURVEY_DIR}/run_daily.sh" ]]; then
+    # Keep errexit active inside the wrapper while recording its result.
+    set +e
+    (set -e; bash "${SURVEY_DIR}/run_daily.sh" "${RUN_DATE}")
+    survey_status=$?
+    set -e
+    if (( survey_status != 0 )); then
+      echo "[ERROR] survey plan failed: exit_code=${survey_status}; continue data processing"
+    fi
   else
     echo "[SKIP] missing survey daily: ${SURVEY_DIR}/run_daily.sh"
   fi
@@ -148,12 +159,20 @@ main() {
     done
     if (( failures > 0 )); then
       section "daily pipeline incomplete: ${failures} failed nights"
-      return 1
+      processing_status=1
     fi
   else
-    run_processing_for_night "$(night_for_offset 1)"
+    set +e
+    (set -e; run_processing_for_night "$(night_for_offset 1)")
+    processing_status=$?
+    set -e
   fi
 
+  echo "[INFO] survey_exit_code=${survey_status} processing_exit_code=${processing_status}"
+  if (( survey_status != 0 || processing_status != 0 )); then
+    section "daily pipeline incomplete: survey_exit_code=${survey_status} processing_exit_code=${processing_status}"
+    return 1
+  fi
   section "daily pipeline done"
 }
 

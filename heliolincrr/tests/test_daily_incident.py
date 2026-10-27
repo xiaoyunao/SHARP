@@ -80,6 +80,61 @@ main 2>&1 | tee -a "${LOG_PATH}"
                     module.run_curl(module.SUBMIT_URL, SimpleNamespace())
                 run.assert_not_called()
 
+    def test_survey_failure_does_not_block_processing(self):
+        for recovery in ('0', '1'):
+            with self.subTest(recovery=recovery), tempfile.TemporaryDirectory() as tmp:
+                root = Path(tmp)
+                survey = root / 'run_daily.sh'
+                survey.write_text('#!/bin/bash\nexit 7\n')
+                survey.chmod(0o755)
+                source = (ROOT / 'heliolincrr/run_daily_pipeline.sh').read_text()
+                source = source.removesuffix('main 2>&1 | tee -a "${LOG_PATH}"\n')
+                source += '''
+night_for_offset() { echo 20261026; }
+run_processing_for_night() { echo "processed=$1"; }
+main 2>&1 | tee -a "${LOG_PATH}"
+'''
+                env = dict(os.environ, LOG_DIR=tmp, SURVEY_DIR=tmp,
+                           RECOVERY_LOOKBACK_DAYS='1', ENABLE_RECOVERY_PROCESSING=recovery)
+                result = subprocess.run(['bash'], input=source, text=True,
+                                        capture_output=True, env=env)
+                self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+                self.assertIn('processed=20261026', result.stdout)
+                self.assertIn('survey_exit_code=7 processing_exit_code=0', result.stdout)
+
+    def test_single_night_failure_keeps_errexit(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            source = (ROOT / 'heliolincrr/run_daily_pipeline.sh').read_text()
+            source = source.removesuffix('main 2>&1 | tee -a "${LOG_PATH}"\n')
+            source += '''
+night_for_offset() { echo 20261026; }
+run_processing_for_night() { false; echo UNSAFE_CONTINUATION; }
+main 2>&1 | tee -a "${LOG_PATH}"
+'''
+            env = dict(os.environ, LOG_DIR=tmp, SURVEY_DIR=tmp, ENABLE_RECOVERY_PROCESSING='0')
+            result = subprocess.run(['bash'], input=source, text=True, capture_output=True, env=env)
+            self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+            self.assertNotIn('UNSAFE_CONTINUATION', result.stdout)
+
+    def test_processing_only_mode_skips_survey(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            survey = Path(tmp) / 'run_daily.sh'
+            survey.write_text('#!/bin/bash\necho UNEXPECTED_SURVEY\nexit 7\n')
+            survey.chmod(0o755)
+            source = (ROOT / 'heliolincrr/run_daily_pipeline.sh').read_text()
+            source = source.removesuffix('main 2>&1 | tee -a "${LOG_PATH}"\n')
+            source += '''
+night_for_offset() { echo 20261026; }
+run_processing_for_night() { echo "processed=$1"; }
+main 2>&1 | tee -a "${LOG_PATH}"
+'''
+            env = dict(os.environ, LOG_DIR=tmp, SURVEY_DIR=tmp, ENABLE_SURVEY_PLAN='0',
+                       ENABLE_RECOVERY_PROCESSING='0')
+            result = subprocess.run(['bash'], input=source, text=True, capture_output=True, env=env)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertNotIn('UNEXPECTED_SURVEY', result.stdout)
+            self.assertIn('processed=20261026', result.stdout)
+
 
 if __name__ == '__main__':
     unittest.main()

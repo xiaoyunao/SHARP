@@ -32,6 +32,20 @@
 
 ## 输出
 
+IERS 使用 Astropy 自动缓存刷新，保留 30 天预测新鲜度限制。若服务器下载失败，
+可在本机下载后传入，使用服务器默认 Python 校验日期覆盖和预测年龄后导入缓存；
+工具会备份旧缓存并验证 SHA256，不接受过期数据，也不放宽精度检查。
+
+```bash
+# 本机执行；日期按实际观测夜修改
+curl --fail --location https://maia.usno.navy.mil/ser7/finals2000A.all -o /tmp/finals2000A.all
+scp -P 20093 /tmp/finals2000A.all smtpipeline@www.xinglong-naoc.cn:/pipeline/xiaoyunao/survey/runtime/finals2000A.all
+ssh -p 20093 smtpipeline@www.xinglong-naoc.cn '/home/smtpipeline/Softwares/miniconda3/bin/python /pipeline/xiaoyunao/survey/import_iers.py /pipeline/xiaoyunao/survey/runtime/finals2000A.all --date 2026-10-27'
+```
+
+添加 `--dry-run` 可仅检查、不更新缓存。旧表及导入凭据保存在
+`/pipeline/xiaoyunao/survey/runtime/iers_backups/`。
+
 - `workspace/plans/YYYYMMDD_plan.json`
 - `workspace/plans/YYYYMMDD_plan.txt`
 - `workspace/history/exposure_history.fits`

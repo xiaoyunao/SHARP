@@ -11,8 +11,11 @@ from astropy.time import Time
 from astropy.utils import iers
 from astroplan import moon
 
-iers.conf.auto_download = False
-iers.conf.auto_max_age = None
+# Use Astropy's cached IERS-A table and refresh old predictions when needed.
+# Disabling downloads forces the bundled table even when a newer cache exists.
+iers.conf.auto_download = True
+iers.conf.auto_max_age = 30
+iers.conf.remote_timeout = 10
 iers.conf.iers_degraded_accuracy = "warn"
 warnings.filterwarnings("ignore", category=NonRotationTransformationWarning)
 

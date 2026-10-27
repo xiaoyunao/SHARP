@@ -2,6 +2,16 @@
 
 ## 2026-10-27
 
+- task: 用户授权直接恢复IERS、当晚计划和10/26处理，并解耦两条流程、保持MPC暂停
+- files_changed: `survey/astro_utils.py`同步现生产自动缓存配置；新增`survey/import_iers.py`；修改`heliolincrr/run_daily_pipeline.sh`、针对性测试、README/CHANGELOG/PLAN；证据在`outputs/recovery_20261027/`
+- iers: 本机主源仍HTTP400；USNO与Astropy官方维护仓库均下载成功，选择更新的USNO表，预测起点2026-10-23/MJD61336，20024行、末端MJD61707；SHA256=95a61292c957fa74ed624bd4f7a84b1b984077e412b43ed39b99e092f38de9da。本机校验、传输校验、服务器导入/缓存hash与今晚UT1/极移检查通过，未放宽30天限制；旧缓存备份在`survey/runtime/iers_backups/20261027T081258847508Z`
+- plan_recovery: 隔离历史副本运行今晚CLI成功、无警告；16:14:39正式wrapper成功，501曝光/113独立场/167个cycle-field组合，每组合3次；UTC10:14:35..21:30:35。runtime/日期发布/current三个TXT同hash=86ec6ffa431e6b6225ef8104c3a4331200b95c994ef7747dc0f35606e55e6e06；未插入后随，active=0。观测电脑端拉取仍需其本地证据
+- plan_quality_limit: 独立本机用同一新IERS表重算，时间递增/日期/重复次数/月距metadata一致且全部满足月距，最小余量0.05093deg；既有窗口50%可见筛选并非逐曝光30deg硬切，14行低于30deg、最低24.234deg，明细留`plan_validation.json`，本次不改既有天区策略。首次服务器向量QA进程segfault，转本机同表重算完成；正式scheduler标量时刻运行正常
+- decoupling: survey与processing各自保留退出码，survey非零仍继续处理、整轮最终非零；正常7夜恢复和单夜模式都隔离错误，保留Bash errexit；新增`ENABLE_SURVEY_PLAN=0`支持仅补数据。原子部署前核对旧hash并备份到服务器`data/heliolincrr/recovery_20261027/`
+- validation: 本机及服务器heliolinc各6项daily/hold/失败隔离回归通过；Python编译/bash-n/diff-check通过；新鲜表dry-run通过、过期日期输入拒绝。19个既有MPC/hold文件hash不变；新脚本不改变上报策略
+- recovery_in_progress: 16:15:08以`ENABLE_SURVEY_PLAN=0 ENABLE_RECOVERY_PROCESSING=0 START_SUBMIT_WATCHER=0`补10/26；396个L2全部manifest保留，无错夜/缺时间；Slurm array255223/finalize255224，24并发，submit=false。日志`data/heliolincrr/recovery_20261027/processing_recovery.log`；等待known完成后自动进入unknown与复核包生成
+- next_step: 等待并验收396帧known、unknown筛选/复核包完整性及保护文件hash，再记录最终恢复结果；MPC hold继续保留
+
 - task: 只读巡检近期每日运行，核实用户反馈的计划未更新及昨晚处理结果缺失
 - files_changed: WORKLOG.md、PLAN.md；日志、只读检查脚本、逐日状态快照保存到 `outputs/runtime_check_20261027/`，不提交运行产物；未改生产代码、缓存、计划或数据
 - commands_run: git status/branch/fetch/log、origin/main 对比（当前分支无 upstream，ahead27/behind0）；默认 SSH 检查 cron、survey/daily/known 日志、计划 SHA256、raw/L2/L4、known status/review manifest、IERS 缓存元数据、Slurm 与磁盘

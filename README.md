@@ -40,6 +40,16 @@
 daily 的历史恢复按夜隔离错误：失败夜停止后续步骤，其余夜继续；任何一夜失败，
 整轮最终返回非零。诊断入口为 `data/heliolincrr/daily_logs/<运行日>_daily_pipeline.log`。
 
+计划生成与科学处理也分别记录状态：survey 失败后继续 known/unknown，最后仍返回非零。
+单独补昨晚数据时，在服务器执行以下命令（运行日期为观测夜次日）：
+
+```bash
+ENABLE_SURVEY_PLAN=0 ENABLE_RECOVERY_PROCESSING=0 bash /pipeline/xiaoyunao/heliolincrr/run_daily_pipeline.sh 2026-10-27
+```
+
+此模式跳过计划生成，仅处理 20261026；MPC hold 仍由现有文件控制。
+IERS 离线下载及导入方式见 `survey/README.md`。
+
 ### survey
 
 ```bash

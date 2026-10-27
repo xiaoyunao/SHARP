@@ -1,6 +1,14 @@
 # PLAN
 
-## Current objective: restore plan freshness and October 26 processing (2026-10-27)
+## Current objective: finish October 26 processing validation (2026-10-27)
+
+- 已完成：本机下载USNO新IERS表（预测起点10/23）并备份后导入服务器；今晚501条计划已于16:14:39发布，三处TXT hash一致；survey失败与数据处理解耦已部署，本机/服务器各6项回归通过，MPC/hold保护文件未变。
+- 正在执行：16:15:08启动10/26单夜数据补跑，396个L2均进入manifest，Slurm array255223/finalize255224，24并发，submit=false；known完成后自动unknown。证据及日志在`outputs/recovery_20261027/`与服务器`data/heliolincrr/recovery_20261027/`。
+- 尚待验收：全部输入帧与parts/match日志闭合、合并known/mask15、unknown筛选/复核包、最终每日入口成功状态与既有MPC/hold hash不变；不要把提交到Slurm等同补跑完成。
+- 额外边界：独立QA发现既有调度50%窗口可见规则会留下14次高度<30deg曝光（最低24.234deg），月距全部通过；本轮保持原策略，逐行证据在`plan_validation.json`，后续可单独加强逐曝光可见性。尚未验证观测电脑是否已拉取新表。
+- 下一步：持续跟进补跑至完成并验收，继续保持MPC暂停；IERS手动离线更新步骤与单独数据补跑命令已写README。
+
+## Initial investigation (2026-10-27; superseded by recovery above)
 
 - 巡检已完成：用户确认“计划未更新、昨晚无处理结果”，两者同源。10/25–27 IERS预测超过30天且主/备用下载失败，survey exit1导致总入口在known/unknown前退出；cron本身正常触发。
 - 当前产物：10/25–27均无新计划；current_plan仍为10/24的495行。10/26有401个MP raw、396个MP L2，但L4空、known/unknown未启动。10/18–21已有known complete和95/73/24/53条复核包，缺GIF均0；22–25无MP输入。
