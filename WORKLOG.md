@@ -2,6 +2,11 @@
 
 ## 2026-10-27
 
+- task: 只读统计形态+PSF串联上线后近期逐夜过滤数量；以10/11..26的8个有报告观测夜为口径，reject计过滤，review仍进人审
+- screening_counts: 初选1036，形态拒绝556、PSF追加拒绝39，共595（57.4324%）；pass91/review350，共441进入人工，平均每个有报告观测夜过滤74.375条。逐夜拒绝：10/11=1、13=102、15=76、18=160、19=130、20=7、21=81、26=38；10/11仅1条初选
+- validation: SSH逐候选重算counts/reason，全部8夜policy相同、原始catalog SHA匹配、pass+review与复核manifest一致，分类和总数闭合；无报告的10/12/14/16/17/22..25均无MP raw/L2，不能记成有观测但过滤0。10/1..10为按现规则历史回放，本次上线后统计不纳入；旧已提交复核包口径可能与回放报告不同，不用旧包替代筛选报告
+- files_changed: WORKLOG/PLAN；只读采集脚本、逐日来源hash/JSON及汇总在`outputs/screening_counts_20261027/`；图用于对话，不入库；未改生产/人工状态/上报。下一步：本次数量查询完成，维持MPC hold，误拦率与候选真实性不能由本统计推出
+
 - recovery_completed: 16:44:29 CST，10/26补跑及正常入口复用验收全部完成；396/396逐帧DONE、无match错误/警告，all139348条、正式matched2748条、mask15为3036条；matched有355份非空parts、mask15有359份非空parts，全部396份all parts齐全
 - unknown_results: 18469个tracklet、470条关联链；扣已知后129条初选，串联筛选pass4/reject38/review87，91条进入人工、274次测量；正式review包含91 GIF、274行full/ADES FITS，评分均ok，CSV候选数一致。复核路径`/pipeline/xiaoyunao/heliolincrr/review_packages/20261026`，tar在其父目录
 - rendering_recovery: 原串行GIF过慢，16:38只终止精确匹配的绘图PID718687，初次入口按预期记录rc143；在独立目录用未修改绘图器8进程生成129 GIF，10份串行已有图hash全部一致，合并summary/图后生成复核包，再复跑processing-only入口；最终`processing_final.log`明确survey_exit_code=0/processing_exit_code=0及daily pipeline done，未重跑科学关联/重分配trkSub
