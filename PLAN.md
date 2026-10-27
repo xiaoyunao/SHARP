@@ -1,12 +1,13 @@
 # PLAN
 
-## Current objective: finish October 26 processing validation (2026-10-27)
+## Current status: nightly recovery complete (2026-10-27)
 
 - 已完成：本机下载USNO新IERS表（预测起点10/23）并备份后导入服务器；今晚501条计划已于16:14:39发布，三处TXT hash一致；survey失败与数据处理解耦已部署，本机/服务器各6项回归通过，MPC/hold保护文件未变。
-- 正在执行：16:15:08启动10/26单夜数据补跑，396个L2均进入manifest，Slurm array255223/finalize255224，24并发，submit=false；known完成后自动unknown。证据及日志在`outputs/recovery_20261027/`与服务器`data/heliolincrr/recovery_20261027/`。
-- 尚待验收：全部输入帧与parts/match日志闭合、合并known/mask15、unknown筛选/复核包、最终每日入口成功状态与既有MPC/hold hash不变；不要把提交到Slurm等同补跑完成。
+- 数据恢复完成：16:44:29，396/396帧known无错误/警告，matched2748条、mask15为3036条。129条初选经串联筛选pass4/reject38/review87，91条人工候选/274次测量/91 GIF；评分、CSV/FITS、逐GIF解码、tar完整性验收通过。
+- 执行与证据：Slurm array255223/finalize255224完成；串行绘图受控中止后在独立目录用原绘图器8进程恢复，129 GIF生成、10份串行已有文件hash一致。最终processing-only入口复用已有包成功，退出码0；19个既有MPC/hold保护文件不变、无新上报。凭据在`outputs/recovery_20261027/final_validation.json`，服务器对应`data/heliolincrr/recovery_20261027/`。
 - 额外边界：独立QA发现既有调度50%窗口可见规则会留下14次高度<30deg曝光（最低24.234deg），月距全部通过；本轮保持原策略，逐行证据在`plan_validation.json`，后续可单独加强逐曝光可见性。尚未验证观测电脑是否已拉取新表。
-- 下一步：持续跟进补跑至完成并验收，继续保持MPC暂停；IERS手动离线更新步骤与单独数据补跑命令已写README。
+- 额外输入边界：401原始帧中5帧缺上游L1/L2，本次覆盖全部396个可用L2；缺失文件清单在`input_completeness.json`，上游原因未在本次修改。
+- 下一步：本次恢复已完成，继续保持MPC暂停；可按后续用户要求独立诊断5份上游产物缺失、加强逐曝光高度约束或核实观测电脑拉取。IERS手动离线更新及单独补跑命令已写README。
 
 ## Initial investigation (2026-10-27; superseded by recovery above)
 

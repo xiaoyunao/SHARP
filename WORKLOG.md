@@ -2,6 +2,12 @@
 
 ## 2026-10-27
 
+- recovery_completed: 16:44:29 CST，10/26补跑及正常入口复用验收全部完成；396/396逐帧DONE、无match错误/警告，all139348条、正式matched2748条、mask15为3036条；matched有355份非空parts、mask15有359份非空parts，全部396份all parts齐全
+- unknown_results: 18469个tracklet、470条关联链；扣已知后129条初选，串联筛选pass4/reject38/review87，91条进入人工、274次测量；正式review包含91 GIF、274行full/ADES FITS，评分均ok，CSV候选数一致。复核路径`/pipeline/xiaoyunao/heliolincrr/review_packages/20261026`，tar在其父目录
+- rendering_recovery: 原串行GIF过慢，16:38只终止精确匹配的绘图PID718687，初次入口按预期记录rc143；在独立目录用未修改绘图器8进程生成129 GIF，10份串行已有图hash全部一致，合并summary/图后生成复核包，再复跑processing-only入口；最终`processing_final.log`明确survey_exit_code=0/processing_exit_code=0及daily pipeline done，未重跑科学关联/重分配trkSub
+- final_validation: 正式known各表行数与status一致；91候选/CSV/FITS/GIF映射闭合、逐张解码274帧、tar全部成员与gzip CRC通过；5个部署文件hash与仓库一致；19个既有MPC/hold文件hash不变，10/26无新增MPC提交文件、无watcher。最终凭据`outputs/recovery_20261027/final_validation.json`；服务器同名证据在`data/heliolincrr/recovery_20261027/`
+- remaining_limits: 原始401份中5份未生成上游L1/L2（0351/0348/0352/0345/0349），本次处理了全部现有396份L2，缺失清单在`input_completeness.json`；既有计划14次低于30deg的问题与观测电脑拉取状态仍待独立跟进。本次授权的IERS更新、今晚计划发布、昨晚补跑和入口解耦均已完成，MPC暂停持续有效
+
 - task: 用户授权直接恢复IERS、当晚计划和10/26处理，并解耦两条流程、保持MPC暂停
 - files_changed: `survey/astro_utils.py`同步现生产自动缓存配置；新增`survey/import_iers.py`；修改`heliolincrr/run_daily_pipeline.sh`、针对性测试、README/CHANGELOG/PLAN；证据在`outputs/recovery_20261027/`
 - iers: 本机主源仍HTTP400；USNO与Astropy官方维护仓库均下载成功，选择更新的USNO表，预测起点2026-10-23/MJD61336，20024行、末端MJD61707；SHA256=95a61292c957fa74ed624bd4f7a84b1b984077e412b43ed39b99e092f38de9da。本机校验、传输校验、服务器导入/缓存hash与今晚UT1/极移检查通过，未放宽30天限制；旧缓存备份在`survey/runtime/iers_backups/20261027T081258847508Z`
