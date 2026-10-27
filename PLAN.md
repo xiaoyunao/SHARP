@@ -1,5 +1,14 @@
 # PLAN
 
+## Current objective: restore plan freshness and October 26 processing (2026-10-27)
+
+- 巡检已完成：用户确认“计划未更新、昨晚无处理结果”，两者同源。10/25–27 IERS预测超过30天且主/备用下载失败，survey exit1导致总入口在known/unknown前退出；cron本身正常触发。
+- 当前产物：10/25–27均无新计划；current_plan仍为10/24的495行。10/26有401个MP raw、396个MP L2，但L4空、known/unknown未启动。10/18–21已有known complete和95/73/24/53条复核包，缺GIF均0；22–25无MP输入。
+- 当前范围：本次只读调查，无生产修复/缓存更新/补跑/发布。证据在 `outputs/runtime_check_20261027/remote_report.json` 及 `evidence/`。MPC hold持续有效。
+- 后续里程碑：1)恢复可靠且预测起点足够新的IERS缓存；2)隔离生成、校验并发布当晚计划；3)保持hold补10/26 known/unknown；4)解耦survey失败与数据处理，并检查current_plan观测日期，防止静默复用旧表。
+- 验收：IERS转换不再报错且使用新鲜预测；当晚JSON/TXT/runtime/发布目录一致；10/26逐帧known完成并生成通过筛选的复核包；任何计划故障仍明确报警且不阻断独立的数据处理；正式上报仍暂停。
+- 注意：当前分支保留维护前astro_utils，生产基线应参照 `/Users/yunaoxiao/.codex/worktrees/nightly-maintenance/smt_asteroid` 的 `2bce0a18`，勿以旧分支代码覆盖服务器。尚未验证观测电脑实际拉取的本地副本。
+
 ## Latest completed task: Small-RA threshold expanded to 2 degrees (2026-10-22)
 
 - 当前范围：按用户最新补充，小RA取非零<2deg；直接样本还要求Dec<2deg、两端30s及原有邻接/指向/唯一性条件，正时间无上限。

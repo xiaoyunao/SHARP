@@ -1,5 +1,17 @@
 # WORKLOG
 
+## 2026-10-27
+
+- task: 只读巡检近期每日运行，核实用户反馈的计划未更新及昨晚处理结果缺失
+- files_changed: WORKLOG.md、PLAN.md；日志、只读检查脚本、逐日状态快照保存到 `outputs/runtime_check_20261027/`，不提交运行产物；未改生产代码、缓存、计划或数据
+- commands_run: git status/branch/fetch/log、origin/main 对比（当前分支无 upstream，ahead27/behind0）；默认 SSH 检查 cron、survey/daily/known 日志、计划 SHA256、raw/L2/L4、known status/review manifest、IERS 缓存元数据、Slurm 与磁盘
+- findings: 10/18–24 survey 均成功；10/25、26、27 的 09:00 任务均以 exit1 退出。IERS 缓存预测起点 MJD61308=2026-09-25，超过 auto_max_age=30；主下载源 HTTP400、USNO 备用源 DNS/超时失败，随后 local_night_window_utc 的 UT1 转换抛 ValueError。表尾到 2027-10-02 不代表预测足够新鲜
+- plan: runtime 与发布目录均无 20261025/26/27_plan；`/pipeline/xiaoyunao/script/current_plan.txt` 仍为10/24 09:00:30的495行，与20261024_plan及runtime TXT逐字节/SHA一致（7555c29d57d621ca84ca495b45ce7f30354aea99155434a1dafe1e3e02359686）；TXT不含观测日期，直接拿current文件可能误用旧表。未验证观测电脑本地文件
+- processing: 总入口 set-e 先执行survey，失败使known/unknown整段未启动；10/26已有401个MP原始文件、396个MP L2文件，L4为空，无known状态/当日处理日志/unknown复核包。10/22–25未发现MP raw/L2。10/18–21 known status均标complete，复核包分别95/73/24/53条、缺GIF均0；本轮仅做状态/日志巡检，未重新核验全部测量质量
+- validation: 连续三天原始异常日志与入口执行顺序闭合；旧表三处hash一致；确认10/26数据存在而下游产物不存在。10/19–24 daily日志无ERROR/WARN/Traceback；磁盘有充足剩余，cron每天自然触发，非cron漏跑。MPC_SUBMISSION_HOLD仍存在
+- remaining_issues: IERS刷新失败尚未修复，今晚计划亦缺失，10/26处理待恢复；本分支astro_utils仍为10/19维护前版本，不得用它覆盖生产，部署基线在独立nightly-maintenance工作树/2bce0a18
+- next_step: 以现生产维护基线更新并验证可靠的新鲜IERS数据；隔离生成并验收当晚计划后发布，再补10/26 known/unknown，保持MPC暂停；将survey失败与科学处理解耦并增加计划日期新鲜度检查，避免同类故障同时阻断两链
+
 ## 2026-10-22
 
 - task: 按用户补充将小RA范围放宽到2deg，重新检查直接样本与匹配耗时
