@@ -1,5 +1,17 @@
 # WORKLOG
 
+## 2026-10-28
+
+- task: 09:34–09:35 CST只读检查今日自然cron、今晚计划、昨晚科学处理及昨日修复状态
+- files_changed: WORKLOG.md、PLAN.md；采集脚本和完整来源快照在`outputs/runtime_check_20261028/`，不入库；未改生产代码、数据或人工决定
+- commands_run: git status/branch/fetch/log及origin/main对比（ahead31/behind0，无upstream）；默认SSH读取cron/survey/daily/match日志、known状态/筛选报告/复核manifest，检查raw/L2、计划hash、IERS缓存、部署文件、Slurm及MPC保护文件
+- runtime: 09:00:01自然启动，09:31:57总入口done，survey_exit_code=0/processing_exit_code=0；main无ERROR/Traceback，survey无IERS警告。昨日报告的5个部署文件hash与本仓库一致，缓存仍为10/23预测起点/MJD61336，未放宽30天检查
+- plan: 今晚504条，09:00:30发布，runtime/日期发布/current三个TXT hash均bb764e89cc1bf96e69d23749536c56ef6ac5008dc32148924d40691b65ad135d；follow-up active=0/inserted=0。仅验证服务器发布，未验证观测电脑拉取或逐曝光高度策略
+- processing: 10/27 raw474/L2=474/manifest474/DONE474，匹配无ERROR/WARN/Traceback；all134972、正式matched3926、mask15为4242行，实际FITS行数与status一致。41条初选中形态拒18/PSF拒1，reject19=46.34%，pass5/review17，共22条人工候选、66次测量/22 GIF
+- validation: 原始catalog SHA与筛选报告一致，分类/复核行数闭合，评分均ok，全部GIF共66帧解码通过，tar成员与gzip CRC通过；19个既有MPC/hold文件hash未变，10/27无新增MPC文件、无提交watcher，hold保持。当前Slurm仅既有上游daily/server服务，目标夜计算已结束
+- remaining_issues: 今日无新的运行阻塞；10/26上游缺5份L1/L2、既有逐曝光高度边界和观测电脑拉取问题沿用此前记录，本轮未修改
+- next_step: 本次巡检完成；继续正常每日任务与人工复核，MPC上报继续暂停
+
 ## 2026-10-27
 
 - task: 只读统计形态+PSF串联上线后近期逐夜过滤数量；以10/11..26的8个有报告观测夜为口径，reject计过滤，review仍进人审

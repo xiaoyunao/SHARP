@@ -1,5 +1,12 @@
 # PLAN
 
+## Latest run check: natural cron completed (2026-10-28)
+
+- 今日09:00:01自然cron启动、09:31:57完成，两段退出码均0；昨日5个部署文件hash一致，IERS新缓存有效，survey无IERS警告。
+- 今晚504条计划已于09:00:30发布，runtime/日期TXT/current的SHA一致；观测电脑拉取和逐曝光高度策略未在本次检查。
+- 昨晚10/27原始474/L2 474，全部474帧匹配完成，正式匹配3926条、mask15为4242条；41初选拒19（形态18+PSF1，46.3%），pass5/review17，22条人工候选/66次测量/22 GIF。评分、FITS/manifest、GIF解码、tar完整性通过。
+- 无新增运行阻塞，19个旧MPC/hold保护文件不变、无新上报，hold保持。证据在`outputs/runtime_check_20261028/remote_report.json`；本次只读巡检完成，后续继续每日任务/人工复核。旧的5份上游缺失、逐曝光高度问题仍需独立处理。
+
 ## Latest readout: nightly screening counts (2026-10-27)
 
 - 10/11串联上线后至10/26，8个有报告夜：1036初选、595拒绝（57.4%），其中形态556、PSF追加39；441可人工复核=pass91+review350，平均每个有报告夜过滤74.4条。
