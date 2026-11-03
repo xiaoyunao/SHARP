@@ -9,6 +9,7 @@
 - validation: py_compile；21项unittest；review_run生成9计划并独立验42个Trojan夜块。开发中修正空tracks调用KeyError及新增target_states导致CSV列不齐，统一所有曝光列；最终证据以products/pro_review/tests.log、verification.json为准
 - commands: python3 -m targeted_observing.{review_data,compare_campaigns,review_run}；unittest discover；git diff --check。缓存/运行产物忽略；未连接服务器
 - remaining: 真实r误差/污染/有效点率须现场；Gaia缓存区域有限，Hipparcos补表不是完整无污染证明；科学角色仍需文献人工判定，候选池仅已有60对象；减场回退/数字ID接口仍未启用
+- docs_sync: GOAL当前参数同步移除22点上限/全小时留场/TESS缺表旧描述，保留历史清单并标识；文档差异检查通过
 - next: 审阅三组科学取舍；未来有真实图像后量化风险与精度，再决定替换冻结campaign及现场适配
 
 
