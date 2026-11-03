@@ -8,6 +8,7 @@ def validate_config(c):
     if c['filter'] not in {'g','r','i','z'}:raise ValueError('Unsupported science filter')
     for k in ['readout_s','adjacent_slew_s','far_slew_s','filter_change_s','edge_margin_deg']:
         if not math.isfinite(c[k]) or c[k]<0:raise ValueError('Invalid nonnegative parameter '+k)
+    if not 0<c['trojan'].get('min_core_retention_fraction',.8)<=1:raise ValueError('Invalid retention fraction')
     budget=c['trojan']['block_s']
     if not math.isfinite(budget) or (budget!=0 and not 3600<=budget<=7200):raise ValueError('Trojan block must be 0 or 60--120 minutes')
     if not math.isfinite(c['adjacent_max_deg']) or c['adjacent_max_deg']<=0:raise ValueError('Invalid neighbor threshold')
@@ -18,4 +19,3 @@ def validate_config(c):
     for section in ['twilight','trojan']:
         if not math.isfinite(c[section]['exposure_s']) or c[section]['exposure_s']<=0:raise ValueError('Exposure must be positive')
     if not math.isfinite(c['trojan']['handover_s']) or c['trojan']['handover_s']<0 or (budget and c['trojan']['handover_s']>=budget):raise ValueError('Invalid handover')
-    if not isinstance(c['trojan']['max_visits_per_field'],int) or c['trojan']['max_visits_per_field']<1:raise ValueError('Invalid cycle count')

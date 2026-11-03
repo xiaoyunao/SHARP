@@ -76,13 +76,15 @@ def validate_plan(plan,campaign=None):
             if not campaign:errors.append('TJ: campaign required for target validation')
             else:
                 if not campaign['start_date']<=plan['date']<campaign['stop_date']:errors.append('TJ: expired field version')
-                for f in fs.values():
-                    for k in f['core_targets']:
-                        track=campaign['tracks'][k]
-                        if not np.all(in_field(track['RA'],track['DEC'],f['ra_deg'],f['dec_deg'],c['fov_deg'],c['edge_margin_deg'])):errors.append(k+': fails full campaign retention')
-                        ts=[unix(r['mid_utc']) for r in rows if r['field_id']==f['field_id']]
-                        ra,dec=interpolate(track,ts)
-                        if not np.all(in_field(ra,dec,f['ra_deg'],f['dec_deg'],c['fov_deg'],c['edge_margin_deg'])):errors.append(k+': leaves actual exposure footprint')
+                frozen={f['field_id']:f for f in campaign['fields']} if 'fields' in campaign else fs
+                for fid,f in fs.items():
+                    if fid not in frozen or any(f[k]!=frozen[fid][k] for k in ['ra_deg','dec_deg','version']):errors.append('TJ: frozen field identity mismatch')
+                from .retention import report
+                visits=dict(campaign.get('planned_visits',{}))
+                visits[plan['date']]=rows
+                retention=report(list(fs.values()),campaign['tracks'],visits,c)
+                for key,r in retention.items():
+                    if r['geometric_retention']<c['trojan'].get('min_core_retention_fraction',.8):errors.append(key+': planned-visit retention below threshold')
     return {'passed':not errors,'errors':errors,'exposures':nrows,'blocks':len(plan['blocks']),
             'min_footprint_alt_bound_deg':minimum if nrows else None,
             'sample_step_s':5,'whole_footprint_bound':'center altitude minus circumscribed cap minus time-grid guard',

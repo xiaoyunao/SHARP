@@ -33,19 +33,44 @@ def load_periods(cache):
         if not cols or not cols[0].isdigit():continue
         entry(str(int(cols[0])))['TESS'].append({'period_h':float(cols[3]),'type':cols[2],
             'amplitude_mag':float(cols[4]),'points':int(cols[5]),'sector':int(cols[6]),'release':'TSSYS-DR1'})
+    from .review_data import tess_records
+    path=cache/'tess2025.tsv'
+    if path.exists():
+        tess,_=tess_records(path)
+        for k,r in tess.items():entry(k)['TESS2025']=r
+        for ev in out.values():ev.setdefault('TESS2025',{'query_status':'not_in_this_table'})
+    else:
+        for ev in out.values():ev['TESS2025']={'query_status':'source_unavailable'}
     return out
 
 
+def assess(evidence):
+    """Candidate review flags do not prove unresolved aliases or source independence."""
+    if not evidence:return {'role':'literature_unchecked','weight':0.1,'periods':[],'review_reasons':['missing_evidence']}
+    periods=[]
+    for source in ['LCDB','Li2025','models2026']:
+        r=evidence.get(source)
+        if r and r.get('period_h'):periods.append({'source':source,**r})
+    for source in ['DAMIT','TESS']:
+        for r in evidence.get(source) or []:
+            if r.get('period_h'):periods.append({'source':source,**r})
+    tess=evidence.get('TESS2025',{})
+    if tess.get('query_status')=='matched':periods.append({'source':'TESS2025',**tess})
+    values=[r['period_h'] for r in periods];reasons=[]
+    if values and max(values)/min(values)>1.1:reasons.append('numerical_period_difference_requires_quality_and_literature_review')
+    if tess.get('other_periods_h'):reasons.append('TESS_alternative_periods')
+    if tess.get('zero_width'):reasons.append('TESS_zero_width_not_infinite_precision')
+    if tess.get('interval_width_h',0)>0.1*tess.get('period_h',float('inf')):reasons.append('TESS_broad_interval')
+    lc=evidence.get('LCDB') or {};model=evidence.get('models2026') or (evidence.get('DAMIT') or [None])[0]
+    if lc.get('U','').startswith('3') and lc.get('period_h'):role='control'
+    elif model:role='known_other'  # A newer model may have resolved an older discrepancy.
+    elif values:role='unknown_or_weak'  # Remains a review candidate, not an automatic high-value conflict.
+    else:role='literature_unchecked'
+    weights={'unknown_or_weak':1.,'alias_review':1.,'slow_candidate':.7,'control':.2,'known_other':.1,'literature_unchecked':.1}
+    if any(p>100 for p in values):reasons.append('long_period_evidence; dense_single_night_science_requires_justification')
+    return {'role':role,'weight':weights[role],'periods':periods,'review_reasons':reasons,
+            'classification':'conservative automatic triage; alias/slow science role requires explicit review'}
+
 def evaluate(evidence):
-    if evidence is None:return 'unverified',1.0
-    lc=evidence['LCDB'];li=evidence['Li2025'];model=evidence['models2026']
-    periods=[x['period_h'] for x in [lc,li,model] if x and x['period_h']]
-    periods += [x['period_h'] for x in evidence.get('TESS',[]) if x['period_h']]
-    if len(periods)>1 and max(periods)/min(periods)>1.1:
-        # A low-quality published estimate is a candidate discrepancy, not a demonstrated conflict.
-        return 'period_discrepancy_candidate',2.0
-    if lc and lc['U'].startswith('3') and lc['period_h']:
-        return 'control_candidate',1.0
-    if model or evidence['DAMIT']:return 'published_model',.6
-    if li or (lc and lc['period_h']):return 'weak_or_published_period',1.5
-    return 'unverified',1.0
+    a=assess(evidence)
+    return a['role'],a['weight']

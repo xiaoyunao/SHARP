@@ -15,6 +15,9 @@ def main():
     campaign=json.loads(Path(a.campaign).read_text()) if a.campaign else None
     previous=json.loads(Path(a.previous).read_text())['blocks'] if a.previous else None
     plan=make_plan(c,a.date,campaign,previous,a.shift_minutes);plan['iers']=iers
+    if campaign:
+        from .bright_stars import assess
+        plan['bright_star_risks']=assess(campaign,{a.date:[r for b in plan['blocks'] if b['mode']=='trojan' for r in b['rows']]})
     qa=validate_plan(plan,campaign);write_products(plan,qa,a.output);plot_plan(plan,campaign,a.output)
     print(json.dumps({'date':a.date,'validation':qa,'skips':plan['skips'],'fields':summarize(plan)},indent=2))
     if not qa['passed']:raise SystemExit(1)

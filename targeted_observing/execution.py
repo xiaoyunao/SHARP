@@ -29,4 +29,5 @@ def gate(plan,block_id,row_index,ready_utc,campaign=None):
                  campaign['tracks'] if campaign and block_id=='TJ' else None)
     if q is None:return {'action':'abort_remaining_block','reason':'actual timing violates geometry or target retention'}
     return {'action':'dry_run_exposure_eligible','exposure':remaining[0],'delay_s':delay,
+            'target_sampling_at_actual_times':{fid:v.get('target_sampling',{}) for fid,v in q.items()},
             'hardware_command_sent':False,'remaining_sequence_revalidated':True}

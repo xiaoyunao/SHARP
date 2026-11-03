@@ -1,0 +1,213 @@
+{
+  "scope": "fixed 14-day cached candidate pool; no weather or measured photometry",
+  "candidates": [
+    {
+      "label": "baseline",
+      "fields": [
+        {
+          "field_id": "TJ_a7cca6aa29",
+          "version": "2026-11-03",
+          "ra_deg": 89.349997,
+          "dec_deg": 8.554764,
+          "pa_deg": 0.0,
+          "core_targets": [
+            "5476",
+            "6002",
+            "4754",
+            "18054"
+          ]
+        },
+        {
+          "field_id": "TJ_0e83e7ce5b",
+          "version": "2026-11-03",
+          "ra_deg": 88.572544,
+          "dec_deg": 11.019328,
+          "pa_deg": 0.0,
+          "core_targets": [
+            "5511"
+          ]
+        }
+      ],
+      "core_objects": [
+        "18054",
+        "4754",
+        "5476",
+        "5511",
+        "6002"
+      ],
+      "roles": {
+        "18054": "literature_unchecked",
+        "4754": "known_other",
+        "5476": "control",
+        "5511": "known_other",
+        "6002": "control"
+      },
+      "scheduled_nights": 14,
+      "total_exposures": 560,
+      "first_night_points_per_field": 20,
+      "first_night_cadence_s": 330.87999987602234,
+      "separation_deg": 2.5808805945867705,
+      "retention": {
+        "TJ_a7cca6aa29:5476": {
+          "geometric_retention": 1.0,
+          "geometric_points": 280,
+          "nights_with_geometric_points": 14,
+          "photometric_usable_fraction": null
+        },
+        "TJ_a7cca6aa29:6002": {
+          "geometric_retention": 1.0,
+          "geometric_points": 280,
+          "nights_with_geometric_points": 14,
+          "photometric_usable_fraction": null
+        },
+        "TJ_a7cca6aa29:4754": {
+          "geometric_retention": 1.0,
+          "geometric_points": 280,
+          "nights_with_geometric_points": 14,
+          "photometric_usable_fraction": null
+        },
+        "TJ_a7cca6aa29:18054": {
+          "geometric_retention": 1.0,
+          "geometric_points": 280,
+          "nights_with_geometric_points": 14,
+          "photometric_usable_fraction": null
+        },
+        "TJ_0e83e7ce5b:5511": {
+          "geometric_retention": 1.0,
+          "geometric_points": 280,
+          "nights_with_geometric_points": 14,
+          "photometric_usable_fraction": null
+        }
+      },
+      "bright_risk_rows": 572
+    },
+    {
+      "label": "alternative_1",
+      "fields": [
+        {
+          "field_id": "TJ_02c9fd283a",
+          "version": "2026-11-03-review",
+          "ra_deg": 83.585922,
+          "dec_deg": 11.804209,
+          "pa_deg": 0.0,
+          "core_targets": [
+            "2223"
+          ],
+          "selection_contributions": {
+            "2223": 1.0
+          }
+        },
+        {
+          "field_id": "TJ_6593b347e7",
+          "version": "2026-11-03-review",
+          "ra_deg": 70.534703,
+          "dec_deg": 21.847066,
+          "pa_deg": 0.0,
+          "core_targets": [
+            "22180"
+          ],
+          "selection_contributions": {
+            "22180": 0.930679183162654
+          }
+        }
+      ],
+      "core_objects": [
+        "22180",
+        "2223"
+      ],
+      "roles": {
+        "22180": "unknown_or_weak",
+        "2223": "unknown_or_weak"
+      },
+      "scheduled_nights": 14,
+      "total_exposures": 476,
+      "first_night_points_per_field": 17,
+      "first_night_cadence_s": 390.0,
+      "separation_deg": 16.01107197256629,
+      "retention": {
+        "TJ_02c9fd283a:2223": {
+          "geometric_retention": 1.0,
+          "geometric_points": 238,
+          "nights_with_geometric_points": 14,
+          "photometric_usable_fraction": null
+        },
+        "TJ_6593b347e7:22180": {
+          "geometric_retention": 1.0,
+          "geometric_points": 238,
+          "nights_with_geometric_points": 14,
+          "photometric_usable_fraction": null
+        }
+      },
+      "bright_risk_rows": 23
+    },
+    {
+      "label": "alternative_2",
+      "fields": [
+        {
+          "field_id": "TJ_02c9fd283a",
+          "version": "2026-11-03-review",
+          "ra_deg": 83.585922,
+          "dec_deg": 11.804209,
+          "pa_deg": 0.0,
+          "core_targets": [
+            "2223"
+          ],
+          "selection_contributions": {
+            "2223": 1.0
+          }
+        },
+        {
+          "field_id": "TJ_0d625b5abd",
+          "version": "2026-11-03-review",
+          "ra_deg": 71.292629,
+          "dec_deg": 22.545291,
+          "pa_deg": 0.0,
+          "core_targets": [
+            "22180",
+            "4792"
+          ],
+          "selection_contributions": {
+            "22180": 0.8146894926794745,
+            "4792": 0.07281782779322743
+          }
+        }
+      ],
+      "core_objects": [
+        "22180",
+        "2223",
+        "4792"
+      ],
+      "roles": {
+        "22180": "unknown_or_weak",
+        "2223": "unknown_or_weak",
+        "4792": "known_other"
+      },
+      "scheduled_nights": 14,
+      "total_exposures": 476,
+      "first_night_points_per_field": 17,
+      "first_night_cadence_s": 390.0,
+      "separation_deg": 15.898158057389432,
+      "retention": {
+        "TJ_02c9fd283a:2223": {
+          "geometric_retention": 1.0,
+          "geometric_points": 238,
+          "nights_with_geometric_points": 14,
+          "photometric_usable_fraction": null
+        },
+        "TJ_0d625b5abd:22180": {
+          "geometric_retention": 0.8571428571428571,
+          "geometric_points": 204,
+          "nights_with_geometric_points": 12,
+          "photometric_usable_fraction": null
+        },
+        "TJ_0d625b5abd:4792": {
+          "geometric_retention": 0.8571428571428571,
+          "geometric_points": 204,
+          "nights_with_geometric_points": 12,
+          "photometric_usable_fraction": null
+        }
+      },
+      "bright_risk_rows": 23
+    }
+  ]
+}

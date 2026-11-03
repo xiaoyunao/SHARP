@@ -1,29 +1,17 @@
-"""Gaia DR3 bright-star screening; not a validated optical halo or completeness model."""
+"""Bright-end supplemented risk report at actual planned visits, never a clean-field certificate."""
+import argparse
 import json
 from pathlib import Path
-import numpy as np
-from .catalog import BASE,download,write_csv
-from .geometry import coord,in_field
-
+from .catalog import BASE
+from .bright_stars import assess
 
 def main():
-    camp=json.loads((BASE/'data/campaign_20261103.json').read_text())
-    query="SELECT source_id,ra,dec,phot_g_mean_mag FROM gaiadr3.gaia_source WHERE 1=CONTAINS(POINT('ICRS',ra,dec),CIRCLE('ICRS',89,10,4)) AND phot_g_mean_mag<8"
-    params={'REQUEST':'doQuery','LANG':'ADQL','FORMAT':'json','QUERY':query,'MAXREC':'10000'}
-    p=download('https://gea.esac.esa.int/tap-server/tap/sync',BASE/'cache/gaia_bright_complete.json',params)
-    data=json.loads(p.read_text())['data']
-    if len(data)>=10000:raise ValueError('Possible truncated catalogue; do not report complete bright-star check')
-    stars=coord([r[1] for r in data],[r[2] for r in data]);rows=[]
-    for f in camp['fields']:
-        inside=[r for r in data if in_field(r[1],r[2],f['ra_deg'],f['dec_deg'],3,0)]
-        for k in f['core_targets']:
-            t=camp['tracks'][k];seps=coord(t['RA'],t['DEC'])[:,None].separation(stars[None,:]).deg
-            idx=np.unravel_index(seps.argmin(),seps.shape)
-            rows.append({'pdes':k,'field_id':f['field_id'],'galactic_lat_deg':float(coord(f['ra_deg'],f['dec_deg']).galactic.b.deg),
-                'field_stars_G_lt8':len(inside),'field_brightest_G':min(r[3] for r in inside) if inside else None,
-                'nearest_track_star_arcmin':float(seps.min()*60),'nearest_star_G':data[idx[1]][3],
-                'status':'requires_on_sky_halo_and_blending_QA; not a clean-field certification'})
-    write_csv(BASE/'products/campaign_20261103/contamination.csv',rows)
-    print(json.dumps({'query':query,'gaia_rows':len(data),'targets':rows},indent=2))
-
+    p=argparse.ArgumentParser();p.add_argument('--campaign',default=str(BASE/'data/campaign_20261103.json'))
+    p.add_argument('--plans',nargs='*',default=[]);p.add_argument('--output',default=str(BASE/'products/pro_review/bright_stars.json'));a=p.parse_args()
+    campaign=json.loads(Path(a.campaign).read_text());visits=dict(campaign.get('planned_visits',{}))
+    for filename in a.plans:
+        plan=json.loads(Path(filename).read_text());visits[plan['date']]=[r for b in plan['blocks'] if b['mode']=='trojan' for r in b['rows']]
+    if not visits:raise ValueError('Supply --plans or a campaign containing planned_visits; do not substitute daytime hourly extrema')
+    result=assess(campaign,visits);out=Path(a.output);out.parent.mkdir(parents=True,exist_ok=True);out.write_text(json.dumps(result,indent=2)+'\n')
+    print(json.dumps({'risk_rows':len(result['risks']),'hip_rows':result['hip_rows'],'output':str(out)}))
 if __name__=='__main__':main()

@@ -11,6 +11,7 @@
 ```bash
 python3 -m pip install -r targeted_observing/requirements.txt
 python3 -m targeted_observing.fetch_sources
+python3 -m targeted_observing.review_data
 python3 -m targeted_observing.plan --date 2026-11-03 --campaign targeted_observing/data/campaign_20261103.json --output targeted_observing/products/20261103
 python3 -m targeted_observing.plan --date 2026-11-04 --campaign targeted_observing/data/campaign_20261103.json --previous targeted_observing/products/20261103/plan.json --shift-minutes 45 --output targeted_observing/products/20261104
 python3 -m targeted_observing.plan --date 2026-11-06 --campaign targeted_observing/data/campaign_20261103.json --previous targeted_observing/products/20261104/plan.json --shift-minutes -45 --output targeted_observing/products/20261106
@@ -28,7 +29,7 @@ python3 -m targeted_observing.seasonal
 python3 -m targeted_observing.contamination
 ```
 
-`contamination` 是此次冻结候选场的 Gaia 亮星检查，固定查询当前两场附近，并非任意新campaign的通用污染模型。`seasonal` 的人口计数使用二体/H–G近似，只是季节方向检查；未来季节必须另取 Horizons 设计新场，不能直接复用11月冻结场。
+`contamination --campaign PATH --plans PLAN.json ...` 现在在计划访问时刻合并Hipparcos亮端补表和Gaia区域缓存，必须提供计划访问；不以白天小时星历极小值代替夜间污染。`seasonal` 的人口计数使用二体/H–G近似，只是季节方向检查；未来季节必须另取 Horizons 设计新场，不能直接复用11月冻结场。
 
 ## 默认行为和输出
 
@@ -71,7 +72,11 @@ python3 -m targeted_observing.feedback --input my_actual_exposures.csv --output 
 - 实际r控制token、定时执行接口、CCD方向/坏区/亮星光晕待现场确认；没有服务器部署。
 - 先筛60个高排名对象，场选择为启发式；不是全天全局最优或科学无偏样本。
 - 场重定心必须新版本；14天留场不等于14晚均晴或一定可解周期。
-- TESS 2025重分析表下载失败；DR1已交叉，文献覆盖不是穷尽。18054仍标未充分核查。
+- TESS 2025完整重分析表已接入，保留区间、备选周期与来源；18054未被该表收录不代表未知周期。
 - IERS仅用于离线规划，预测EOP允许但记录来源/覆盖；超表范围拒绝。长期预排不等于临近执行时EOP仍新鲜。
 
 实际反馈汇总增加 `complete_five_visits` 和 `usable_short_tracklet`：后者要求至少4次有效曝光且中点跨度≥720秒，包含满足条件的5次序列；`sequence_class`互斥分类。这里只统计采样条件，不证明某颗小行星已被检出或成功链接。Trojan行不套晨昏短弧分类。
+
+## 最新审查落实
+
+见 [GPT Pro审查修改与复现](docs/PRO_REVIEW_CHANGES_20261103.md)。晨昏采用A/B联合选择与三夜前瞻/复用，单场退化按预算取点，Trojan统一按计划访问≥80%留场。`design_campaign`现输出三组比较，完整结果位于输出目录各候选子目录；不自动覆盖旧campaign。当前角色分类、候选池和亮星缓存的限制均在报告中说明。

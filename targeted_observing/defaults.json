@@ -44,11 +44,11 @@
     "block_s": 7200,
     "handover_s": 300,
     "exposure_s": 120,
-    "max_visits_per_field": 22,
     "freeze_days": 14,
     "core_V_limit": 18.5,
     "extended_V_limit": 19.2,
-    "sun_alt_deg": -18
+    "sun_alt_deg": -18,
+    "min_core_retention_fraction": 0.8
   },
   "reservations": [],
   "use_header_slew_floor": true

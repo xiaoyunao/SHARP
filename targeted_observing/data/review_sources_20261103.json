@@ -1,0 +1,419 @@
+{
+  "sources": {
+    "rows": 9912,
+    "numbered": 9868,
+    "zero_width": 34,
+    "sha256": "27dbf7f8470459f41e32b6fa50cc7f8ea02b46cd5a048d9434f58fceb009ac9c",
+    "url": "https://vizier.idia.ac.za/viz-bin/asu-tsv?-source=J%2FA%2BA%2F693%2FA66%2Ftess&-out.all=&-out.max=unlimited",
+    "tjn_matches": 52,
+    "candidate_matches": 7,
+    "hip_sha256": "91e7cfae4039dee1a35393dca2024b9bf032d8e55e5289d201b0af0cadb2223a",
+    "hip_url": "https://vizier.idia.ac.za/viz-bin/asu-tsv?-source=I%2F239%2Fhip_main&Vmag=%3C6&-out=HIP,RAICRS,DEICRS,Vmag,pmRA,pmDE&-out.max=unlimited"
+  },
+  "TESS2025_candidates": {
+    "5511": {
+      "query_status": "not_in_this_table"
+    },
+    "54652": {
+      "query_status": "not_in_this_table"
+    },
+    "3240": {
+      "query_status": "not_in_this_table"
+    },
+    "5907": {
+      "query_status": "not_in_this_table"
+    },
+    "32726": {
+      "query_status": "not_in_this_table"
+    },
+    "5476": {
+      "query_status": "not_in_this_table"
+    },
+    "6002": {
+      "query_status": "not_in_this_table"
+    },
+    "12126": {
+      "query_status": "not_in_this_table"
+    },
+    "6998": {
+      "query_status": "not_in_this_table"
+    },
+    "4792": {
+      "query_status": "not_in_this_table"
+    },
+    "17365": {
+      "period_h": 12.678896299,
+      "lower_h": 12.631223743,
+      "upper_h": 12.710878424,
+      "interval_width_h": 0.07965468100000095,
+      "zero_width": false,
+      "other_periods_h": [],
+      "raw": {
+        "FileName": "17365.par",
+        "MPC": "17365",
+        "Name": "Thymbraeus",
+        "Per": "12.678896299",
+        "b_Per": "12.631223743",
+        "B_Per": "12.710878424",
+        "e_Per": "0.07965468100000094864",
+        "sigmaValue": "3.197313088813879e-02",
+        "sigmaThreshold": "3.454191802715571e-02",
+        "NFS": "2",
+        "Nobs": "547",
+        "Nrejected": "85",
+        "Nvalid": "462",
+        "magmean": "10.08663643211610",
+        "phasec1": "0.258421923800938980",
+        "phasec2": "-11.5932953467271993020",
+        "p2p": "1.44077799999999989",
+        "PerOthers": ""
+      },
+      "period_kind": "synodic",
+      "error_kind": "full interval width, not +/- sigma",
+      "source": "J/A+A/693/A66/tess",
+      "source_url": "https://vizier.idia.ac.za/viz-bin/asu-tsv?-source=J%2FA%2BA%2F693%2FA66%2Ftess&-out.all=&-out.max=unlimited",
+      "query_status": "matched",
+      "dependence": "Reanalysis of TSSYS-DR1; not an independent observing data set"
+    },
+    "55702": {
+      "query_status": "not_in_this_table"
+    },
+    "32720": {
+      "query_status": "not_in_this_table"
+    },
+    "39474": {
+      "query_status": "not_in_this_table"
+    },
+    "117404": {
+      "query_status": "not_in_this_table"
+    },
+    "4754": {
+      "query_status": "not_in_this_table"
+    },
+    "55060": {
+      "query_status": "not_in_this_table"
+    },
+    "2674": {
+      "query_status": "not_in_this_table"
+    },
+    "18054": {
+      "query_status": "not_in_this_table"
+    },
+    "24467": {
+      "query_status": "not_in_this_table"
+    },
+    "77914": {
+      "query_status": "not_in_this_table"
+    },
+    "23549": {
+      "query_status": "not_in_this_table"
+    },
+    "24448": {
+      "query_status": "not_in_this_table"
+    },
+    "129134": {
+      "query_status": "not_in_this_table"
+    },
+    "22180": {
+      "period_h": 29.511132012,
+      "lower_h": 1.999761427,
+      "upper_h": 546.997989535,
+      "interval_width_h": 544.998228108,
+      "zero_width": false,
+      "other_periods_h": [],
+      "raw": {
+        "FileName": "22180.par",
+        "MPC": "22180",
+        "Name": "2000 YZ",
+        "Per": "29.511132012",
+        "b_Per": "1.999761427",
+        "B_Per": "546.997989535",
+        "e_Per": "544.99822810800003480836",
+        "sigmaValue": "1.975228915679301e-03",
+        "sigmaThreshold": "2.088504945545093e-03",
+        "NFS": "2",
+        "Nobs": "976",
+        "Nrejected": "97",
+        "Nvalid": "879",
+        "magmean": "9.89014519476532",
+        "phasec1": "0.012246917246768300",
+        "phasec2": "-5.6976734975061296140",
+        "p2p": "0.54601199999999928",
+        "PerOthers": ""
+      },
+      "period_kind": "synodic",
+      "error_kind": "full interval width, not +/- sigma",
+      "source": "J/A+A/693/A66/tess",
+      "source_url": "https://vizier.idia.ac.za/viz-bin/asu-tsv?-source=J%2FA%2BA%2F693%2FA66%2Ftess&-out.all=&-out.max=unlimited",
+      "query_status": "matched",
+      "dependence": "Reanalysis of TSSYS-DR1; not an independent observing data set"
+    },
+    "51351": {
+      "query_status": "not_in_this_table"
+    },
+    "4722": {
+      "query_status": "not_in_this_table"
+    },
+    "24018": {
+      "query_status": "not_in_this_table"
+    },
+    "2223": {
+      "query_status": "not_in_this_table"
+    },
+    "32499": {
+      "query_status": "not_in_this_table"
+    },
+    "24453": {
+      "period_h": 57.528988784,
+      "lower_h": 56.824284821,
+      "upper_h": 58.437559168,
+      "interval_width_h": 1.6132743470000008,
+      "zero_width": false,
+      "other_periods_h": [
+        28.86160622,
+        86.74760722,
+        144.538709,
+        173.2349561
+      ],
+      "raw": {
+        "FileName": "24453.par",
+        "MPC": "24453",
+        "Name": "2000 QG173",
+        "Per": "57.528988784",
+        "b_Per": "56.824284821",
+        "B_Per": "58.437559168",
+        "e_Per": "1.61327434700000083012",
+        "sigmaValue": "8.110417479551671e-02",
+        "sigmaThreshold": "8.557895462767605e-02",
+        "NFS": "2",
+        "Nobs": "1048",
+        "Nrejected": "101",
+        "Nvalid": "947",
+        "magmean": "11.00744642950690",
+        "phasec1": "1.068461931353070105",
+        "phasec2": "-11.6379522198954994394",
+        "p2p": "1.42701600000000006",
+        "PerOthers": "28.86160622;86.74760722;144.538709;173.2349561"
+      },
+      "period_kind": "synodic",
+      "error_kind": "full interval width, not +/- sigma",
+      "source": "J/A+A/693/A66/tess",
+      "source_url": "https://vizier.idia.ac.za/viz-bin/asu-tsv?-source=J%2FA%2BA%2F693%2FA66%2Ftess&-out.all=&-out.max=unlimited",
+      "query_status": "matched",
+      "dependence": "Reanalysis of TSSYS-DR1; not an independent observing data set"
+    },
+    "34785": {
+      "query_status": "not_in_this_table"
+    },
+    "51346": {
+      "query_status": "not_in_this_table"
+    },
+    "11663": {
+      "query_status": "not_in_this_table"
+    },
+    "18940": {
+      "query_status": "not_in_this_table"
+    },
+    "37519": {
+      "query_status": "not_in_this_table"
+    },
+    "56951": {
+      "query_status": "not_in_this_table"
+    },
+    "76819": {
+      "query_status": "not_in_this_table"
+    },
+    "11887": {
+      "query_status": "not_in_this_table"
+    },
+    "31342": {
+      "query_status": "not_in_this_table"
+    },
+    "1172": {
+      "period_h": 8.707324123,
+      "lower_h": 8.688489392,
+      "upper_h": 8.7148809,
+      "interval_width_h": 0.02639150800000145,
+      "zero_width": false,
+      "other_periods_h": [],
+      "raw": {
+        "FileName": "1172.par",
+        "MPC": "1172",
+        "Name": "Aneas",
+        "Per": "8.707324123",
+        "b_Per": "8.688489392",
+        "B_Per": "8.714880900",
+        "e_Per": "0.02639150800000145125",
+        "sigmaValue": "1.334934058778734e-03",
+        "sigmaThreshold": "1.418139630906397e-03",
+        "NFS": "2",
+        "Nobs": "850",
+        "Nrejected": "101",
+        "Nvalid": "749",
+        "magmean": "7.51605908583031",
+        "phasec1": "2.526480675083329963",
+        "phasec2": "8.1530629986508600382",
+        "p2p": "0.16044299999999989",
+        "PerOthers": ""
+      },
+      "period_kind": "synodic",
+      "error_kind": "full interval width, not +/- sigma",
+      "source": "J/A+A/693/A66/tess",
+      "source_url": "https://vizier.idia.ac.za/viz-bin/asu-tsv?-source=J%2FA%2BA%2F693%2FA66%2Ftess&-out.all=&-out.max=unlimited",
+      "query_status": "matched",
+      "dependence": "Reanalysis of TSSYS-DR1; not an independent observing data set"
+    },
+    "2207": {
+      "query_status": "not_in_this_table"
+    },
+    "4709": {
+      "period_h": 12.269454133,
+      "lower_h": 12.261960743,
+      "upper_h": 12.273204263,
+      "interval_width_h": 0.011243520000000728,
+      "zero_width": false,
+      "other_periods_h": [],
+      "raw": {
+        "FileName": "4709.par",
+        "MPC": "4709",
+        "Name": "Ennomos",
+        "Per": "12.269454133",
+        "b_Per": "12.261960743",
+        "B_Per": "12.273204263",
+        "e_Per": "0.01124352000000072849",
+        "sigmaValue": "9.596644504535505e-03",
+        "sigmaThreshold": "1.020373756534600e-02",
+        "NFS": "6",
+        "Nobs": "982",
+        "Nrejected": "246",
+        "Nvalid": "736",
+        "magmean": "8.13338461802744",
+        "phasec1": "2.774415528037470047",
+        "phasec2": "-2.9668323216359802075",
+        "p2p": "0.59002899999999947",
+        "PerOthers": ""
+      },
+      "period_kind": "synodic",
+      "error_kind": "full interval width, not +/- sigma",
+      "source": "J/A+A/693/A66/tess",
+      "source_url": "https://vizier.idia.ac.za/viz-bin/asu-tsv?-source=J%2FA%2BA%2F693%2FA66%2Ftess&-out.all=&-out.max=unlimited",
+      "query_status": "matched",
+      "dependence": "Reanalysis of TSSYS-DR1; not an independent observing data set"
+    },
+    "16667": {
+      "query_status": "not_in_this_table"
+    },
+    "24456": {
+      "query_status": "not_in_this_table"
+    },
+    "11509": {
+      "period_h": 17.365335664,
+      "lower_h": 17.290526604,
+      "upper_h": 17.438096359,
+      "interval_width_h": 0.14756975499999925,
+      "zero_width": false,
+      "other_periods_h": [
+        43.42401741
+      ],
+      "raw": {
+        "FileName": "11509.par",
+        "MPC": "11509",
+        "Name": "Thersilochos",
+        "Per": "17.365335664",
+        "b_Per": "17.290526604",
+        "B_Per": "17.438096359",
+        "e_Per": "0.14756975499999924750",
+        "sigmaValue": "2.829971811871642e-04",
+        "sigmaThreshold": "2.983282230240523e-04",
+        "NFS": "2",
+        "Nobs": "1131",
+        "Nrejected": "150",
+        "Nvalid": "981",
+        "magmean": "9.60828427051987",
+        "phasec1": "3.845519192046800150",
+        "phasec2": "-14.8264818670030003034",
+        "p2p": "1.16192700000000038",
+        "PerOthers": "43.42401741"
+      },
+      "period_kind": "synodic",
+      "error_kind": "full interval width, not +/- sigma",
+      "source": "J/A+A/693/A66/tess",
+      "source_url": "https://vizier.idia.ac.za/viz-bin/asu-tsv?-source=J%2FA%2BA%2F693%2FA66%2Ftess&-out.all=&-out.max=unlimited",
+      "query_status": "matched",
+      "dependence": "Reanalysis of TSSYS-DR1; not an independent observing data set"
+    },
+    "11554": {
+      "query_status": "not_in_this_table"
+    },
+    "32501": {
+      "query_status": "not_in_this_table"
+    },
+    "52273": {
+      "query_status": "not_in_this_table"
+    },
+    "51364": {
+      "query_status": "not_in_this_table"
+    },
+    "52767": {
+      "query_status": "not_in_this_table"
+    },
+    "63923": {
+      "query_status": "not_in_this_table"
+    },
+    "73677": {
+      "query_status": "not_in_this_table"
+    },
+    "76804": {
+      "query_status": "not_in_this_table"
+    },
+    "6443": {
+      "query_status": "not_in_this_table"
+    },
+    "2357": {
+      "query_status": "not_in_this_table"
+    },
+    "3317": {
+      "query_status": "not_in_this_table"
+    },
+    "5120": {
+      "period_h": 11.550117788,
+      "lower_h": 11.510265892,
+      "upper_h": 11.591711107,
+      "interval_width_h": 0.08144521500000046,
+      "zero_width": false,
+      "other_periods_h": [],
+      "raw": {
+        "FileName": "5120.par",
+        "MPC": "5120",
+        "Name": "Bitias",
+        "Per": "11.550117788",
+        "b_Per": "11.510265892",
+        "B_Per": "11.591711107",
+        "e_Per": "0.08144521500000045933",
+        "sigmaValue": "8.128494275103086e-02",
+        "sigmaThreshold": "8.559172418303725e-02",
+        "NFS": "2",
+        "Nobs": "1114",
+        "Nrejected": "90",
+        "Nvalid": "1024",
+        "magmean": "10.08397772186650",
+        "phasec1": "0.793605193643866946",
+        "phasec2": "-5.2612196519095597580",
+        "p2p": "1.46335900000000052",
+        "PerOthers": ""
+      },
+      "period_kind": "synodic",
+      "error_kind": "full interval width, not +/- sigma",
+      "source": "J/A+A/693/A66/tess",
+      "source_url": "https://vizier.idia.ac.za/viz-bin/asu-tsv?-source=J%2FA%2BA%2F693%2FA66%2Ftess&-out.all=&-out.max=unlimited",
+      "query_status": "matched",
+      "dependence": "Reanalysis of TSSYS-DR1; not an independent observing data set"
+    },
+    "17172": {
+      "query_status": "not_in_this_table"
+    },
+    "19018": {
+      "query_status": "not_in_this_table"
+    }
+  }
+}

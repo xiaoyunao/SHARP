@@ -51,7 +51,7 @@ def visits(fields,start,end,exposure,cycles,config,block_id,mode):
             if finish+config['readout_s']>end: return rows
             cycle.append({'block_id':block_id,'mode':mode,'field_id':f['field_id'],
                           'field_version':f['version'],'ra_deg':f['ra_deg'],'dec_deg':f['dec_deg'],
-                          'filter':config['filter'],'visit':visit,'exposure_s':exposure,
+                          'filter':config['filter'],'visit':visit,'exposure_s':exposure,'target_states':{},
                           'slew_s':turn,'filter_change_s':change,'readout_s':config['readout_s'],
                           'overhead_start_utc':isot(t),'start_utc':isot(begin),'mid_utc':isot((begin+finish)/2),
                           'end_utc':isot(finish),'release_utc':isot(finish+config['readout_s'])})
@@ -97,10 +97,8 @@ def check_rows(sky,fields,rows,mode,extended=False,tracks=None):
         q=sky.check_field(f,a,b,mode,extended)
         if not q['ok']:return None
         if tracks is not None:
-            for k in f['core_targets']:
-                if k not in tracks:raise ValueError(f'Missing track {k}')
-                ra,dec=interpolate(tracks[k],np.linspace(a,b,17))
-                if not np.all(in_field(ra,dec,f['ra_deg'],f['dec_deg'],sky.config['fov_deg'],sky.config['edge_margin_deg'])): return None
+            from .retention import report
+            q['target_sampling']=report([f],tracks,{'night':selected},sky.config)
         quality[f['field_id']]=q
     return quality
 
@@ -141,57 +139,8 @@ def twilight_candidates(sky,start,end,side,version):
 
 
 def twilight(sky,window,side,previous=None):
-    c=sky.config;tc=c['twilight'];a,b=window
-    # Fixed half-windows enforce dawn A not-before even if B finishes early.
-    names=['A','B'] if side=='EV' else ['B','A']
-    slots=[(a,(a+b)/2),((a+b)/2,b)];blocks=[];used=[]
-    for label,(start,end) in zip(names,slots):
-        name=f'{side}_{label}'
-        if any(max(start,unix(r['start_utc']))<min(end,unix(r['end_utc'])) for r in c['reservations']):continue
-        candidates=twilight_candidates(sky,start,end,side,c['version'])
-        if previous:
-            old=next((x for x in previous if x['block_id']==name),None)
-            if old:
-                # Try retaining three anchors before replacing an entire group.
-                # Order each mixed group by its complete cyclic slew budget.
-                replacements=[]
-                pool={f['field_id']:f for _,_,_,group in candidates[:40] for f in group}
-                for anchors in itertools.combinations(old['fields'],3):
-                    if not all(sky.check_field(f,start+70,end-15,'twilight',True)['ok'] for f in anchors):continue
-                    for f in pool.values():
-                        sep=coord(f['ra_deg'],f['dec_deg']).separation(coord([x['ra_deg'] for x in anchors],[x['dec_deg'] for x in anchors])).deg
-                        if sep.min()<2.6 or sep.max()>8:continue
-                        group=list(anchors)+[f]
-                        points=coord([x['ra_deg'] for x in group],[x['dec_deg'] for x in group])
-                        distances=points[:,None].separation(points[None,:]).deg
-                        routes=[tuple(group[i] for i in order) for order in itertools.permutations(range(4))
-                                if all(distances[order[i-1],order[i]]<=c['adjacent_max_deg'] for i in range(4))]
-                        if not routes:continue
-                        route=min(routes,key=lambda rr:sum(slew(rr[i-1],rr[i],c) for i in range(4)))
-                        # Extended label is based on actual new time geometry, not prior-night status.
-                        em=sky.metrics([x['ra_deg'] for x in route],[x['dec_deg'] for x in route],[start+70,end-15])['elong']
-                        ext=bool(em.max()>tc['elongation_deg'][1])
-                        replacements.append((1e8,None,ext,list(route)))
-                candidates=replacements+candidates
-                candidates.insert(0,(1e9,None,old['extended_search'],old['fields']))
-        for _,el,extended,fs in candidates:
-            if not closed_neighbor_tour(fs,c):continue
-            if used:
-                sep=coord([f['ra_deg'] for f in used],[f['dec_deg'] for f in used])[:,None].separation(coord([f['ra_deg'] for f in fs],[f['dec_deg'] for f in fs])[None,:]).deg
-                if sep.min()<2.6:continue
-                # Preserve A/B inner/outer ordering, including previous-night reuse.
-                nowel=float(sky.metrics([f['ra_deg'] for f in fs],[f['dec_deg'] for f in fs],[(start+end)/2])['elong'].mean())
-                oldel=float(sky.metrics([f['ra_deg'] for f in used],[f['dec_deg'] for f in used],[(start+end)/2])['elong'].mean())
-                if (side=='EV' and nowel<oldel) or (side=='AM' and nowel>oldel):continue
-            rows=visits(fs,start,end,tc['exposure_s'],tc['visits'],c,name,'twilight')
-            if len(rows)!=tc['visits']*tc['fields_per_group']:continue
-            q=check_rows(sky,fs,rows,'twilight',extended)
-            if q:
-                block=block_record(name,fs,rows,start,end,q,extended)
-                oldids={f['field_id'] for x in (previous or []) if x['block_id']==name for f in x['fields']}
-                block['retained_anchor_count']=sum(f['field_id'] in oldids for f in fs)
-                blocks.append(block);used.extend(fs);break
-    return blocks
+    from .joint_twilight import plan
+    return plan(sky,window,side,previous)
 
 
 def trojan(sky,window,fields,tracks,shift_minutes=0):
@@ -222,10 +171,17 @@ def trojan(sky,window,fields,tracks,shift_minutes=0):
         # Deliberate 30--60 minute offset when feasible, rather than a negligible soft jitter.
         options.sort(key=lambda x:(abs(x[1]-desired),-x[0]))
         for _,start,end in options:
-            rows=visits(fs,start,end-tc['handover_s'],tc['exposure_s'],tc['max_visits_per_field'],c,'TJ','trojan')
+            rows=visits(fs,start,end-tc['handover_s'],tc['exposure_s'],int(duration//(tc['exposure_s']+c['readout_s'])),c,'TJ','trojan')
             if not rows:continue
             q=check_rows(sky,fs,rows,'trojan',tracks=tracks)
-            if q:return block_record('TJ',fs,rows,start,end,q)
+            if q:
+                for f in fs:
+                    selected=[r for r in rows if r['field_id']==f['field_id']]
+                    sampling=q[f['field_id']]['target_sampling']
+                    for i,r in enumerate(selected):
+                        r['target_states']={v['object_id']:{'in_field':v['nights']['night']['in_field'][i],
+                            'photometric_usable':None} for v in sampling.values()}
+                return block_record('TJ',fs,rows,start,end,q)
     return None
 
 

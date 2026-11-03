@@ -1,0 +1,81 @@
+{
+  "source": "02005c58 planning output for 2026-11-04; regression against GPT Pro 7/8 feasible baseline",
+  "blocks": [
+    {
+      "block_id": "EV_A",
+      "fields": [
+        {
+          "field_id": "TW_f3bfe78df3",
+          "version": "20261103-v0",
+          "ra_deg": 279.536202,
+          "dec_deg": -4.399306,
+          "pa_deg": 0.0,
+          "core_targets": []
+        },
+        {
+          "field_id": "TW_b7eaf5afa8",
+          "version": "20261103-v0",
+          "ra_deg": 282.34364,
+          "dec_deg": -4.399306,
+          "pa_deg": 0.0,
+          "core_targets": []
+        },
+        {
+          "field_id": "TW_23f14bacb5",
+          "version": "20261103-v0",
+          "ra_deg": 282.340049,
+          "dec_deg": -1.599308,
+          "pa_deg": 0.0,
+          "core_targets": []
+        },
+        {
+          "field_id": "TW_6f44c37808",
+          "version": "20261103-v0",
+          "ra_deg": 279.539794,
+          "dec_deg": -1.599308,
+          "pa_deg": 0.0,
+          "core_targets": []
+        }
+      ],
+      "extended_search": false
+    },
+    {
+      "block_id": "EV_B",
+      "fields": [
+        {
+          "field_id": "TW_84d8b445b9",
+          "version": "20261103-v0",
+          "ra_deg": 287.969213,
+          "dec_deg": -3.462206,
+          "pa_deg": 0.0,
+          "core_targets": []
+        },
+        {
+          "field_id": "TW_6374c6cb94",
+          "version": "20261103-v0",
+          "ra_deg": 290.773496,
+          "dec_deg": -3.462206,
+          "pa_deg": 0.0,
+          "core_targets": []
+        },
+        {
+          "field_id": "TW_5815eae7af",
+          "version": "20261103-v0",
+          "ra_deg": 290.77103,
+          "dec_deg": -0.662207,
+          "pa_deg": 0.0,
+          "core_targets": []
+        },
+        {
+          "field_id": "TW_4df1a21dc7",
+          "version": "20261103-v0",
+          "ra_deg": 287.971679,
+          "dec_deg": -0.662207,
+          "pa_deg": 0.0,
+          "core_targets": []
+        }
+      ],
+      "extended_search": false
+    }
+  ]
+}

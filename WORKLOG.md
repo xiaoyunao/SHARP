@@ -2,6 +2,16 @@
 
 ## 2026-11-03
 
+- task: 网络恢复后读取GPT Pro对02005c58的最新审查并落实本地修改；原文归档review_pro_20261103.md
+- sources: 对话接口成功；Library三个包未提供下载路径，直接用官方VizieR IDIA取得TESS9912行和Hipparcos V<6补表4992行；原字段/URL/hash可复核。TESS交集52TJN/7候选，34零宽区间，5旧核心无命中
+- changes: review_data/science保留上下界/完整宽度/备选周期并纳入DAMIT；bright_stars/contamination及plan输出计划访问亮星风险；joint_twilight联合A/B、局部修复和三夜前瞻；retention贯通设计/排程/验收，移除单场22点上限；compare_campaigns/review_run及测试、文档、小型输入
+- findings: HIP27989在主场；18054原三夜最近21.52/17.85/10.57角分；7/8锚点回归成功。备选含22180/2223和加4792组合，远转场后17点/390s，部分目标85.7%留场12夜；保留原基线作比较，不将几何点视为测光可用点
+- validation: py_compile；21项unittest；review_run生成9计划并独立验42个Trojan夜块。开发中修正空tracks调用KeyError及新增target_states导致CSV列不齐，统一所有曝光列；最终证据以products/pro_review/tests.log、verification.json为准
+- commands: python3 -m targeted_observing.{review_data,compare_campaigns,review_run}；unittest discover；git diff --check。缓存/运行产物忽略；未连接服务器
+- remaining: 真实r误差/污染/有效点率须现场；Gaia缓存区域有限，Hipparcos补表不是完整无污染证明；科学角色仍需文献人工判定，候选池仅已有60对象；减场回退/数字ID接口仍未启用
+- next: 审阅三组科学取舍；未来有真实图像后量化风险与精度，再决定替换冻结campaign及现场适配
+
+
 - task: 接收用户提供的四份原附件，对照本地原型，明确已符合/需修正/待输入；用户继续找TESS2025重分析表
 - recovery: status/branch/fetch/log确认codex/twilight-trojan与origin同步于3b54aa45；仅原有outputs/未跟踪；未连接服务器
 - files_changed: 四附件及SHA256归档、SPEC_ALIGNMENT审计；targeted_observing配置/调度/独立审计/产品/反馈/测试；GOAL/README/RESULTS及根PLAN/CHANGELOG
