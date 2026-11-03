@@ -33,6 +33,12 @@ def slew(previous, current, config):
     return budget
 
 
+def closed_neighbor_tour(fields,config):
+    if len(fields)<2:return False
+    points=coord([f['ra_deg'] for f in fields],[f['dec_deg'] for f in fields])
+    return bool(np.all(points.separation(points[np.roll(np.arange(len(fields)),1)]).deg<=config['adjacent_max_deg']))
+
+
 def visits(fields,start,end,exposure,cycles,config,block_id,mode):
     rows=[];t=start;previous=None
     for visit in range(1,cycles+1):
@@ -156,7 +162,11 @@ def twilight(sky,window,side,previous=None):
                         sep=coord(f['ra_deg'],f['dec_deg']).separation(coord([x['ra_deg'] for x in anchors],[x['dec_deg'] for x in anchors])).deg
                         if sep.min()<2.6 or sep.max()>8:continue
                         group=list(anchors)+[f]
-                        routes=list(itertools.permutations(group))
+                        points=coord([x['ra_deg'] for x in group],[x['dec_deg'] for x in group])
+                        distances=points[:,None].separation(points[None,:]).deg
+                        routes=[tuple(group[i] for i in order) for order in itertools.permutations(range(4))
+                                if all(distances[order[i-1],order[i]]<=c['adjacent_max_deg'] for i in range(4))]
+                        if not routes:continue
                         route=min(routes,key=lambda rr:sum(slew(rr[i-1],rr[i],c) for i in range(4)))
                         # Extended label is based on actual new time geometry, not prior-night status.
                         em=sky.metrics([x['ra_deg'] for x in route],[x['dec_deg'] for x in route],[start+70,end-15])['elong']
@@ -165,6 +175,7 @@ def twilight(sky,window,side,previous=None):
                 candidates=replacements+candidates
                 candidates.insert(0,(1e9,None,old['extended_search'],old['fields']))
         for _,el,extended,fs in candidates:
+            if not closed_neighbor_tour(fs,c):continue
             if used:
                 sep=coord([f['ra_deg'] for f in used],[f['dec_deg'] for f in used])[:,None].separation(coord([f['ra_deg'] for f in fs],[f['dec_deg'] for f in fs])[None,:]).deg
                 if sep.min()<2.6:continue
@@ -185,6 +196,7 @@ def twilight(sky,window,side,previous=None):
 
 def trojan(sky,window,fields,tracks,shift_minutes=0):
     c=sky.config;tc=c['trojan']
+    if tc['block_s']==0:return None
     intervals=free_intervals(window,c['reservations'])
     durations=sorted({min(tc['block_s'],b-a) for a,b in intervals if b-a>=3600} | {d for d in (5400.,3600.) if d<=tc['block_s']},reverse=True)
     for duration in durations:
@@ -223,17 +235,28 @@ def make_plan(config,date,campaign=None,previous=None,shift_minutes=0):
     sky=Sky(config);night=sky.night(date)
     blocks=twilight(sky,night['evening'],'EV',previous)
     reasons=[]
-    if campaign:
+    if config['trojan']['block_s']==0:
+        reasons.append('TJ: disabled by zero nightly budget')
+    elif campaign:
         if not campaign['start_date']<=date<campaign['stop_date']:
             reasons.append('TJ: date outside frozen campaign; design a new version')
         else:
             tj=trojan(sky,night['dark'],campaign['fields'],campaign['tracks'],shift_minutes)
-            if tj:blocks.append(tj)
+            if tj:
+                tj['allocation_status']='provisional_no_external_bookings' if not config['reservations'] else 'respects_supplied_reservations'
+                tj['planned_block_class']='standard_dense' if unix(tj['hard_deadline_utc'])-unix(tj['not_before_utc'])>=7200-.01 else 'partial_dense'
+                blocks.append(tj)
             else:reasons.append('TJ: no continuous eligible >=60min interval with core targets')
     else:reasons.append('TJ: no frozen campaign supplied')
     blocks+=twilight(sky,night['morning'],'AM',previous)
     present={b['block_id'] for b in blocks}
     for name in ['EV_A','EV_B','AM_B','AM_A']:
         if name not in present:reasons.append(name+': no complete eligible group; time released')
-    return {'schema_version':1,'status':'LOCAL_SIMULATION_NOT_FOR_TELESCOPE','date':date,'config':config,
+    occupied=config['reservations']+[{'start_utc':b['not_before_utc'],'end_utc':b['hard_deadline_utc']} for b in blocks]
+    # Match the millisecond precision of persisted block and reservation timestamps.
+    available=free_intervals((unix(isot(night['evening'][0])),unix(isot(night['morning'][1]))),occupied)
+    free=[{'start_utc':isot(a),'end_utc':isot(b),'start_local':local_time(a),'end_local':local_time(b),'duration_s':b-a} for a,b in available]
+    return {'schema_version':1,'free_intervals':free,
+            'free_intervals_scope':'Unallocated within the -12 degree night; excludes entire held blocks including margins and supplied reservations. Not a target visibility or weather guarantee.',
+            'status':'LOCAL_SIMULATION_NOT_FOR_TELESCOPE','date':date,'config':config,
             'night':night,'blocks':blocks,'skips':reasons,'observations_completed':False}

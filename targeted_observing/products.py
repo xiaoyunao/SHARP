@@ -27,11 +27,18 @@ def write_products(plan,validation,path):
     for name,data in [('plan.json',plan),('validation.json',validation)]:
         (p/name).write_text(json.dumps(data,indent=2,allow_nan=False)+'\n')
     rows=[r for b in plan['blocks'] for r in b['rows']]
-    write_csv(p/'exposures.csv',rows);write_csv(p/'fields.csv',summarize(plan))
+    if rows:
+        write_csv(p/'exposures.csv',rows);write_csv(p/'fields.csv',summarize(plan))
+    else:
+        (p/'exposures.csv').write_text('');(p/'fields.csv').write_text('')
+    # Reusing an output directory with a disabled/skipped block must not retain its old list.
+    present={b['block_id'] for b in plan['blocks']}
+    for name in {'EV_A','EV_B','TJ','AM_B','AM_A'}-present:
+        (p/(name+'.csv')).unlink(missing_ok=True)
     manifest={'date':plan['date'],'status':plan['status'],'control_export':'disabled: verified filter tokens and timing integration required',
               'plan_sha256':hashlib.sha256((p/'plan.json').read_bytes()).hexdigest(),
               'blocks':[{k:v for k,v in b.items() if k not in ['rows','quality']} for b in plan['blocks']],
-              'skips':plan['skips'],'validation_passed':validation['passed']}
+              'skips':plan['skips'],'free_intervals':plan['free_intervals'],'free_intervals_scope':plan['free_intervals_scope'],'validation_passed':validation['passed']}
     for b in plan['blocks']:write_csv(p/(b['block_id']+'.csv'),b['rows'])
     (p/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
 

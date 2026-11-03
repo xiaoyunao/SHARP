@@ -37,12 +37,49 @@ class CoreTests(unittest.TestCase):
         self.assertEqual(free_intervals((a,b),rs),[(a,a+1800),(a+5400,b)])
         self.assertEqual(free_intervals((a,b),[{'start_utc':'2026-11-03T11:00:00Z','end_utc':'2026-11-03T15:00:00Z'}]),[])
 
+    def test_closed_tour_includes_return_jump(self):
+        from targeted_observing.scheduler import closed_neighbor_tour
+        # Consecutive forward hops are legal; the last-to-first hop is not.
+        self.assertFalse(closed_neighbor_tour([field(x,0) for x in [0,2.8,5.6,8.4]],self.c))
+        self.assertTrue(closed_neighbor_tour([field(0,0),field(2.8,0),field(2.8,2.8),field(0,2.8)],self.c))
+        self.assertTrue(closed_neighbor_tour([field(0,0),field(3.4,0)],self.c))
+
+    def test_actual_short_tracklet_boundary(self):
+        from targeted_observing.feedback import summarize
+        from targeted_observing.geometry import isot
+        a=unix('2026-11-03T10:30:00Z')
+        for count,span,usable,complete in [(3,900,False,False),(4,719,False,False),(4,720,True,False),(5,1040,True,True)]:
+            rows=[{'date':'2026-11-03','block_id':'EV_A','field_id':'test','visit':str(i+1),
+                   'valid':'1','actual_start_utc':isot(a+t),'actual_end_utc':isot(a+t+30),'stable_star_rms_mag':''}
+                  for i,t in enumerate(np.linspace(0,span,count))]
+            result=summarize(rows)['fields'][0]
+            self.assertEqual(result['usable_short_tracklet'],usable)
+            self.assertEqual(result['complete_five_visits'],complete)
+            for row in rows:row['valid']='0'
+            self.assertFalse(summarize(rows)['fields'][0]['usable_short_tracklet'])
+
     def test_missing_filter_mapping_refuses_without_files(self):
         plan={'config':self.c,'blocks':[{'rows':[{'filter':'r'}]}]}
         with tempfile.TemporaryDirectory() as d:
             p=Path(d)/'controller'
             with self.assertRaisesRegex(ValueError,'Verified filter'):export_controller_drafts(plan,p)
             self.assertFalse(p.exists())
+
+    def test_empty_plan_clears_stale_generated_lists_only(self):
+        from targeted_observing.products import write_products
+        plan={'date':'2026-11-03','status':'LOCAL_SIMULATION_NOT_FOR_TELESCOPE','blocks':[],
+              'skips':['TJ: disabled by zero nightly budget'],'free_intervals':[],
+              'free_intervals_scope':'test'}
+        with tempfile.TemporaryDirectory() as d:
+            p=Path(d)
+            for name in ['TJ.csv','EV_A.csv','exposures.csv','fields.csv','observer_notes.csv']:
+                (p/name).write_text('previous run')
+            write_products(plan,{'passed':True},p)
+            self.assertFalse((p/'TJ.csv').exists())
+            self.assertFalse((p/'EV_A.csv').exists())
+            self.assertEqual((p/'exposures.csv').read_text(),'')
+            self.assertEqual((p/'fields.csv').read_text(),'')
+            self.assertEqual((p/'observer_notes.csv').read_text(),'previous run')
 
     def test_ephemeris_wrap_and_no_extrapolation(self):
         from astropy.time import Time
@@ -68,6 +105,28 @@ class IntegrationTests(unittest.TestCase):
         for d in ['2026-12-21','2027-03-20','2027-06-21','2027-09-23']:
             n=s.night(d);self.assertAlmostEqual(n['evening'][1]-n['evening'][0],3600)
             self.assertLess(n['dark'][0],n['dark'][1])
+
+    def test_zero_budget_and_free_interval_partition(self):
+        from unittest.mock import patch
+        from targeted_observing.config import validate_config
+        from targeted_observing.scheduler import make_plan
+        from targeted_observing.geometry import Sky,isot
+        self.c['trojan']['block_s']=0
+        validate_config(self.c)
+        sky=Sky(self.c);night=sky.night('2026-11-03')
+        self.assertIsNone(trojan(sky,night['dark'],[],{}))
+        a,b=night['evening']
+        self.c['reservations']=[{'start_utc':isot(a+1800),'end_utc':isot(a+5400)}]
+        block={'block_id':'EV_A','not_before_utc':isot(a),'hard_deadline_utc':isot(b)}
+        with patch('targeted_observing.scheduler.twilight',side_effect=[[block],[]]):
+            plan=make_plan(self.c,'2026-11-03')
+        self.assertTrue(any('zero nightly budget' in r for r in plan['skips']))
+        self.assertEqual(len(plan['free_intervals']),1)
+        self.assertAlmostEqual(sum(r['duration_s'] for r in plan['free_intervals']),night['morning'][1]-a-5400,places=2)
+        # Zero must be explicit; malformed or unsupported budgets still fail.
+        for budget in [-1,1800,float('nan')]:
+            self.c['trojan']['block_s']=budget
+            with self.assertRaises(ValueError):validate_config(self.c)
 
     def test_footprint_rejection_and_sun(self):
         from targeted_observing.geometry import Sky

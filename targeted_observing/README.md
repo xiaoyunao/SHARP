@@ -2,7 +2,7 @@
 
 本目录是独立 Python 包，不导入/改写旧 `survey` 调度，不包含 SSH、cron、生产发布或望远镜控制功能。所有计划标记 `LOCAL_SIMULATION_NOT_FOR_TELESCOPE`。
 
-详细工作目标见 [docs/GOAL.md](docs/GOAL.md)，来源和样本解释见 [docs/SCIENCE.md](docs/SCIENCE.md)，2026-11-03实际本地结果见 [docs/RESULTS.md](docs/RESULTS.md)。原对话快照在 `docs/conversation_20261103.md`；四份原交接附件没有传入，`defaults.json` 从完整正文重建，**不是原 YAML 的逐字副本**。
+详细工作目标见 [docs/GOAL.md](docs/GOAL.md)，来源和样本解释见 [docs/SCIENCE.md](docs/SCIENCE.md)，2026-11-03实际本地结果见 [docs/RESULTS.md](docs/RESULTS.md)。原对话快照在 `docs/conversation_20261103.md`；四份原交接附件现已原样归档到 [docs/specification](docs/specification/manifest.json)。逐项差异与后续工作见 [附件对照审计](docs/SPEC_ALIGNMENT_20261103.md)。`defaults.json` 是当前程序配置，**不等于原 YAML 已完整接入**。
 
 ## 本地运行
 
@@ -33,11 +33,11 @@ python3 -m targeted_observing.contamination
 ## 默认行为和输出
 
 - 晚晨分别60分钟，两个半小时槽；r30，4场×5访。太阳距角45–75°优先，75–90°扩展单独标记；无完整组释放时间。
-- Trojan仅一个连续最多120分钟块，r120、两场；扣除晨昏、−18°太阳界限和外部预约，按可见性降到90分钟两场/60分钟主场，少于60分钟跳过。
+- Trojan预算可设为0以停用；启用时仅一个连续最多120分钟块，r120、两场；扣除晨昏、−18°太阳界限和外部预约，按可见性降到90分钟两场/60分钟主场，少于60分钟跳过。
 - 默认5分钟交接、每次15秒读出。转场取方案20/60秒与仓库实测正常分支模型加2秒余量的较大值；不是所有相邻场都强套20秒。
 - 中心≥32.5°；采用完整足迹的球面包围角帽检验>30°，并保留时间采样间隔的保守余量。月距按30/40°工程初值；固定场和目标全时段重新检查。
-- 晨昏优先保留4个旧场，失败尝试3个锚点加1新场；最终保留数写manifest。目标恢复需新星历，重拍原场不能当恢复成功。
-- `plan.json`保存配置/EOP来源、时间和决策；`manifest.json`包含分块not-before/deadline与字段版本；`EV_A.csv`等提供逐曝光时间；`fields.csv`汇总cadence；`validation.json`是独立5秒审计；`plan.png/pdf`展示时间轴与足迹。
+- 晨昏闭合巡回（包括末场回首场）每跳≤3.5°，阈值为附件暂定分类，不是实测角速度定律。优先保留4个旧场，失败尝试3个锚点加1新场；最终保留数写manifest。目标恢复需新星历，重拍原场不能当恢复成功。
+- `plan.json`保存配置/EOP来源、时间和决策；`manifest.json`包含分块not-before/deadline、字段版本及UTC/北京时间未占用区间（扣整块及预约，含块内余量仍保留）；无外部预约时Trojan标记暂定分配；`EV_A.csv`等提供逐曝光时间；`fields.csv`汇总cadence；`validation.json`是独立5秒审计；`plan.png/pdf`展示时间轴与足迹。
 - `data/campaign_20261103.json` 是版本化小型科学输入：两个固定场、5个核心的站心星历与文献证据；`target_audit_20261103.csv`保留60候选审查。缓存与运行输出不提交Git。
 
 `defaults.json` 是可读JSON配置，不需要YAML依赖。v0只支持3°视场、晨昏4场5访/1小时；不支持的结构变化明确拒绝，不能只改配置就假定扩展模式已实现。曝光/开销/预约/月距等可调整；前三个有效夜建议保持r及30/120秒一致。
@@ -73,3 +73,5 @@ python3 -m targeted_observing.feedback --input my_actual_exposures.csv --output 
 - 场重定心必须新版本；14天留场不等于14晚均晴或一定可解周期。
 - TESS 2025重分析表下载失败；DR1已交叉，文献覆盖不是穷尽。18054仍标未充分核查。
 - IERS仅用于离线规划，预测EOP允许但记录来源/覆盖；超表范围拒绝。长期预排不等于临近执行时EOP仍新鲜。
+
+实际反馈汇总增加 `complete_five_visits` 和 `usable_short_tracklet`：后者要求至少4次有效曝光且中点跨度≥720秒，包含满足条件的5次序列；`sequence_class`互斥分类。这里只统计采样条件，不证明某颗小行星已被检出或成功链接。Trojan行不套晨昏短弧分类。

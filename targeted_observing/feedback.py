@@ -24,11 +24,18 @@ def summarize(rows):
     output=[]
     for key,rr in groups.items():
         mids=sorted((unix(r['actual_start_utc'])+unix(r['actual_end_utc']))/2 for r in rr)
-        output.append({'date':key[0],'block_id':key[1],'field_id':key[2],'valid_visits':len(rr),
+        span=mids[-1]-mids[0] if mids else 0
+        is_twilight=key[1].startswith(('EV_','AM_'))
+        usable=is_twilight and len(rr)>=4 and span>=720
+        complete=is_twilight and len(rr)>=5
+        output.append({'complete_five_visits':complete if is_twilight else None,
+            'usable_short_tracklet':usable if is_twilight else None,
+            'sequence_class':('complete_five_visits' if complete else 'usable_short_tracklet' if usable else 'incomplete') if is_twilight else 'not_twilight',
+            'date':key[0],'block_id':key[1],'field_id':key[2],'valid_visits':len(rr),
             'cadence_s':float(np.median(np.diff(mids))) if len(mids)>1 else None,
-            'arc_span_s':mids[-1]-mids[0] if mids else 0,
+            'arc_span_s':span,
             'stable_star_rms_median_mag':float(np.median([float(r['stable_star_rms_mag']) for r in rr if r['stable_star_rms_mag']])) if any(r['stable_star_rms_mag'] for r in rr) else None})
-    return {'fields':output,'note':'No asteroid RMS substituted for measurement error; empty rows are not completed observations'}
+    return {'fields':output,'note':'No asteroid RMS substituted for measurement error; empty rows are not completed observations. Tracklet flags summarize valid exposure sampling only, not detection/linking of an asteroid'}
 
 
 def main():

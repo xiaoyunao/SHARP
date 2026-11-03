@@ -1,0 +1,22 @@
+{
+  "received_date": "2026-11-03",
+  "source": "User-supplied original GPT Pro attachments; design reference, subject to local-only user scope",
+  "files": [
+    {
+      "name": "SHARP_Codex_Handoff_v0_20261103.md",
+      "sha256": "41bb83cf6597d1b3d6456b8d1c3300bed9ff736639d7d50fbd9152c1bdb941a9"
+    },
+    {
+      "name": "SHARP_Defaults_v0_20261103.yaml",
+      "sha256": "a7c485119130eb4872be07607741e6b53b058cc3d4f643a401b477d2c0a09127"
+    },
+    {
+      "name": "SHARP_Trojan_Plan_v0_20261103.md",
+      "sha256": "e9f180b9916550311d77f636982bfa80af1f6ce6678af911fde8bdd8cc248f44"
+    },
+    {
+      "name": "SHARP_Twilight_Plan_v0_20261103.md",
+      "sha256": "bb78db05d9dfb682df213520e30c1107939a87e40fb31774cea74bd43594b85c"
+    }
+  ]
+}

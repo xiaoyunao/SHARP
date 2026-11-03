@@ -16,9 +16,16 @@ def validate_plan(plan,campaign=None):
         prior=end
         window=expected_night['dark'] if name=='TJ' else expected_night['evening' if name.startswith('EV') else 'morning']
         if start<window[0]-.02 or end>window[1]+.02:errors.append(name+': outside solar window')
+        if name=='TJ' and (c['trojan']['block_s']==0 or end-start>c['trojan']['block_s']+.01):errors.append('TJ: configured budget exceeded or disabled')
         if name=='TJ' and (end-start>7200.01 or end-start<3599.99):errors.append('TJ: block duration')
         for r in c['reservations']:
             if max(start,unix(r['start_utc']))<min(end,unix(r['end_utc'])):errors.append(name+': reservation overlap')
+        if name!='TJ':
+            route=block['fields']
+            for i,f in enumerate(route):
+                g=route[i-1]
+                if coord(f['ra_deg'],f['dec_deg']).separation(coord(g['ra_deg'],g['dec_deg'])).deg>c['adjacent_max_deg']:
+                    errors.append(name+': closed tour exceeds neighbor threshold')
         counts=Counter(r['field_id'] for r in rows)
         if name!='TJ' and (len(counts)!=4 or set(counts.values())!={5}):errors.append(name+': incomplete five-visit group')
         if name=='TJ' and len(set(counts.values()))!=1:errors.append('TJ: incomplete cycle')

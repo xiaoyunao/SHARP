@@ -1,0 +1,200 @@
+# Proposal schema for Codex implementation, NOT a drop-in config for current SHARP.
+# Human rationale and sources are in the two plans and Codex handoff.
+schema_version: sharp_two_programs_v0
+spec_date: '2026-11-03'
+strategy: twilight_and_trojan
+reference_repo_commit: 2dffff5e65081eeabd0dab0df2d1ac6ed2d2f757
+status: proposal_requires_code_integration
+
+site:
+  latitude_deg: 40.393
+  longitude_east_deg: 117.575
+  elevation_m: 960
+  timezone: Asia/Shanghai
+  night_date_is: local_evening_date
+  internal_time_scale: UTC
+  refraction_for_planning: false
+
+instrument:
+  fov_width_deg: 3.0
+  fov_height_deg: 3.0
+  tracking: sidereal
+  available_filters: [g, r, i, z]
+  readout_s: 15.0
+  same_field_slew_s: 0.0
+  neighbor_slew_s: 20.0
+  neighbor_max_separation_deg: 3.5 # Provisional classification, not measured angular law.
+  non_neighbor_slew_s: 60.0 # Provisional; log and replace with site measurements.
+  filter_change_s: 10.0
+  assume_overheads_overlap: false
+  controller_filter_token_map: {g: null, r: null, i: null, z: null}
+  allow_unresolved_tokens_for_preview: true
+  reject_executable_export_if_token_unresolved: true
+
+constraints:
+  telescope_altitude_strict_min_deg: 30.0
+  planning_center_min_deg: 32.5
+  require_core_targets_above_min: true
+  require_footprint_boundary_above_min: true
+  validate_exposure_times: [start, midpoint, end]
+  require_readout_before_block_end: true
+  moon:
+    apply_when_moon_altitude_gt_deg: 0.0
+    min_center_separation_deg: 30.0
+    bright_illumination_fraction: 0.75
+    bright_min_center_separation_deg: 40.0
+    status: engineering_initial_values
+
+external_allocation:
+  reserved_intervals: [] # UTC {start_utc, end_utc, label}; never overwrite other programs.
+  respect_reservations: true
+  emit_free_intervals: true
+  do_not_fill_unused_time_with_legacy_survey: true
+
+twilight:
+  enabled: true
+  filter: r
+  exposure_s: 30
+  solar_altitude_limit_deg: -12.0
+  evening:
+    anchor: descending_sun_minus12
+    start_offset_s: 0
+    end_offset_s: 3600
+    group_order: [A_near_or_urgent, B_outer]
+  morning:
+    anchor: ascending_sun_minus12
+    start_offset_s: -3600
+    end_offset_s: 0
+    group_order: [B_outer, A_near_or_urgent]
+    place_near_group_toward_window_end: true
+  n_groups: 2
+  fields_per_group: 4
+  visits_per_field: 5
+  complete_group_before_switch: true
+  nominal_revisit_s: 260
+  nominal_first_to_last_midpoint_s: 1040
+  nominal_total_visits: 40
+  nominal_visit_budget_s: 65
+  nominal_group_budget_s: 1300
+  nominal_two_group_budget_s: 2600
+  residual_window_budget_s: 1000 # Includes entry, group transition, recovery, contingency.
+  candidate_geometry:
+    solar_elongation_range_deg: [45.0, 75.0]
+    preferred_elongation_range_deg: [50.0, 65.0]
+    max_abs_ecliptic_latitude_deg: 25.0
+    prefer_low_ecliptic_latitude: true
+    latitude_preference_is_soft: true
+    check_correct_solar_side_and_rise_set: true
+    validate_complete_group_visibility: true
+    check_closed_tour_slew: true
+    crowded_fields_penalty_is_soft: true
+  cross_night:
+    anchor_fields_per_group: 3
+    anchor_good_nights: 3
+    keep_icrs_centers_when_valid: true
+    replace_invalid_anchors_with_logged_reason: true
+    candidate_recovery_uses_predicted_position_and_uncertainty: true
+  fallback:
+    try_larger_elongation_within_pool_first: true
+    one_group_allowed: true
+    preserve_revisit_when_reducing_fields: true
+    extended_elongation_range_deg: [75.0, 90.0]
+    extended_mode_label: twilight_extended
+    known_target_recovery_may_replace_whole_group: true
+    release_if_no_scientifically_valid_group: true
+    usable_short_tracklet_min_actual_visits: 4
+    usable_short_tracklet_min_span_s: 720
+  pipeline_validation_goal_motion_deg_day: [0.1, 5.0] # Goal, not claimed current completeness.
+
+trojan:
+  enabled: true
+  filter: r
+  exposure_s: 120
+  n_fields: 2
+  max_nightly_budget_s: 7200
+  preferred_contiguous_block_s: 7200
+  entry_and_handover_total_margin_s: 300
+  nominal_neighbor_revisit_s: 310
+  nominal_complete_cycles: 22
+  nominal_points_per_field: 22
+  nominal_total_exposures: 44
+  sun_altitude_strict_max_deg: -18.0
+  prefer_center_altitude_deg: 40.0
+  prefer_neighbor_pair: true
+  report_recomputed_cadence_for_non_neighbor_pair: true
+  split_blocks_enabled: false
+  short_snapshots_enabled: false
+  partial_blocks:
+    two_fields_if_available_s_at_least: 5400
+    primary_field_only_if_available_s_at_least: 3600
+    skip_below_s: 3600
+    count_as_standard_pilot_only_if_full_block_completed: true
+  placement:
+    optimize_joint_visibility_and_airmass: true
+    exclude_twilight_blocks: true
+    external_reservations_are_hard: true
+    optional_between_night_center_shift_min: [30, 60]
+    never_shift_outside_valid_window: true
+  targets:
+    candidate_population: TJN
+    core_r_upper_proxy_mag: 18.5
+    preferred_core_r_range_mag: [16.0, 18.5] # Not a measured saturation/detection limit.
+    secondary_r_upper_proxy_mag: 19.2
+    allow_V_proxy_if_r_missing: true
+    V_proxy_upper_mag: 18.5
+    preserve_band_and_proxy_flag: true
+    measured_saturation_threshold_required_for_exclusion: true
+    unknown_or_weak_fraction_soft: [0.5, 0.6]
+    alias_review_fraction_soft_max: 0.2
+    slow_candidate_fraction_soft: 0.1
+    program_control_targets_goal: [1, 2]
+    missing_source_status: literature_unchecked
+    science_role_weights:
+      unknown_or_weak: 1.0
+      alias_review: 1.0
+      slow_candidate: 0.7
+      control: 0.2
+      known_other: 0.1
+    require_unique_object_scoring: true
+  campaign:
+    freeze_pointing_days: 14
+    core_edge_margin_deg: 0.15
+    min_core_retention_fraction: 0.8
+    trajectory_aware_field_selection: true
+    pilot_good_nights: 3
+    pilot_target_span_days: 7
+    total_span_days: [28, 42]
+    goal_good_nights: [10, 14]
+    review_by_good_night: 10
+    review_by_calendar_day: 28
+    recenter_only_with_new_pointing_version: true
+    bypass_legacy_recent_nights_cooldown: true
+  color:
+    enabled: false
+    earliest_after_good_nights: 3
+    sequence_when_enabled:
+      - {filter: r, exposure_s: 120}
+      - {filter: g, exposure_s: 180}
+      - {filter: r, exposure_s: 120}
+    count_inside_same_nightly_budget: true
+    maximum_frequency: once_per_week_when_useful
+
+execution:
+  disable_legacy_posthoc_followup_insertion: true
+  validate_once_after_all_plan_mutations: true
+  publish_only_final_validated_plan: true
+  output_independent_execution_groups: [EV_A, EV_B, TJ, AM_B, AM_A]
+  require_manifest_utc_and_local_time: true
+  executor_mode: manual_group_handoff_until_real_timed_interface_verified
+  late_policy: revalidate_or_skip_never_push_past_deadline
+  keep_numeric_legacy_compatible_field_ids: true
+  preserve_actual_exposure_history_separately_from_plan: true
+
+pilot_review:
+  after_good_nights: 3
+  keep_filter_r_initially: true
+  assess_actual_deadtime_and_cadence: true
+  assess_comparison_star_precision_by_magnitude: true
+  assess_twilight_known_object_recovery_by_magnitude_and_motion: true
+  assess_trojan_in_field_and_period_status: true
+  do_not_require_unique_period_or_new_discovery_to_complete_pilot: true

@@ -14,7 +14,7 @@
   "bright_moon_fraction": 0.75,
   "readout_s": 15.0,
   "adjacent_slew_s": 20.0,
-  "adjacent_max_deg": 3.2,
+  "adjacent_max_deg": 3.5,
   "far_slew_s": 60.0,
   "filter_change_s": 10.0,
   "filter": "r",

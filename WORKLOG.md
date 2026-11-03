@@ -2,6 +2,17 @@
 
 ## 2026-11-03
 
+- task: 接收用户提供的四份原附件，对照本地原型，明确已符合/需修正/待输入；用户继续找TESS2025重分析表
+- recovery: status/branch/fetch/log确认codex/twilight-trojan与origin同步于3b54aa45；仅原有outputs/未跟踪；未连接服务器
+- files_changed: 四附件及SHA256归档、SPEC_ALIGNMENT审计；targeted_observing配置/调度/独立审计/产品/反馈/测试；GOAL/README/RESULTS及根PLAN/CHANGELOG
+- fixes: 允许TJ预算0，输出未占用区间/暂定分配/partial_dense；邻场3.2→附件暂定3.5度并校验闭合回跳；实际≥4访且中点跨度≥720秒短弧采样标记。统一空闲计算窗口与序列化毫秒精度，修复测试发现的亚毫秒碎片；清除复用输出目录时残留的已停用块CSV/空计划旧总表
+- findings: 原科学角色权重、14天全轨迹留场和仅相邻不重叠场对选择不同于附件；保留旧两场作基线待重评，未凑未知周期比例。新闭合限制后11/06黄昏锚点由6/8变0/8，需要三夜联合选场，不能称附件完全验收
+- validation: py_compile与15项unittest通过；三夜80/100/120曝光、启动夜/春分/夏至零预算40/80/80曝光独立5秒审计通过；TJ仍20点/场、330.88秒cadence；原附件副本hash一致；git diff --check
+- commands_run: python3 -m targeted_observing.plan（输出到products/spec_alignment_20261103）；python3 -m unittest discover -s targeted_observing/tests -v；python3 -m py_compile；git diff审阅。缓存/产品继续忽略，旧产品和生产目录未动
+- remaining: 科学角色/权重/≥80%计划访问留场联合实现、晨昏备选/替换理由/面积/三夜锚点、2–3场回退、数字ID/配置映射/元数据；附件中的现场发布和首夜不在本地范围
+- next_step: 优先科学选场对比及三夜联合设计；TESS表收到后入证据库重评，不阻塞前述开发。同步GitHub专用分支，继续不部署
+
+
 - task: 根据当日GPT Pro完整问答建立详细goal，在独立子目录实现晨昏+木星特洛伊模式，仅本地开发测试并同步GitHub
 - recovery: git status/branch/fetch/log；原分支codex/unknown-morphology相对origin/main ahead32/behind0，无upstream；从aa0ddf24建立codex/twilight-trojan，保留原有未跟踪outputs/；未连接服务器
 - files_changed: 新增targeted_observing/的配置、天区/星历/调度/独立验收/执行门控/产品/反馈/测试和文档；更新AGENTS本地模式例外、README、PLAN、CHANGELOG；原survey/known_asteroid/heliolincrr代码未动
