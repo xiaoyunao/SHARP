@@ -1,0 +1,55 @@
+{
+  "version": "20261103-v0",
+  "site": {
+    "lat_deg": 40.393,
+    "lon_deg": 117.575,
+    "height_m": 960
+  },
+  "fov_deg": 3.0,
+  "edge_margin_deg": 0.15,
+  "min_alt_deg": 30.0,
+  "center_alt_deg": 32.5,
+  "moon_sep_deg": 30.0,
+  "bright_moon_sep_deg": 40.0,
+  "bright_moon_fraction": 0.75,
+  "readout_s": 15.0,
+  "adjacent_slew_s": 20.0,
+  "adjacent_max_deg": 3.2,
+  "far_slew_s": 60.0,
+  "filter_change_s": 10.0,
+  "filter": "r",
+  "controller_filter_tokens": {},
+  "twilight": {
+    "window_s": 3600,
+    "sun_alt_deg": -12,
+    "exposure_s": 30,
+    "visits": 5,
+    "fields_per_group": 4,
+    "elongation_deg": [
+      45,
+      75
+    ],
+    "extended_elongation_deg": [
+      75,
+      90
+    ],
+    "preferred_elongation_deg": [
+      50,
+      65
+    ],
+    "beta_max_deg": 25,
+    "anchor_fields_per_group": 3
+  },
+  "trojan": {
+    "block_s": 7200,
+    "handover_s": 300,
+    "exposure_s": 120,
+    "max_visits_per_field": 22,
+    "freeze_days": 14,
+    "core_V_limit": 18.5,
+    "extended_V_limit": 19.2,
+    "sun_alt_deg": -18
+  },
+  "reservations": [],
+  "use_header_slew_floor": true
+}

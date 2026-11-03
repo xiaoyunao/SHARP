@@ -1,0 +1,1 @@
+date,block_id,field_id,visit,actual_start_utc,actual_end_utc,filter,valid,background,fwhm_arcsec,zeropoint,limiting_mag,stable_star_rms_mag,zero_point_offset_mag,readout_s,slew_s,known_moving_expected,known_moving_recovered,measured_r_mag,notes

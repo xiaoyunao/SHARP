@@ -14,6 +14,13 @@
 - 仓库中的 `survey/`、`known_asteroid/`、`heliolincrr/` 默认分别对应上述服务器目录。
 - 后续调试、重构和参数调整，都应优先保持与服务器行为一致。
 
+## 本地新模式例外（2026-11-03 用户明确授权）
+
+- `targeted_observing/` 是晨昏 + 木星特洛伊独立研发模式，在本地开发测试并同步 GitHub。
+- 此目录不对应服务器路径，不连接/部署服务器，不改变现有三条生产流程。
+- 允许此新增子目录；其余服务器镜像、MPC暂停、依赖及文档规则继续适用。
+- 目标、验收和缺失现场输入以 `targeted_observing/docs/GOAL.md` 为准。
+
 ## Environment rules
 
 - `survey` 相关程序：

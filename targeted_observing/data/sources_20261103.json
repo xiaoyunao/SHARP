@@ -1,0 +1,125 @@
+[
+  {
+    "file": "li2025.csv",
+    "url": "https://raw.githubusercontent.com/ZhuofuLi/ZTF-Jupiter-Trojan-Rotation-Periods/main/Summary_Table.csv",
+    "sha256": "c8e1ad56c7b11b61ca2eba89de1f0bc00f7edb6ab2c93827f52773680a19c923",
+    "bytes": 24109,
+    "cache_mtime_utc": "2026-11-03T07:03:36.426486+00:00",
+    "status": "downloaded"
+  },
+  {
+    "file": "li2025_license.txt",
+    "url": "https://raw.githubusercontent.com/ZhuofuLi/ZTF-Jupiter-Trojan-Rotation-Periods/main/LICENSE",
+    "sha256": "45f3410256285e8455a2a48560e20827a99cd8272fde0895870dc3d47e9e1c9d",
+    "bytes": 1068,
+    "cache_mtime_utc": "2026-11-03T07:13:32.260457+00:00",
+    "status": "downloaded"
+  },
+  {
+    "file": "lcdb.zip",
+    "url": "https://minplanobs.org/MPInfo/datazips/LCLIST_PUB_CURRENT.zip",
+    "sha256": "1a200680375897fbd62143572b2078137a0d42b170eabb764b1b1eef620640e2",
+    "bytes": 39966552,
+    "cache_mtime_utc": "2026-11-03T07:04:44.085864+00:00",
+    "status": "downloaded"
+  },
+  {
+    "file": "models2026.html",
+    "url": "https://arxiv.org/html/2610.06082v1",
+    "sha256": "ed9c44af35fb54f4d3bc22e4278b6469e3eab8e5264ee061e28f49017fbc31a0",
+    "bytes": 302358,
+    "cache_mtime_utc": "2026-11-03T07:04:45.583569+00:00",
+    "status": "downloaded"
+  },
+  {
+    "file": "zenodo.json",
+    "url": "https://zenodo.org/api/records/22812438",
+    "sha256": "60ea284c2ee387558115221bdf2c3b6a8da8791d0ce9129f1fe68cdf00059f06",
+    "bytes": 6640,
+    "cache_mtime_utc": "2026-11-03T07:05:49.152276+00:00",
+    "status": "downloaded"
+  },
+  {
+    "file": "spin_results",
+    "url": "https://zenodo.org/api/records/22812438/files/spin_results/content",
+    "sha256": "160c1f8c69d54e94255ac4439634294f9f8d0421c0a34413f1a9827b4254ba02",
+    "bytes": 8588106,
+    "cache_mtime_utc": "2026-11-03T07:07:41.869152+00:00",
+    "status": "downloaded"
+  },
+  {
+    "file": "spin_results_partial",
+    "url": "https://zenodo.org/api/records/22812438/files/spin_results_partial/content",
+    "sha256": "8239fe3fd241bb8d9747224784926f0892e4806f14852ec013192f14f73db465",
+    "bytes": 2293191,
+    "cache_mtime_utc": "2026-11-03T07:07:25.110426+00:00",
+    "status": "downloaded"
+  },
+  {
+    "file": "damit_asteroids.csv",
+    "url": "https://damit.cuni.cz/projects/damit/exports/table/asteroids",
+    "sha256": "2e432e10e969c3c34c7fbf61688c00a158c799461f254af22a598fdcf38f241d",
+    "bytes": 1229330,
+    "cache_mtime_utc": "2026-11-03T07:07:48.976549+00:00",
+    "status": "downloaded"
+  },
+  {
+    "file": "damit_asteroid_models.csv",
+    "url": "https://damit.cuni.cz/projects/damit/exports/table/asteroid_models",
+    "sha256": "09c00f0b97dbc987e1a7150d8c52af6fc0947b0ad6c1be9b48fc3bc9d78260cf",
+    "bytes": 4337210,
+    "cache_mtime_utc": "2026-11-03T07:07:54.685380+00:00",
+    "status": "downloaded"
+  },
+  {
+    "file": "iers.all",
+    "url": "https://maia.usno.navy.mil/ser7/finals2000A.all",
+    "sha256": "f7c0e9e5033b92ecd2488cf20cdf015c8aa2229f3153eceafd17d862b19fc961",
+    "bytes": 3775228,
+    "cache_mtime_utc": "2026-11-03T07:06:00.782055+00:00",
+    "status": "downloaded"
+  },
+  {
+    "file": "tssys_README",
+    "url": "https://archive.konkoly.hu/pub/tssys/dr1/README",
+    "sha256": "8dfe1fb83b7a0b6b0c5e0032b3270525ab9c665c0b80656d22a247f7779f6565",
+    "bytes": 1908,
+    "cache_mtime_utc": "2026-11-03T07:12:57.891085+00:00",
+    "status": "downloaded"
+  },
+  {
+    "file": "tssys_release.info",
+    "url": "https://archive.konkoly.hu/pub/tssys/dr1/release.info",
+    "sha256": "5b525867f0a2f1eea2f6e3f6d3f8e8fab8ae5e4adf173c25a01e9ce6820f3193",
+    "bytes": 1219,
+    "cache_mtime_utc": "2026-11-03T07:12:59.342504+00:00",
+    "status": "downloaded"
+  },
+  {
+    "file": "tssys_release.merge",
+    "url": "https://archive.konkoly.hu/pub/tssys/dr1/release.merge",
+    "sha256": "c2bca0b63d8210392ff1c6ace8a2e7af7c322ee675a26313093511855652dab4",
+    "bytes": 1764336,
+    "cache_mtime_utc": "2026-11-03T07:13:02.163031+00:00",
+    "status": "downloaded"
+  },
+  {
+    "file": "tess_edr2.html",
+    "url": "https://arxiv.org/html/2503.13332v1",
+    "sha256": "530613b901d7e18d4e914e7af37010f84b9bd52619e8d613275b033e0ec834b0",
+    "bytes": 239062,
+    "cache_mtime_utc": "2026-11-03T07:09:31.510202+00:00",
+    "status": "downloaded"
+  },
+  {
+    "file": "trojans.json",
+    "url": "https://ssd-api.jpl.nasa.gov/sbdb_query.api",
+    "parameters": {
+      "sb-class": "TJN",
+      "fields": "spkid,pdes,full_name,epoch,a,e,i,om,w,ma,H",
+      "full-prec": "true"
+    },
+    "sha256": "ef907d141b4cb2fcdc3eb2f3a00d2f34c971898f61f21c2e06cec342cc2086b0",
+    "status": "downloaded"
+  }
+]

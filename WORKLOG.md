@@ -1,5 +1,18 @@
 # WORKLOG
 
+## 2026-11-03
+
+- task: 根据当日GPT Pro完整问答建立详细goal，在独立子目录实现晨昏+木星特洛伊模式，仅本地开发测试并同步GitHub
+- recovery: git status/branch/fetch/log；原分支codex/unknown-morphology相对origin/main ahead32/behind0，无upstream；从aa0ddf24建立codex/twilight-trojan，保留原有未跟踪outputs/；未连接服务器
+- files_changed: 新增targeted_observing/的配置、天区/星历/调度/独立验收/执行门控/产品/反馈/测试和文档；更新AGENTS本地模式例外、README、PLAN、CHANGELOG；原survey/known_asteroid/heliolincrr代码未动
+- sources: read_thread取得今天完整问答；原4份交接MD/YAML未传入，从正文重建配置并注明。取得JPL TJN16445对象、排名60对象逐小时站心Horizons、LCDB2023/Li2025/DAMIT/2026模型/TESS DR1/USNO IERS/Gaia亮星；TESS2025重分析CDS下载SSL/502失败，保留缺口
+- implementation: 晨昏各60分钟，2组4场各5访r30，清晨B→A；Trojan连续最多120分钟r120，预约扣除及90/60分钟退化；14天固定版本/目标轨迹、全足迹高度>30和月距、实际曝光中点、分块manifest。控制token缺失拒绝TXT，不接旧follow-up/冷却，早到wait/晚到重验/超时abort仅dry-run
+- findings: 两个L5场(89.349997,+8.554764)、(88.572544,+11.019328)，5核心留场14日，每夜可排2小时。实测slew正常分支+2s设预算下限后每场20点/330.88s cadence；不强报22点。低银纬约-8度，主场有G4.67亮星，需现场污染评估
+- local_validation: Python编译、11项边界/预约/退化/执行门控测试通过；11/03、04、06三夜80/100/120曝光独立5秒全足迹审计通过；四季代表夜几何审计通过；图件已目视改为分区放大。11/03晨间无合格组、11/04仅B、11/06完整；11/06黄昏保留6/8锚点。14日星历/逐夜窗口及Gaia查询完整性核验通过
+- commands_run: python3 -m targeted_observing.{fetch_sources,design_campaign,plan,seasonal,campaign_visibility,contamination}；python3 -m py_compile；python3 -m unittest discover -s targeted_observing/tests -v；git diff --check。运行产物在targeted_observing/products/，缓存在cache/，均忽略；data/仅版本化小型科学输入及模板
+- remaining_issues: 原附件、TESS重分析表未全；r合法token/定时控制/CCD方向坏区光晕/真实r测光精度待现场。18054不能据未命中称未知周期。现生产3–63arcsec/h不代表快NEO已可搜；MPC hold和生产部署不属本轮
+- next_step: 本轮完成本地模式与GitHub专用分支交付；按反馈审阅首批天区；未来获准接现场后确认token/计时契约，用3个有效夜数据一次调整一个主要参数
+
 ## 2026-10-28
 
 - task: 09:34–09:35 CST只读检查今日自然cron、今晚计划、昨晚科学处理及昨日修复状态

@@ -1,6 +1,7 @@
 # smt_asteroid
 
-本仓库现在只保留一套代码，目标是直接镜像服务器上的实际运行版本，不再维护本地可运行分支。
+本仓库的 `survey/`、`known_asteroid/`、`heliolincrr/` 保持服务器实际运行版本。
+另有用户于2026-11-03授权的独立本地研发模式 `targeted_observing/`，用于晨昏搜寻与木星特洛伊监测，尚未部署服务器。
 
 ## 当前约定
 
@@ -15,7 +16,14 @@
   - `heliolincrr` 使用 `heliolinc` 环境
     - 当前为 `/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python`
 
+## 新观测模式（本地）
+
+[详细目标与验收](targeted_observing/docs/GOAL.md)、[运行说明](targeted_observing/README.md)、[本地验收结果](targeted_observing/docs/RESULTS.md)。
+新模式提供分块调度、14天固定Trojan场、逐曝光几何验收及三夜反馈模板。默认不导出可执行TXT，不接生产发布与MPC上报。
+
 ## 目录结构
+
+- `targeted_observing/`：独立本地模式；数据缓存/运行产物不入Git。
 
 - `survey/`
 - `known_asteroid/`
