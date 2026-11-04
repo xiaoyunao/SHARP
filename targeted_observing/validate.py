@@ -1,5 +1,7 @@
 """Independent product audit: chronology, budgets, constraints and target retention."""
 from collections import Counter
+from astropy.coordinates import GeocentricMeanEcliptic
+from astropy.time import Time
 import numpy as np
 from .geometry import Sky,unix,coord,footprint,in_field
 from .catalog import interpolate
@@ -27,7 +29,7 @@ def validate_plan(plan,campaign=None):
                 if coord(f['ra_deg'],f['dec_deg']).separation(coord(g['ra_deg'],g['dec_deg'])).deg>c['adjacent_max_deg']:
                     errors.append(name+': closed tour exceeds neighbor threshold')
         counts=Counter(r['field_id'] for r in rows)
-        if name!='TJ' and (len(counts)!=4 or set(counts.values())!={5}):errors.append(name+': incomplete five-visit group')
+        if name!='TJ' and (len(counts)!=4 or set(counts.values())!={c['twilight']['visits']}):errors.append(name+': incomplete configured twilight group')
         if name=='TJ' and len(set(counts.values()))!=1:errors.append('TJ: incomplete cycle')
         if name=='TJ' and end-start<5400-.01 and len(fs)!=1:errors.append('TJ: short block must use primary field')
         for fid in counts:
@@ -69,6 +71,8 @@ def validate_plan(plan,campaign=None):
         sunlim=c['trojan']['sun_alt_deg'] if name=='TJ' else c['twilight']['sun_alt_deg']
         if np.any(sun.alt.deg>sunlim+.002):errors.append(name+': solar altitude')
         if name!='TJ':
+            beta=coord(all_ra,all_dec).transform_to(GeocentricMeanEcliptic(equinox=Time('J2000'),obstime=Time(all_t,format='unix'))).lat.deg
+            if np.any(abs(beta)>c['twilight']['beta_max_deg']):errors.append(name+': ecliptic latitude')
             el=center.separation(sun).deg
             hi=c['twilight']['extended_elongation_deg'][1] if block['extended_search'] else c['twilight']['elongation_deg'][1]
             if el.min()<c['twilight']['elongation_deg'][0] or el.max()>hi:errors.append(name+': solar elongation')

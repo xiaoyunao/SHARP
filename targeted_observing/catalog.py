@@ -27,11 +27,11 @@ def download(url, path, params=None):
     return path
 
 
-def approximate(catalog, date):
+def approximate(catalog, date, max_H=13.0):
     """Two-body ranking only. Never used for final field retention or executable pointing."""
     t=Time(date)
     records=[dict(zip(catalog['fields'],r)) for r in catalog['data']]
-    records=[r for r in records if r['H'] is not None and float(r['H'])<13.0]
+    records=[r for r in records if r['H'] is not None and float(r['H'])<max_H]
     vals=lambda k:np.array([float(r[k]) for r in records])
     a,e=vals('a'),vals('e')
     ma=np.deg2rad(vals('ma'))+.01720209895/a**1.5*(t.tdb.jd-vals('epoch'))

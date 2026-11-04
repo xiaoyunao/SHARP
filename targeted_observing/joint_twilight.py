@@ -8,6 +8,8 @@ def plan(sky,window,side,previous=None):
     from .scheduler import twilight_candidates,field,visits,check_rows,block_record,closed_neighbor_tour
     c=sky.config;tc=c['twilight'];a,b=window
     names=['A','B'] if side=='EV' else ['B','A'];slots=[(a,(a+b)/2),((a+b)/2,b)]
+    cycles=tc['visits']
+    if cycles==10:names=['A'];slots=[(a,b)]
     pools=[];audit=[];future=[]
     if not previous:
         night_date=datetime.fromtimestamp(a,ZoneInfo('Asia/Shanghai')).date()
@@ -23,7 +25,7 @@ def plan(sky,window,side,previous=None):
         if not any(max(start,unix(r['start_utc']))<min(end,unix(r['end_utc'])) for r in c['reservations']):
             if old:
                 raw.append((old['fields'],'previous_group'))
-                rr=visits(old['fields'],start,end,tc['exposure_s'],5,c,name,'twilight')
+                rr=visits(old['fields'],start,end,tc['exposure_s'],cycles,c,name,'twilight')
                 for i,f in enumerate(old['fields']):
                     if check_rows(sky,[f],[r for r in rr if r['field_id']==f['field_id']],'twilight',True):continue
                     for size in [.15,.3,.45]:
@@ -34,8 +36,8 @@ def plan(sky,window,side,previous=None):
             raw.extend((fs,'new_grid') for _,_,_,fs in twilight_candidates(sky,start,end,side,c['version'])[:8])
         for fs,reason in raw:
             if not closed_neighbor_tour(fs,c):continue
-            rr=visits(fs,start,end,tc['exposure_s'],5,c,name,'twilight')
-            if len(rr)!=20:continue
+            rr=visits(fs,start,end,tc['exposure_s'],cycles,c,name,'twilight')
+            if len(rr)!=4*cycles:continue
             q=check_rows(sky,fs,rr,'twilight',True)
             if not q:continue
             ext=any(v['elongation_max_deg']>tc['elongation_deg'][1] for v in q.values())
@@ -46,15 +48,19 @@ def plan(sky,window,side,previous=None):
             block['replacement_reason']='previous group not feasible at scheduled visits or joint A/B incompatibility' if block['replaced_field_ids'] else None
             future_passes=0
             for fa,fb in future:
-                index=names.index(label);lo=fa+index*(fb-fa)/2;hi=lo+(fb-fa)/2
-                future_rows=visits(fs,lo,hi,tc['exposure_s'],5,c,name,'twilight')
-                if len(future_rows)==20 and check_rows(sky,fs,future_rows,'twilight',True):future_passes+=1
+                index=names.index(label);lo=fa+index*(fb-fa)/len(names);hi=lo+(fb-fa)/len(names)
+                future_rows=visits(fs,lo,hi,tc['exposure_s'],cycles,c,name,'twilight')
+                if len(future_rows)==4*cycles and check_rows(sky,fs,future_rows,'twilight',True):future_passes+=1
             block['anchor_lookahead_valid_nights']=future_passes
             pool.append(block)
         pool.sort(key=lambda x:(-x['retained_anchor_count'],-x['anchor_lookahead_valid_nights'],x['extended_search'],-min(q['min_center_alt_deg'] for q in x['quality'].values())))
         pools.append(pool[:12])
         audit.append({'block_id':name,'generated_candidates':len(raw),'feasible_candidates':len(pool),
                       'alternatives':[{'field_ids':[f['field_id'] for f in x['fields']],'retained':x['retained_anchor_count'],'reason':x['selection_reason']} for x in pool[:12]]})
+    if len(pools)==1:
+        chosen=pools[0][:1]
+        for block in chosen:block['joint_selection_audit']=audit
+        return chosen
     choices=[]
     for x in pools[0]+[None]:
         for y in pools[1]+[None]:

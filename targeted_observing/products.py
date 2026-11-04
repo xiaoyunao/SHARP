@@ -17,6 +17,9 @@ def summarize(plan):
             mids=np.array([unix(r['mid_utc']) for r in rr])
             result.append({'block':b['block_id'],'field_id':f['field_id'],'ra_deg':f['ra_deg'],'dec_deg':f['dec_deg'],
                            'points':len(rr),'cadence_median_s':float(np.median(np.diff(mids))) if len(mids)>1 else None,
+                           'cadence_min_s':float(np.min(np.diff(mids))) if len(mids)>1 else None,
+                           'cadence_max_s':float(np.max(np.diff(mids))) if len(mids)>1 else None,
+                           'cadence_intervals_s':json.dumps(np.diff(mids).round(3).tolist()),
                            'arc_span_s':float(mids[-1]-mids[0]),'core_targets':','.join(f['core_targets']),
                            'start_local':local_time(unix(rr[0]['start_utc'])),'end_local':local_time(unix(rr[-1]['end_utc']))})
     return result

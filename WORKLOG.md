@@ -1,5 +1,15 @@
 # WORKLOG
 
+## 2026-11-04
+
+- task: read_thread恢复后取得最新两轮GPT Pro正文；范围改为一年365夜/730窗口及百颗质量光变目标，归档annual_requirements_pro/review_pro_20261104，更新GOAL/PLAN。正文所引用额外附件尚未取得，不冒称已读。
+- repairs: execution迟到后刷新曝光target_states；共用几何和独立验收都复验黄纬；支持Trojan AABB及完整cadence分布；晨昏四场十访；2223已知周期控制源/22180别名复核，保留原LCDB质量。
+- sources: 全量16445 TJN的每周二体宽松筛选得到1063年度Horizons候选；USNO新IERS覆盖至2027-11-05；引用MNRAS 2022 Table3历史月可观测率，明确不是测光夜率。年度下载与全年晨昏模拟进行中。
+- development: annual_defaults/sources/twilight/trojan/visibility/weather与四项年度契约测试；35日campaign、7日场版本、共同相关天气、质量门槛函数。年度引擎仍在开发，不是完成的科学产出。
+- validation: 29项全套测试通过（含4项年度契约）；AABB测试20点/场、135/525s交替；四场十访40曝光通过独立5s校验；两种晨昏和两种Trojan三夜冒烟成功，年度visibility三夜冒烟成功。
+- commands: python3 -m targeted_observing.annual_sources --workers 2；annual_twilight --workers 4；annual_trojan --days 3 --limit 60 --fields 2 --workers 2；unittest discover。完整数据/运行结果在ignored cache与products/annual中，不入git。
+- remaining: 完整年度星历/八方案与自适应队列模拟、约200天气实现、去重面积/移动恢复、周期振幅注入和两份报告；未完成不能以候选1063替代科学产量。仅本地，无服务器连接。
+
 ## 2026-11-03
 
 - task: 网络恢复后读取GPT Pro对02005c58的最新审查并落实本地修改；原文归档review_pro_20261103.md

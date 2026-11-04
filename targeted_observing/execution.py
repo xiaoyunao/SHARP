@@ -28,6 +28,12 @@ def gate(plan,block_id,row_index,ready_utc,campaign=None):
     q=check_rows(Sky(plan['config']),fields,remaining,block['mode'],block['extended_search'],
                  campaign['tracks'] if campaign and block_id=='TJ' else None)
     if q is None:return {'action':'abort_remaining_block','reason':'actual timing violates geometry or target retention'}
+    for f in fields:
+        selected=[r for r in remaining if r['field_id']==f['field_id']]
+        sampling=q[f['field_id']].get('target_sampling',{})
+        for i,r in enumerate(selected):
+            r['target_states']={v['object_id']:{'in_field':v['nights']['night']['in_field'][i],
+                'photometric_usable':None} for v in sampling.values()}
     return {'action':'dry_run_exposure_eligible','exposure':remaining[0],'delay_s':delay,
             'target_sampling_at_actual_times':{fid:v.get('target_sampling',{}) for fid,v in q.items()},
             'hardware_command_sent':False,'remaining_sequence_revalidated':True}

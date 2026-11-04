@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 import numpy as np
 import astropy.units as u
-from astropy.coordinates import AltAz, EarthLocation, SkyCoord, get_body, get_sun
+from astropy.coordinates import AltAz, EarthLocation, SkyCoord, get_body, get_sun, GeocentricMeanEcliptic
 from astropy.time import Time
 from astropy.utils import iers
 from scipy.optimize import brentq
@@ -139,6 +139,8 @@ class Sky:
         sun_limit=c['trojan']['sun_alt_deg'] if mode=='trojan' else c['twilight']['sun_alt_deg']
         if np.any(m['sun_alt']>sun_limit+0.002): reasons.append('sun')
         if mode=='twilight':
+            beta=coord(field['ra_deg'],field['dec_deg']).transform_to(GeocentricMeanEcliptic(equinox=Time('J2000'),obstime=Time(seconds,format='unix'))).lat.deg
+            if np.any(abs(beta)>c['twilight']['beta_max_deg']):reasons.append('ecliptic_latitude')
             lo=c['twilight']['elongation_deg'][0]
             hi=c['twilight']['extended_elongation_deg'][1] if extended else c['twilight']['elongation_deg'][1]
             if m['elong'][-1].min()<lo or m['elong'][-1].max()>hi: reasons.append('elongation')

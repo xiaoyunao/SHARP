@@ -48,7 +48,8 @@
     "core_V_limit": 18.5,
     "extended_V_limit": 19.2,
     "sun_alt_deg": -18,
-    "min_core_retention_fraction": 0.8
+    "min_core_retention_fraction": 0.8,
+    "exposures_per_dwell": 1
   },
   "reservations": [],
   "use_header_slew_floor": true

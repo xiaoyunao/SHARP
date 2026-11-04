@@ -9,10 +9,11 @@ def validate_config(c):
     for k in ['readout_s','adjacent_slew_s','far_slew_s','filter_change_s','edge_margin_deg']:
         if not math.isfinite(c[k]) or c[k]<0:raise ValueError('Invalid nonnegative parameter '+k)
     if not 0<c['trojan'].get('min_core_retention_fraction',.8)<=1:raise ValueError('Invalid retention fraction')
+    if c['trojan'].get('exposures_per_dwell',1) not in (1,2):raise ValueError('Dwell must contain one or two exposures')
     budget=c['trojan']['block_s']
     if not math.isfinite(budget) or (budget!=0 and not 3600<=budget<=7200):raise ValueError('Trojan block must be 0 or 60--120 minutes')
     if not math.isfinite(c['adjacent_max_deg']) or c['adjacent_max_deg']<=0:raise ValueError('Invalid neighbor threshold')
-    if c['twilight']['window_s']!=3600 or c['twilight']['visits']!=5:raise ValueError('v0 twilight requires one hour and five visits')
+    if c['twilight']['window_s']!=3600 or c['twilight']['visits'] not in (5,10):raise ValueError('Twilight requires one hour and five or ten visits')
     if c['min_alt_deg']<30 or c['center_alt_deg']<32.5:raise ValueError('Cannot relax v0 altitude safety limits')
     if c['trojan']['sun_alt_deg']!=-18 or c['twilight']['sun_alt_deg']!=-12:raise ValueError('v0 solar crossing levels are fixed')
     if not 0<=c['edge_margin_deg']<1.5:raise ValueError('Invalid field margin')

@@ -1,0 +1,22 @@
+{
+  "source": "https://academic.oup.com/mnras/article/511/4/5363/6543517",
+  "table": "https://academic.oup.com/view-large/337462686",
+  "description": "Zhang et al. historical Xinglong observable-night percentages reproduced in Table 3 of MNRAS 511, 5363 (2022). Observable is not photometric. Months Jan through Dec. Missing years omitted, never zero-filled.",
+  "observable_percent_by_year": {
+    "2008": [87.10,96.55,45.16,50,35.48,33.33,29.03,32.26,50,83.87,93.33,90.32],
+    "2009": [80.65,64.29,51.61,56.67,64.52,66.67,35.48,35.48,50,74.19,70,70.97],
+    "2010": [77.42,53.57,41.94,40,54.84,36.67,25.81,29.03,63.33,67.74,100,93.55],
+    "2011": [100,67.86,64.52,66.67,58.06,50,35.48,35.48,60,74.19,60,83.87],
+    "2012": [80.65,100,70.97,53.33,64.52,46.67,22.58,38.71,73.33,87.10,80,67.74],
+    "2014": [93.55,53.57,87.10,73.33,58.06,53.33,22.58,51.61,50,58.06,90,90.32]
+  },
+  "scenario_parameters_not_measured": {
+    "latent_ar1_rho": 0.55,
+    "partial_cloud_probability_given_observable": 0.25,
+    "external_block_loss_probability": 0.15,
+    "delay_max_s": 180,
+    "extra_readout_mean_s": 0.5,
+    "extra_slew_mean_s": 2.0,
+    "seeing_median_arcsec": 2.0
+  }
+}

@@ -1,5 +1,6 @@
 """Evidence-preserving period cross-match. Absence never means unknown period."""
 import csv
+import json
 from pathlib import Path
 
 
@@ -41,6 +42,8 @@ def load_periods(cache):
         for ev in out.values():ev.setdefault('TESS2025',{'query_status':'not_in_this_table'})
     else:
         for ev in out.values():ev['TESS2025']={'query_status':'source_unavailable'}
+    reviews=json.loads((Path(__file__).parent/'data/manual_science_review.json').read_text())
+    for k,review in reviews.items():entry(k)['manual_review']=review
     return out
 
 
@@ -67,8 +70,13 @@ def assess(evidence):
     elif values:role='unknown_or_weak'  # Remains a review candidate, not an automatic high-value conflict.
     else:role='literature_unchecked'
     weights={'unknown_or_weak':1.,'alias_review':1.,'slow_candidate':.7,'control':.2,'known_other':.1,'literature_unchecked':.1}
+    manual=evidence.get('manual_review')
+    if manual:
+        role=manual['role']
+        if role not in weights:raise ValueError('Unsupported manually reviewed science role')
+        reasons.append('manual_review: '+manual['reason'])
     if any(p>100 for p in values):reasons.append('long_period_evidence; dense_single_night_science_requires_justification')
-    return {'role':role,'weight':weights[role],'periods':periods,'review_reasons':reasons,
+    return {'role':role,'weight':weights[role],'periods':periods,'review_reasons':reasons,'manual_review':manual,
             'classification':'conservative automatic triage; alias/slow science role requires explicit review'}
 
 def evaluate(evidence):

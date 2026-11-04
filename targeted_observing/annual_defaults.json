@@ -1,0 +1,33 @@
+{
+  "start_date": "2026-11-01",
+  "stop_date_exclusive": "2027-11-01",
+  "lookahead_days": 3,
+  "iers_file": "iers_20261104.all",
+  "candidate_max_H": 14.0,
+  "candidate_V_limit": 19.7,
+  "candidate_min_dec_deg": -29.0,
+  "preselection_step_days": 7,
+  "horizons_step": "6h",
+  "campaign_days": 35,
+  "field_version_days": 7,
+  "field_counts": [2, 3, 4, 6],
+  "dwells": [1, 2],
+  "weather_realizations": 200,
+  "seed": 20261104,
+  "quality": {
+    "points": 100, "nights": 10, "points_per_night": 5,
+    "night_span_s": 1800, "baseline_days": 21,
+    "median_random_error_mag": 0.03, "fraction_below_005": 0.8,
+    "max_zeropoint_mag": 0.02
+  },
+  "photometry_scenarios": {
+    "optimistic": {"sigma_r18_120s": 0.015, "night_zeropoint": 0.008, "usable_fraction": 0.95},
+    "baseline": {"sigma_r18_120s": 0.025, "night_zeropoint": 0.012, "usable_fraction": 0.85},
+    "conservative": {"sigma_r18_120s": 0.04, "night_zeropoint": 0.02, "usable_fraction": 0.70}
+  },
+  "assumptions": [
+    "V is not calibrated r: adopt r=V for baseline and report color sensitivity.",
+    "Photometric and weather parameters are planning scenarios, not instrument measurements.",
+    "All candidate screening uses full TJN input; two-body preselection is not executable ephemeris."
+  ]
+}

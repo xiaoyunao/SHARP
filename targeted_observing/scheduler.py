@@ -41,9 +41,13 @@ def closed_neighbor_tour(fields,config):
 
 def visits(fields,start,end,exposure,cycles,config,block_id,mode):
     rows=[];t=start;previous=None
+    dwell=config['trojan'].get('exposures_per_dwell',1) if mode=='trojan' else 1
+    route=[f for f in fields for _ in range(dwell)]
+    counts={f['field_id']:0 for f in fields}
     for visit in range(1,cycles+1):
         cycle=[]
-        for f in fields:
+        for f in route:
+            counts[f['field_id']]+=1
             turn=slew(previous,f,config)
             change=config['filter_change_s'] if previous is None else 0.0
             begin=t+turn+change
@@ -51,7 +55,7 @@ def visits(fields,start,end,exposure,cycles,config,block_id,mode):
             if finish+config['readout_s']>end: return rows
             cycle.append({'block_id':block_id,'mode':mode,'field_id':f['field_id'],
                           'field_version':f['version'],'ra_deg':f['ra_deg'],'dec_deg':f['dec_deg'],
-                          'filter':config['filter'],'visit':visit,'exposure_s':exposure,'target_states':{},
+                          'filter':config['filter'],'visit':counts[f['field_id']],'exposure_s':exposure,'target_states':{},
                           'slew_s':turn,'filter_change_s':change,'readout_s':config['readout_s'],
                           'overhead_start_utc':isot(t),'start_utc':isot(begin),'mid_utc':isot((begin+finish)/2),
                           'end_utc':isot(finish),'release_utc':isot(finish+config['readout_s'])})
@@ -206,7 +210,8 @@ def make_plan(config,date,campaign=None,previous=None,shift_minutes=0):
     else:reasons.append('TJ: no frozen campaign supplied')
     blocks+=twilight(sky,night['morning'],'AM',previous)
     present={b['block_id'] for b in blocks}
-    for name in ['EV_A','EV_B','AM_B','AM_A']:
+    expected=['EV_A','AM_A'] if config['twilight']['visits']==10 else ['EV_A','EV_B','AM_B','AM_A']
+    for name in expected:
         if name not in present:reasons.append(name+': no complete eligible group; time released')
     occupied=config['reservations']+[{'start_utc':b['not_before_utc'],'end_utc':b['hard_deadline_utc']} for b in blocks]
     # Match the millisecond precision of persisted block and reservation timestamps.

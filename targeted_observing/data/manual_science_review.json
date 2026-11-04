@@ -1,0 +1,19 @@
+{
+  "2223": {
+    "role": "control",
+    "review_date": "2026-11-04",
+    "source": "https://doi.org/10.1088/0004-6256/141/5/170",
+    "citation": "Mottola et al. 2011, AJ 141, 170, Table 3",
+    "measurements": [
+      {"epoch": "1994", "period_h": 22.77, "period_error_h": 0.04, "amplitude_mag": 0.11, "amplitude_error_mag": 0.01, "paper_quality": 3},
+      {"epoch": "1996", "period_h": 22.741, "period_error_h": 0.014, "amplitude_mag": 0.14, "amplitude_error_mag": 0.01, "paper_quality": 3}
+    ],
+    "reason": "Published repeated period makes this a bright control, with near-24h alias sensitivity; historical amplitudes are not guaranteed for 2026. Preserve LCDB U=2+ alongside paper Q=3."
+  },
+  "22180": {
+    "role": "alias_review",
+    "review_date": "2026-11-04",
+    "source": "review_pro_20261104.md; frozen LCDB, TSSYS DR1 and TESS2025 records",
+    "reason": "LCDB 19.39h U=2+, DR1 26.1284h and TESS2025 29.51h with roughly 2–547h interval warrant alias review. TESS analyses are not independent observations; no unique new period claimed."
+  }
+}
