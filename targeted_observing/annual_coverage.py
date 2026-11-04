@@ -9,27 +9,29 @@ from .catalog import BASE,write_csv
 from .geometry import in_field,coord,offset,unix
 from .annual_sources import dates
 from .annual_weather import ensemble
+from .annual_timing import prepare,mask,row_times
 
 
 @lru_cache(maxsize=16384)
-def pixels(ra,dec,nside):
+def pixels(ra,dec,nside,margin=0):
     ids=hp.query_disc(nside,hp.ang2vec(ra,dec,lonlat=True),np.deg2rad(2.123),inclusive=True)
     r,d=hp.pix2ang(nside,ids,lonlat=True)
-    return ids[in_field(r,d,ra,dec,3,0)]
+    return ids[in_field(r,d,ra,dec,3,margin)]
 
 
 def window_pixels(blocks,nside):
-    all_pixels=[];counts=[];first=[];last=[]
+    all_pixels=[];counts=[];first=[];last=[];full_pixels=[]
     for b in blocks:
         for f in b['fields']:
             ts=[unix(r['mid_utc']) for r in b['rows'] if r['field_id']==f['field_id']]
-            ids=pixels(f['ra_deg'],f['dec_deg'],nside)
+            full_pixels.extend(pixels(f['ra_deg'],f['dec_deg'],nside))
+            ids=pixels(f['ra_deg'],f['dec_deg'],nside,.15)
             all_pixels.extend(ids);counts.extend([len(ts)]*len(ids));first.extend([min(ts)]*len(ids));last.extend([max(ts)]*len(ids))
     if not all_pixels:return np.array([],dtype=int),np.array([],dtype=int)
     ids,inv=np.unique(all_pixels,return_inverse=True);n=np.zeros(len(ids),dtype=int)
     lo=np.full(len(ids),np.inf);hi=np.full(len(ids),-np.inf)
     np.add.at(n,inv,counts);np.minimum.at(lo,inv,first);np.maximum.at(hi,inv,last)
-    return ids,ids[(n>=4)&(hi-lo>=720)]
+    return np.unique(full_pixels),ids[(n>=4)&(hi-lo>=720)]
 
 
 def union_area(plans,nside):
@@ -70,7 +72,7 @@ def recover(blocks,initial,weather,night_index,side,limiting_mag,rng):
     n=len(initial['ra']);count=np.zeros(n,int);lo=np.full(n,np.inf);hi=np.full(n,-np.inf)
     realizations=initial['realization'];slot=0 if side=='EV' else 2
     for block in blocks:
-        rows=block['rows'];ts=np.array([unix(r['mid_utc']) for r in rows])
+        rows=block['rows'];ts=row_times(block)
         w=lambda key:weather[key][realizations,night_index,slot]
         shifts=w('delay_s')[:,None]+np.arange(len(rows))[None,:]*(w('extra_readout_s')+w('extra_slew_s'))[:,None]
         actual=ts[None,:]+shifts
@@ -82,13 +84,19 @@ def recover(blocks,initial,weather,night_index,side,limiting_mag,rng):
         cloud=(fraction>=w('cloud_start_fraction')[:,None])&(fraction<w('cloud_start_fraction')[:,None]+w('cloud_duration_fraction')[:,None])
         safe=(actual+30<end)&~cloud&clear[:,None]
         # A conservative motion-in-time margin avoids declaring shifted edge frames safe.
-        margins=np.array([block['quality'][r['field_id']]['min_footprint_alt_bound_deg']-30 for r in rows])
-        safe&=shifts*.0043<margins[None,:]
+        safe&=mask(block,[r['field_id'] for r in rows],actual)
         trail=initial['speed'][:,None]*3600/86400*30
         loss=1.25*np.log10(1+(trail/(2*w('seeing_arcsec')[:,None]))**2)
         # Approximate twilight penalty from window position; explicitly scenario-based.
-        penalty=.8*(1-fraction if side=='EV' else fraction)
-        depth=limiting_mag-loss-penalty
+        second_half=(block['block_id']=='EV_B' or block['block_id']=='AM_A') and len(rows)==20
+        window_start=start-(1800 if second_half else 0)
+        window_fraction=np.clip((actual-window_start)/3600,0,1)
+        penalty=.8*(1-window_fraction if side=='EV' else window_fraction)
+        moon_loss=np.column_stack([np.interp(actual[:,j],block['timing_grid'],block['timing_moon_loss'][r['field_id']]) for j,r in enumerate(rows)])
+        altitude=np.column_stack([np.interp(actual[:,j],block['timing_grid'],block['timing_alt'][r['field_id']]) for j,r in enumerate(rows)])
+        extinction=.15*(1/np.sin(np.deg2rad(altitude))-1)
+        seeing_loss=2.5*np.log10(w('seeing_arcsec')[:,None]/2)
+        depth=limiting_mag-loss-penalty-moon_loss-extinction-seeing_loss
         probability=1/(1+np.exp((initial['mag'][:,None]-depth)/.25))
         detected=inside&safe&(rng.random(inside.shape)<probability)
         count+=detected.sum(axis=1)
@@ -97,28 +105,37 @@ def recover(blocks,initial,weather,night_index,side,limiting_mag,rng):
     return (count>=4)&(hi-lo>=720)
 
 
-def injections(plans,spec,limiting_mag=20.,per_cell=12):
+def injections(plans,spec,limiting_mag=20.,per_cell=12,causal=None):
     nights=[p['date'] for p in plans];weather=ensemble(nights,spec['weather_realizations'],spec['seed']);rng=np.random.default_rng(spec['seed']+71)
     output=[];speeds=np.array([.1,.3,.7,1.5,5.]);magnitudes=np.array([17.,18.,19.,20.,21.])
     speed,mag=np.meshgrid(speeds,magnitudes);speed=np.repeat(speed.ravel(),per_cell);mag=np.repeat(mag.ravel(),per_cell)
+    def selected(index,side,realization):
+        if causal is None:return [b for b in plans[index]['blocks'] if b['block_id'].startswith(side)]
+        menus,choices,sky=causal;menu=menus[index];slot=0 if side=='EV' else 2
+        indices=choices[realization,index,slot]
+        names=[side+'_A'] if menu['config']['twilight']['visits']==10 else [side+'_'+x for x in (['A','B'] if side=='EV' else ['B','A'])]
+        blocks=[menu['options'][name][int(i)] for name,i in zip(names,indices) if i>=0]
+        for block in blocks:prepare(block,sky)
+        return blocks
     for index,plan in enumerate(plans):
         for side in ('EV','AM'):
-            blocks=[b for b in plan['blocks'] if b['block_id'].startswith(side)]
+            cohort=(index*2+(side=='AM'))%spec['weather_realizations']
+            blocks=selected(index,side,cohort)
             fields=[f for b in blocks for f in b['fields']]
             if not fields:continue
-            n=len(speed);choices=rng.integers(0,len(fields),n);ras=[];decs=[]
-            for j in choices:
-                f=fields[j];p=offset(coord(f['ra_deg'],f['dec_deg']),rng.uniform(-1.5,1.5),rng.uniform(-1.5,1.5));ras.append(p.ra.deg);decs.append(p.dec.deg)
+            n=len(speed);choices=rng.integers(0,len(fields),n);xy=rng.uniform(-1.5,1.5,(n,2))
+            p=offset(coord([fields[j]['ra_deg'] for j in choices],[fields[j]['dec_deg'] for j in choices]),xy[:,0],xy[:,1])
+            ras=p.ra.deg;decs=p.dec.deg
             epoch=min(unix(r['mid_utc']) for b in blocks for r in b['rows'])
             initial={'ra':np.array(ras),'dec':np.array(decs),'bearing':rng.uniform(0,2*np.pi,n),'speed':speed,'mag':mag,
-                     'epoch':epoch,'realization':np.arange(n)%spec['weather_realizations']}
+                     'epoch':epoch,'realization':np.full(n,cohort) if causal is not None else np.arange(n)%spec['weather_realizations']}
             first=recover(blocks,initial,weather,index,side,limiting_mag,rng)
             later={}
             for gap in (1,3):
                 if index+gap>=len(plans):later[gap]=None;continue
                 p=plans[index+gap];result=np.zeros(n,bool)
                 for s in ('EV','AM'):
-                    bs=[b for b in p['blocks'] if b['block_id'].startswith(s)]
+                    bs=selected(index+gap,s,cohort)
                     result|=recover(bs,initial,weather,index+gap,s,limiting_mag,rng)
                 later[gap]=result
             for i in range(n):
@@ -133,22 +150,41 @@ def injections(plans,spec,limiting_mag=20.,per_cell=12):
 
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--visits',type=int,choices=(5,10),required=True);p.add_argument('--nside',type=int,default=512)
-    p.add_argument('--days',type=int);p.add_argument('--skip-injections',action='store_true');args=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('--visits',type=int,choices=(5,10),required=True);p.add_argument('--nside',type=int,default=1024)
+    p.add_argument('--days',type=int);p.add_argument('--skip-injections',action='store_true');p.add_argument('--causal',action='store_true')
+    p.add_argument('--skip-area',action='store_true');p.add_argument('--limiting-mag',type=float,default=20.);args=p.parse_args()
     spec=json.loads((BASE/'annual_defaults.json').read_text());nights=dates(spec['start_date'],spec['stop_date_exclusive'])
     if args.days:nights=nights[:args.days]
     root=BASE/'products/annual'/f'twilight_{args.visits}';plans=[json.loads((root/f'{d}.json').read_text()) for d in nights]
-    rows,summary=union_area(plans,args.nside);summary['night_count']=len(plans)
-    write_csv(root/f'coverage_nside{args.nside}.csv',rows)
-    (root/f'coverage_nside{args.nside}.json').write_text(json.dumps(summary,indent=2)+'\n')
+    source_root=root
+    if args.days:
+        root=root/f'smoke_{args.days}days';root.mkdir(exist_ok=True)
+    if not args.skip_area:
+        rows,summary=union_area(plans,args.nside);summary['night_count']=len(plans)
+        write_csv(root/f'coverage_nside{args.nside}.csv',rows)
+        (root/f'coverage_nside{args.nside}.json').write_text(json.dumps(summary,indent=2)+'\n')
     if not args.skip_injections:
-        rows=injections(plans,spec);write_csv(root/'moving_injections.csv',rows)
-        (root/'injection_assumptions.json').write_text(json.dumps({'population':'uniform seeds within scheduled footprints, not normalized NEO population',
+        from .geometry import Sky,setup_iers
+        setup_iers(BASE/'cache'/spec['iers_file'])
+        for plan in plans:
+            sky=Sky(plan['config'])
+            for block in plan['blocks']:prepare(block,sky)
+        causal=None
+        if args.causal:
+            menus=[json.loads((source_root/'menus'/f'{d}.json').read_text()) for d in nights]
+            choices={tuple(row[:3]):tuple(row[3:]) for row in np.load(source_root/'causal_choices.npz')['choices']}
+            causal=(menus,choices,Sky(plans[0]['config']))
+        rows=injections(plans,spec,limiting_mag=args.limiting_mag,causal=causal)
+        tag=f'{"causal_" if args.causal else ""}r{args.limiting_mag:g}'
+        write_csv(root/f'moving_injections_{tag}.csv',rows)
+        (root/f'injection_assumptions_{tag}.json').write_text(json.dumps({'population':'uniform seeds within scheduled footprints, not normalized NEO population',
             'motion':'great-circle constant angular velocity over 3 days; no acceleration/orbit ambiguity',
-            'depth':'r30 dark 20 mag scenario; logistic width .25mag; .8mag twilight-position penalty',
+            'depth':f'r30 dark {args.limiting_mag:g} mag scenario; logistic width .25mag; .8mag twilight-position penalty; explicit airmass, Moon, seeing and trailing losses',
             'linking':'truth-associated recovery upper bound; no false detections or orbit-link ambiguity model',
-            'weather':'shared 200-realization ensemble; seeds balanced across realizations; nominal field choices',
-            'limitations':'Nominal anchors are not rescheduled here after bad weather. Report this separately from a causal execution queue.'},indent=2)+'\n')
+            'weather':'shared 200-realization ensemble; one rotating realization per window cohort' if args.causal else 'shared 200-realization ensemble; seeds balanced across realizations',
+            'field_policy':'causal weather-feedback anchor queue' if args.causal else 'nominal anchors, not rescheduled after weather',
+            'conditioning':'initial window has a scheduled group; closed initial windows are counted separately in causal execution ledger',
+            'limitations':'Truth-associated recovery is an upper bound on real linking; end-of-year follow-ups are right-censored.'},indent=2)+'\n')
 
 
 if __name__=='__main__':main()

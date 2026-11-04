@@ -5,16 +5,17 @@
 - [Bolin et al. 2024，Palomar twilight survey](https://arxiv.org/abs/2409.15263)：支持r短曝光、同窗多次访问与恢复链；不把ZTF发现率缩放成本台预测。
 - [ZTF官方Trojan实验](https://www.ztf.caltech.edu/ztf-experiments.html)：已有g/r、180秒、约小时采样实验；本项目应强调少数目标分钟级连续光变和多夜一致性。
 - [Li et al. 2025](https://arxiv.org/abs/2504.15530)，[发表记录](https://authors.library.caltech.edu/records/8ecpv-f3d69)，[作者数据表](https://github.com/ZhuofuLi/ZTF-Jupiter-Trojan-Rotation-Periods)：读取216对象周期与可靠性列；低质量差异只能列为待检验候选。
+- [Huang et al. 2026，KMTNet](https://arxiv.org/abs/2606.26184)：2018季节的一平方度样本获得96颗可靠周期，84颗此前没有发表光变。三站近连续覆盖和样本类型与SHARP不同，不能按面积直接换算Trojan产额。
 - [Ďurech & Hanuš 2026](https://arxiv.org/abs/2610.06082)，[Zenodo结果表](https://doi.org/10.5281/zenodo.22812438)：下载完整/partial自转表，交叉247个Trojan背景；这改变了“无已知周期”的判断。
 - [DAMIT数据导出](https://damit.cuni.cz/projects/damit/exports)：交叉asteroids与asteroid_models，以正式number连接；模型版本可能更新，与新论文不是独立样本。
 - [LCDB官网](https://minorplanet.info/php/lcdb.php)：公开版2023-10-01。读取summary固定列、保留U；目录未命中不等于周期未知。
 - [Pál et al. 2020 TSSYS-DR1](https://arxiv.org/abs/2001.05822)，[作者发布表](https://archive.konkoly.hu/pub/tssys/dr1/)：取得release.merge及列说明，检查本次全部60个候选。
-- [TESS 2025重分析](https://arxiv.org/abs/2501.07189)，[CDS目录](https://cdsarc.cds.unistra.fr/viz-bin/ReadMe/J/A%2BA/693/A66?format=html&tex=true)：文章可定位，FTP主站和HTTPS镜像下载分别SSL EOF/502失败；**未完成逐对象重分析表匹配**，DR1不能替代这份表。
+- [TESS 2025重分析](https://arxiv.org/abs/2501.07189)，[CDS目录](https://cdsarc.cds.unistra.fr/viz-bin/ReadMe/J/A%2BA/693/A66?format=html&tex=true)：初次主站下载失败，后已从VizieR IDIA镜像取得完整9912行主表并逐对象匹配。保留上下界、完整区间宽度及备选周期；重分析与DR1不构成独立观测证据。来源和hash见 `data/review_sources_20261103.json`。
 - [TESS EDR2](https://arxiv.org/abs/2503.13332)：已获取论文，44目标的特定样本不代表全部TESS覆盖。
 - [Mottola et al. 2011](https://doi.org/10.1088/0004-6256/141/5/170)：直接检查5476的5.78小时和5511的长周期讨论，后者依赖跨夜比较星一致测光。
 - [SBDB Query文档](https://ssd-api.jpl.nasa.gov/doc/sbdb_query.html)及[Horizons API文档](https://ssd-api.jpl.nasa.gov/doc/horizons.html)：TJN目录用于初筛，实际目标轨迹使用站心观测星历，RA/Dec为ICRF天测坐标、时间UTC。
 
-## 当前两场的科学用途
+## 首轮两场的科学用途（历史基线，年度队列不局限于这五个对象）
 
 | 核心对象 | 公共周期证据 | 本轮用途 |
 |---|---|---|

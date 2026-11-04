@@ -1,2 +1,3 @@
 -r requirements.txt
 healpy>=1.17
+pandas>=2.0

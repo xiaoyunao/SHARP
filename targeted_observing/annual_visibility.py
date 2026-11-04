@@ -35,18 +35,24 @@ def visibility_chunk(job):
             m=sky.metrics([f['ra_deg'] for f in fields],[f['dec_deg'] for f in fields],grid)
             # Entire spherical footprint; 0.645deg between-grid time bound and 0.01deg numeric margin.
             altlim=max(config['center_alt_deg'],config['min_alt_deg']+2.122)+.0043*150+.01
-            # Moon separation varies slowly; use the same larger rotation bound conservatively,
-            # and the bright-Moon limit at all phases so a threshold crossing cannot slip through.
-            moonlim=config['bright_moon_sep_deg']+2.122+.0043*150+.01
-            good=(m['alt']>=altlim)&((m['moon_sep']>=moonlim)|(m['moon_alt'][None,:]<-.0043*150-.01))
+            # A .001 phase margin covers the 300s interpolation interval near the
+            # bright-Moon transition; the angular guard encloses the whole field.
+            moonlim=np.where(m['moon_fraction']>=config['bright_moon_fraction']-.001,
+                             config['bright_moon_sep_deg'],config['moon_sep_deg'])
+            if spec.get('moon_policy')=='fixed40':moonlim=np.full(len(grid),config['bright_moon_sep_deg'])
+            moonlim=moonlim+2.122+.0043*150+.01
+            good=(m['alt']>=altlim)&((m['moon_sep']>=moonlim[None,:])|(m['moon_alt'][None,:]<-.0043*150-.01))
             for j in range(len(starts)):valid[:,j]=np.all(good[:,j:j+25],axis=1)
             for j,f in enumerate(fields):
                 if f['very_bright_star_risk']:valid[j]=False
-        np.savez_compressed(root/f'{day}.npz',starts=starts,valid=valid)
+        arrays={'starts':starts,'valid':valid,'grid':grid}
+        if fields and len(starts):
+            arrays.update(alt=m['alt'],moon_sep=m['moon_sep'],moon_fraction=m['moon_fraction'],moon_alt=m['moon_alt'])
+        np.savez_compressed(root/f'{day}.npz',**arrays)
         (root/f'{day}.json').write_text(json.dumps({'date':day,'night':night,'fields':fields,
             'campaign_start':nights[0],'campaign_stop':stop,'menu_span_s':7200,
             'grid_step_s':300,'time_guard_deg':.655,
-            'moon_policy':'conservative bright-moon limit for all phases',
+            'moon_policy':spec.get('moon_policy','phase_dependent'),
             'zero_reason':None if valid.any() else 'no full two-hour interval for campaign fields',
             'state':'planning envelope; dispatch still requires individual exposure validation'})+'\n')
         result.append({'date':day,'candidate_fields':len(fields),'eligible_fields':int(np.any(valid,axis=1).sum()),
@@ -56,7 +62,10 @@ def visibility_chunk(job):
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('--workers',type=int,default=4);p.add_argument('--days',type=int);p.add_argument('--limit',type=int)
-    args=p.parse_args();spec=json.loads((BASE/'annual_defaults.json').read_text());nights=dates(spec['start_date'],spec['stop_date_exclusive'])
+    p.add_argument('--moon-policy',choices=['fixed40','phase_dependent'])
+    args=p.parse_args();spec=json.loads((BASE/'annual_defaults.json').read_text())
+    if args.moon_policy:spec['moon_policy']=args.moon_policy
+    nights=dates(spec['start_date'],spec['stop_date_exclusive'])
     if args.days:nights=nights[:args.days]
     jobs=[(nights[i:i+spec['campaign_days']],spec,args.limit) for i in range(0,len(nights),spec['campaign_days'])]
     results=[]

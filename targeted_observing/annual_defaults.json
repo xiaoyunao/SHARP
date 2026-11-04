@@ -8,12 +8,15 @@
   "candidate_min_dec_deg": -29.0,
   "preselection_step_days": 7,
   "horizons_step": "6h",
+  "moon_policy": "phase_dependent",
   "campaign_days": 35,
   "field_version_days": 7,
   "field_counts": [2, 3, 4, 6],
   "dwells": [1, 2],
   "weather_realizations": 200,
   "seed": 20261104,
+  "science_priority_strength": 0.25,
+  "queue_policy_version": 3,
   "quality": {
     "points": 100, "nights": 10, "points_per_night": 5,
     "night_span_s": 1800, "baseline_days": 21,
@@ -23,11 +26,13 @@
   "photometry_scenarios": {
     "optimistic": {"sigma_r18_120s": 0.015, "night_zeropoint": 0.008, "usable_fraction": 0.95},
     "baseline": {"sigma_r18_120s": 0.025, "night_zeropoint": 0.012, "usable_fraction": 0.85},
-    "conservative": {"sigma_r18_120s": 0.04, "night_zeropoint": 0.02, "usable_fraction": 0.70}
+    "conservative": {"sigma_r18_120s": 0.04, "night_zeropoint": 0.02, "usable_fraction": 0.70},
+    "precision_requirement": {"sigma_r18_120s": 0.01, "night_zeropoint": 0.008, "usable_fraction": 0.95}
   },
   "assumptions": [
     "V is not calibrated r: adopt r=V for baseline and report color sensitivity.",
     "Photometric and weather parameters are planning scenarios, not instrument measurements.",
+    "precision_requirement is an extra sensitivity experiment, beyond the optimistic case, not a performance claim.",
     "All candidate screening uses full TJN input; two-body preselection is not executable ephemeris."
   ]
 }

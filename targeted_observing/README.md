@@ -81,9 +81,11 @@ python3 -m targeted_observing.feedback --input my_actual_exposures.csv --output 
 
 见 [GPT Pro审查修改与复现](docs/PRO_REVIEW_CHANGES_20261103.md)。晨昏采用A/B联合选择与三夜前瞻/复用，单场退化按预算取点，Trojan统一按计划访问≥80%留场。`design_campaign`现输出三组比较，完整结果位于输出目录各候选子目录；不自动覆盖旧campaign。当前角色分类、候选池和亮星缓存的限制均在报告中说明。
 
-## 一年期模式（开发中）
+## 一年期模式（本地模拟已完成）
 
 当前目标以 [年度GOAL](docs/GOAL.md) 和 [最新需求正文](docs/annual_requirements_pro_20261104.md) 为准。旧60对象/三夜方案只作为回归基线。`annual_defaults.json`固定日期、候选宽松门槛、2/3/4/6场、驻场张数、200天气实现与三种假定r性能；不是现场测量值。
+
+另有 `precision_requirement` 灵敏度探索情景，不能称为已实现的仪器性能。年度主队列将文献权重以25%强度纳入完成概率评分，保留未核查状态；达到点数/夜数、但等待21天基线的对象先释放致密采样，届时回来补齐。评分不读取未来天气。`--science-strength 0`用于纯吞吐量对照，`--duration-s 10800/14400`仅作额外时间申请实验，不能由标准两小时模式执行。
 
 年度去重面积使用HEALPix球面像素，需要 `pip install -r targeted_observing/requirements-annual.txt`；这一额外依赖仅用于面积评估，不改变原调度器依赖。
 
@@ -91,12 +93,21 @@ python3 -m targeted_observing.feedback --input my_actual_exposures.csv --output 
 python3 -m targeted_observing.annual_sources --workers 2
 python3 -m targeted_observing.annual_twilight --workers 4
 python3 -m targeted_observing.annual_visibility --workers 4
-python3 -m targeted_observing.annual_trojan --workers 4
-python3 -m targeted_observing.annual_coverage --visits 5
-python3 -m targeted_observing.annual_coverage --visits 10
+python3 -m targeted_observing.annual_simulation --workers 4 --save-curves --scenario baseline optimistic conservative
+python3 -m targeted_observing.annual_simulation --workers 4 --nominal --scenario baseline
+python3 -m targeted_observing.annual_twilight_queue --visits 5 --workers 3
+python3 -m targeted_observing.annual_twilight_queue --visits 10 --workers 3
+python3 -m targeted_observing.annual_coverage --visits 5 --causal --limiting-mag 20
+python3 -m targeted_observing.annual_coverage --visits 10 --causal --limiting-mag 20
+python3 -m targeted_observing.annual_delivery
+python3 -m targeted_observing.annual_effective_area
 python3 -m unittest discover -s targeted_observing/tests -v
 ```
 
 数据/计划保存在忽略提交的 `cache/annual` 和 `products/annual`；下载可续跑。`--days 3 --limit 60`仅用于Trojan/visibility冒烟，不能用于年度结论。晨昏全年输出包含两个策略各730窗口及零计划理由。星历必须完整；失败表不允许静默丢掉对象。新IERS `iers_20261104.all` 覆盖到2027-11-05，仍是预测规划数据。
 
-名义计划使用计划成功反馈，不等于真实完成；`AnchorState.feedback`只应在实际有效短弧后更新三夜期限。年度天气模拟必须使用自己的逐对象累计状态；`annual_visibility`提供带保守时间余量的可选时窗，避免按未来天气设计队列。周期恢复、面积/移动目标恢复和两份全年科学报告尚在实施，不能把当前候选池或几何点数作为已完成产出。
+名义计划使用计划成功反馈，不等于真实完成；`AnchorState.feedback`只应在实际有效短弧后更新三夜期限。年度天气模拟使用自己的逐对象累计状态；`annual_visibility`提供带保守时间余量的可选时窗，避免按未来天气设计队列。完成后的光变保存合格前缀，后续低质量伴随帧不会抹掉已有证书。
+
+完整结果和其余周期/三深度/额外预算复现命令见 [年度材料索引](docs/annual_reports/README.md)、[Trojan报告](docs/annual_reports/TROJAN_ANNUAL_REPORT.md)、[晨昏报告](docs/annual_reports/TWILIGHT_ANNUAL_REPORT.md)。已生成365夜主方案、37078条曝光并独立验收；比较24组标准策略、各200天气实现。四场驻场两张的基准合格光变P10/P50/P90=36/42/47，当前两小时模式不能承诺百颗；周期与振幅另计。四小时/更高精度仅为额外申请实验，不改变正常预算。
+
+`annual_trojan`是先前名义评分的参考实现；最终主方案由`annual_simulation --nominal`和`annual_delivery`生成。原三夜`defaults.json`及冻结campaign保留，年度推荐不静默替换它们。GitHub同步源码和审查摘要；大型年度产品、原始科学缓存留在本地。精确复现数字需要保留当前输入快照；日后重新下载的目录和IERS可能不同。

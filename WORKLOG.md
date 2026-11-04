@@ -2,6 +2,22 @@
 
 ## 2026-11-04
 
+- annual_delivery: 完成science25_v3主队列、24组标准策略各365夜×200天气实现；8组全晴名义对照；365夜组合37078曝光独立5秒几何/时间/版本验收通过。合格前缀重新计算realization0共37对象通过；全24组累计质量单调、对象去重与时间账本闭合。
+- science_result: 四场驻场两张基准36/42/47、乐观55/62.5/70颗质量光变（P10/P50/P90），标准24组均0/200达101。三形状总体注入基准盲搜正确且唯一24/28/32；与质量光变分开。四小时八场+假定0.01mag实验102.9/117/128.1、达101频率92%，未改正常预算。
+- twilight_result: 五访/十访各730名义窗口、146000因果执行记录；名义去重6180.93/3812.19平方度，天气实现0实际有效帧去重4344.88/2694.80平方度；nside512/1024差异列明。移动源三深度、五速度/星等含拖线、月光、气团、seeing和+1/+3传播；真值关联上限不称真实链接或NEO发现率。
+- fixes_final: 质量累计不再被后续低精度伴随帧撤销；点/夜已够的目标等待21日时释放致密采样，之后补齐；复算实际时移几何，晨昏按field ID累计三有效夜。有效面积重放补prepare以兼容早期菜单缺timing_valid；报告CSV采用可空布尔避免末年右删失混型。
+- files: annual_simulation/periods/period_yield/timing/twilight_queue/delivery/effective_area/report；annual_coverage/weather/visibility/defaults；docs/annual_reports两报告、七图和审查表；GOAL/README/PLAN/CHANGELOG。原生产代码、outputs/与缓存保留。
+- validation: 35项unittest通过，年度模块py_compile；主计划365夜独立5秒校验；有效面积逐窗口曝光/短弧数与执行账本一致；图件已目视检查；最终报告生成器强制24组完整性与质量/时间闭合。最终git差异检查通过；交付提交包含源码和审查摘要，缓存仍忽略。
+- commands: annual_simulation --save-curves/--nominal；annual_periods与annual_period_yield；annual_coverage --causal --limiting-mag 19/20/21；annual_delivery；annual_effective_area；annual_report。完整产品在ignored products/annual，源码与审查摘要同步专用分支。
+- remaining: 百颗是未达到的条件科学指标，不冒称达成；真实r/CCD污染/控制token/快速NEO管线待现场。两份报告明确模型及未建模项。仅本地，无服务器连接。
+
+- annual_progress: 1063/1063全年站心星历成功；12历元独立1h查询检验6h插值，最大0.511角秒；365夜双晨昏名义模式完成并逐曝光验证。全量母表16445行保留拒绝理由；H>=14排除对象的二体最亮界没有V<=19.2对象。
+- simulation: 完成2/3/4/6场×1/2张驻场×3精度情景×200相关天气实现；首轮固定40度避月作为diagnostic归档，主几何改为原30/40度相位规则。预算3/4小时和额外精度探索仅为申请敏感性，不改变标准两小时上限。
+- queue_revision: 引入文献软权重、已知未来几何/历史月天气的完成机会评分，修复点/夜已够但等待21天基线时仍过度拍摄的低效；v2在等待期转向新对象并回访。v1已完成部分保留诊断，未完成进程已明确停止；v2统一重跑中。
+- quality: 实测模拟时间、点误差、夜间相关零点、坏点/云/晚到/读出/转场、外部预约；输出逐对象质量、逐夜账本和独立的周期/振幅注入。周期唯一性额外要求±1%局部周期移动也超过delta-chi2=9，仍只作启发式、真值可验证的注入指标。
+- twilight: 三有效夜锚点反馈队列、14日历史可行菜单、HEALPix去重和移动源0.1–5deg/day注入；实际延时后采用30秒网格完整曝光几何mask。修复局部变量mask遮蔽函数导致的UnboundLocalError，重跑两策略；没有修改生产检测速度范围。
+- validation: 32项测试通过后又补基线等待/返回与实际几何网格回归；新测试已执行。完整年度材料、最终主队列结果与独立复验仍进行中，不能把早期诊断数当最终申请结论。
+
 - task: read_thread恢复后取得最新两轮GPT Pro正文；范围改为一年365夜/730窗口及百颗质量光变目标，归档annual_requirements_pro/review_pro_20261104，更新GOAL/PLAN。正文所引用额外附件尚未取得，不冒称已读。
 - repairs: execution迟到后刷新曝光target_states；共用几何和独立验收都复验黄纬；支持Trojan AABB及完整cadence分布；晨昏四场十访；2223已知周期控制源/22180别名复核，保留原LCDB质量。
 - sources: 全量16445 TJN的每周二体宽松筛选得到1063年度Horizons候选；USNO新IERS覆盖至2027-11-05；引用MNRAS 2022 Table3历史月可观测率，明确不是测光夜率。年度下载与全年晨昏模拟进行中。

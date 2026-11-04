@@ -1,0 +1,136 @@
+{
+  "scope": "frozen input/code/product fingerprints for this local annual assessment",
+  "python": "3.12.2",
+  "packages": {
+    "numpy": "1.26.4",
+    "scipy": "1.16.2",
+    "pandas": "2.2.2",
+    "astropy": "6.1.3",
+    "astroquery": "0.4.10",
+    "healpy": "1.18.1",
+    "matplotlib": "3.9.2"
+  },
+  "configuration": {
+    "start_date": "2026-11-01",
+    "stop_date_exclusive": "2027-11-01",
+    "lookahead_days": 3,
+    "iers_file": "iers_20261104.all",
+    "candidate_max_H": 14.0,
+    "candidate_V_limit": 19.7,
+    "candidate_min_dec_deg": -29.0,
+    "preselection_step_days": 7,
+    "horizons_step": "6h",
+    "moon_policy": "phase_dependent",
+    "campaign_days": 35,
+    "field_version_days": 7,
+    "field_counts": [
+      2,
+      3,
+      4,
+      6
+    ],
+    "dwells": [
+      1,
+      2
+    ],
+    "weather_realizations": 200,
+    "seed": 20261104,
+    "science_priority_strength": 0.25,
+    "queue_policy_version": 3,
+    "quality": {
+      "points": 100,
+      "nights": 10,
+      "points_per_night": 5,
+      "night_span_s": 1800,
+      "baseline_days": 21,
+      "median_random_error_mag": 0.03,
+      "fraction_below_005": 0.8,
+      "max_zeropoint_mag": 0.02
+    },
+    "photometry_scenarios": {
+      "optimistic": {
+        "sigma_r18_120s": 0.015,
+        "night_zeropoint": 0.008,
+        "usable_fraction": 0.95
+      },
+      "baseline": {
+        "sigma_r18_120s": 0.025,
+        "night_zeropoint": 0.012,
+        "usable_fraction": 0.85
+      },
+      "conservative": {
+        "sigma_r18_120s": 0.04,
+        "night_zeropoint": 0.02,
+        "usable_fraction": 0.7
+      },
+      "precision_requirement": {
+        "sigma_r18_120s": 0.01,
+        "night_zeropoint": 0.008,
+        "usable_fraction": 0.95
+      }
+    },
+    "assumptions": [
+      "V is not calibrated r: adopt r=V for baseline and report color sensitivity.",
+      "Photometric and weather parameters are planning scenarios, not instrument measurements.",
+      "precision_requirement is an extra sensitivity experiment, beyond the optimistic case, not a performance claim.",
+      "All candidate screening uses full TJN input; two-body preselection is not executable ephemeris."
+    ]
+  },
+  "sha256": {
+    "annual_defaults.json": "6a706bc16e82e483d07b30da3e4341731d2ef37c3ab604656b01a082c739b8b0",
+    "defaults.json": "34cc8d9d4fc40ccde462f39d1352f4d57ed39629666a87d919dcb1a030215c3b",
+    "data/weather_prior.json": "5ad5a6f2d8010573b5b5702b141d6e0cb589614791873e7cb997f253e1d7588d",
+    "cache/trojans.json": "ef907d141b4cb2fcdc3eb2f3a00d2f34c971898f61f21c2e06cec342cc2086b0",
+    "cache/tess2025.tsv": "27dbf7f8470459f41e32b6fa50cc7f8ea02b46cd5a048d9434f58fceb009ac9c",
+    "cache/iers_20261104.all": "f7c0e9e5033b92ecd2488cf20cdf015c8aa2229f3153eceafd17d862b19fc961",
+    "products/annual/input_verification.json": "35a5e0d26fe2a248c1c1f5e5e586d25e670d3c89035ed40b727509ab2b5a0894",
+    "products/annual/screening_manifest.json": "4eb976ba3b66d64a14c6c804c24184935d5ac5cc970fdf73614c42aea2fbc8ba",
+    "products/annual/selected_nominal/verification.json": "8104165cfedb96d4494b27f067a8ed619288c87d4d3e85742aedcf540709124f",
+    "products/annual/selected_nominal/exposures.csv": "eff768d7021ee88a65a18fc29d90fe6c2777410e7eb6ddfa5125f8f0ba9e030b",
+    "annual_period_yield.py": "a3320ddcfab0319ac5b76527e576767a012c0c61014633dca7c7bac4e8b40eb7",
+    "annual_twilight_queue.py": "f594cf922e45e724a5acbe80c2f38a57d042aa1a40e7b819934c3e27302fc143",
+    "annual_coverage.py": "008b4258b441c406e06f15302fdbe5e0ef220c66e2c537009fcfaba461cb35b5",
+    "annual_delivery.py": "cb1b496a8ea04cc5474866321a317199dd93f62e61951ba564bd3d4065787fb0",
+    "annual_twilight.py": "a940ad4a81d3838d42df656af89005f2fe0ce69ffa8aae65991fabf199a4e66c",
+    "annual_weather.py": "70461ec3a69c17ebbb72c46ccf6d7b93d92d1ab4936bf66ce2237a847919f3e2",
+    "annual_visibility.py": "e8c801d5ff284ff3c49398355762210b901262f60a572984c13b78c14aec75cd",
+    "annual_ephemeris_qa.py": "e0d8abf142fd5f601c32a6538b65c261e436603711debf3dbb72b2e0b9f66197",
+    "annual_sources.py": "b176a7d4fe29e59d6dee8776fbe3ee90a395e3668e6c3e38307e45f57ec8df4b",
+    "annual_trojan.py": "3f57cc7ae98c5d5809d169c1a3ac7370f2f10545245ecbee223e6ae9ae40326b",
+    "annual_timing.py": "14ce0b53e9c65acb8744dd4a812c6a1c8802961b8d3294c9d319ea9d0f4fb397",
+    "annual_periods.py": "ae43f63f399f11b481f66c1a0d1f1f20d7f9a208278c101565a4e83a9a87269d",
+    "annual_effective_area.py": "e79a629cba10f4d6a8dcb156e7af924c206df78d617cb5ca5e89fc947f2821f1",
+    "annual_simulation.py": "0d3788eb0b9d725c52cd73194c903b7407de03ef5728a2bc8ff3fcfc8e0d249f",
+    "annual_report.py": "96aad20e136f3919fcd8c1cff5792be09d5513f7b30d73bd0589e0c3c4d99e95",
+    "products/annual/queue_3fields_dwell1_conservative_science25_v3/summary.json": "19f3b9b587402338a1ba72cd267723100fbf88e1b161d310d68862d6485e5bdf",
+    "products/annual/queue_3fields_dwell2_optimistic_science25_v3/summary.json": "8f0c82368505a8b5cb1b346b8b4ceddb5679c2c0037d62d7f9300b8fcf2c64f9",
+    "products/annual/queue_4fields_dwell2_optimistic_science25_v3/summary.json": "b79fb105cfe4448eb9d4ccc6a54635fc9af55f8048bf3dba63684c284dbda028",
+    "products/annual/queue_4fields_dwell1_baseline_science25_v3/summary.json": "ba37eaa5ccc00cbaeac97ab7fc7d72e57797141a82ef364c78f0d06c9bb25d5a",
+    "products/annual/queue_2fields_dwell1_baseline_science25_v3/summary.json": "136052887b816ae284f1c7b132fea894c7548761ea2a49d94e95fd4ebd6b5a5e",
+    "products/annual/queue_6fields_dwell2_baseline_science25_v3/summary.json": "bb6813326e64e340d806c34fe96b778190d6ec082e927689db2132432a69191c",
+    "products/annual/queue_6fields_dwell1_conservative_science25_v3/summary.json": "e3539f7140b2dec1edf10e2dc0fd9b6279ddfed700600d7df2021f7992457920",
+    "products/annual/queue_2fields_dwell2_optimistic_science25_v3/summary.json": "c993b20ff330d8e7a53ff5341dbaceb2f996199f0b9f0bfbd425fb644d3d2134",
+    "products/annual/queue_2fields_dwell1_optimistic_science25_v3/summary.json": "cf7da4db35c195ced231a11a0e3441c7ff9b68c285d36486f6bff3fa03393a63",
+    "products/annual/queue_4fields_dwell2_precision_requirement_science25_v3/summary.json": "8ecee37212ff013be72519a76c0106560d255051481f6946af445497c6e8ba6c",
+    "products/annual/queue_2fields_dwell2_conservative_science25_v3/summary.json": "98118d5fa8e063e571239a0db0c9a30c6d37130a28554399fb063db5eaed6da6",
+    "products/annual/queue_3fields_dwell1_baseline_science25_v3/summary.json": "462b909f357ed313ca4c02cd9aa458e7e565255a9c21aa2d4a8f9ada16f6c388",
+    "products/annual/queue_3fields_dwell1_optimistic_science25_v3/summary.json": "facc8d93d9d0f496c21be4e72a24d39a6ea061cb93ce45f6fdb2f4b587e192c0",
+    "products/annual/queue_4fields_dwell1_optimistic_science25_v3/summary.json": "b1fcb7ef7615fa99f6610a9e58cc8e3859dd45272546fd90053ca5f4172a2b96",
+    "products/annual/queue_4fields_dwell2_conservative_science25_v3/summary.json": "fae9595b56e53b8168a9d75ce30b7f0909832386d7c7e9e90111c35731d7af4f",
+    "products/annual/queue_6fields_dwell1_optimistic_science25_v3/summary.json": "e6d0e8cd117ff88e0fbdb69ff49cf44ab4829a5278b89309e555de6d810319ce",
+    "products/annual/queue_8fields_dwell2_optimistic_budget14400_science25_v3/summary.json": "996f96e1f634249778d7659fc4570156f45d1ba4e26fa22ede9d4de9360d9f54",
+    "products/annual/queue_6fields_dwell2_conservative_science25_v3/summary.json": "0c68d3dd8ee1f43fd7b3cb0c1d3239499bc742442fb8270213d46149e54a46ed",
+    "products/annual/queue_8fields_dwell2_baseline_budget14400_science25_v3/summary.json": "df25e95b40ca620d5a51b282ba443dc95d5173f9576d9e7ccf8b993976733daa",
+    "products/annual/queue_6fields_dwell1_baseline_science25_v3/summary.json": "e2c35bae2ae0abe14171436de3ff3a420d333e0521b6177576439bb4c9eb6334",
+    "products/annual/queue_2fields_dwell2_baseline_science25_v3/summary.json": "2db364a4c357a0761e122a617b7ce67d04568e649751861781299f35e0015dad",
+    "products/annual/queue_4fields_dwell2_baseline_science25_v3/summary.json": "ce6a52d7f10c4c2cf1a70381a591b77c3a4cb34be6c746db1ef3e358229ad2f4",
+    "products/annual/queue_3fields_dwell2_conservative_science25_v3/summary.json": "c31556d5934eb649e88353587267626215816fdb421b5d8b761054d063299e89",
+    "products/annual/queue_4fields_dwell1_conservative_science25_v3/summary.json": "96911562a6d3767ac6e494ba941fd3e564343e025008883b372fd65cf6fb212c",
+    "products/annual/queue_3fields_dwell2_baseline_science25_v3/summary.json": "fcc9ccf8c284eaec5c7af5fed5adbf6d90f26737d76414fc84d0c75257b6c2d0",
+    "products/annual/queue_8fields_dwell2_precision_requirement_budget14400_science25_v3/summary.json": "b35c02eed79732392fecf1b271116b377418ce40c8ae3e5dd033645af0cb2611",
+    "products/annual/queue_2fields_dwell1_conservative_science25_v3/summary.json": "9c36a3baa9661dfea5307027949ec7ad9cb6829926d97db43f0bce2b2c89c4d7",
+    "products/annual/queue_6fields_dwell2_optimistic_science25_v3/summary.json": "702a0d6ed00830ea83fe1fa1900915bb4a306bbd18f102dcf2314c9316329c94",
+    "products/annual/queue_4fields_dwell2_optimistic_science25_v3/period_yield_summary.json": "8f93097bf5ff451a8104b4aa3a8e8ae0765c1bdea8c587181279c4dc5967fa3a",
+    "products/annual/queue_4fields_dwell2_baseline_science25_v3/period_yield_summary.json": "c1fd69e8332910c960e5cb231bcc3c49e4daae646626f53c10f81cb792955cd2"
+  }
+}

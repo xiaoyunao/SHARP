@@ -1,0 +1,6 @@
+role,P10,P50,P90
+alias_review,0.0,1.0,1.0
+control,23.0,27.0,32.0
+known_other,5.0,7.0,8.0
+literature_unchecked,1.0,1.0,1.0
+unknown_or_weak,4.0,6.0,7.0

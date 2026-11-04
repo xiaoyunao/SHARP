@@ -24,7 +24,7 @@ from .bright_stars import load as load_stars
 def load_tracks(limit=None):
     root=BASE/'products/annual';index=root/'ephemeris_index.json'
     if limit:
-        paths=sorted((BASE/'cache/annual').glob('horizons_*.json'))[:limit]
+        paths=sorted((BASE/'cache/annual').glob('horizons_*_6h.json'))[:limit]
     else:
         manifest=json.loads(index.read_text())
         if manifest['failures']:raise ValueError('Annual ephemeris acquisition is incomplete')

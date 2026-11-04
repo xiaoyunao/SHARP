@@ -1,0 +1,17 @@
+{
+  "standard_strategies": 24,
+  "weather_realizations_per_strategy": 200,
+  "nominal_cadence_strategies": 8,
+  "twilight_strategies": 2,
+  "windows_per_strategy": 730,
+  "moving_depth_scenarios_per_strategy": 3,
+  "selected_nights": 365,
+  "selected_exposures": 37078,
+  "independent_geometry_step_s": 5,
+  "unit_tests_passed": 35,
+  "quality_prefix_recheck_realization0": 37,
+  "period_phase_diagnostics_verified": true,
+  "documentation_local_links_verified": true,
+  "validation_scope": "local simulations only; no on-sky measurement or deployment",
+  "final_test_log_sha256": "02cbb521cb45bcd1d571434b055a2bf7566051718242f5328802d7d56ef768ae"
+}

@@ -58,9 +58,16 @@ def lightcurve_quality(times,night_indices,errors,zeropoints,valid,thresholds):
     baseline=(max(good_nights)-min(good_nights)) if good_nights else 0
     median=float(np.median(err[clean])) if clean.any() else None
     fraction=float(np.mean(err[clean]<=.05)) if clean.any() else 0
+    # Each night contributes once: a densely sampled night must not dominate the
+    # inferred cross-night calibration floor. Bad offsets are not erased here.
+    calibration=[float(np.mean(np.asarray(zeropoints)[clean&(night==n)])) for n in np.unique(night[clean])]
+    zeropoint_rms=float(np.sqrt(np.mean(np.square(calibration)))) if calibration else None
     passed=(int(good.sum())>=thresholds['points'] and len(good_nights)>=thresholds['nights']
             and baseline>=thresholds['baseline_days'] and median is not None
-            and median<=thresholds['median_random_error_mag'] and fraction>=thresholds['fraction_below_005'])
+            and median<=thresholds['median_random_error_mag'] and fraction>=thresholds['fraction_below_005']
+            and zeropoint_rms is not None and zeropoint_rms<=thresholds['max_zeropoint_mag'])
     return {'quality_lightcurve':bool(passed),'good_points':int(good.sum()),'clean_points':int(clean.sum()),
             'good_nights':len(good_nights),'baseline_days':baseline,'median_random_error_mag':median,
-            'fraction_below_005':fraction,'period_reliable':None}
+            'first_good_night':min(good_nights) if good_nights else None,
+            'last_good_night':max(good_nights) if good_nights else None,
+            'fraction_below_005':fraction,'zeropoint_rms_mag':zeropoint_rms,'period_reliable':None}
