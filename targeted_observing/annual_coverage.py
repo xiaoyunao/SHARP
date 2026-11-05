@@ -113,7 +113,8 @@ def injections(plans,spec,limiting_mag=20.,per_cell=12,causal=None):
         if causal is None:return [b for b in plans[index]['blocks'] if b['block_id'].startswith(side)]
         menus,choices,sky=causal;menu=menus[index];slot=0 if side=='EV' else 2
         indices=choices[realization,index,slot]
-        names=[side+'_A'] if menu['config']['twilight']['visits']==10 else [side+'_'+x for x in (['A','B'] if side=='EV' else ['B','A'])]
+        from .annual_twilight_queue import group_names
+        names=group_names(menu,side)
         blocks=[menu['options'][name][int(i)] for name,i in zip(names,indices) if i>=0]
         for block in blocks:prepare(block,sky)
         return blocks
@@ -152,10 +153,11 @@ def injections(plans,spec,limiting_mag=20.,per_cell=12,causal=None):
 def main():
     p=argparse.ArgumentParser();p.add_argument('--visits',type=int,choices=(5,10),required=True);p.add_argument('--nside',type=int,default=1024)
     p.add_argument('--days',type=int);p.add_argument('--skip-injections',action='store_true');p.add_argument('--causal',action='store_true')
+    p.add_argument('--root-name',help='separate experimental product directory')
     p.add_argument('--skip-area',action='store_true');p.add_argument('--limiting-mag',type=float,default=20.);args=p.parse_args()
     spec=json.loads((BASE/'annual_defaults.json').read_text());nights=dates(spec['start_date'],spec['stop_date_exclusive'])
     if args.days:nights=nights[:args.days]
-    root=BASE/'products/annual'/f'twilight_{args.visits}';plans=[json.loads((root/f'{d}.json').read_text()) for d in nights]
+    root=BASE/'products/annual'/(args.root_name or f'twilight_{args.visits}');plans=[json.loads((root/f'{d}.json').read_text()) for d in nights]
     source_root=root
     if args.days:
         root=root/f'smoke_{args.days}days';root.mkdir(exist_ok=True)

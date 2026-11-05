@@ -1,0 +1,54 @@
+[
+  {
+    "scenario": "baseline",
+    "before": [
+      36.0,
+      42.0,
+      47.0
+    ],
+    "after": [
+      37.0,
+      43.0,
+      48.0
+    ],
+    "paired_delta_mean": 0.88,
+    "paired_delta_p10_p50_p90": [
+      -2.0,
+      1.0,
+      4.0
+    ],
+    "realization": 0,
+    "both_active_nights": 160,
+    "changed_start_both_active_nights": 73,
+    "changed_active_state_nights": 0,
+    "changed_field_sets_nights": 117,
+    "actual_exposures_before": 5924,
+    "actual_exposures_after": 5936
+  },
+  {
+    "scenario": "optimistic",
+    "before": [
+      55.0,
+      62.5,
+      70.0
+    ],
+    "after": [
+      57.0,
+      64.0,
+      72.0
+    ],
+    "paired_delta_mean": 1.705,
+    "paired_delta_p10_p50_p90": [
+      -2.0,
+      1.5,
+      6.099999999999994
+    ],
+    "realization": 0,
+    "both_active_nights": 160,
+    "changed_start_both_active_nights": 71,
+    "changed_active_state_nights": 0,
+    "changed_field_sets_nights": 121,
+    "actual_exposures_before": 6032,
+    "actual_exposures_after": 6056
+  }
+]

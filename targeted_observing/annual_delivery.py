@@ -18,10 +18,14 @@ from .retention import report
 from .validate import validate_plan
 
 
-def assemble():
+def assemble(source_name='nominal_queue_4fields_dwell2_baseline_science25_v3',output_name='selected_nominal',visibility_name='visibility'):
     spec=json.loads((BASE/'annual_defaults.json').read_text())
-    root=BASE/'products/annual';source=root/'nominal_queue_4fields_dwell2_baseline_science25_v3'
-    out=root/'selected_nominal';out.mkdir(exist_ok=True)
+    root=BASE/'products/annual';source=root/source_name
+    if source_name!='nominal_queue_4fields_dwell2_baseline_science25_v3' and output_name=='selected_nominal':
+        raise ValueError('New policy must use a separate output name; preserve frozen baseline')
+    if not json.loads((source/'summary.json').read_text()).get('nominal_clear_weather'):
+        raise ValueError('Nominal assembly requires an all-clear nominal source')
+    out=root/output_name;out.mkdir(exist_ok=True)
     tracks=load_tracks();setup_iers(BASE/'cache'/spec['iers_file'])
     c=json.loads((BASE/'defaults.json').read_text());c['trojan']['exposures_per_dwell']=2
     sky=Sky(c);nights=dates(spec['start_date'],spec['stop_date_exclusive'])
@@ -32,7 +36,7 @@ def assemble():
         ledger={r['date']:r for r in csv.DictReader(handle)}
     plans=[];versions=defaultdict(list)
     for day in nights:
-        menu=json.loads((root/'visibility'/f'{day}.json').read_text())
+        menu=json.loads((root/visibility_name/f'{day}.json').read_text())
         p=json.loads((root/'twilight_5'/f'{day}.json').read_text())
         p['config']=copy.deepcopy(c);p['status']='LOCAL_ANNUAL_NOMINAL_NOT_FOR_TELESCOPE'
         p['source_policy']=source.name;p['observations_completed']=False
@@ -100,4 +104,8 @@ def assemble():
     print({k:v for k,v in result.items() if k!='records'},flush=True)
 
 
-if __name__=='__main__':assemble()
+if __name__=='__main__':
+    import argparse
+    p=argparse.ArgumentParser();p.add_argument('--source-name',default='nominal_queue_4fields_dwell2_baseline_science25_v3')
+    p.add_argument('--output-name',default='selected_nominal');p.add_argument('--visibility-name',default='visibility')
+    a=p.parse_args();assemble(a.source_name,a.output_name,a.visibility_name)

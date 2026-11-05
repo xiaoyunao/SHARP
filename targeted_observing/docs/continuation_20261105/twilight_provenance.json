@@ -1,0 +1,15 @@
+{
+  "input_hashes": {
+    "products/annual/twilight_5/moving_injections_causal_r19.csv": "3d828922ce3ce7b7df194c02738a927473bba8e27cbee7ae308b731030474ad9",
+    "products/annual/twilight_5/moving_injections_causal_r20.csv": "9736354479c4dcbea02a6d8de20fedf27b8246f6ff3b76e34503fc4272c42e36",
+    "products/annual/twilight_5/moving_injections_causal_r21.csv": "f48942b0a350cf0c43fb96afddeeceddffb5ee2479b13fb10de577b766a2b24b",
+    "products/annual/twilight_5/causal_execution_ledger.csv": "0b4293c8af89e02148ce0a610ec27900c9834a52b5be203324604c7f142fadf1",
+    "products/annual/twilight_morning10_aligned/moving_injections_causal_r19.csv": "6aa3d14d31f9f15e2e97933af04f576667f02a7e41ac6485fc16231d561cb29d",
+    "products/annual/twilight_morning10_aligned/moving_injections_causal_r20.csv": "3237dfc60e32ad8da65b330298d0e9299f150953753b420658ab1c10affbed26",
+    "products/annual/twilight_morning10_aligned/moving_injections_causal_r21.csv": "2553c7af95cc0330fd64dcabf55bbf26913e512d0a76364a91a91b70485dfdcc",
+    "products/annual/twilight_morning10_aligned/causal_execution_ledger.csv": "2e462c4f185d840605c90787ea8b6cb432d6e6b7610fcb1897cde24434b3c124"
+  },
+  "scope": "same weather ensemble; conditional truth-associated moving-source recovery, not NEO discovery rate",
+  "geometry": "nominal actual exposure centres; separate HEALPix independent area estimates; no PNG-derived coordinates",
+  "end_alignment": "30s nominal guard; simulated additive delays are not absorbed by waiting and may lose late visits"
+}

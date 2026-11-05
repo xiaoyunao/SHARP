@@ -1,0 +1,24 @@
+{
+  "tests_passed": 51,
+  "baseline_export_counts": {
+    "nights": 365,
+    "blocks": 1556,
+    "field_visits": 6137,
+    "exposures": 37078,
+    "zero_plan_nights": 0
+  },
+  "html_dates": 365,
+  "figure_files": 378,
+  "pdf_pages_rendered": 13,
+  "new_B_nominal": {
+    "nights": 365,
+    "exposures": 37264,
+    "independent_validation_passed": true
+  },
+  "morning_alignment_nights": 365,
+  "paired_years_per_strategy": 200,
+  "A_counts_identical_to_frozen_baseline": true,
+  "time_ledgers_and_prefix_science_budget_passed": true,
+  "server_accessed": false,
+  "visual_qa": "13-page PDF contact sheet, full annual overview, monthly June and representative nightly exposure/altitude plots inspected"
+}

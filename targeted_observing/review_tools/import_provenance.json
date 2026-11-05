@@ -1,0 +1,10 @@
+{
+  "source": "user-provided SHARP_resume_20261105.zip",
+  "original_sha256": {
+    "export_plot_data.py": "3b3062c05102c76e28ee3061f2be3e249185768b159d39e0cfff0192f52a6acc",
+    "compute_special_visibility.py": "4c3fac81b21ca6511e06fccd3cfa00616ca678debebff499c0fb3e3883972137",
+    "README.md": "4a61c9073c6495ee3a3be8aed37ef00f37a4a9b85c91d637c808900bd5d76b73",
+    "make_review_figures.py": "7defe0f19a979c7b0465d447f1f3b36f19f49180a9060b2e8d2364d35758f9a6",
+    "plot_exported_plan.py": "d418ac36f07d16b80e3a44c27c502aeddda91b5ce9f0ac86c4308824a57b28b6"
+  }
+}

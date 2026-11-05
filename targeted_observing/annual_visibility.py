@@ -22,12 +22,15 @@ def visibility_chunk(job):
     setup_iers(BASE/'cache'/spec['iers_file']);sky=Sky(config);stars=load_stars(epoch=2027.3)
     stop=(date.fromisoformat(nights[-1])+timedelta(days=1)).isoformat()
     groups=campaign_groups(tracks,nights[0],stop)
-    root=BASE/'products/annual'/('visibility_smoke' if limit else 'visibility');root.mkdir(parents=True,exist_ok=True)
+    root=BASE/'products/annual'/spec.get('visibility_name',('visibility_smoke' if limit else 'visibility'));root.mkdir(parents=True,exist_ok=True)
     result=[]
     for i,day in enumerate(nights):
         if i%spec['field_version_days']==0:
             version_stop=min(date.fromisoformat(day)+timedelta(days=spec['field_version_days']),date.fromisoformat(stop)).isoformat()
             fields=version_fields(groups,tracks,day,version_stop,stars)
+            if spec.get('free_centres'):
+                from .annual_free_fields import supplement
+                fields=supplement(fields,tracks,day,version_stop,stars)
         night=sky.night(day);a,b=night['dark'];grid=np.arange(a,b+.01,300.)
         starts=grid[grid+7200<=b+.01]
         valid=np.zeros((len(fields),len(starts)),dtype=bool)
@@ -63,8 +66,11 @@ def visibility_chunk(job):
 def main():
     p=argparse.ArgumentParser();p.add_argument('--workers',type=int,default=4);p.add_argument('--days',type=int);p.add_argument('--limit',type=int)
     p.add_argument('--moon-policy',choices=['fixed40','phase_dependent'])
+    p.add_argument('--free-centres',action='store_true')
     args=p.parse_args();spec=json.loads((BASE/'annual_defaults.json').read_text())
     if args.moon_policy:spec['moon_policy']=args.moon_policy
+    if args.free_centres:
+        spec.update(free_centres=True,visibility_name='visibility_free'+('_smoke' if args.limit else ''))
     nights=dates(spec['start_date'],spec['stop_date_exclusive'])
     if args.days:nights=nights[:args.days]
     jobs=[(nights[i:i+spec['campaign_days']],spec,args.limit) for i in range(0,len(nights),spec['campaign_days'])]
@@ -72,7 +78,7 @@ def main():
     with ProcessPoolExecutor(max_workers=args.workers) as pool:
         for i,future in enumerate(as_completed([pool.submit(visibility_chunk,job) for job in jobs]),1):
             results.extend(future.result());print(f'Visibility campaign {i}/{len(jobs)}',flush=True)
-    results.sort(key=lambda r:r['date']);suffix='_smoke' if args.limit else ''
+    results.sort(key=lambda r:r['date']);suffix=('_free' if args.free_centres else '')+('_smoke' if args.limit else '')
     write_csv(BASE/f'products/annual/visibility_ledger{suffix}.csv',results)
 
 

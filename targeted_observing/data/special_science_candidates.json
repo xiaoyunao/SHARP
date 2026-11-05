@@ -1,0 +1,714 @@
+{
+  "metadata": {
+    "checked_date": "2026-11-04",
+    "year": "2026-11-01 through 2027-10-31",
+    "shortlist_n": 15,
+    "catalog_source": "JPL SBDB TJN snapshot obtained 2026-10-22; research/jpl_trojans_raw.json (16412 objects).",
+    "current_output": "annual_review_20261104/snapshot/targeted_observing/docs/annual_reports/object_summary.csv",
+    "current_quality_probability_note": "Current simulator quality_realizations/200, not measured success or probability that a published period is true.",
+    "coarse_track_method": "Existing research/trojan_planning.py: two-body propagation plus one light-time iteration; H–G predicted V, missing G=.15; dark-time altitude sampled in ten-minute bins. Monthly sample dates only; not fresh per-exposure annual simulation.",
+    "coarse_track_limitations": "Target-center altitude and cumulative hours only. No full 3×3° footprint, weather, Moon, shared-time windows, field competition, lightcurve rotational amplitude, measured r calibration, or exact Horizons scheduling. Do not treat as yield or detection probability.",
+    "track_files": [
+      "trojan_results/positions_2026-11-15.csv.gz",
+      "trojan_results/positions_2026-12-15.csv.gz",
+      "trojan_results/positions_2027-01-15.csv.gz",
+      "trojan_results/positions_2027-02-15.csv.gz",
+      "trojan_results/positions_2027-03-15.csv.gz",
+      "trojan_results/positions_2027-04-15.csv.gz",
+      "trojan_results/positions_2027-05-15.csv.gz",
+      "trojan_results/positions_2027-06-15.csv.gz",
+      "trojan_results/positions_2027-07-15.csv.gz",
+      "trojan_results/positions_2027-08-15.csv.gz",
+      "trojan_results/positions_2027-09-15.csv.gz",
+      "trojan_results/positions_2027-10-15.csv.gz"
+    ],
+    "scientific_amplitude_note": "Published amplitudes are appearance/band dependent and may change this year; no amplitudes here are predicted 2026–27 amplitudes.",
+    "period_note": "Catalog differences are not new discoveries or proof that one publication is wrong. Multiple solutions may share input data. Synodic/sidereal and mutual-orbit/photometric periods must not be merged blindly.",
+    "geometry_update": "Replaced previous coarse per-target geometry with new representative-night Horizons calculations; all chart conclusions retain their representative-night scope.",
+    "actual_target_count": 16,
+    "scope": "Supplied scientific review, retained as evidence; archived representative geometry excluded from scheduling input."
+  },
+  "sources": {
+    "carry2023": {
+      "citation": "Carry et al. 2023, A&A 680, A21",
+      "doi": "10.1051/0004-6361/202347158",
+      "url": "https://orbi.uliege.be/bitstream/2268/309746/1/aa47158-23.pdf",
+      "arxiv_url": "https://arxiv.org/pdf/2309.15537"
+    },
+    "mann2007": {
+      "citation": "Mann, Jewitt & Lacerda 2007, AJ 134, 1133",
+      "doi": "10.1086/520328",
+      "url": "https://faculty.epss.ucla.edu/~jewitt/papers/2007/MJL07.pdf"
+    },
+    "french2013": {
+      "citation": "French et al. 2013, Minor Planet Bulletin 40, 198–203; target discussion p.198, Table I p.199",
+      "url": "https://minplanobs.org/MPB/issues/MPB_40-4.pdf"
+    },
+    "durech2026": {
+      "citation": "Durech et al. 2026, arXiv:2610.06082; model table on Zenodo",
+      "doi": "10.1051/0004-6361/202662316",
+      "url": "https://arxiv.org/abs/2610.06082",
+      "data_url": "https://zenodo.org/records/22812438"
+    },
+    "li2025": {
+      "citation": "Li et al. 2025, Icarus, article 116609; adopted periods use Manual_Overwrite when present",
+      "doi": "10.1016/j.icarus.2025.116609",
+      "url": "https://arxiv.org/html/2504.15530v2",
+      "data_url": "https://github.com/ZhuofuLi/ZTF-Jupiter-Trojan-Rotation-Periods/blob/main/Summary_Table.csv"
+    },
+    "tess2025": {
+      "citation": "Vavilov & Carry 2025, A&A 693, A66; catalog J/A+A/693/A66",
+      "doi": "10.1051/0004-6361/202348940",
+      "url": "https://arxiv.org/abs/2501.07189",
+      "data_url": "https://cdsarc.cds.unistra.fr/viz-bin/ReadMe/J/A%2BA/693/A66?format=html&tex=true"
+    },
+    "mottola2011": {
+      "citation": "Mottola et al. 2011, AJ 141, 170; section on (5511) Cloanthus",
+      "doi": "10.1088/0004-6256/141/5/170",
+      "url": "https://doi.org/10.1088/0004-6256/141/5/170"
+    },
+    "warner2025": {
+      "citation": "Warner et al. 2025, Minor Planet Bulletin 52(1), 64–69, CCD Photometric Observations of 617 Patroclus–Menoetius Mutual Events",
+      "url": "https://scholarscommons.fgcu.edu/esploro/outputs/journalArticle/CCD-Photometric-Observations-of-617-Patroclus-Menoetius/99385796394306570?institution=01FALSC_FGCU"
+    },
+    "lucy": {
+      "citation": "NASA Lucy mission, target encounters; checked 2026-11-04",
+      "url": "https://science.nasa.gov/mission/lucy/"
+    },
+    "mottola2023": {
+      "citation": "Mottola et al. 2023, PSJ 4, 18, shapes/spins of Eurybates and Orus",
+      "doi": "10.3847/PSJ/acaf79",
+      "url": "https://elib.dlr.de/194154/"
+    },
+    "polymele2026": {
+      "citation": "Alarcon et al. 2026, RNAAS 10, 143; non-refereed research note, TTT observations May 2026",
+      "doi": "10.3847/2515-5172/ae7368",
+      "url": "https://www.iac.edu.es/en/science-and-technology/publications/rotational-light-curve-and-photometric-baseline-15094-polymele-support-lucy-mutual-event"
+    },
+    "kiss2025": {
+      "citation": "Kiss et al. 2025, Three fast-rotating Jovian Trojans identified by TESS set new population density limits; Table 1",
+      "url": "https://arxiv.org/html/2501.18440v1"
+    },
+    "mottola2020": {
+      "citation": "Mottola et al. 2020, PSJ 1, 73, Shape and Spin of (11351) Leucus",
+      "doi": "10.3847/PSJ/abb942",
+      "url": "https://elib.dlr.de/139387/"
+    },
+    "buie2018": {
+      "citation": "Buie et al. 2018, AJ 155, 245; historical synodic period and amplitude",
+      "url": "https://www2.boulder.swri.edu/~buie/biblio/pub127.pdf"
+    },
+    "marchis2014": {
+      "citation": "Marchis et al. 2014, ApJL 783, L37, Hektor system",
+      "doi": "10.1088/2041-8205/783/2/L37",
+      "url": "https://arxiv.org/abs/1402.7336"
+    }
+  },
+  "targets": [
+    {
+      "mpc_number": "17365",
+      "name": "Thymbraeus",
+      "tier": "A: 建议年度加强",
+      "tags": [
+        "high_amplitude",
+        "bilobate_shape",
+        "model_validation"
+      ],
+      "periods_h": [
+        12.671821,
+        12.672607
+      ],
+      "amplitude_mag": 0.98,
+      "evidence": "2023模型两个极轴解对应约12.672 h；历史2005–2006光变振幅0.98±0.02 mag；2023正文还给2013/2015振幅0.76/1.16 mag。2023研究包括60 cm和40 cm望远镜光变，典型散差约0.03 mag，但不少夜段长4–8 h。2023结论支持哑铃形双叶单体、认为分离双星不太可能；不可直接标成已确认双星。振幅随观测几何变化。",
+      "question": "检验新视向下大振幅、尖锐极小与相位角依赖，补充形状/极轴模型约束。",
+      "strategy": "在2026年11月至2027年2月优先安排10–15个错峰夜、每夜约1–2 h；普通间隔5–10 min，预报尖锐极小时缩至约5 min。以相位覆盖和模型残差为完成条件。",
+      "feasibility": "代表V17.31且很高，适合0.6 m；先验证r精度和最低亮度时完整性。约0.03 mag单点可测大振幅，但约0.05 mag极小差异/细致模型检验要求更好的合并精度及相位覆盖。已知周期源不记为新周期发现。",
+      "sources": [
+        "carry2023",
+        "mann2007"
+      ],
+      "jpl_frozen_name": " 17365 Thymbraeus (1978 VF11)",
+      "published_period_comparison": null,
+      "source_records": [
+        {
+          "citation": "Carry et al. 2023, A&A 680, A21",
+          "doi": "10.1051/0004-6361/202347158",
+          "url": "https://orbi.uliege.be/bitstream/2268/309746/1/aa47158-23.pdf",
+          "arxiv_url": "https://arxiv.org/pdf/2309.15537"
+        },
+        {
+          "citation": "Mann, Jewitt & Lacerda 2007, AJ 134, 1133",
+          "doi": "10.1086/520328",
+          "url": "https://faculty.epss.ucla.edu/~jewitt/papers/2007/MJL07.pdf"
+        }
+      ],
+      "geometry_scope": "12 representative nights with new 6-hour topocentric Horizons; not a 365-night extrema search or scheduled visits"
+    },
+    {
+      "mpc_number": "22180",
+      "name": "Paeon",
+      "tier": "A: 建议年度加强",
+      "tags": [
+        "period_discrepancy"
+      ],
+      "periods_h": [
+        19.39,
+        26.1284
+      ],
+      "amplitude_mag": 0.0925,
+      "evidence": "现有审查LCDB为19.39 h/U2+；TSSYS DR1给26.1284 h、振幅0.0925 mag；2025重分析最佳29.511 h但区间约2–547 h，不能当可靠第三票或唯一解。DR1与重分析不是独立观测。",
+      "question": "用独立地基数据辨别约19.4/26.1 h候选及日别名，先确认低振幅信号。",
+      "strategy": "4–6周、至少10–14个有效夜；2 h块的开始时刻在可见范围内有意识错开，选取对候选模型分歧最大的窗口；必要时申请少数延长块。",
+      "feasibility": "代表V16.96；常规r120可作为启动设置，但~0.09 mag振幅要求实测单点约0.02 mag或更好及可靠跨夜零点。当前已经是alias_review，属于保留目标。",
+      "sources": [
+        "tess2025"
+      ],
+      "jpl_frozen_name": " 22180 Paeon (2000 YZ)",
+      "published_period_comparison": null,
+      "source_records": [
+        {
+          "citation": "Vavilov & Carry 2025, A&A 693, A66; catalog J/A+A/693/A66",
+          "doi": "10.1051/0004-6361/202348940",
+          "url": "https://arxiv.org/abs/2501.07189",
+          "data_url": "https://cdsarc.cds.unistra.fr/viz-bin/ReadMe/J/A%2BA/693/A66?format=html&tex=true"
+        }
+      ],
+      "geometry_scope": "12 representative nights with new 6-hour topocentric Horizons; not a 365-night extrema search or scheduled visits"
+    },
+    {
+      "mpc_number": "5012",
+      "name": "Eurymedon",
+      "tier": "A: 建议年度加强",
+      "tags": [
+        "published_period_discrepancy",
+        "factor_two"
+      ],
+      "periods_h": [
+        16.69,
+        33.369376
+      ],
+      "amplitude_mag": 0.1142838861,
+      "evidence": "Li2025采用16.69 h（flag2），2026完整形状模型33.369376 h；前者振幅约0.114 mag。接近2倍差异。这里只是两篇目录不一致，不能断言哪篇错误；两项工作部分共用ZTF数据。",
+      "question": "补充独立密集测光，检验双峰不对称及半周期误判，验证已发表模型。",
+      "strategy": "3–6周内10–14夜、2 h块错峰，比较16.69与33.369 h折叠及预测残差；优先覆盖两极大/极小的不对称相位。",
+      "feasibility": "代表V18.03、L4春季高于46°；可先选同场或低增量成本，实测r120精度不足0.03 mag时应合并点或延长曝光，不承诺唯一周期。",
+      "sources": [
+        "li2025",
+        "durech2026"
+      ],
+      "jpl_frozen_name": "  5012 Eurymedon (9507 P-L)",
+      "published_period_comparison": {
+        "mpc_number": "5012",
+        "period_durech2026_h": "33.369376",
+        "model_kind": "full",
+        "period_li2025_adopted_h": "16.69",
+        "li2025_recorded_lcdb_period_h": "46",
+        "li2025_flag": "2",
+        "li2025_best_h": "16.69",
+        "li2025_manual_h": "",
+        "fractional_difference_relative_li": "0.9993634511683643",
+        "fractional_difference_relative_durech": "0.4998408121266637",
+        "li_diameter_km": "36.96",
+        "li_amplitude_mag": "0.1142838861",
+        "comparison_status": "published_periods_differ_gt10percent",
+        "interpretation_note": "Catalogue comparison only; not a new discovery or proof either paper is wrong; review prior dense lightcurves and LCDB.",
+        "object_context_note": ""
+      },
+      "source_records": [
+        {
+          "citation": "Li et al. 2025, Icarus, article 116609; adopted periods use Manual_Overwrite when present",
+          "doi": "10.1016/j.icarus.2025.116609",
+          "url": "https://arxiv.org/html/2504.15530v2",
+          "data_url": "https://github.com/ZhuofuLi/ZTF-Jupiter-Trojan-Rotation-Periods/blob/main/Summary_Table.csv"
+        },
+        {
+          "citation": "Durech et al. 2026, arXiv:2610.06082; model table on Zenodo",
+          "doi": "10.1051/0004-6361/202662316",
+          "url": "https://arxiv.org/abs/2610.06082",
+          "data_url": "https://zenodo.org/records/22812438"
+        }
+      ],
+      "geometry_scope": "12 representative nights with new 6-hour topocentric Horizons; not a 365-night extrema search or scheduled visits"
+    },
+    {
+      "mpc_number": "7543",
+      "name": "Prylis",
+      "tier": "A: 建议年度加强",
+      "tags": [
+        "published_period_discrepancy",
+        "very_slow_model"
+      ],
+      "periods_h": [
+        17.8,
+        763.739412
+      ],
+      "amplitude_mag": 0.1289825505,
+      "evidence": "2026完整模型763.739412 h（31.82 d）；Li2025采用17.8 h（manual override，raw best24.312 h，flag2），Li振幅约0.129 mag。差异极大，应定位为独立检验而不是宣布新发现。",
+      "question": "验证一个月尺度模型，并排查短周期候选；单一短campaign不能回答。",
+      "strategy": "长基线稀疏观测优先争取90–100天以上，配少数密集夜排查短周期；763.739h三圈约96天。8–12周可作为中间阶段，不能声称已覆盖三圈。",
+      "feasibility": "代表V18.01、最大高度42°，有现实可行性；浅振幅对长期系统误差敏感。特别目标不应在普通QLC点数达标后立即停观。",
+      "sources": [
+        "li2025",
+        "durech2026"
+      ],
+      "jpl_frozen_name": "  7543 Prylis (1973 SY)",
+      "published_period_comparison": {
+        "mpc_number": "7543",
+        "period_durech2026_h": "763.739412",
+        "model_kind": "full",
+        "period_li2025_adopted_h": "17.8",
+        "li2025_recorded_lcdb_period_h": "17.8",
+        "li2025_flag": "2",
+        "li2025_best_h": "24.312",
+        "li2025_manual_h": "17.8",
+        "fractional_difference_relative_li": "41.90670853932584",
+        "fractional_difference_relative_durech": "0.9766936212531089",
+        "li_diameter_km": "42.893",
+        "li_amplitude_mag": "0.1289825505",
+        "comparison_status": "published_periods_differ_gt10percent",
+        "interpretation_note": "Catalogue comparison only; not a new discovery or proof either paper is wrong; review prior dense lightcurves and LCDB.",
+        "object_context_note": ""
+      },
+      "source_records": [
+        {
+          "citation": "Li et al. 2025, Icarus, article 116609; adopted periods use Manual_Overwrite when present",
+          "doi": "10.1016/j.icarus.2025.116609",
+          "url": "https://arxiv.org/html/2504.15530v2",
+          "data_url": "https://github.com/ZhuofuLi/ZTF-Jupiter-Trojan-Rotation-Periods/blob/main/Summary_Table.csv"
+        },
+        {
+          "citation": "Durech et al. 2026, arXiv:2610.06082; model table on Zenodo",
+          "doi": "10.1051/0004-6361/202662316",
+          "url": "https://arxiv.org/abs/2610.06082",
+          "data_url": "https://zenodo.org/records/22812438"
+        }
+      ],
+      "geometry_scope": "12 representative nights with new 6-hour topocentric Horizons; not a 365-night extrema search or scheduled visits"
+    },
+    {
+      "mpc_number": "5511",
+      "name": "Cloanthus",
+      "tier": "A: 建议年度加强",
+      "tags": [
+        "slow_rotator",
+        "model_validation"
+      ],
+      "periods_h": [
+        322.77335,
+        336.0
+      ],
+      "amplitude_mag": null,
+      "evidence": "2026模型322.77335 h（13.45 d）；旧LCDB336 h/U2−。Mottola2011描述夜内变化很小、跨夜显著，约14 d，并建议检查可能复杂自转；已有长周期模型不能称为完全未知。",
+      "question": "新apparition下检验长周期形状模型及是否存在超出单周期模型的相干残差。",
+      "strategy": "2026年11月至2027年2月安排6–8周多夜，每夜3–5帧或与邻近主场共用；少量密集块检查短时变化。跨夜零点需保留慢变信号，不可逐夜强制去均值。",
+      "feasibility": "代表V17.81，适合0.6 m。当前虽然quality_probability=.95，28 d只有约2.1个慢周期；应另外报告模型验证覆盖。",
+      "sources": [
+        "mottola2011",
+        "durech2026"
+      ],
+      "jpl_frozen_name": "  5511 Cloanthus (1988 TH1)",
+      "published_period_comparison": null,
+      "source_records": [
+        {
+          "citation": "Mottola et al. 2011, AJ 141, 170; section on (5511) Cloanthus",
+          "doi": "10.1088/0004-6256/141/5/170",
+          "url": "https://doi.org/10.1088/0004-6256/141/5/170"
+        },
+        {
+          "citation": "Durech et al. 2026, arXiv:2610.06082; model table on Zenodo",
+          "doi": "10.1051/0004-6361/202662316",
+          "url": "https://arxiv.org/abs/2610.06082",
+          "data_url": "https://zenodo.org/records/22812438"
+        }
+      ],
+      "geometry_scope": "12 representative nights with new 6-hour topocentric Horizons; not a 365-night extrema search or scheduled visits"
+    },
+    {
+      "mpc_number": "4902",
+      "name": "Thessandrus",
+      "tier": "A: 建议年度加强",
+      "tags": [
+        "very_slow_rotator",
+        "tumbling_candidate"
+      ],
+      "periods_h": [
+        738.0,
+        510.0
+      ],
+      "amplitude_mag": null,
+      "evidence": "French2013 p198：两个月观测第二轮波形显著不同；双周期拟合约738 h与510 h，各不确定度约20 h。Table I却列738、P.E.10且Amp栏为Tumb，因此不强行选单一精确误差或0.60 mag振幅。",
+      "question": "验证非主轴转动/双频信号及跨轮波形变化，不能只做单一Lomb–Scargle峰值。",
+      "strategy": "2027年1月至5月覆盖70–100 d，每可用夜3–5个r点，少量2 h块；正演双频/翻滚模型，保留长期绝对或统一相对亮度尺度。",
+      "feasibility": "代表V16.81、可用季节长，是优先慢转源。当前31 d baseline约一个738 h周期；质量模拟达标不等于自转物理解恢复。",
+      "sources": [
+        "french2013"
+      ],
+      "jpl_frozen_name": "  4902 Thessandrus (1989 AN2)",
+      "published_period_comparison": null,
+      "source_records": [
+        {
+          "citation": "French et al. 2013, Minor Planet Bulletin 40, 198–203; target discussion p.198, Table I p.199",
+          "url": "https://minplanobs.org/MPB/issues/MPB_40-4.pdf"
+        }
+      ],
+      "geometry_scope": "12 representative nights with new 6-hour topocentric Horizons; not a 365-night extrema search or scheduled visits"
+    },
+    {
+      "mpc_number": "617",
+      "name": "Patroclus–Menoetius",
+      "tier": "A: 建议年度加强",
+      "tags": [
+        "resolved_binary",
+        "lucy",
+        "event_conditional"
+      ],
+      "periods_h": [
+        102.873,
+        103.09
+      ],
+      "amplitude_mag": 0.12,
+      "evidence": "2025 MPB分析2024年9–10月9次互事件片段：含事件曲线周期102.873±0.006 h，去事件103.09±0.04 h、振幅0.12±0.01 mag。这些光度拟合值不应代替最新互轨道星历；已报道事件季为2024–25。Lucy飞掠2033-03-03。",
+      "question": "取得新的总光度基线、相位曲线和已建模双星系统的验证数据；仅在有适用本季预报时触发互掩/互食。",
+      "strategy": "普通期每夜若干帧跨数周即可；事件期根据正式时刻连续2 h并覆盖事件外基线，必要时单目标。先做线性/饱和检查，r120饱和则30–60 s。",
+      "feasibility": "代表V15.18、冬季高空，非常可测。0.6 m看的是合成光，不能分辨双星；2026–27不承诺存在互事件。",
+      "sources": [
+        "warner2025",
+        "lucy"
+      ],
+      "jpl_frozen_name": "   617 Patroclus (A906 UL)",
+      "published_period_comparison": null,
+      "source_records": [
+        {
+          "citation": "Warner et al. 2025, Minor Planet Bulletin 52(1), 64–69, CCD Photometric Observations of 617 Patroclus–Menoetius Mutual Events",
+          "url": "https://scholarscommons.fgcu.edu/esploro/outputs/journalArticle/CCD-Photometric-Observations-of-617-Patroclus-Menoetius/99385796394306570?institution=01FALSC_FGCU"
+        },
+        {
+          "citation": "NASA Lucy mission, target encounters; checked 2026-11-04",
+          "url": "https://science.nasa.gov/mission/lucy/"
+        }
+      ],
+      "geometry_scope": "12 representative nights with new 6-hour topocentric Horizons; not a 365-night extrema search or scheduled visits"
+    },
+    {
+      "mpc_number": "21900",
+      "name": "Orus",
+      "tier": "B: 需精确几何/精度后定",
+      "tags": [
+        "lucy",
+        "known_shape"
+      ],
+      "periods_h": [
+        13.48619
+      ],
+      "amplitude_mag": null,
+      "evidence": "2023 PSJ精确恒星周期13.486190±0.000017 h，已有形状和极轴解；Lucy飞掠2028-11-11。",
+      "question": "新观测视向下验证模型并获得校准振幅/相位曲线，不是首次求周期。",
+      "strategy": "若完整视场在alt>30°下有足够窗口，2027年4–5月用若干短块拼接相位；按预测残差和校准质量完成。",
+      "feasibility": "May15 V17.27但仅2.17 h且最大高度32.54°；4月更亮却仅1.33 h。月度目标中心判据不能证明整个3×3°视场可用。",
+      "sources": [
+        "mottola2023",
+        "lucy"
+      ],
+      "jpl_frozen_name": " 21900 Orus (1999 VQ10)",
+      "published_period_comparison": null,
+      "source_records": [
+        {
+          "citation": "Mottola et al. 2023, PSJ 4, 18, shapes/spins of Eurybates and Orus",
+          "doi": "10.3847/PSJ/acaf79",
+          "url": "https://elib.dlr.de/194154/"
+        },
+        {
+          "citation": "NASA Lucy mission, target encounters; checked 2026-11-04",
+          "url": "https://science.nasa.gov/mission/lucy/"
+        }
+      ],
+      "geometry_scope": "12 representative nights with new 6-hour topocentric Horizons; not a 365-night extrema search or scheduled visits"
+    },
+    {
+      "mpc_number": "15094",
+      "name": "Polymele",
+      "tier": "B: 需精确几何/精度后定",
+      "tags": [
+        "lucy",
+        "low_amplitude",
+        "event_conditional"
+      ],
+      "periods_h": [
+        5.762,
+        5.8607
+      ],
+      "amplitude_mag": 0.076,
+      "evidence": "2026 RNAAS/TTT报告5.762±0.051 h和峰峰振幅0.076±0.008 mag，与旧5.8607 h在2σ内相容；该来源为非审稿研究短讯。Lucy飞掠2027-09-14，并有卫星。",
+      "question": "配合Lucy目标总光度/互事件基线；只在达到足够精度且有本季事件预报时作精细事件工作。",
+      "strategy": "先用少量r120测精度；达到约0.01–0.02 mag并有窗口才做2 h块/事件加密，否则申请更大口径或合作台址。",
+      "feasibility": "2027年5月V19.04、最大32.44°，低高度与0.076 mag小振幅叠加，不能作为稳获年度主样本。白光20.8极限无法保证这项精度。",
+      "sources": [
+        "polymele2026",
+        "lucy"
+      ],
+      "jpl_frozen_name": " 15094 Polymele (1999 WB2)",
+      "published_period_comparison": null,
+      "source_records": [
+        {
+          "citation": "Alarcon et al. 2026, RNAAS 10, 143; non-refereed research note, TTT observations May 2026",
+          "doi": "10.3847/2515-5172/ae7368",
+          "url": "https://www.iac.edu.es/en/science-and-technology/publications/rotational-light-curve-and-photometric-baseline-15094-polymele-support-lucy-mutual-event"
+        },
+        {
+          "citation": "NASA Lucy mission, target encounters; checked 2026-11-04",
+          "url": "https://science.nasa.gov/mission/lucy/"
+        }
+      ],
+      "geometry_scope": "12 representative nights with new 6-hour topocentric Horizons; not a 365-night extrema search or scheduled visits"
+    },
+    {
+      "mpc_number": "13383",
+      "name": "1998 XS31",
+      "tier": "C: 本年度不纳入主计划",
+      "tags": [
+        "fast_rotator"
+      ],
+      "periods_h": [
+        2.926
+      ],
+      "amplitude_mag": 0.18,
+      "evidence": "Kiss2025 TESS P2.926±0.002 h、A0.18±0.03 mag；ZTF没有给该对象唯一独立周期确认。论文临时编号有XS3排版，采用稳定编号13383和JPL XS31。",
+      "question": "很快自转及其强度/密度解释的独立验证，科学价值高。",
+      "strategy": "更合适季节/台址需≤5–10 min间隔、数个错峰2 h块，争取一晚3–4 h；r120曝光时间本身足够短。",
+      "feasibility": "本年兴隆几乎没有暗夜alt>30°窗口：月度网格最佳约10 min、最大30.37°；不因它是重要快转源而绕过高度条件。",
+      "sources": [
+        "kiss2025"
+      ],
+      "jpl_frozen_name": " 13383 (1998 XS31)",
+      "published_period_comparison": null,
+      "source_records": [
+        {
+          "citation": "Kiss et al. 2025, Three fast-rotating Jovian Trojans identified by TESS set new population density limits; Table 1",
+          "url": "https://arxiv.org/html/2501.18440v1"
+        }
+      ],
+      "geometry_scope": "12 representative nights with new 6-hour topocentric Horizons; not a 365-night extrema search or scheduled visits"
+    },
+    {
+      "mpc_number": "38615",
+      "name": "2000 AV121",
+      "tier": "C: 本年度不纳入主计划",
+      "tags": [
+        "fast_rotator"
+      ],
+      "periods_h": [
+        4.259
+      ],
+      "amplitude_mag": 0.35,
+      "evidence": "Kiss2025 P4.259±0.002 h、A0.35±0.06 mag；ZTF独立恢复支持。",
+      "question": "快转群体形状/振幅、周期验证；不是尚无周期目标。",
+      "strategy": "若换更大口径/更好台址，数小时连续并5–10 min采样；SHARP只在实测精度通过时研究性尝试。",
+      "feasibility": "2027年4月V20.03、2.33 h、最大32.17°，5月也约20.17；对0.6 m r120不适合作为精确光变承诺。",
+      "sources": [
+        "kiss2025"
+      ],
+      "jpl_frozen_name": " 38615 (2000 AV121)",
+      "published_period_comparison": null,
+      "source_records": [
+        {
+          "citation": "Kiss et al. 2025, Three fast-rotating Jovian Trojans identified by TESS set new population density limits; Table 1",
+          "url": "https://arxiv.org/html/2501.18440v1"
+        }
+      ],
+      "geometry_scope": "12 representative nights with new 6-hour topocentric Horizons; not a 365-night extrema search or scheduled visits"
+    },
+    {
+      "mpc_number": "228155",
+      "name": "2009 SF61",
+      "tier": "C: 本年度不纳入主计划",
+      "tags": [
+        "fast_rotator"
+      ],
+      "periods_h": [
+        4.749
+      ],
+      "amplitude_mag": 0.37,
+      "evidence": "Kiss2025 Table1的正确编号228155（正文局部误写288155），P4.749±0.001 h、A0.37±0.07 mag；ZTF独立恢复支持。",
+      "question": "快转密度下限群体后续光变，非未知周期。",
+      "strategy": "较大口径高信噪监测；如SHARP试验应先测实际r120精度而不以W检出极限代替。",
+      "feasibility": "2027年4月V20.43，虽有5.5 h高于30°，深度不适合主产额。",
+      "sources": [
+        "kiss2025"
+      ],
+      "jpl_frozen_name": "228155 (2009 SF61)",
+      "published_period_comparison": null,
+      "source_records": [
+        {
+          "citation": "Kiss et al. 2025, Three fast-rotating Jovian Trojans identified by TESS set new population density limits; Table 1",
+          "url": "https://arxiv.org/html/2501.18440v1"
+        }
+      ],
+      "geometry_scope": "12 representative nights with new 6-hour topocentric Horizons; not a 365-night extrema search or scheduled visits"
+    },
+    {
+      "mpc_number": "624",
+      "name": "Hektor",
+      "tier": "C: 本年度不纳入主计划",
+      "tags": [
+        "high_amplitude",
+        "bilobate_primary",
+        "satellite"
+      ],
+      "periods_h": [
+        6.921
+      ],
+      "amplitude_mag": 1.1,
+      "evidence": "经典大振幅双叶主星，有直接成像发现的卫星；Mann2007汇总历史振幅约1.10 mag，随几何变化。Marchis2014给系统物理解；Hektor不在NASA列出的Lucy目标清单。",
+      "question": "双叶形状、光散射和已知卫星系统验证。",
+      "strategy": "留待合适年份或南方合作观测；本年不分配满足alt>30°的主计划时段。",
+      "feasibility": "虽V可到约15.2，但本年度月度暗夜最高高度仅22.21°，不满足兴隆条件。",
+      "sources": [
+        "marchis2014",
+        "mann2007",
+        "lucy"
+      ],
+      "jpl_frozen_name": "   624 Hektor (A907 CF)",
+      "published_period_comparison": null,
+      "source_records": [
+        {
+          "citation": "Marchis et al. 2014, ApJL 783, L37, Hektor system",
+          "doi": "10.1088/2041-8205/783/2/L37",
+          "url": "https://arxiv.org/abs/1402.7336"
+        },
+        {
+          "citation": "Mann, Jewitt & Lacerda 2007, AJ 134, 1133",
+          "doi": "10.1086/520328",
+          "url": "https://faculty.epss.ucla.edu/~jewitt/papers/2007/MJL07.pdf"
+        },
+        {
+          "citation": "NASA Lucy mission, target encounters; checked 2026-11-04",
+          "url": "https://science.nasa.gov/mission/lucy/"
+        }
+      ],
+      "geometry_scope": "12 representative nights with new 6-hour topocentric Horizons; not a 365-night extrema search or scheduled visits"
+    },
+    {
+      "mpc_number": "3548",
+      "name": "Eurybates",
+      "tier": "C: 本年度不纳入主计划",
+      "tags": [
+        "lucy",
+        "known_shape"
+      ],
+      "periods_h": [
+        8.7027283
+      ],
+      "amplitude_mag": null,
+      "evidence": "2023 PSJ恒星周期8.7027283±0.0000029 h，已有唯一形状/极轴模型；2026模型8.702737 h一致，不能把Li不同周期单独宣传成全新悬案。Lucy飞掠2027-08-11，卫星Queta同行。",
+      "question": "新视向光度形状模型验证或任务配套，而非重新发现周期。",
+      "strategy": "精确检查短窗口后可作独立<2 h任务配套例外；未验证前不纳入年度主样本承诺。",
+      "feasibility": "最佳粗样本2027年5月V17.03、暗夜alt>30°仅1.5 h、最大30.82°；全年度月度最大31.15°，完整3×3°场更受约束。",
+      "sources": [
+        "mottola2023",
+        "durech2026",
+        "lucy"
+      ],
+      "jpl_frozen_name": "  3548 Eurybates (1973 SO)",
+      "published_period_comparison": {
+        "mpc_number": "3548",
+        "period_durech2026_h": "8.702737",
+        "model_kind": "full",
+        "period_li2025_adopted_h": "4.771",
+        "li2025_recorded_lcdb_period_h": "8.711",
+        "li2025_flag": "2",
+        "li2025_best_h": "4.771",
+        "li2025_manual_h": "",
+        "fractional_difference_relative_li": "0.8240907566547896",
+        "fractional_difference_relative_durech": "0.4517816636306487",
+        "li_diameter_km": "63.885",
+        "li_amplitude_mag": "0.06858067665",
+        "comparison_status": "published_periods_differ_gt10percent",
+        "interpretation_note": "Catalogue comparison only; not a new discovery or proof either paper is wrong; review prior dense lightcurves and LCDB.",
+        "object_context_note": "3548 Eurybates is a previously studied Lucy target; this discrepancy is not a new period discovery."
+      },
+      "source_records": [
+        {
+          "citation": "Mottola et al. 2023, PSJ 4, 18, shapes/spins of Eurybates and Orus",
+          "doi": "10.3847/PSJ/acaf79",
+          "url": "https://elib.dlr.de/194154/"
+        },
+        {
+          "citation": "Durech et al. 2026, arXiv:2610.06082; model table on Zenodo",
+          "doi": "10.1051/0004-6361/202662316",
+          "url": "https://arxiv.org/abs/2610.06082",
+          "data_url": "https://zenodo.org/records/22812438"
+        },
+        {
+          "citation": "NASA Lucy mission, target encounters; checked 2026-11-04",
+          "url": "https://science.nasa.gov/mission/lucy/"
+        }
+      ],
+      "geometry_scope": "12 representative nights with new 6-hour topocentric Horizons; not a 365-night extrema search or scheduled visits"
+    },
+    {
+      "mpc_number": "11351",
+      "name": "Leucus",
+      "tier": "C: 本年度不纳入主计划",
+      "tags": [
+        "lucy",
+        "very_slow_rotator"
+      ],
+      "periods_h": [
+        445.683
+      ],
+      "amplitude_mag": 0.61,
+      "evidence": "2020 PSJ给恒星周期445.683±0.007 h（18.57 d）；2018历史振幅约0.61 mag。旧445.732 h是视向/拟合口径不同，不能将小差别直接标成矛盾。Lucy飞掠2028-04-18。",
+      "question": "慢转形状与新观测视向下振幅/相位曲线验证。",
+      "strategy": "理论上宜2–3个月每晚数点而非每晚固定2 h；本年度由较南台址或未来更佳季节承担。",
+      "feasibility": "2027年5月V18.27但本年暗夜月度最高28.34°，不满足alt>30°。",
+      "sources": [
+        "mottola2020",
+        "buie2018",
+        "lucy"
+      ],
+      "jpl_frozen_name": " 11351 Leucus (1997 TS25)",
+      "published_period_comparison": null,
+      "source_records": [
+        {
+          "citation": "Mottola et al. 2020, PSJ 1, 73, Shape and Spin of (11351) Leucus",
+          "doi": "10.3847/PSJ/abb942",
+          "url": "https://elib.dlr.de/139387/"
+        },
+        {
+          "citation": "Buie et al. 2018, AJ 155, 245; historical synodic period and amplitude",
+          "url": "https://www2.boulder.swri.edu/~buie/biblio/pub127.pdf"
+        },
+        {
+          "citation": "NASA Lucy mission, target encounters; checked 2026-11-04",
+          "url": "https://science.nasa.gov/mission/lucy/"
+        }
+      ],
+      "geometry_scope": "12 representative nights with new 6-hour topocentric Horizons; not a 365-night extrema search or scheduled visits"
+    },
+    {
+      "mpc_number": "5284",
+      "name": "Orsilocus",
+      "tier": "B: 精度验证后的第二批候选",
+      "tags": [
+        "period_conflict_review",
+        "low_amplitude",
+        "model_validation"
+      ],
+      "periods_h": [
+        7.847,
+        15.677923,
+        10.31
+      ],
+      "amplitude_mag": 0.05403042558,
+      "evidence": "Li2025采用7.847h，2026完整形状模型15.677923h；French2013 MPB40 p199曾报10.31h。需复核原始密集光变、质量与数据相关性，不能由表差异断言新发现。",
+      "question": "独立检验候选周期与低振幅双峰结构。",
+      "strategy": "先验证r120约0.01–0.02mag精度，再在春季安排错峰密集块，选择候选相位差异大的时段。",
+      "sources": [
+        "li2025",
+        "models2026",
+        "french2013"
+      ],
+      "geometry_scope": "12 representative nights; not an actual annual queue"
+    }
+  ]
+}

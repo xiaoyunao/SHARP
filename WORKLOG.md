@@ -1,5 +1,18 @@
 # WORKLOG
 
+## 2026-11-05
+
+- task: 读取续接对话及Downloads执行清单/SHARP_resume_20261105.zip，按P0/P1继续本地模式；基线a5cb945与GitHub同步，用户outputs/保留，未连接服务器。
+- recovery: 恢复既有selected_nominal全部365夜；导出6137夜块场行/37078曝光、来源SHA和365输入hash；四个原审查绘图工具入review_tools，完成365逐夜图与全年/月度图，13页PDF及日期索引。
+- repairs: annual_selection按独立对象收益比较所有时段，保留pick_legacy；完成机会开关与科学权重解耦，预测读同一quality配置；非默认阈值/重叠反例回归通过。
+- validation: 原42项测试通过；新增8项续接契约测试通过。同菜单/种子全年200实现去重修复基准37/43/48、乐观57/64/72（P10/P50/P90），原36/42/47、55/62.5/70；不能把局部反例收益解释成年产额20%。
+- results: A/B/C/D全部365×200完成，中位42/47/44/39，A200计数逐项复现原基线；科学实际份额9.73%/18.54%。Thymbraeus/Paeon采样代理C为99.5%/87.5%，物理解仍未知；完整16候选可见性审计和全母表选择函数交付。
+- twilight: EV5/AM10后对齐365夜独立5秒验证成功，200因果天气与19/20/21三深度移动恢复完成；双侧实际有效帧实现0面积4344.88→3512.23deg²，条件短弧率提高但距日角中位67.89→69.59°，不宣称更靠近太阳。
+- verification: 51项unittest通过；新B名义年365夜/37264曝光独立5秒验收全部通过，原基线37078保留；A/B/C/D账本闭合、前缀科学份额不超限，统一晨昏/预约/TJ时间账本闭合。13页PDF渲染及全年/月图/代表夜图目视无裁切；378图与日期索引完整。
+- commands: review_tools.export_plot_data/plot_exported_plan/publish_atlas；annual_visibility --free-centres；annual_simulation --continuation A/B/C/D；annual_morning_alignment；unittest。
+- issues: stdin multiprocessing spawn失败后改模块CLI；PDF使用bundled Python。后对齐首帧开销起点导致独立验证报错，显式记录起始等待后全年重验通过；末年恢复列用可空布尔避免False字符串误判。CLI禁止continuation混入不同场数/预算，避免命名冲突覆盖配对结果。
+- remaining: 现场r/饱和/污染/控制token、真实测光/形状模型/事件预报仍待输入；>100科学目标未达，不降低门槛。新B轻量导出与Git里程碑同步随后完成。
+
 ## 2026-11-04
 
 - annual_delivery: 完成science25_v3主队列、24组标准策略各365夜×200天气实现；8组全晴名义对照；365夜组合37078曝光独立5秒几何/时间/版本验收通过。合格前缀重新计算realization0共37对象通过；全24组累计质量单调、对象去重与时间账本闭合。

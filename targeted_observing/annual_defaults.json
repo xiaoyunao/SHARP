@@ -16,7 +16,7 @@
   "weather_realizations": 200,
   "seed": 20261104,
   "science_priority_strength": 0.25,
-  "queue_policy_version": 3,
+  "queue_policy_version": 4,
   "quality": {
     "points": 100, "nights": 10, "points_per_night": 5,
     "night_span_s": 1800, "baseline_days": 21,

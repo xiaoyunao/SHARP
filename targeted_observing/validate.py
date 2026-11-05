@@ -29,7 +29,8 @@ def validate_plan(plan,campaign=None):
                 if coord(f['ra_deg'],f['dec_deg']).separation(coord(g['ra_deg'],g['dec_deg'])).deg>c['adjacent_max_deg']:
                     errors.append(name+': closed tour exceeds neighbor threshold')
         counts=Counter(r['field_id'] for r in rows)
-        if name!='TJ' and (len(counts)!=4 or set(counts.values())!={c['twilight']['visits']}):errors.append(name+': incomplete configured twilight group')
+        expected_visits=c['twilight'].get('visits_by_side',{}).get(name[:2],c['twilight']['visits'])
+        if name!='TJ' and (len(counts)!=4 or set(counts.values())!={expected_visits}):errors.append(name+': incomplete configured twilight group')
         if name=='TJ' and len(set(counts.values()))!=1:errors.append('TJ: incomplete cycle')
         if name=='TJ' and end-start<5400-.01 and len(fs)!=1:errors.append('TJ: short block must use primary field')
         for fid in counts:

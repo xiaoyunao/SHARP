@@ -111,3 +111,11 @@ python3 -m unittest discover -s targeted_observing/tests -v
 完整结果和其余周期/三深度/额外预算复现命令见 [年度材料索引](docs/annual_reports/README.md)、[Trojan报告](docs/annual_reports/TROJAN_ANNUAL_REPORT.md)、[晨昏报告](docs/annual_reports/TWILIGHT_ANNUAL_REPORT.md)。已生成365夜主方案、37078条曝光并独立验收；比较24组标准策略、各200天气实现。四场驻场两张的基准合格光变P10/P50/P90=36/42/47，当前两小时模式不能承诺百颗；周期与振幅另计。四小时/更高精度仅为额外申请实验，不改变正常预算。
 
 `annual_trojan`是先前名义评分的参考实现；最终主方案由`annual_simulation --nominal`和`annual_delivery`生成。原三夜`defaults.json`及冻结campaign保留，年度推荐不静默替换它们。GitHub同步源码和审查摘要；大型年度产品、原始科学缓存留在本地。精确复现数字需要保留当前输入快照；日后重新下载的目录和IERS可能不同。
+
+## 2026-11-05 续接：365夜图册与优化比较
+
+见[本轮结果及复现入口](docs/continuation_20261105/README.md)、[逐日图索引](docs/continuation_20261105/atlas/index.html)。原a5cb945名义年四份轻量数据与378张图已交付；新增去重评分/独立完成预测、偏置中心、真实路线重评分、10%/20%预算内特殊科学状态，以及晨间十访后对齐。
+
+当前 `annual_defaults.json` 的policy为4；`--continuation A`保留旧policy3，B/C/D显式启用新比较。基准测光200次年度中位分别42/47/44/39，质量达标不等于唯一周期或模型已验证；>100颗目标仍未达到。`--days`/`--realizations`的小试验使用独立目录后缀，`--nominal --continuation B`使用`nominal_`前缀，不覆盖天气实现。
+
+科学任务使用文献候选周期和独立采样代理；普通质量达标后可继续长基线。完整物理解和实际r/饱和/污染仍待验证。图册PDF打包需要Pillow和reportlab，仅用于离线报告；现场与生产依赖未改变。原三夜campaign与生产路径继续保留。

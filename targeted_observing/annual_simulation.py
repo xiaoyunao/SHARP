@@ -10,6 +10,7 @@ from .annual_trojan import load_tracks
 from .annual_weather import ensemble,random_error,lightcurve_quality
 from .geometry import in_field
 from .science import load_periods,assess
+from .annual_selection import pick
 
 
 def transition(a,b,c):
@@ -54,7 +55,7 @@ def update_quality(state,thresholds):
     if state['quality']['quality_lightcurve']:state['completion_index']=len(state['times'])
 
 
-def pick(menu,data,values,count,history,night_index,completion=None):
+def pick_legacy(menu,data,values,count,history,night_index,completion=None):
     fields=menu['fields'];valid=data['valid']
     if not valid.any():return None
     scores=np.zeros(len(fields))
@@ -120,7 +121,7 @@ def simulate(job):
     if nominal:
         weather['observable'].fill(True);weather['reserved'].fill(False);weather['seeing_arcsec'].fill(2.)
         for key in ['cloud_duration_fraction','delay_s','extra_readout_s','extra_slew_s','zeropoint_standard_normal']:weather[key].fill(0)
-    vroot=BASE/'products/annual'/('visibility_smoke' if smoke else 'visibility')
+    vroot=BASE/'products/annual'/spec.get('visibility_name',('visibility_smoke' if smoke else 'visibility'))
     menus=[json.loads((vroot/f'{day}.json').read_text()) for day in nights]
     arrays=[dict(np.load(vroot/f'{day}.npz')) for day in nights]
     if duration!=7200:
@@ -144,9 +145,9 @@ def simulate(job):
         magnitudes=np.array([np.interp(when,track_arrays[k]['t'],track_arrays[k]['V']) for k in keys])
         expected=random_error(magnitudes,1.3,0,90,2,120,scenario)
         weights=np.array([science.get(k,{}).get('weight',.1) for k in keys])
-        night_values.append(dict(zip(keys,((1-strength+strength*weights)/(1+(expected/.03)**4)).tolist())))
+        night_values.append(dict(zip(keys,((1-strength+strength*weights)/(1+(expected/spec['quality']['median_random_error_mag'])**4)).tolist())))
     completion_forecast=None
-    if strength:
+    if spec.get('completion_forecast_enabled',True):
         ids=list(track_arrays);index={k:j for j,k in enumerate(ids)};possible=np.zeros((len(nights),len(ids)),bool)
         for ni,(menu,data) in enumerate(zip(menus,arrays)):
             for j in np.flatnonzero(np.any(data['valid'],axis=1)):
@@ -162,24 +163,54 @@ def simulate(job):
     if duration!=7200:name+=f'_budget{duration}'
     if strength:name+=f'_science{int(strength*100):02d}'
     if strength and spec.get('queue_policy_version',1)>1:name+=f'_v{spec["queue_policy_version"]}'
+    if not strength:name+=f'_v{spec.get("queue_policy_version",4)}'
+    if not spec.get('completion_forecast_enabled',True):name+='_noforecast'
     if nominal:name='nominal_'+name
+    if spec.get('experiment_label'):name=('nominal_' if nominal else '')+spec['experiment_label']+'_'+scenario_name
+    if day_limit:name+=f'_{day_limit}days'
+    if realization_limit and realization_limit!=spec['weather_realizations']:name+=f'_{realization_limit}real'
     root=BASE/'products/annual'/name;root.mkdir(parents=True,exist_ok=True)
+    from .annual_tasks import load_tasks,status as task_status,weights as task_weights
+    from .annual_selection import pick_route
+    tasks=load_tasks();task_records=[];fraction=spec.get('special_budget_fraction',0.)
+    (root/'run_config.json').write_text(json.dumps({'spec':spec,'instrument':c,'field_count':field_count,'dwell':dwell},indent=2)+'\n')
     nightly=[];objects=[];samples={};actual_rows=[];totals=[]
     curve_times=[];curve_errors=[];curve_zeropoints=[];curve_offsets=[0];curve_ids=[];curve_realizations=[]
     for realization in range(nreal):
-        history={};cumulative=0
+        history={};cumulative=0;allocated_total=0.;special_total=0.
         for ni,(day,menu,data) in enumerate(zip(nights,menus,arrays)):
             w=lambda key:weather[key][realization,ni,1]
             record={'realization':realization,'date':day,'fields':0,'exposures':0,'allocated_s':0,'exposure_s':0,
                     'readout_s':0.,'slew_s':0.,'filter_s':0.,'delay_s':0.,'handover_s':0.,'slack_s':0.,
-                    'quality_objects_cumulative':sum(s.get('quality',{}).get('quality_lightcurve',False) for s in history.values()),'reason':''}
+                    'quality_objects_cumulative':sum(s.get('quality',{}).get('quality_lightcurve',False) for s in history.values()),'reason':'',
+                    'special_allocation_s':0.,'block_start_unix':None,'selected_field_ids':'[]','selected_object_ids':'[]','special_targets':'[]'}
             if not w('observable'):record['reason']='weather_closed';nightly.append(record);continue
             if w('reserved'):record['reason']='external_allocation_cancelled';nightly.append(record);continue
-            chosen=pick(menu,data,night_values[ni],field_count,history,ni,completion_forecast[ni] if completion_forecast else None)
+            selector=pick_legacy if spec.get('queue_policy_version',4)<=3 else pick
+            forecast=completion_forecast[ni] if completion_forecast else None
+            special_values={};special_mode=False
+            if spec.get('route_rescore'):
+                extra=dict(delay=float(w('delay_s')),extra_readout=float(w('extra_readout_s')),extra_slew=float(w('extra_slew_s')))
+                args=(menu,data,night_values[ni],field_count,history,ni,forecast,spec['quality'],c,dwell)
+                chosen=None
+                if fraction and special_total+duration<=fraction*(allocated_total+duration)+1e-6:
+                    special_values=task_weights(tasks,history,night_values[ni],spec['quality'],ni)
+                    if special_values:chosen=pick_route(*args,**extra,special=special_values,tasks=tasks)
+                    special_mode=chosen is not None
+                if chosen is None:chosen=pick_route(*args,**extra)
+            else:
+                chosen=selector(menu,data,night_values[ni],field_count,history,ni,forecast,
+                                **({'quality':spec['quality']} if selector is pick else {}))
             if chosen is None:record['reason']='no_eligible_unfinished_targets';nightly.append(record);continue
             slot,indices=chosen;fields=[menu['fields'][j] for j in indices];start=float(data['starts'][slot])
             rows=numeric_visits(fields,dwell,c,float(w('delay_s')),float(w('extra_readout_s')),float(w('extra_slew_s')))
             if not len(rows):record['reason']='no_complete_cycle_after_delay';nightly.append(record);continue
+            allocated_total+=duration
+            if special_mode:special_total+=duration
+            record.update(special_allocation_s=duration if special_mode else 0.,block_start_unix=start,
+                          selected_field_ids=json.dumps([f['field_id'] for f in fields]),
+                          selected_object_ids=json.dumps(sorted({k for f in fields for k in f['core_targets']})),
+                          special_targets=json.dumps(sorted({k for f in fields for k in f['core_targets'] if special_mode and k in special_values})))
             record.update(fields=len(fields),exposures=len(rows),allocated_s=duration,exposure_s=120*len(rows),
                 readout_s=(c['readout_s']+float(w('extra_readout_s')))*len(rows),slew_s=float(rows[:,3].sum()),
                 filter_s=float(rows[:,4].sum()),delay_s=float(w('delay_s')),handover_s=c['trojan']['handover_s'])
@@ -218,13 +249,18 @@ def simulate(job):
                 'median_V_proxy':float(np.median(s['magnitudes'])),
                 'raw_points_total':len(s['times']),'completion_index':s.get('completion_index'),**q})
             if spec.get('save_qualified_curves') and q['quality_lightcurve']:
-                good=np.array(s['valid'])&(np.array(s['errors'])<=.05)&(abs(np.array(s['zeropoints']))<=.02)
+                good=np.array(s['valid'])&(np.array(s['errors'])<=.05)&(abs(np.array(s['zeropoints']))<=spec['quality']['max_zeropoint_mag'])
                 seconds=np.array(s['times'])[good];tr=track_arrays[k]
                 emission=seconds-np.interp(seconds,tr['t'],tr['delta'])*499.004783836
                 curve_times.extend(emission.tolist());curve_errors.extend(np.array(s['errors'])[good].tolist())
                 curve_zeropoints.extend(np.array(s['zeropoints'])[good].tolist())
                 curve_offsets.append(len(curve_times));curve_ids.append(k);curve_realizations.append(realization)
         totals.append(qualified)
+        for k,t in tasks.items():
+            s=task_status(t,history.get(k),spec['quality'])
+            reason='sampled; physical inference pending' if k in history else ('outside unchanged ephemeris parent sample' if k not in tracks else 'no selected feasible useful combination within budget')
+            task_records.append({'realization':realization,'object_id':k,'name':t['name'],'tags':json.dumps(t['tags']),
+                                 'selection_reason':reason,**s})
         if realization==0:samples=history
         if (realization+1)%20==0:print(f'{name}: {realization+1}/{nreal} weather realizations',flush=True)
     actual_rows.sort(key=lambda r:r['start_unix']);counters=defaultdict(int)
@@ -233,6 +269,7 @@ def simulate(job):
     write_csv(root/'nightly_execution_ledger.csv',nightly);write_csv(root/'object_yield.csv',objects);write_csv(root/'execution_realization0.csv',actual_rows)
     (root/'samples_realization0.json').write_text(json.dumps(samples)+'\n')
     (root/'science_roles.json').write_text(json.dumps({k:science.get(k,assess(None)) for k in tracks},indent=2)+'\n')
+    write_csv(root/'science_task_status.csv',task_records)
     if spec.get('save_qualified_curves'):
         np.savez_compressed(root/'qualified_curves.npz',emission_unix=np.array(curve_times),error=np.array(curve_errors),
             zeropoint=np.array(curve_zeropoints),offsets=np.array(curve_offsets),object_id=np.array(curve_ids),realization=np.array(curve_realizations))
@@ -244,8 +281,12 @@ def simulate(job):
             'allocation_s':duration,'allocation_scope':'standard <=2h mode' if duration==7200 else 'additional-time proposal experiment, not dispatchable by standard mode'}
     result['science_priority_strength']=strength
     result['queue_policy_version']=spec.get('queue_policy_version',1)
+    result['completion_forecast_enabled']=spec.get('completion_forecast_enabled',True)
+    result['special_budget_fraction']=fraction
+    result['route_rescore']=spec.get('route_rescore',False)
+    result['visibility_name']=vroot.name
     result['nominal_clear_weather']=nominal
-    result['selection_policy']='photometry * (1-strength+strength*literature_weight) * expected completion availability; past outcomes only' if strength else 'photometry and observed continuity; throughput comparison'
+    result['selection_policy']='distinct-object photometric/literature utility; '+('completion forecast' if completion_forecast else 'observed continuity')+('; route/points and separate science quota' if spec.get('route_rescore') else '')+'; no future realized weather'
     (root/'summary.json').write_text(json.dumps(result,indent=2)+'\n');return result
 
 
@@ -255,11 +296,27 @@ def main():
     p.add_argument('--dwells',type=int,nargs='+',choices=[1,2])
     p.add_argument('--duration-s',type=int,choices=[7200,10800,14400],default=7200)
     p.add_argument('--science-strength',type=float)
+    p.add_argument('--no-completion-forecast',action='store_true',help='independent of literature weights')
+    p.add_argument('--policy-version',type=int,choices=[3,4],default=4)
+    p.add_argument('--continuation',choices=['A','B','C','D'],help='A frozen policy; B free centres + route; C/D special quota 10/20 percent')
     p.add_argument('--nominal',action='store_true')
     p.add_argument('--smoke',action='store_true');p.add_argument('--save-curves',action='store_true')
     args=p.parse_args();spec=json.loads((BASE/'annual_defaults.json').read_text());spec['save_qualified_curves']=args.save_curves
+    if args.continuation:
+        if args.fields not in (None,[4]) or args.dwells not in (None,[2]) or args.duration_s!=7200:
+            p.error('Continuation A/B/C/D fixes four fields, dwell two and a 7200s cap; use ordinary experiments for other settings')
+        if args.science_strength is not None or args.no_completion_forecast or args.smoke:
+            p.error('Continuation comparisons keep the common literature/forecast/parent settings; run ablations without --continuation')
+        args.fields=[4];args.dwells=[2]
     spec['experimental_duration_s']=args.duration_s
     spec['nominal_clear_weather']=args.nominal
+    spec['queue_policy_version']=args.policy_version
+    spec['completion_forecast_enabled']=not args.no_completion_forecast
+    if args.continuation:
+        spec.update(visibility_name='visibility' if args.continuation=='A' else 'visibility_free',route_rescore=args.continuation!='A',
+                    queue_policy_version=3 if args.continuation=='A' else 4,
+                    special_budget_fraction={'A':0.,'B':0.,'C':.1,'D':.2}[args.continuation],
+                    experiment_label='continuation_'+args.continuation)
     if args.science_strength is not None:spec['science_priority_strength']=args.science_strength
     if not 0<=spec['science_priority_strength']<=1:raise ValueError('Science strength must lie in [0,1]')
     jobs=[(n,d,s,spec,args.days,args.realizations,args.smoke) for n in args.fields or spec['field_counts'] for d in args.dwells or spec['dwells']

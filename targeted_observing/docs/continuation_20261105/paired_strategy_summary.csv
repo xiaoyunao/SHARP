@@ -1,0 +1,6 @@
+strategy,quality_p10,quality_p50,quality_p90,quality_mean,ge101_realizations,paired_delta_mean,paired_delta_p10,paired_delta_p50,paired_delta_p90,sampled_objects_mean,raw_points_mean,exposures_mean,allocated_hours_mean,special_quota,special_hours_mean,special_actual_fraction_mean,both_active_nights,changed_start_both_active_nights,changed_active_state_nights,changed_field_sets_nights,actual_exposures_before,actual_exposures_after,changed_start_all200_both_active,changed_selected_objects_all200
+A,36.0,42.0,47.0,41.69,0,0.0,0.0,0.0,0.0,126.1,12589.39,6384.04,341.84,0.0,0.0,0.0,160,0,0,0,5924,5924,0,0
+P0,37.0,43.0,48.0,42.57,0,0.88,-2.0,1.0,4.0,121.105,12742.09,6395.99,342.31,0.0,0.0,0.0,160,73,0,117,5924,5936,,
+B,41.0,47.0,52.0,46.79,0,5.1,1.0,5.0,9.0,161.16,16916.94,6731.95,340.98,0.0,0.0,0.0,159,134,1,144,5924,6192,28107,31236
+C,38.0,44.0,48.0,43.03,0,1.34,-2.099999999999998,1.0,5.0,156.755,16263.0,6774.5,341.66,0.1,33.25,0.0972988480085613,159,134,1,144,5924,6172,27974,31379
+D,33.0,39.0,45.0,38.7,0,-2.99,-7.0,-3.0,1.0,151.61,15569.42,6798.08,341.8,0.2,63.31,0.18538395728925067,159,138,1,145,5924,6202,27816,31587

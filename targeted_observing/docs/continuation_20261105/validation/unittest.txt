@@ -1,0 +1,56 @@
+test_accepted_curve_survives_later_noisy_companion_points (test_annual.AnnualContracts.test_accepted_curve_survives_later_noisy_companion_points) ... ok
+test_anchor_ages_only_on_successful_feedback (test_annual.AnnualContracts.test_anchor_ages_only_on_successful_feedback) ... ok
+test_full_year_and_leap_calendar (test_annual.AnnualContracts.test_full_year_and_leap_calendar) ... ok
+test_numeric_execution_matches_scheduler_and_accounts_time (test_annual.AnnualContracts.test_numeric_execution_matches_scheduler_and_accounts_time) ... ok
+test_period_recovers_asymmetric_double_peaked_signal (test_annual.AnnualContracts.test_period_recovers_asymmetric_double_peaked_signal) ... ok
+test_quality_is_not_point_count_or_period (test_annual.AnnualContracts.test_quality_is_not_point_count_or_period) ... ok
+test_queue_releases_baseline_wait_then_returns_to_finish (test_annual.AnnualContracts.test_queue_releases_baseline_wait_then_returns_to_finish) ... ok
+test_shared_weather_is_reproducible_and_correlated (test_annual.AnnualContracts.test_shared_weather_is_reproducible_and_correlated) ... ok
+test_shifted_exposure_checks_all_enclosing_grid_nodes (test_annual.AnnualContracts.test_shifted_exposure_checks_all_enclosing_grid_nodes) ... ok
+test_spherical_area_does_not_count_repeat_exposures_twice (test_annual.AnnualContracts.test_spherical_area_does_not_count_repeat_exposures_twice) ... ok
+test_export_missing_calendar_day_is_error (test_continuation.ContinuationContracts.test_export_missing_calendar_day_is_error) ... ok
+test_export_missing_coordinates_and_nonfinite_values_are_errors (test_continuation.ContinuationContracts.test_export_missing_coordinates_and_nonfinite_values_are_errors) ... ok
+test_export_requires_provenance (test_continuation.ContinuationContracts.test_export_requires_provenance) ... ok
+test_export_sha_mismatch_is_error (test_continuation.ContinuationContracts.test_export_sha_mismatch_is_error) ... ok
+test_low_amplitude_science_has_separate_precision_requirement (test_continuation.ContinuationContracts.test_low_amplitude_science_has_separate_precision_requirement) ... ok
+test_mixed_twilight_group_order (test_continuation.ContinuationContracts.test_mixed_twilight_group_order) ... ok
+test_right_censored_followups_preserve_false (test_continuation.ContinuationContracts.test_right_censored_followups_preserve_false) ... ok
+test_route_cost_changes_start_choice (test_continuation.ContinuationContracts.test_route_cost_changes_start_choice) ... ok
+test_science_survives_general_photometric_completion (test_continuation.ContinuationContracts.test_science_survives_general_photometric_completion) ... ok
+test_actual_short_tracklet_boundary (test_mode.CoreTests.test_actual_short_tracklet_boundary) ... ok
+test_budget_and_no_partial_cycle (test_mode.CoreTests.test_budget_and_no_partial_cycle) ... ok
+test_closed_tour_includes_return_jump (test_mode.CoreTests.test_closed_tour_includes_return_jump) ... ok
+test_empty_plan_clears_stale_generated_lists_only (test_mode.CoreTests.test_empty_plan_clears_stale_generated_lists_only) ... ok
+test_ephemeris_wrap_and_no_extrapolation (test_mode.CoreTests.test_ephemeris_wrap_and_no_extrapolation) ... ok
+test_long_slew_and_repeated_field (test_mode.CoreTests.test_long_slew_and_repeated_field) ... ok
+test_missing_filter_mapping_refuses_without_files (test_mode.CoreTests.test_missing_filter_mapping_refuses_without_files) ... ok
+test_ra_wrap_and_high_declination (test_mode.CoreTests.test_ra_wrap_and_high_declination) ... ok
+test_reservations (test_mode.CoreTests.test_reservations) ... ok
+test_execution_gate_early_and_deadline (test_mode.IntegrationTests.test_execution_gate_early_and_deadline) ... ok
+test_footprint_rejection_and_sun (test_mode.IntegrationTests.test_footprint_rejection_and_sun) ... ok
+test_independent_audit_detects_corrupt_exposure (test_mode.IntegrationTests.test_independent_audit_detects_corrupt_exposure) ... ok
+test_solar_windows_and_season (test_mode.IntegrationTests.test_solar_windows_and_season) ... ok
+test_trojan_fallback_and_reservations (test_mode.IntegrationTests.test_trojan_fallback_and_reservations) ... ok
+test_zero_budget_and_free_interval_partition (test_mode.IntegrationTests.test_zero_budget_and_free_interval_partition) ... ok
+test_aabb_actual_budget_and_nonuniform_cadence (test_nov4.ReviewRegressions.test_aabb_actual_budget_and_nonuniform_cadence) ... ok
+test_delayed_first_exposure_updates_target_state (test_nov4.ReviewRegressions.test_delayed_first_exposure_updates_target_state) ... ok
+test_manual_control_preserves_conflicting_quality (test_nov4.ReviewRegressions.test_manual_control_preserves_conflicting_quality) ... ok
+test_old_field_revalidated_against_stricter_beta (test_nov4.ReviewRegressions.test_old_field_revalidated_against_stricter_beta) ... ok
+test_damit_discrepancy_is_evidence_not_priority_boost (test_review.EvidenceTests.test_damit_discrepancy_is_evidence_not_priority_boost) ... ok
+test_retention_uses_visits_not_daytime_grid (test_review.EvidenceTests.test_retention_uses_visits_not_daytime_grid) ... ok
+test_tess_full_table_and_ambiguous_period (test_review.EvidenceTests.test_tess_full_table_and_ambiguous_period) ... ok
+test_hipparcos_catches_betelgeuse (test_review.GeometryReviewTests.test_hipparcos_catches_betelgeuse) ... ok
+test_old_anchor_regression_retains_seven (test_review.GeometryReviewTests.test_old_anchor_regression_retains_seven) ... ok
+test_single_field_fills_budget (test_review.GeometryReviewTests.test_single_field_fills_budget) ... ok
+test_completed_prefix_does_not_affect_other_targets (test_selection.SelectionReview.test_completed_prefix_does_not_affect_other_targets) ... ok
+test_empty_and_no_available_fields (test_selection.SelectionReview.test_empty_and_no_available_fields) ... ok
+test_equal_union_scores_rotate_only_among_ties (test_selection.SelectionReview.test_equal_union_scores_rotate_only_among_ties) ... ok
+test_nondefault_quality_forecast_and_baseline_wait (test_selection.SelectionReview.test_nondefault_quality_forecast_and_baseline_wait) ... ok
+test_overlapping_fields_do_not_hide_lower_ranked_distinct_target (test_selection.SelectionReview.test_overlapping_fields_do_not_hide_lower_ranked_distinct_target) ... ok
+test_review_counterexample_with_and_without_forecast (test_selection.SelectionReview.test_review_counterexample_with_and_without_forecast) ... ok
+test_single_field_and_completed_object (test_selection.SelectionReview.test_single_field_and_completed_object) ... ok
+
+----------------------------------------------------------------------
+Ran 51 tests in 15.769s
+
+OK

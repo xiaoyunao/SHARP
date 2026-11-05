@@ -14,8 +14,8 @@ from .annual_coverage import union_area
 from .geometry import unix,isot,Sky,setup_iers
 
 
-def run(visits):
-    root=BASE/f'products/annual/twilight_{visits}'
+def run(visits,root_name=None):
+    root=BASE/'products/annual'/(root_name or f'twilight_{visits}')
     spec=json.loads((BASE/'annual_defaults.json').read_text());nights=dates(spec['start_date'],spec['stop_date_exclusive'])
     setup_iers(BASE/'cache'/spec['iers_file'])
     weather=ensemble(nights,200,spec['seed'])
@@ -27,7 +27,8 @@ def run(visits):
         for side,slot in [('EV',0),('AM',2)]:
             w=lambda key:weather[key][0,ni,slot]
             rng=np.random.default_rng(int(w('point_seed')));actual_count=qualified=0
-            names=[side+'_A'] if visits==10 else [side+'_'+x for x in (['A','B'] if side=='EV' else ['B','A'])]
+            from .annual_twilight_queue import group_names
+            names=group_names(menu,side)
             for name,choice in zip(names,choices[0,ni,slot]):
                 if choice<0:continue
                 b=menu['options'][name][choice];prepare(b,sky);ts=row_times(b)

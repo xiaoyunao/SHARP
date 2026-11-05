@@ -1,0 +1,538 @@
+{
+  "A": {
+    "spec": {
+      "start_date": "2026-11-01",
+      "stop_date_exclusive": "2027-11-01",
+      "lookahead_days": 3,
+      "iers_file": "iers_20261104.all",
+      "candidate_max_H": 14.0,
+      "candidate_V_limit": 19.7,
+      "candidate_min_dec_deg": -29.0,
+      "preselection_step_days": 7,
+      "horizons_step": "6h",
+      "moon_policy": "phase_dependent",
+      "campaign_days": 35,
+      "field_version_days": 7,
+      "field_counts": [
+        2,
+        3,
+        4,
+        6
+      ],
+      "dwells": [
+        1,
+        2
+      ],
+      "weather_realizations": 200,
+      "seed": 20261104,
+      "science_priority_strength": 0.25,
+      "queue_policy_version": 3,
+      "quality": {
+        "points": 100,
+        "nights": 10,
+        "points_per_night": 5,
+        "night_span_s": 1800,
+        "baseline_days": 21,
+        "median_random_error_mag": 0.03,
+        "fraction_below_005": 0.8,
+        "max_zeropoint_mag": 0.02
+      },
+      "photometry_scenarios": {
+        "optimistic": {
+          "sigma_r18_120s": 0.015,
+          "night_zeropoint": 0.008,
+          "usable_fraction": 0.95
+        },
+        "baseline": {
+          "sigma_r18_120s": 0.025,
+          "night_zeropoint": 0.012,
+          "usable_fraction": 0.85
+        },
+        "conservative": {
+          "sigma_r18_120s": 0.04,
+          "night_zeropoint": 0.02,
+          "usable_fraction": 0.7
+        },
+        "precision_requirement": {
+          "sigma_r18_120s": 0.01,
+          "night_zeropoint": 0.008,
+          "usable_fraction": 0.95
+        }
+      },
+      "assumptions": [
+        "V is not calibrated r: adopt r=V for baseline and report color sensitivity.",
+        "Photometric and weather parameters are planning scenarios, not instrument measurements.",
+        "precision_requirement is an extra sensitivity experiment, beyond the optimistic case, not a performance claim.",
+        "All candidate screening uses full TJN input; two-body preselection is not executable ephemeris."
+      ],
+      "save_qualified_curves": true,
+      "experimental_duration_s": 7200,
+      "nominal_clear_weather": false,
+      "completion_forecast_enabled": true,
+      "visibility_name": "visibility",
+      "route_rescore": false,
+      "special_budget_fraction": 0.0,
+      "experiment_label": "continuation_A"
+    },
+    "instrument": {
+      "version": "20261103-v0",
+      "site": {
+        "lat_deg": 40.393,
+        "lon_deg": 117.575,
+        "height_m": 960
+      },
+      "fov_deg": 3.0,
+      "edge_margin_deg": 0.15,
+      "min_alt_deg": 30.0,
+      "center_alt_deg": 32.5,
+      "moon_sep_deg": 30.0,
+      "bright_moon_sep_deg": 40.0,
+      "bright_moon_fraction": 0.75,
+      "readout_s": 15.0,
+      "adjacent_slew_s": 20.0,
+      "adjacent_max_deg": 3.5,
+      "far_slew_s": 60.0,
+      "filter_change_s": 10.0,
+      "filter": "r",
+      "controller_filter_tokens": {},
+      "twilight": {
+        "window_s": 3600,
+        "sun_alt_deg": -12,
+        "exposure_s": 30,
+        "visits": 5,
+        "fields_per_group": 4,
+        "elongation_deg": [
+          45,
+          75
+        ],
+        "extended_elongation_deg": [
+          75,
+          90
+        ],
+        "preferred_elongation_deg": [
+          50,
+          65
+        ],
+        "beta_max_deg": 25,
+        "anchor_fields_per_group": 3
+      },
+      "trojan": {
+        "block_s": 7200,
+        "handover_s": 300,
+        "exposure_s": 120,
+        "freeze_days": 14,
+        "core_V_limit": 18.5,
+        "extended_V_limit": 19.2,
+        "sun_alt_deg": -18,
+        "min_core_retention_fraction": 0.8,
+        "exposures_per_dwell": 1
+      },
+      "reservations": [],
+      "use_header_slew_floor": true
+    },
+    "field_count": 4,
+    "dwell": 2
+  },
+  "B": {
+    "spec": {
+      "start_date": "2026-11-01",
+      "stop_date_exclusive": "2027-11-01",
+      "lookahead_days": 3,
+      "iers_file": "iers_20261104.all",
+      "candidate_max_H": 14.0,
+      "candidate_V_limit": 19.7,
+      "candidate_min_dec_deg": -29.0,
+      "preselection_step_days": 7,
+      "horizons_step": "6h",
+      "moon_policy": "phase_dependent",
+      "campaign_days": 35,
+      "field_version_days": 7,
+      "field_counts": [
+        2,
+        3,
+        4,
+        6
+      ],
+      "dwells": [
+        1,
+        2
+      ],
+      "weather_realizations": 200,
+      "seed": 20261104,
+      "science_priority_strength": 0.25,
+      "queue_policy_version": 4,
+      "quality": {
+        "points": 100,
+        "nights": 10,
+        "points_per_night": 5,
+        "night_span_s": 1800,
+        "baseline_days": 21,
+        "median_random_error_mag": 0.03,
+        "fraction_below_005": 0.8,
+        "max_zeropoint_mag": 0.02
+      },
+      "photometry_scenarios": {
+        "optimistic": {
+          "sigma_r18_120s": 0.015,
+          "night_zeropoint": 0.008,
+          "usable_fraction": 0.95
+        },
+        "baseline": {
+          "sigma_r18_120s": 0.025,
+          "night_zeropoint": 0.012,
+          "usable_fraction": 0.85
+        },
+        "conservative": {
+          "sigma_r18_120s": 0.04,
+          "night_zeropoint": 0.02,
+          "usable_fraction": 0.7
+        },
+        "precision_requirement": {
+          "sigma_r18_120s": 0.01,
+          "night_zeropoint": 0.008,
+          "usable_fraction": 0.95
+        }
+      },
+      "assumptions": [
+        "V is not calibrated r: adopt r=V for baseline and report color sensitivity.",
+        "Photometric and weather parameters are planning scenarios, not instrument measurements.",
+        "precision_requirement is an extra sensitivity experiment, beyond the optimistic case, not a performance claim.",
+        "All candidate screening uses full TJN input; two-body preselection is not executable ephemeris."
+      ],
+      "save_qualified_curves": true,
+      "experimental_duration_s": 7200,
+      "nominal_clear_weather": false,
+      "completion_forecast_enabled": true,
+      "visibility_name": "visibility_free",
+      "route_rescore": true,
+      "special_budget_fraction": 0.0,
+      "experiment_label": "continuation_B"
+    },
+    "instrument": {
+      "version": "20261103-v0",
+      "site": {
+        "lat_deg": 40.393,
+        "lon_deg": 117.575,
+        "height_m": 960
+      },
+      "fov_deg": 3.0,
+      "edge_margin_deg": 0.15,
+      "min_alt_deg": 30.0,
+      "center_alt_deg": 32.5,
+      "moon_sep_deg": 30.0,
+      "bright_moon_sep_deg": 40.0,
+      "bright_moon_fraction": 0.75,
+      "readout_s": 15.0,
+      "adjacent_slew_s": 20.0,
+      "adjacent_max_deg": 3.5,
+      "far_slew_s": 60.0,
+      "filter_change_s": 10.0,
+      "filter": "r",
+      "controller_filter_tokens": {},
+      "twilight": {
+        "window_s": 3600,
+        "sun_alt_deg": -12,
+        "exposure_s": 30,
+        "visits": 5,
+        "fields_per_group": 4,
+        "elongation_deg": [
+          45,
+          75
+        ],
+        "extended_elongation_deg": [
+          75,
+          90
+        ],
+        "preferred_elongation_deg": [
+          50,
+          65
+        ],
+        "beta_max_deg": 25,
+        "anchor_fields_per_group": 3
+      },
+      "trojan": {
+        "block_s": 7200,
+        "handover_s": 300,
+        "exposure_s": 120,
+        "freeze_days": 14,
+        "core_V_limit": 18.5,
+        "extended_V_limit": 19.2,
+        "sun_alt_deg": -18,
+        "min_core_retention_fraction": 0.8,
+        "exposures_per_dwell": 1
+      },
+      "reservations": [],
+      "use_header_slew_floor": true
+    },
+    "field_count": 4,
+    "dwell": 2
+  },
+  "C": {
+    "spec": {
+      "start_date": "2026-11-01",
+      "stop_date_exclusive": "2027-11-01",
+      "lookahead_days": 3,
+      "iers_file": "iers_20261104.all",
+      "candidate_max_H": 14.0,
+      "candidate_V_limit": 19.7,
+      "candidate_min_dec_deg": -29.0,
+      "preselection_step_days": 7,
+      "horizons_step": "6h",
+      "moon_policy": "phase_dependent",
+      "campaign_days": 35,
+      "field_version_days": 7,
+      "field_counts": [
+        2,
+        3,
+        4,
+        6
+      ],
+      "dwells": [
+        1,
+        2
+      ],
+      "weather_realizations": 200,
+      "seed": 20261104,
+      "science_priority_strength": 0.25,
+      "queue_policy_version": 4,
+      "quality": {
+        "points": 100,
+        "nights": 10,
+        "points_per_night": 5,
+        "night_span_s": 1800,
+        "baseline_days": 21,
+        "median_random_error_mag": 0.03,
+        "fraction_below_005": 0.8,
+        "max_zeropoint_mag": 0.02
+      },
+      "photometry_scenarios": {
+        "optimistic": {
+          "sigma_r18_120s": 0.015,
+          "night_zeropoint": 0.008,
+          "usable_fraction": 0.95
+        },
+        "baseline": {
+          "sigma_r18_120s": 0.025,
+          "night_zeropoint": 0.012,
+          "usable_fraction": 0.85
+        },
+        "conservative": {
+          "sigma_r18_120s": 0.04,
+          "night_zeropoint": 0.02,
+          "usable_fraction": 0.7
+        },
+        "precision_requirement": {
+          "sigma_r18_120s": 0.01,
+          "night_zeropoint": 0.008,
+          "usable_fraction": 0.95
+        }
+      },
+      "assumptions": [
+        "V is not calibrated r: adopt r=V for baseline and report color sensitivity.",
+        "Photometric and weather parameters are planning scenarios, not instrument measurements.",
+        "precision_requirement is an extra sensitivity experiment, beyond the optimistic case, not a performance claim.",
+        "All candidate screening uses full TJN input; two-body preselection is not executable ephemeris."
+      ],
+      "save_qualified_curves": true,
+      "experimental_duration_s": 7200,
+      "nominal_clear_weather": false,
+      "completion_forecast_enabled": true,
+      "visibility_name": "visibility_free",
+      "route_rescore": true,
+      "special_budget_fraction": 0.1,
+      "experiment_label": "continuation_C"
+    },
+    "instrument": {
+      "version": "20261103-v0",
+      "site": {
+        "lat_deg": 40.393,
+        "lon_deg": 117.575,
+        "height_m": 960
+      },
+      "fov_deg": 3.0,
+      "edge_margin_deg": 0.15,
+      "min_alt_deg": 30.0,
+      "center_alt_deg": 32.5,
+      "moon_sep_deg": 30.0,
+      "bright_moon_sep_deg": 40.0,
+      "bright_moon_fraction": 0.75,
+      "readout_s": 15.0,
+      "adjacent_slew_s": 20.0,
+      "adjacent_max_deg": 3.5,
+      "far_slew_s": 60.0,
+      "filter_change_s": 10.0,
+      "filter": "r",
+      "controller_filter_tokens": {},
+      "twilight": {
+        "window_s": 3600,
+        "sun_alt_deg": -12,
+        "exposure_s": 30,
+        "visits": 5,
+        "fields_per_group": 4,
+        "elongation_deg": [
+          45,
+          75
+        ],
+        "extended_elongation_deg": [
+          75,
+          90
+        ],
+        "preferred_elongation_deg": [
+          50,
+          65
+        ],
+        "beta_max_deg": 25,
+        "anchor_fields_per_group": 3
+      },
+      "trojan": {
+        "block_s": 7200,
+        "handover_s": 300,
+        "exposure_s": 120,
+        "freeze_days": 14,
+        "core_V_limit": 18.5,
+        "extended_V_limit": 19.2,
+        "sun_alt_deg": -18,
+        "min_core_retention_fraction": 0.8,
+        "exposures_per_dwell": 1
+      },
+      "reservations": [],
+      "use_header_slew_floor": true
+    },
+    "field_count": 4,
+    "dwell": 2
+  },
+  "D": {
+    "spec": {
+      "start_date": "2026-11-01",
+      "stop_date_exclusive": "2027-11-01",
+      "lookahead_days": 3,
+      "iers_file": "iers_20261104.all",
+      "candidate_max_H": 14.0,
+      "candidate_V_limit": 19.7,
+      "candidate_min_dec_deg": -29.0,
+      "preselection_step_days": 7,
+      "horizons_step": "6h",
+      "moon_policy": "phase_dependent",
+      "campaign_days": 35,
+      "field_version_days": 7,
+      "field_counts": [
+        2,
+        3,
+        4,
+        6
+      ],
+      "dwells": [
+        1,
+        2
+      ],
+      "weather_realizations": 200,
+      "seed": 20261104,
+      "science_priority_strength": 0.25,
+      "queue_policy_version": 4,
+      "quality": {
+        "points": 100,
+        "nights": 10,
+        "points_per_night": 5,
+        "night_span_s": 1800,
+        "baseline_days": 21,
+        "median_random_error_mag": 0.03,
+        "fraction_below_005": 0.8,
+        "max_zeropoint_mag": 0.02
+      },
+      "photometry_scenarios": {
+        "optimistic": {
+          "sigma_r18_120s": 0.015,
+          "night_zeropoint": 0.008,
+          "usable_fraction": 0.95
+        },
+        "baseline": {
+          "sigma_r18_120s": 0.025,
+          "night_zeropoint": 0.012,
+          "usable_fraction": 0.85
+        },
+        "conservative": {
+          "sigma_r18_120s": 0.04,
+          "night_zeropoint": 0.02,
+          "usable_fraction": 0.7
+        },
+        "precision_requirement": {
+          "sigma_r18_120s": 0.01,
+          "night_zeropoint": 0.008,
+          "usable_fraction": 0.95
+        }
+      },
+      "assumptions": [
+        "V is not calibrated r: adopt r=V for baseline and report color sensitivity.",
+        "Photometric and weather parameters are planning scenarios, not instrument measurements.",
+        "precision_requirement is an extra sensitivity experiment, beyond the optimistic case, not a performance claim.",
+        "All candidate screening uses full TJN input; two-body preselection is not executable ephemeris."
+      ],
+      "save_qualified_curves": true,
+      "experimental_duration_s": 7200,
+      "nominal_clear_weather": false,
+      "completion_forecast_enabled": true,
+      "visibility_name": "visibility_free",
+      "route_rescore": true,
+      "special_budget_fraction": 0.2,
+      "experiment_label": "continuation_D"
+    },
+    "instrument": {
+      "version": "20261103-v0",
+      "site": {
+        "lat_deg": 40.393,
+        "lon_deg": 117.575,
+        "height_m": 960
+      },
+      "fov_deg": 3.0,
+      "edge_margin_deg": 0.15,
+      "min_alt_deg": 30.0,
+      "center_alt_deg": 32.5,
+      "moon_sep_deg": 30.0,
+      "bright_moon_sep_deg": 40.0,
+      "bright_moon_fraction": 0.75,
+      "readout_s": 15.0,
+      "adjacent_slew_s": 20.0,
+      "adjacent_max_deg": 3.5,
+      "far_slew_s": 60.0,
+      "filter_change_s": 10.0,
+      "filter": "r",
+      "controller_filter_tokens": {},
+      "twilight": {
+        "window_s": 3600,
+        "sun_alt_deg": -12,
+        "exposure_s": 30,
+        "visits": 5,
+        "fields_per_group": 4,
+        "elongation_deg": [
+          45,
+          75
+        ],
+        "extended_elongation_deg": [
+          75,
+          90
+        ],
+        "preferred_elongation_deg": [
+          50,
+          65
+        ],
+        "beta_max_deg": 25,
+        "anchor_fields_per_group": 3
+      },
+      "trojan": {
+        "block_s": 7200,
+        "handover_s": 300,
+        "exposure_s": 120,
+        "freeze_days": 14,
+        "core_V_limit": 18.5,
+        "extended_V_limit": 19.2,
+        "sun_alt_deg": -18,
+        "min_core_retention_fraction": 0.8,
+        "exposures_per_dwell": 1
+      },
+      "reservations": [],
+      "use_header_slew_floor": true
+    },
+    "field_count": 4,
+    "dwell": 2
+  }
+}

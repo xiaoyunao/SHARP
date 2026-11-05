@@ -1,0 +1,12 @@
+usage: annual_simulation.py [-h] [--workers WORKERS] [--days DAYS]
+                            [--realizations REALIZATIONS]
+                            [--fields FIELDS [FIELDS ...]]
+                            [--scenario SCENARIO [SCENARIO ...]]
+                            [--dwells {1,2} [{1,2} ...]]
+                            [--duration-s {7200,10800,14400}]
+                            [--science-strength SCIENCE_STRENGTH]
+                            [--no-completion-forecast]
+                            [--policy-version {3,4}]
+                            [--continuation {A,B,C,D}] [--nominal] [--smoke]
+                            [--save-curves]
+annual_simulation.py: error: Continuation A/B/C/D fixes four fields, dwell two and a 7200s cap; use ordinary experiments for other settings

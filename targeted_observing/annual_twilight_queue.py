@@ -15,6 +15,10 @@ from .annual_timing import prepare,mask as timing_mask,row_times
 def identity(block):return tuple(f['field_id'] for f in block['fields'])
 
 
+def group_names(menu,side):
+    return [side+'_'+n for n in (['A','B'] if side=='EV' else ['B','A']) if side+'_'+n in menu['options']]
+
+
 def build_day(job):
     day,cycles,spec=job
     root=BASE/'products/annual'/f'twilight_{cycles}';dest=root/'menus';dest.mkdir(exist_ok=True)
@@ -52,7 +56,7 @@ def compatible(a,b,side):
 
 
 def run(cycles,spec):
-    root=BASE/'products/annual'/f'twilight_{cycles}';nights=dates(spec['start_date'],spec['stop_date_exclusive'])
+    root=BASE/'products/annual'/spec.get('twilight_root',f'twilight_{cycles}');nights=dates(spec['start_date'],spec['stop_date_exclusive'])
     menus=[json.loads((root/'menus'/f'{d}.json').read_text()) for d in nights]
     setup_iers(BASE/'cache'/spec['iers_file'])
     for menu in menus:
@@ -64,7 +68,7 @@ def run(cycles,spec):
     pair_cache={}
     for ni,menu in enumerate(menus):
         for side in ('EV','AM'):
-            names=[side+'_A'] if cycles==10 else [side+'_'+x for x in (['A','B'] if side=='EV' else ['B','A'])]
+            names=group_names(menu,side)
             opts=[menu['options'][n] for n in names]
             pairs=[(i,-1) for i in range(len(opts[0]))] if len(opts)==1 else [
                 (i,j) for i in range(-1,len(opts[0])) for j in range(-1,len(opts[1]))
