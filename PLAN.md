@@ -8,7 +8,7 @@
 - P1 complete: A legacy / B free centres + route / C 10% / D 20% special-science budget, identical annual parent, weather seed, r120 and <=2h allocation. Separate photometric certificate, sampling readiness and unresolved physical solution.
 - Twilight complete: preserve EV5/AM5, compare EV5/AM10 end-aligned, revalidate all shifted exposures; same-weather short arcs and +1/+3 recovery require qualifying tracklets.
 - Acceptance: 365-day completeness, source/config hashes, no double-counted targets, all timing ledgers close; scientific quota <= requested share; paired counts/changed starts/selection reasons; meaningful regression tests; commit/push report and compact tables.
-- Remaining: publish the new B nominal compact export and git milestones. Simulations, comparison reports and figure QA are complete. >100-object goal unchanged; report actual gap. Physical model fitting and instrument calibration are explicitly outstanding science inputs, not implicit successful tasks.
+- Delivery complete: new B 365-night compact export refers to source commit 4605b372; simulations, paired reports, 51 tests, full nominal geometry verification and figure QA complete. Sync milestones to the authorized GitHub branch. >100-object goal unchanged; report actual gap. Physical model fitting and instrument calibration are explicitly outstanding science inputs, not implicit successful tasks.
 
 ## Current objective: 全年项目申请（2026-11-04）
 

@@ -20,5 +20,12 @@
   "A_counts_identical_to_frozen_baseline": true,
   "time_ledgers_and_prefix_science_budget_passed": true,
   "server_accessed": false,
-  "visual_qa": "13-page PDF contact sheet, full annual overview, monthly June and representative nightly exposure/altitude plots inspected"
+  "visual_qa": "13-page PDF contact sheet, full annual overview, monthly June and representative nightly exposure/altitude plots inspected",
+  "new_B_export_counts": {
+    "nights": 365,
+    "blocks": 1556,
+    "field_visits": 6138,
+    "exposures": 37264,
+    "zero_plan_nights": 0
+  }
 }

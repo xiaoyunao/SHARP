@@ -1,0 +1,5 @@
+# Preserve archived source bytes and generated PDF/CSV checksums.
+*.pdf binary
+*/fields.csv -text whitespace=cr-at-eol
+ORIGINAL_PLOTTING_REVIEW.md -whitespace
+PRO_REQUIREMENTS.md -whitespace

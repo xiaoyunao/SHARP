@@ -11,7 +11,7 @@
 - verification: 51项unittest通过；新B名义年365夜/37264曝光独立5秒验收全部通过，原基线37078保留；A/B/C/D账本闭合、前缀科学份额不超限，统一晨昏/预约/TJ时间账本闭合。13页PDF渲染及全年/月图/代表夜图目视无裁切；378图与日期索引完整。
 - commands: review_tools.export_plot_data/plot_exported_plan/publish_atlas；annual_visibility --free-centres；annual_simulation --continuation A/B/C/D；annual_morning_alignment；unittest。
 - issues: stdin multiprocessing spawn失败后改模块CLI；PDF使用bundled Python。后对齐首帧开销起点导致独立验证报错，显式记录起始等待后全年重验通过；末年恢复列用可空布尔避免False字符串误判。CLI禁止continuation混入不同场数/预算，避免命名冲突覆盖配对结果。
-- remaining: 现场r/饱和/污染/控制token、真实测光/形状模型/事件预报仍待输入；>100科学目标未达，不降低门槛。新B轻量导出与Git里程碑同步随后完成。
+- remaining: 现场r/饱和/污染/控制token、真实测光/形状模型/事件预报仍待输入；>100科学目标未达，不降低门槛。代码与比较里程碑4605b372已保存；B轻量导出365夜/6138场记录/37264曝光，声明完整源SHA并与HEAD核对。归档PDF标为binary、源CSV保留CRLF和hash；完成GitHub专用分支同步，不改生产。
 
 ## 2026-11-04
 

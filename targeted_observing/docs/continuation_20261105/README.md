@@ -9,6 +9,7 @@
 - [365夜可按日期浏览的图索引](atlas/index.html)：本地打开；包含1张全年足迹、12张月图、365张高度与曝光时间图。GitHub HTML页面显示源码，下载仓库后打开即可。
 - [13页全年／月度PDF](atlas/nominal_annual_atlas.pdf)：原基线的名义模拟排程，不是已完成观测。
 - [原始365夜绘图数据](baseline_plot_data/manifest.json)：四个轻量文件，6137个夜次—块—场记录、37078条曝光；全部365夜输入哈希、配置及来源提交。无整夜零曝光，但没有Trojan的夜次也保留。
+- [新B方案365夜轻量排程](B_plot_data/manifest.json)：6138个夜次—块—场记录、37264曝光，来源代码提交`4605b372`；与原基线分目录交付，全部通过独立验收。
 - [Trojan详细对比](TROJAN_CONTINUATION.md)、[晨昏详细对比](TWILIGHT_CONTINUATION.md)。
 - [配对年度统计](paired_strategy_summary.csv)、[200次配对质量计数](paired_realizations.csv)、[特殊任务状态](special_task_summary.csv)、[16候选可见性及拒绝理由](special_availability_audit.csv)。
 - `A/B/C/D_nightly_ledger.csv.gz`：各73000条时间与选择记录，含开始时刻、场ID、去重对象ID、特殊任务及实际开销；`*_science_tasks.csv.gz`记录全部16对象×200实现，未知物理完成状态留空。
