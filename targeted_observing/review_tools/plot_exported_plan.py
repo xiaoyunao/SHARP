@@ -6,7 +6,7 @@ and --iers are provided) night_YYYY-MM-DD.png. Input coordinates/timestamps are
 never generated or replaced. Field borders are spherical FOV outlines. These
 figures describe source plans, not successful observations or scientific yield.
 
-Dependencies: numpy, matplotlib, astropy. A repository checkout is not required.
+Dependencies: numpy, matplotlib, astropy. Run as a module from the SHARP repository.
 """
 from __future__ import annotations
 
@@ -25,7 +25,11 @@ import multiprocessing
 
 
 BJ = ZoneInfo("Asia/Shanghai")
-COLORS = {"EV": "#1976b8", "AM": "#d86a20", "TJ": "#7652ad"}
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from targeted_observing.plot_style import MODES as COLORS, apply_style, save_pair
+
+LINESTYLES = dict(EV="solid", AM="dashed", TJ="solid")
 LABELS = {"EV": "Evening twilight", "AM": "Morning twilight", "TJ": "Trojan"}
 
 
@@ -157,9 +161,7 @@ def status_note(nights):
 
 def save_figure(fig, path, note, extra=""):
     footer = note + (" | " + extra if extra else "")
-    fig.text(.02, .012, textwrap.fill(footer, 145), fontsize=8, color="#555555", va="bottom")
-    fig.savefig(path, dpi=170, facecolor="white", bbox_inches="tight",
-                metadata={"Software": "SHARP plot_exported_plan.py", "Description": footer})
+    save_pair(fig, path, footer)
     plt.close(fig)
 
 
@@ -170,16 +172,14 @@ def overview(fields, nights, output, note):
         part = [r for r in fields if r["category"] == key]
         segments = [s for r in unique_fields(part) for s in map_segments(*footprint(r))]
         if segments:
-            ax.add_collection(LineCollection(segments, colors=COLORS[key], linewidths=.4, alpha=.45, transform=ax.transData))
-        c = counts(part)
-        legend.append(Line2D([], [], color=COLORS[key], label=f"{LABELS[key]}: {c['unique_field_versions']} field versions; {c['unique_planned_target_ids']} planned target IDs"))
+            ax.add_collection(LineCollection(segments, colors=COLORS[key], linestyles=LINESTYLES[key], linewidths=.65, alpha=.45, transform=ax.transData))
+        legend.append(Line2D([], [], color=COLORS[key], ls=LINESTYLES[key], label=LABELS[key]))
     ticks = np.arange(-150, 180, 30)
     ax.set_xticks(np.deg2rad(ticks)); ax.set_xticklabels([f"{int((180-x)/15)}h" for x in ticks])
     ax.grid(alpha=.3); ax.set_xlabel("Right ascension (increases to the left)", labelpad=22)
     dates = sorted(nights); total = counts(fields)
-    ax.set_title(f"Exported sky pointings | {dates[0]} to {dates[-1]} | {len(nights)} source nights\n"
-                 "Spherical field boundaries; repeated visits are not repeated footprints", fontsize=13, pad=20)
-    ax.legend(handles=legend, loc="upper center", bbox_to_anchor=(.5, -.08), frameon=False, fontsize=9)
+    ax.set_title(f"Nominal pointings · {dates[0]} to {dates[-1]}", pad=20)
+    ax.legend(handles=legend, loc="upper center", bbox_to_anchor=(.5, -.08), frameon=False, ncol=3)
     fig.subplots_adjust(bottom=.22, top=.87)
     save_figure(fig, output / "pointings_aitoff.png", note,
                 f"All modes: {total['unique_field_versions']} distinct field/version keys, {total['unique_planned_target_ids']} target IDs, {total['exposure_rows']} exposure rows. Overlapping fields are not independent sky area; target IDs are not recovered lightcurves.")
@@ -187,13 +187,13 @@ def overview(fields, nights, output, note):
 
 def monthly_maps(fields, nights, output, note):
     for month in sorted({day[:7] for day in nights}):
-        fig, axes = plt.subplots(1, 3, figsize=(16, 5.6))
+        fig, axes = plt.subplots(1, 3, figsize=(16, 5.4), layout="constrained")
         for ax, key in zip(axes, ("EV", "AM", "TJ")):
             part = [r for r in fields if r["date"].startswith(month) and r["category"] == key]
-            unique = unique_fields(part); c = counts(part)
-            ax.set_title(f"{LABELS[key]}\n{c['unique_field_versions']} versions / {c['unique_planned_target_ids']} target IDs", fontsize=11)
+            unique = unique_fields(part)
+            ax.set_title(LABELS[key])
             if not unique:
-                ax.text(.5, .5, "No exported fields", transform=ax.transAxes, ha="center", color="#777777")
+                ax.text(.5, .5, "No scheduled fields", transform=ax.transAxes, ha="center", color="#777777")
                 ax.set_xticks([]); ax.set_yticks([]); continue
             borders = [footprint(r) for r in unique]
             ras = np.sort(np.concatenate([r for r, _ in borders]) % 360)
@@ -202,15 +202,12 @@ def monthly_maps(fields, nights, output, note):
             xs = []; ys = []
             for row, (ra, dec) in zip(unique, borders):
                 x = unwrap(ra); xs.extend(x); ys.extend(dec)
-                ax.plot(x, dec, color=COLORS[key], alpha=.55, lw=.7)
-                if len(unique) <= 12:
-                    ax.text(float(unwrap(row["ra_deg"])), row["dec_deg"], row["field_id"][-6:], fontsize=6, ha="center", color=COLORS[key])
+                ax.plot(x, dec, color=COLORS[key], ls=LINESTYLES[key], alpha=.55, lw=.7)
             xp = max(1., np.ptp(xs) * .06); yp = max(1., np.ptp(ys) * .06)
             ax.set_xlim(max(xs) + xp, min(xs) - xp); ax.set_ylim(max(-90, min(ys) - yp), min(90, max(ys) + yp))
             ax.xaxis.set_major_formatter(FuncFormatter(lambda value, pos: f"{value % 360:g}"))
             ax.set_xlabel("RA (deg; increases left)"); ax.set_ylabel("Dec (deg)"); ax.grid(alpha=.2)
-        fig.suptitle(f"{month}: local RA/Dec views of exported spherical fields", fontsize=14)
-        fig.subplots_adjust(top=.80, bottom=.23, wspace=.30)
+        fig.suptitle(month)
         save_figure(fig, output / f"monthly_pointings_{month}.png", note,
                     "Each panel has its own coordinate limits. Target counts use field membership IDs, not inferred target positions or scientific yield.")
 
@@ -261,10 +258,10 @@ def night_card(day, manifest, nights, fields, exposures, args, output, note, tab
         if label:
             ax.text(1.002, level, label, transform=ax.get_yaxis_transform(), va="center", fontsize=8, color=color)
     ax.text(1.002, (altitude_floor + center_floor) / 2, f"{altitude_floor:g} / {center_floor:g} deg", transform=ax.get_yaxis_transform(), va="center", fontsize=8, color="#b94c45")
-    palette = plt.get_cmap("tab20")
+    markers = ("o", "s", "^", "D", "v", "P")
     ticks = []; labels = []
     for lane, f in enumerate(lanes):
-        color = palette(lane % 20); block = blocks[f["block_id"]]
+        color = COLORS[f["category"]]; block = blocks[f["block_id"]]
         rr = [r for r in rows if r["block_id"] == f["block_id"] and r["field_id"] == f["field_id"]]
         point = SkyCoord(f["ra_deg"] * u.deg, f["dec_deg"] * u.deg, frame="icrs")
         alt = point.transform_to(frame).alt.deg
@@ -274,7 +271,7 @@ def night_card(day, manifest, nights, fields, exposures, args, output, note, tab
         ts = Time([utc(r["mid_utc"]).timestamp() for r in rr], format="unix")
         mids = point.transform_to(AltAz(obstime=ts, location=loc, pressure=0*u.hPa)).alt.deg
         xm = mdates.date2num([utc(r["mid_utc"]) for r in rr])
-        ax.scatter(xm, mids, s=11, color=color, zorder=5)
+        ax.scatter(xm, mids, s=16, color=color, marker=markers[lane % len(markers)], zorder=5)
         gantt.broken_barh([(mdates.date2num(utc(block["not_before_utc"])), (end-begin)/86400)], (lane-.36, .72), facecolors=color, alpha=.065)
         for r in rr:
             a, b = mdates.date2num(utc(r["start_utc"])), mdates.date2num(utc(r["end_utc"]))
@@ -290,8 +287,9 @@ def night_card(day, manifest, nights, fields, exposures, args, output, note, tab
         ax.axvspan(a, b, color="#e5e5e5", alpha=.22, zorder=0)
     ax.set_ylim(-90, 90); ax.set_ylabel("Altitude (deg)"); ax.grid(alpha=.2)
     ax.legend(loc="lower left", fontsize=8, framealpha=.85)
-    ax.set_title(f"{day} | exported exposure times and computed pointing altitude\n"
-                 "Dots: exposure midpoints; faint field curves: held block only; gray background: exported free time", fontsize=12)
+    tj_count = sum(r["mode"] == "trojan" for r in rows)
+    suffix = f" · {tj_count} Trojan exposures" if tj_count else " · no Trojan block"
+    ax.set_title(day + suffix)
     gantt.set_yticks(ticks); gantt.set_yticklabels(labels, fontsize=8)
     if lanes:
         gantt.set_ylim(len(lanes)-.5, -.5)
@@ -302,10 +300,10 @@ def night_card(day, manifest, nights, fields, exposures, args, output, note, tab
     gantt.set_ylabel("Exported block / field"); gantt.grid(axis="x", alpha=.2)
     gantt.xaxis.set_major_locator(mdates.HourLocator(interval=1, tz=BJ))
     gantt.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M", tz=BJ)); gantt.set_xlim(x[0], x[-1])
-    gantt.set_xlabel("Beijing time (UTC+08); morning hours belong to the next calendar day")
-    gantt.legend(handles=[Patch(color="#3883b9", label="Exposure (color matches field)"), Patch(color="#aaaaaa", label="Readout"),
-                          Patch(facecolor="#eeeeee", edgecolor="#999999", hatch="///", label="Slew / filter overhead")], loc="upper center", bbox_to_anchor=(.5, -.16), ncol=3, fontsize=8, frameon=False)
-    fig.subplots_adjust(top=.91, bottom=.18, left=.16, right=.91, hspace=.16)
+    gantt.set_xlabel("Beijing time [UTC+08]")
+    fig.legend(handles=[Patch(color="#3883b9", label="Exposure"), Patch(color="#aaaaaa", label="Readout"),
+                          Patch(facecolor="#eeeeee", edgecolor="#999999", hatch="///", label="Slew / filter overhead")], loc="lower center", bbox_to_anchor=(.5, .015), ncol=3, fontsize=11, frameon=False)
+    fig.subplots_adjust(top=.91, bottom=.15, left=.16, right=.91, hspace=.16)
     save_figure(fig, output / f"night_{day}.png", note,
                 f"Site lat={site['lat_deg']:.4f}, lon={site['lon_deg']:.4f}, {site['height_m']:g} m ({site_basis}); local IERS {args.iers.name}. Altitude lines are config floors before sampling guards; no photometric success inferred.")
     return {"date": day, "exposure_rows": len(rows), "field_lanes": len(lanes), "site": site, "site_basis": site_basis,
@@ -351,6 +349,7 @@ def main():
     from astropy.utils import iers
     iers.conf.auto_download = False; iers.conf.iers_degraded_accuracy = "error"
     solar_system_ephemeris.set("builtin")
+    apply_style()
     manifest, nights, fields, exposures = load_bundle(args.bundle)
     if args.all_nights:
         args.night = sorted(nights)

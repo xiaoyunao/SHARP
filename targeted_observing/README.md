@@ -114,8 +114,10 @@ python3 -m unittest discover -s targeted_observing/tests -v
 
 ## 2026-11-05 续接：365夜图册与优化比较
 
-见[本轮结果及复现入口](docs/continuation_20261105/README.md)、[逐日图索引](docs/continuation_20261105/atlas/index.html)。原a5cb945名义年四份轻量数据与378张图已交付；新增去重评分/独立完成预测、偏置中心、真实路线重评分、10%/20%预算内特殊科学状态，以及晨间十访后对齐。
+见[本轮结果及复现入口](docs/continuation_20261105/README.md)、[逐日图索引](docs/continuation_20261105/atlas_B/index.html)。原a5cb945名义年四份轻量数据与378张图已交付；新增去重评分/独立完成预测、偏置中心、真实路线重评分、10%/20%预算内特殊科学状态，以及晨间十访后对齐。
 
 当前 `annual_defaults.json` 的policy为4；`--continuation A`保留旧policy3，B/C/D显式启用新比较。基准测光200次年度中位分别42/47/44/39，质量达标不等于唯一周期或模型已验证；>100颗目标仍未达到。`--days`/`--realizations`的小试验使用独立目录后缀，`--nominal --continuation B`使用`nominal_`前缀，不覆盖天气实现。
 
 科学任务使用文献候选周期和独立采样代理；普通质量达标后可继续长基线。完整物理解和实际r/饱和/污染仍待验证。图册PDF打包需要Pillow和reportlab，仅用于离线报告；现场与生产依赖未改变。原三夜campaign与生产路径继续保留。
+
+2026-11-05 阶段收尾采用 B 名义年作为默认图册，包含 365 夜和 37,264 条曝光。图件与补充采样统计见[收尾说明](docs/continuation_20261105/FINAL_REVIEW.md)。

@@ -1,0 +1,11 @@
+strategy,role,expected_quality_objects
+B,alias_review,1.0
+B,control,32.165
+B,known_other,8.14
+B,literature_unchecked,1.04
+B,unknown_or_weak,4.445
+C,alias_review,1.0
+C,control,29.55
+C,known_other,7.53
+C,literature_unchecked,1.0
+C,unknown_or_weak,3.95

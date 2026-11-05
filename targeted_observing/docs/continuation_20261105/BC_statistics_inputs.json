@@ -1,0 +1,16 @@
+{
+  "continuation_B_baseline/run_config.json": "2246869bf3210770cd7c0946614505c784b8e738a4c338ca4b3d4db9720e975d",
+  "continuation_B_baseline/samples_realization0.json": "7af6a4bea4005d940d3e3505bed95d7d5d986c75b6ac36b672a9f1c3db4f0d28",
+  "continuation_B_baseline/execution_realization0.csv": "2b2c0f7d3e91b9fbac29f2426dca16f15854b51c9db607ff648d0c218b144f25",
+  "continuation_B_baseline/science_task_status.csv": "7ebcb549c515d71e32a8da5e3055752d9a90e94dc4c7ffe230acb7fe675e3d84",
+  "continuation_B_baseline/summary.json": "2c824e0b02857a0ad4d2c71229288d71f6f6a766cbb379418e2af3f5d9fb0b65",
+  "continuation_B_baseline/object_yield.csv": "87abb147a3942e7f49d2ce70590d94009c6e30af21c9b92f4860d84a15e2481c",
+  "continuation_C_baseline/run_config.json": "89ea0976eda19d34645f7b979e33ca6e7a58f5e439fdacc301f91c542846d732",
+  "continuation_C_baseline/samples_realization0.json": "93e98f7fac43ca8ddb2cb30f0f8f1b91fc651a085a4c1a4c73415c2fdc2fb670",
+  "continuation_C_baseline/execution_realization0.csv": "f77b4ded01ce93038faec3801daba5fcc3130bfe8caf3a1dd05a335b0522126d",
+  "continuation_C_baseline/science_task_status.csv": "a763bfe8293e74b1175291c1562fe302d199d09be0376b436fb5580b51cba1ae",
+  "continuation_C_baseline/summary.json": "5b8361bd07d9dfde6e560fbec85295cb44853ea5b029c98a50c58d8aea03813d",
+  "continuation_C_baseline/object_yield.csv": "74d54b803d4f739400dbcdd3a9a0c5b5cbbcae9ab35de4e2e6055d2c783a37e4",
+  "object_selection_function.csv": "838c3548072dad05e9762603550681f2cdb06d5e8c29c82267096809f3f3b2c6",
+  "B_plot_data/manifest.json": "0449951dcf3e64b0e0b7a660a81df6dc9fe959958933016426f797355997f163"
+}

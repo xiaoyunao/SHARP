@@ -34,13 +34,48 @@ def geometry():
         d['beta_deg']=c.transform_to(GeocentricMeanEcliptic(equinox=Time('J2000'),obstime=t)).lat.deg
         allrows.append(d)
     data=pd.concat(allrows,ignore_index=True);archive_csv(data,OUT/'morning_scheduled_geometry.csv.gz')
-    fig,axes=plt.subplots(1,2,figsize=(12,4.8),sharex=True,sharey=True)
-    for ax,(name,d) in zip(axes,data.groupby('strategy',sort=False)):
-        h=ax.hist2d(d.elongation_deg,d.beta_deg,bins=[np.arange(40,92,2),np.arange(-26,28,2)],cmin=1)
-        fig.colorbar(h[3],ax=ax,label='Scheduled exposure-centre samples')
-        ax.set_title('AM 5 visits' if name=='twilight_5' else 'AM 10 visits, end aligned');ax.set_xlabel('Solar elongation (deg)')
-    axes[0].set_ylabel('Ecliptic latitude (deg)');fig.suptitle('365-night nominal scheduled times; counts are not independent sky area')
-    fig.tight_layout();fig.savefig(OUT/'morning_geometry.png',dpi=170);plt.close(fig)
+    plot_twilight()
+
+
+def plot_twilight():
+    from .plot_style import BLUE, ORANGE, apply_style, save_pair
+    apply_style()
+    data = pd.read_csv(OUT/'morning_scheduled_geometry.csv.gz')
+    xbins, ybins = np.arange(44, 92, 2), np.arange(-26, 28, 2)
+    density = [np.histogram2d(g.elongation_deg, g.beta_deg, bins=[xbins,ybins])[0].T
+               for _, g in data.groupby('strategy', sort=False)]
+    fig, axes = plt.subplots(1, 2, figsize=(12.8, 4.8), sharey=True, layout='constrained')
+    for ax, panel, label in zip(axes, density, ['AM5','AM10 · end aligned']):
+        image = ax.pcolormesh(xbins, ybins, np.ma.masked_equal(panel,0), cmap='viridis',
+                              vmin=0, vmax=max(p.max() for p in density))
+        ax.set_title(label)
+        ax.set_xlabel('Solar elongation [deg]')
+        ax.grid()
+    axes[0].set_ylabel('Ecliptic latitude [deg]')
+    fig.colorbar(image, ax=axes, label='Exposure centres [count]')
+    fig.suptitle('365-night nominal morning schedule')
+    save_pair(fig, OUT/'morning_geometry')
+    plt.close(fig)
+
+    recovery = pd.read_csv(OUT/'twilight_conditional_recovery.csv')
+    recovery = recovery.query("side == 'AM' and dark_depth == 20 and magnitude == 19")
+    fig, axes = plt.subplots(1, 3, figsize=(14, 4.9), sharey=True, layout='constrained')
+    measures = [('tracklet_fraction','Initial short arc'), ('plus1_conditional_fraction','+1 night'),
+                ('plus3_conditional_fraction','+3 nights')]
+    for ax,(key,title) in zip(axes, measures):
+        for strategy,label,color,style in [('twilight_5','AM5',BLUE,'o-'),
+                ('twilight_morning10_aligned','AM10 end aligned',ORANGE,'s--')]:
+            group = recovery[recovery.strategy==strategy].sort_values('speed_deg_day')
+            ax.plot(group.speed_deg_day, group[key]*100, style, color=color, label=label)
+        ax.set_xscale('log')
+        ax.set_xlabel('Motion [deg/day]')
+        ax.set_title(title)
+        ax.grid()
+    axes[0].set_ylabel('Conditional efficiency [%]')
+    axes[0].legend()
+    fig.suptitle('Injected r=19 · dark r30 depth 20 · common 200-weather ensemble')
+    save_pair(fig, OUT/'morning_recovery')
+    plt.close(fig)
 
 
 def summarize():
@@ -107,6 +142,7 @@ def summarize():
 
 if __name__=='__main__':
     import argparse
-    p=argparse.ArgumentParser();p.add_argument('--geometry-only',action='store_true');a=p.parse_args()
-    if a.geometry_only:geometry()
+    p=argparse.ArgumentParser();p.add_argument('--geometry-only',action='store_true');p.add_argument('--plots-only',action='store_true');a=p.parse_args()
+    if a.plots_only:plot_twilight()
+    elif a.geometry_only:geometry()
     else:summarize()

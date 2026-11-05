@@ -1,5 +1,12 @@
 # PLAN
 
+## 阶段收尾（2026-11-05）
+
+- 年度科学设计冻结于 5250252d 的排程与 200 条天气实现。常规图册采用 B，重点科学比较保留 C，晨昏采用五访覆盖基线与十访增强选项。
+- 本轮只重绘 B 名义年和正式统计图，补齐 cadence、跨夜采样、特殊科学失败门槛、角色产额和晨昏距日角统计。
+- 后续工作以现场校准结果为输入，包括真实 r 精度和零点、饱和与污染、控制器开销及快速目标处理能力。研究周期和形状模型需要实际测光。
+- 结果、图册和复现入口见 `targeted_observing/docs/continuation_20261105/FINAL_REVIEW.md`。
+
 ## Current objective — 2026-11-05 continuation review
 
 - Scope: local `targeted_observing` development and GitHub sync only; preserve a5cb945 baseline and production/MPC boundaries.

@@ -12,25 +12,73 @@ from .annual_trojan import load_tracks
 from .annual_tasks import load_tasks
 
 
+from .plot_style import STRATEGIES, ERRORBAR, apply_style, save_pair
+
+
+def plot_comparisons():
+    apply_style()
+    s = pd.read_csv(OUT/'paired_strategy_summary.csv')
+    fig, axes = plt.subplots(1, 2, figsize=(12.8, 5.3), layout='constrained')
+    for i, row in s.iterrows():
+        color = STRATEGIES[row.strategy]
+        axes[0].errorbar(i, row.quality_p50,
+            yerr=[[row.quality_p50-row.quality_p10], [row.quality_p90-row.quality_p50]],
+            fmt='o', color=color, **ERRORBAR)
+        axes[1].bar(i, row.special_hours_mean, color=color)
+        axes[1].text(i, row.special_hours_mean+1, f'{row.special_actual_fraction_mean:.1%}', ha='center')
+    for ax in axes:
+        ax.set_xticks(np.arange(len(s)), s.strategy)
+        ax.grid(axis='y')
+    axes[0].set_ylabel('Qualified objects [count]')
+    axes[0].set_title('P10 / P50 / P90')
+    axes[0].set_ylim(0, 115)
+    axes[0].axhline(101, color='0.45', ls='--', lw=1, label='Goal: 101')
+    axes[0].legend()
+    axes[1].set_ylabel('Special-science allocation [h/year]')
+    axes[1].set_title('Mean and share of allocation')
+    axes[1].set_ylim(0, max(s.special_hours_mean)*1.14)
+    fig.suptitle('Baseline precision · 200 paired weather realizations')
+    save_pair(fig, OUT/'strategy_comparison')
+    plt.close(fig)
+
+    t = pd.read_csv(OUT/'special_task_summary.csv', dtype={'object_id':str})
+    ids = ['17365','22180','4902','5511','5012','7543','5284','617']
+    matrix = t.pivot(index='object_id', columns='strategy', values='sampling_ready_probability').reindex(ids)[list('ABCD')]
+    fig, ax = plt.subplots(figsize=(8.4, 6.3), layout='constrained')
+    im = ax.imshow(matrix.to_numpy(), vmin=0, vmax=1, cmap='viridis', aspect='auto')
+    ax.set_xticks(range(4), list('ABCD'))
+    ax.set_yticks(range(len(ids)), ids)
+    ax.set_ylabel('MPC number')
+    ax.set_xlabel('Strategy')
+    for i, values in enumerate(matrix.to_numpy()):
+        for j, value in enumerate(values):
+            ax.text(j, i, f'{value:.1%}', ha='center', va='center', color='black' if value>.57 else 'white')
+    ax.set_title('Sampling readiness · baseline precision')
+    fig.colorbar(im, ax=ax, label='Fraction of 200 simulated years')
+    save_pair(fig, OUT/'science_sampling_readiness')
+    plt.close(fig)
+
+
+    cadence = pd.read_csv(OUT/'cadence_intervals.csv.gz')
+    fig, axes = plt.subplots(1, 2, figsize=(12.8, 5), sharey=True, layout='constrained')
+    for ax, kind, title in zip(axes, ['within_dwell', 'same_field_first_to_first'],
+                               ['Within two-frame dwell', 'Full same-field revisit']):
+        for label, group in cadence[cadence.kind == kind].groupby('scope'):
+            times = np.sort(group.seconds.to_numpy())
+            style = ':' if 'nominal' in label else '-' if label.startswith('B') else '--'
+            ax.step(times, np.arange(1,len(times)+1)/len(times), where='post',
+                    ls=style, color=STRATEGIES[label[0]], label=label.replace('baseline realization', 'weather'))
+        ax.set_xlabel('Midpoint separation [s]')
+        ax.set_title(title)
+        ax.grid()
+    axes[0].set_ylabel('Cumulative fraction')
+    axes[1].legend(loc='upper left')
+    save_pair(fig, OUT/'cadence_distribution')
+    plt.close(fig)
+
+
 def main():
-    s=pd.read_csv(OUT/'paired_strategy_summary.csv');x=np.arange(len(s));fig,axes=plt.subplots(1,2,figsize=(11,4.5))
-    axes[0].errorbar(x,s.quality_p50,yerr=[s.quality_p50-s.quality_p10,s.quality_p90-s.quality_p50],fmt='o',capsize=5,color='#245c94')
-    axes[0].set_xticks(x,s.strategy);axes[0].set_ylabel('Quality-qualified objects, P10 / P50 / P90');axes[0].set_ylim(0,110)
-    axes[0].axhline(101,color='#a4472b',ls='--');axes[0].text(.05,103,'Unchanged goal: 101',color='#a4472b')
-    axes[0].set_title('Same parent sample, weather seeds and 2 h cap')
-    axes[1].bar(x,s.special_hours_mean,color='#6e5c98');axes[1].set_xticks(x,s.strategy)
-    axes[1].set_ylabel('Mean annual special-science held hours');axes[1].set_title('Included in the original Trojan allocation')
-    for i,r in s.iterrows():axes[1].text(i,r.special_hours_mean+1,f'{r.special_actual_fraction_mean:.1%}',ha='center')
-    fig.suptitle('200 paired annual simulations; quality compliance is not a recovered period')
-    fig.tight_layout();fig.savefig(OUT/'strategy_comparison.png',dpi=170);plt.close(fig)
-    t=pd.read_csv(OUT/'special_task_summary.csv',dtype={'object_id':str});ids=['17365','22180','4902','5511','5012','7543']
-    matrix=t[t.object_id.isin(ids)].pivot(index='object_id',columns='strategy',values='sampling_ready_probability').reindex(ids)[list('ABCD')]
-    fig,ax=plt.subplots(figsize=(8,4.8));im=ax.imshow(matrix.to_numpy(),vmin=0,vmax=1,cmap='Blues',aspect='auto')
-    ax.set_xticks(range(4),list('ABCD'));ax.set_yticks(range(6),ids)
-    for i in range(6):
-        for j in range(4):ax.text(j,i,f'{matrix.iloc[i,j]:.1%}',ha='center',va='center',color='white' if matrix.iloc[i,j]>.6 else 'black')
-    ax.set_title('Special-task SAMPLING readiness only\nPhysical/period solutions remain unassessed')
-    fig.colorbar(im,ax=ax,label='Fraction of 200 simulated years');fig.tight_layout();fig.savefig(OUT/'science_sampling_readiness.png',dpi=170);plt.close(fig)
+    plot_comparisons()
     tasks=load_tasks();tracks=load_tracks();avail={};fields_present={}
     for name in ['visibility','visibility_free']:
         counts=Counter();present=Counter()

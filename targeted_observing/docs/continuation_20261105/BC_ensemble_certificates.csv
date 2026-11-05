@@ -1,0 +1,7 @@
+strategy,realizations,qualified_object_realizations,metric,p10,p50,p90
+B,200,9358,good_points,100.0,104.0,112.0
+B,200,9358,good_nights,12.0,13.0,14.0
+B,200,9358,baseline_days,24.0,38.0,257.0
+C,200,8606,good_points,100.0,104.0,112.0
+C,200,8606,good_nights,12.0,13.0,14.0
+C,200,8606,baseline_days,26.0,42.0,230.0

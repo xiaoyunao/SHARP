@@ -6,7 +6,8 @@
 
 ## 交付
 
-- [365夜可按日期浏览的图索引](atlas/index.html)：本地打开；包含1张全年足迹、12张月图、365张高度与曝光时间图。GitHub HTML页面显示源码，下载仓库后打开即可。
+- [默认 B 图册日期索引](atlas_B/index.html)与[阶段收尾统计](FINAL_REVIEW.md)。B 图册基于37,264条名义曝光，含13页全年／月度图及365夜逐夜图。下载仓库后可在浏览器按日期查看。
+- [历史 A 图册索引](atlas/index.html)对应原37,078条名义曝光。
 - [13页全年／月度PDF](atlas/nominal_annual_atlas.pdf)：原基线的名义模拟排程，不是已完成观测。
 - [原始365夜绘图数据](baseline_plot_data/manifest.json)：四个轻量文件，6137个夜次—块—场记录、37078条曝光；全部365夜输入哈希、配置及来源提交。无整夜零曝光，但没有Trojan的夜次也保留。
 - [新B方案365夜轻量排程](B_plot_data/manifest.json)：6138个夜次—块—场记录、37264曝光，来源代码提交`4605b372`；与原基线分目录交付，全部通过独立验收。
@@ -20,7 +21,7 @@
 
 ## 复现
 
-使用本仓库已有 `requirements-annual.txt` 环境；绘图使用 matplotlib。PDF打包另外需要 Pillow、reportlab（本次使用应用附带的Python环境，不改变服务器依赖）。原始星历、IERS与年度菜单仍保存在忽略提交的 `cache/`、`products/`；精确数值复现需要保留同一输入快照。
+使用本仓库已有 `requirements-annual.txt` 环境；绘图使用 matplotlib。PDF打包另外需要 Pillow、pypdf。原始星历、IERS与年度菜单仍保存在忽略提交的 `cache/`、`products/`；精确数值复现需要保留同一输入快照。
 
 ```bash
 python3 -m unittest discover -s targeted_observing/tests -v

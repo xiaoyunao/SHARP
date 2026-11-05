@@ -2,6 +2,12 @@
 
 ## 2026-11-05
 
+- final_review: 读取“木星特洛伊+晨昏”最新答复，基于5250252d冻结调度与质量门槛。只读检查Pal 5 New的step5_stream_model.plot_density_track_summary及rcParams，新增plot_style统一当前图件。
+- atlas_B: 从B_plot_data重绘365夜/37264曝光，378组PDF及300 dpi PNG，提交13页和365页矢量图册及日期浏览预览；61个无Trojan夜保留原原因。A图册独立保留。抽查发现夜图图例重叠，调整为固定画布底部后重绘。
+- statistics: final_sampling_stats与final_twilight_bins从保存结果重算。B名义年驻场135秒、同场轮巡中位1325秒。C特殊任务相位/精度限制与B/C原结论相符。晨间45–55度五访95.1平方度、十访0；逐曝光站心球面像素分箱。
+- validation: py_compile、51项unittest、图册页数及378组输入hash/DPI、13页渲染与五类代表夜、分箱计数守恒和角色期望计数校验。详细口径与复现见FINAL_REVIEW。
+- next: 现场r精度、零点、污染与饱和、读出/转场和快速目标管线确认。年度设计已阶段冻结。
+
 - task: 读取续接对话及Downloads执行清单/SHARP_resume_20261105.zip，按P0/P1继续本地模式；基线a5cb945与GitHub同步，用户outputs/保留，未连接服务器。
 - recovery: 恢复既有selected_nominal全部365夜；导出6137夜块场行/37078曝光、来源SHA和365输入hash；四个原审查绘图工具入review_tools，完成365逐夜图与全年/月度图，13页PDF及日期索引。
 - repairs: annual_selection按独立对象收益比较所有时段，保留pick_legacy；完成机会开关与科学权重解耦，预测读同一quality配置；非默认阈值/重叠反例回归通过。

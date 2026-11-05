@@ -1,0 +1,20 @@
+{
+  "exposures": 37264,
+  "nights": 365,
+  "pdf_pages": [
+    13,
+    365
+  ],
+  "figure_pairs": 378,
+  "png_dpi": 300,
+  "no_trojan_nights": 61,
+  "sampled_night_render_dates": {
+    "normal": "2026-11-01",
+    "no_trojan": "2027-06-14",
+    "seasonal_edge": "2027-09-06",
+    "bright_moon": "2027-07-18",
+    "long_slew": "2027-04-19"
+  },
+  "unittest_passed": 51,
+  "source_commit": "4605b372fde47692ddcd66ed809905b07caf05bb"
+}
