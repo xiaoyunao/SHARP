@@ -1,71 +1,36 @@
-# SMT r-band focus measurement
+# SMT 调焦主程序
 
-独立工具；用户于 2026-11-11 授权新增 `focus/` 并在服务器临时运行。生产目录、原始 FITS、定时任务均不修改。程序和结果保留本地；服务器临时目录在结果传回并逐文件 SHA256 验证后删除。SSH/系统审计日志不属于本工具清理范围。
+独立读取服务器图像并测量星像。生产目录、原始FITS和定时任务保持原状；结果传回并校验SHA256后删除本次服务器临时目录。今晚结果索引见 [results/README.md](results/README.md)。
 
-## 方法
+## 保留的主程序
 
-- 读取全幅 16 放大器，不抽样选星；SEP 3σ、至少12像素检测，逐源局部背景扣除。
-- 实测0083原图亮星约53800 ADU平顶（全图最大54422），头SATURATE=65535不可信；去overscan后平台约51000，保守屏蔽>45000 ADU像素及包含它们的源，避免饱和尺寸随亮度增大污染排序。`--saturation`可覆盖，不能未经检查直接信头值。
-- 使用所有符合可靠测量要求的源：S/N≥30，剔除饱和/坏像素、边界、混叠标志、明显宇宙线尺度、邻源污染和增长曲线不收敛。逐放大器记录每种剔除原因。
-- 主量为 D50（包围50%光的直径）及 D80（80%），不把 D50 冒称 FWHM。光度孔径≥12像素或6倍长轴二阶矩；扩大20%后两个半径变化均须≤10%。环状源仍能测量；环状源不报告单峰径向 FWHM。
-- 比较时平移配准、双向唯一匹配同一批星；各4×4等面积区域内求对数尺寸比中位数，再跨区域取中位数，避免星密度不均主导排序。至少8区、每区10星，否则拒绝给出匹配排序。
-- D50 排序，D80、亮星 S/N>80 子样本、椭率和空间分布交叉检查。直接比较领先图与每幅图，不仅比较各自对第一幅的误差条。
-- bootstrap 区间只表示源采样误差，不能消除不同曝光的 seeing 变化。尺寸差很小或 D50/D80 不一致时须结合复拍判断。曝光内星像质量可比较，不能从单波段焦扫独立认定 band 间焦差的原因。
-- 源坐标为去overscan后图像的0基像素坐标；尺寸CSV单位pixel，摘要同时给出头中 `PIXSCAL1` 换算的角秒。
+- `run_remote.py`：本地发起SSH、复制必要模块、运行、传回校验和清理。
+- `measure_focus.py`：全幅16通道overscan、源筛选、D50/D80与形态测量。
+- `compare_focus.py`：同波段焦扫的同星/分区比较，供主入口调用。
+- `compare_passbands.py`：不同波段完全共同源的图像质量对照，不推导滤镜焦差。
 
-源为未经星表分类的恒星候选；中位数及同源比值抵抗少量星系/未分辨双星污染。低S/N源无法可靠测尺寸，保留拒绝计数。未给出精确相机gain时，S/N使用背景噪声、局部背景估计误差和保守1 e/ADU泊松项，属于筛选估计。
+测试和一次性复核脚本已清理，需要恢复时查看git历史。结果中保留逐源CSV、逐帧摘要、最终图表与必要波段来源信息；校验结论汇总于`results/provenance.json`。
 
-## 服务器环境及原图处理
+## 运行
 
-解释器：`/home/smtpipeline/Softwares/miniconda3/bin/python`，已确认 NumPy 2.3.3、SciPy 1.16.2、Astropy 7.1.0、SEP 1.4.1、Matplotlib 3.10.6；不安装依赖。
-
-`.fits.gz` 的 subscan 图为 9232×9216。新 `focus-...fits` 不含 `OBJ`，生产预处理会跳过，故用独立的16通道行overscan算法直接读 9400×10000 原图。布局/异常overscan处理根据只读核查 `/pipeline/smtpipeline/ccd9k.py` 实现，不导入生产程序。
-
-首幅 raw 与 subscan 两条路径独立运行：修正饱和阈值后1,754个源的所有13列逐项完全一致，证据在结果目录 `raw_processed_validation_corrected.json`（初版1,832源记录仍留档）。
-
-## 本地发起远程运行
-
-在本项目目录执行（只给明确的 r 波段调焦曝光；程序也检查FILTER）：
+在本项目目录本地执行，实际计算在默认服务器：
 
 ```bash
-python3 focus/run_remote.py \
-  /processed1/20261111/subscan/OBJ/OBJ_MP_1831_0080.fits.gz \
-  /raw1/20261111/OBJ/focus-5.84_0081.fits \
-  /raw1/20261111/OBJ/focus-5.86_0082.fits \
-  /raw1/20261111/OBJ/focus-5.88_0083.fits \
-  /raw1/20261111/OBJ/focus-5.90_0084.fits \
-  /raw1/20261111/OBJ/focus-5.92_0085.fits \
-  --out focus/results/20261111
+python3 focus/run_remote.py /raw1/20261111/OBJ/focus-5.88-G_0092.fits \
+  --band g --allow-header-mismatch --out focus/results/new_g_run
 ```
 
-后续仅传新帧即可：已有本地源表/摘要被复制到本次临时目录，测量后在服务器重新比较整个本地批次；旧结果不会因只新增一帧而消失。FITS读前后大小/mtime须一致；尚在写入则拒绝本次测量。单帧失败时不宣称已有完整排序。
+`--band`支持g/r/i/z，实际滤镜已确认但图头陈旧时才使用`--allow-header-mismatch`；未确认用`--band unconfirmed`。摘要分别记录实际band与header_band，不改原图头。不同波段应使用独立输出目录。已有目录会带入其源表/摘要继续比较；后续新焦扫使用新目录。
 
-`last_remote_run.json` 保存本次远程临时路径、SHA256和清理状态。中断/断网时检查 `cleaned`；若为false，只处理该记录中的确切临时目录，不清理其他任务。
+仅对已有同波段结果定稿：`python3 focus/run_remote.py --out <结果目录> --final-through <最后序号>`。不指定截止时报告保留provisional。`last_remote_run.json`在运行时记录传输SHA和清理状态；断网/中断后以该记录核查本次临时目录。
 
-结果包括：逐源CSV、逐帧JSON、全场尺寸图、固定31×31像素源切图、`comparison.json`、`comparison.png`、`RESULTS.md`。未指定范围时结果保持 provisional，最终比较范围必须由现场确认，不能靠一段时间无新文件推断结束。用户已确认本次用到0088，最终选择0083。
+跨波段对照：`python3 focus/compare_passbands.py <参考摘要.json> <其他摘要.json> ... --out <输出目录>`，第一个输入为参考，必须每band一帧；可将程序及源表传到服务器临时目录执行。
 
-仅按已测数据定稿（不重测FITS）：
+## 测量口径与环境
 
-```bash
-python3 focus/run_remote.py --out focus/results/20261111 --final-through 88
-```
-
-定稿要求源表序号连续、末帧等于指定值、所有帧都能排序；在服务器临时目录重算比较、校验传回并清理。
-
-## 验证
-
-`python3 -m py_compile focus/*.py`；在上述服务器环境中运行 `python -B validate_synthetic.py`。解析高斯D50误差分别0.88%/0.18%，Moffat为2.65%；环状源识别、宽度排序、饱和/宇宙线剔除通过。相近帧排序还以真实同源、亮星和空间分区复核。
-
-SEP包围能量实现参考：[flux_radius API](https://sep.readthedocs.io/en/stable/api/sep.flux_radius.html)。
-
-## 形态与显示复核
-
-`python3 focus/review_morphology.py` 从服务器只读提取0081–0085共同未饱和源切图（SSH stdin/stdout，无远程文件），本地生成subscan前后公平显示、完整峰值PSF叠加及同星分区图。旧99%分位预览有截白效应；今后测量程序使用完整峰值显示，形态判断以 `morphology_review/` 新图为准。数值排序不受预览拉伸影响。0083是全场折中最优，不代表各处完全合焦。
-
-## 其他波段与陈旧图头
-
-`run_remote.py --band g/r/i/z`要求FITS头与指定波段一致。实际滤镜已获现场确认但头陈旧时，可显式加`--allow-header-mismatch`，摘要同时保存实际band、header_band和override标志；不得仅凭文件名擅自覆盖。尚未确认时用`--band unconfirmed`先测形态。各波段使用不同输出目录，compare_focus拒绝混合band排名；独立跨波段的同星图像质量对照不代表滤镜焦差测定。2026-11-11的0091单帧结果在results/20261111_i。
-
-## 不同波段的同星图像质量对照
-
-`compare_passbands.py <reference_summary.json> <other_summary.json> ... --out <directory>`比较所有帧都存在的相同源并给出高S/N子样本和4×4分区图。每个band只允许一帧，必须有明确band归属；参考是第一个输入。此工具不拟合滤镜焦距差、不把不同band放进焦扫排名。2026-11-11的r/i/G/Z 5.88对照在results/20261111_passbands，计算时摘要快照保留在input_snapshots。
+- SEP全幅检测，使用所有通过S/N≥30、饱和/坏像素/边界/混叠/增长曲线收敛筛选的源。D50/D80为包围50%/80%光的直径，D50不是FWHM。
+- 同星双向匹配，4×4分区等权；D80、亮星子样本、椭率和空间分布交叉检查。bootstrap只含源采样误差，不含seeing系统变化。
+- 2026-11-11实际饱和平台低于65535头值；去overscan后采用45000 ADU保守阈值。源图采用完整峰值线性显示，避免99%截白造成假胖核。
+- 服务器解释器`/home/smtpipeline/Softwares/miniconda3/bin/python`；NumPy、SciPy、Astropy、SEP、Matplotlib。不导入生产代码，不安装新依赖。
+- 支持9400×10000 raw及9232×9216 subscan，原图在内存独立去overscan。CSV坐标为去overscan后0基像素，宽度为pixel；摘要按PIXSCAL1另给角秒。
+- 单一焦位不同波段的图像大小不等于各自最优焦点；曝光时长、seeing和成像位置可能影响结果。
