@@ -2,6 +2,7 @@
 
 ## 2026-11-11
 
+- MPC已识别天体晨昏图：复用已核实的 WAMO 身份交叉表，从筛后 89 条人审保留轨迹中取 54 条已识别目标（179 次测量、34 夜，pass 51/review 3）；新增与原两图共轴、共分箱的 PNG/PDF 三联图及逐条 `in_mpc_identified_plot` 标记。命令：`python3 -m py_compile outputs/candidate_twilight_20261111/rescreen/plot_after_screening.py`、`python3 outputs/candidate_twilight_20261111/rescreen/plot_after_screening.py`。图件目视通过；以观测夜、轨迹标识、关联 ID 三字段验算 54+35=89、179+110=289，三组 PNG/PDF 齐全。轨迹 ID 单独跨夜重复，不作唯一键。下一步按新数据批次重算。
 - 晨昏一致性核查：git status/branch/fetch/log后对照survey和targeted_observing的scheduler/config/joint_twilight/feedback及两次服务器原表快照。当前TW自由中心未复用MP；旧流程RA排序非单轴保证；新默认完整5访，无3访计划降级，质量统计仍4点/12分钟。
 - 原表发现：1855场，10/22与11/09来源SHA一致，1855个不同Dec；仓库equatorial_footprints为1976场，同ID不同坐标，不可替代。读取表头/前三行及SHA交叉核验，无服务器连接。更新GOAL和PLAN登记待实现边界；本次无调度代码变更或新运行结果。
 
