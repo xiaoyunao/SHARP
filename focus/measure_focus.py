@@ -110,14 +110,16 @@ def measure_tile(data, amp, xoff, yoff, saturation=45000, snr_min=30):
     return rows, previews, dict(detected=len(objects),accepted=len(rows),rejected=reasons)
 
 
-def analyze(path, out, snr_min=30, saturation=45000):
+def analyze(path, out, snr_min=30, saturation=45000, expected_band="r", allow_header_mismatch=False):
     started=time.time(); path=Path(path); out=Path(out);out.mkdir(parents=True,exist_ok=True)
     before=path.stat()
     with fits.open(path,memmap=False) as hdul:
         hdu=next(h for h in hdul if h.data is not None and h.data.ndim==2)
         header=hdu.header.copy(); data=hdu.data
-        band=str(header.get('FILTER',header.get('CHANNEL',''))).strip().lower()
-        if band!='r': raise ValueError('Not r band: '+band)
+        header_band=str(header.get('FILTER',header.get('CHANNEL',''))).strip().lower()
+        if expected_band != 'unconfirmed' and header_band != expected_band and not allow_header_mismatch:
+            raise ValueError(f'Band mismatch: expected {expected_band}, header {header_band}')
+        band=expected_band
         if data.shape==(9400,10000): tiles=raw_tiles(data)
         elif data.shape==(9232,9216):
             tiles=((i,(i%8)*1152,(i//8)*4616,
@@ -136,7 +138,7 @@ def analyze(path, out, snr_min=30, saturation=45000):
     with (out/(name+'_sources.csv')).open('w') as f:
         writer=csv.DictWriter(f,fieldnames=list(rows[0]));writer.writeheader();writer.writerows(rows)
     scale=float(header.get('PIXSCAL1',1))
-    summary=dict(file=str(path),name=name,band=band,exposure=header.get('EXPOSURE'),
+    summary=dict(file=str(path),name=name,band=band,header_band=header_band,band_header_override=bool(band!=header_band and band!="unconfirmed"),exposure=header.get('EXPOSURE'),
                  utc=header.get('EXPSTA',header.get('DATE')),pixel_scale=scale,n_sources=len(rows),
                  input_size=before.st_size,input_mtime_ns=before.st_mtime_ns,
                  snr_min=snr_min,saturation_adu=saturation,amplifiers=stats,seconds=time.time()-started,
@@ -172,5 +174,7 @@ if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('images',nargs='+');parser.add_argument('--out',required=True);parser.add_argument('--snr-min',type=float,default=30)
     parser.add_argument('--saturation',type=float,default=45000,help='Conservative ceiling after overscan; SMT r plateau observed near 51000 ADU')
+    parser.add_argument('--band',choices=['r','i','unconfirmed'],default='r')
+    parser.add_argument('--allow-header-mismatch',action='store_true',help='Only after actual filter is independently confirmed')
     args=parser.parse_args()
-    for path in args.images:analyze(path,args.out,args.snr_min,args.saturation)
+    for path in args.images:analyze(path,args.out,args.snr_min,args.saturation,args.band,args.allow_header_mismatch)

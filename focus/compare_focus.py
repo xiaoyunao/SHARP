@@ -49,6 +49,9 @@ def compare(directory, final_through=None):
     directory=Path(directory)
     summaries=sorted([json.loads(p.read_text()) for p in directory.glob('*_summary.json')],key=lambda s:s['utc'])
     if not summaries: raise ValueError('No measured frames')
+    bands={s['band'] for s in summaries}
+    if len(bands)!=1: raise ValueError('Cannot mix different or unconfirmed bands in one ranking')
+    band=next(iter(bands))
     if final_through is not None:
         seq=[int(s['name'].rsplit('_',1)[1]) for s in summaries]
         if max(seq)!=int(final_through) or sorted(seq)!=list(range(min(seq),int(final_through)+1)):
@@ -80,14 +83,14 @@ def compare(directory, final_through=None):
             strong=(best['snr'][a]>80)&(cat['snr'][b]>80)
             try: row['vs_best']['bright_d50']=summarize_ratio(np.log(cat['d50'][b[strong]]/best['d50'][a[strong]]),best['cell'][a[strong]])
             except ValueError:row['vs_best']['bright_d50']=None
-    report=dict(status='PROVISIONAL: acquisition completion not asserted',reference=ref['name'],best=winner['name'] if winner else None,ranking=valid,excluded=[r for r in results if r['status']!='measured'],
+    report=dict(band=band,status='PROVISIONAL: acquisition completion not asserted',reference=ref['name'],best=winner['name'] if winner else None,ranking=valid,excluded=[r for r in results if r['status']!='measured'],
                 caveat='Bootstrap intervals quantify source sampling only, not time-variable seeing. Focus cannot be isolated from seeing without repeated exposures.')
     if final_through is not None:
         if report['excluded']: raise ValueError('Cannot finalize with unranked frames')
         report['status']=f'FINAL for user-approved exposure range {min(seq):04d}-{int(final_through):04d}'
         report['final_through']=int(final_through)
     (directory/'comparison.json').write_text(json.dumps(report,indent=2))
-    lines=['# r-band focus comparison','',report['status'],'','Smaller D50/D80 is better; dimensions in arcsec. D50 is half-light diameter, not FWHM.','',
+    lines=[f'# {band}-band focus comparison','',report['status'],'','Smaller D50/D80 is better; dimensions in arcsec. D50 is half-light diameter, not FWHM.','',
            '| Rank | Image | Usable | Matched | D50 | D80 | Relative D50 |','|---|---|---:|---:|---:|---:|---:|']
     for i,r in enumerate(valid):lines.append(f"| {i+1} | {r['name']} | {r['n_sources']} | {r['n_matched']} | {r['d50_arcsec']:.3f} | {r['d80_arcsec']:.3f} | {r['d50_relative']['ratio']:.4f} |")
     lines+=['',report['caveat'],'','Ranking: matched-star size ratios, median in each of 16 spatial cells, then median across cells. All usable stars retained in per-frame catalogs.']
@@ -101,7 +104,7 @@ def compare(directory, final_through=None):
         vals=np.array([r[key+'_relative']['ratio'] for r in ordered]);ci=np.array([r[key+'_relative']['ci95'] for r in ordered])
         ax.errorbar(range(len(ordered)),vals,yerr=np.maximum(0,np.vstack((vals-ci[:,0],ci[:,1]-vals))),fmt='o-',capsize=3)
         ax.set_xticks(range(len(ordered)),[r['name'].split('_')[-1] for r in ordered]);ax.set(xlabel='Exposure sequence',ylabel=key.upper()+' relative to first frame',title='Same stars / equal-area spatial cells');ax.grid(alpha=.2)
-    fig.suptitle('r-band focus comparison'+(' / final selected range' if final_through is not None else ' (provisional)'));fig.tight_layout();fig.savefig(directory/'comparison.png',dpi=160);plt.close(fig)
+    fig.suptitle(f'{band}-band focus comparison'+(' / final selected range' if final_through is not None else ' (provisional)'));fig.tight_layout();fig.savefig(directory/'comparison.png',dpi=160);plt.close(fig)
     print('\n'.join(lines))
     return report
 

@@ -61,3 +61,7 @@ SEP包围能量实现参考：[flux_radius API](https://sep.readthedocs.io/en/st
 ## 形态与显示复核
 
 `python3 focus/review_morphology.py` 从服务器只读提取0081–0085共同未饱和源切图（SSH stdin/stdout，无远程文件），本地生成subscan前后公平显示、完整峰值PSF叠加及同星分区图。旧99%分位预览有截白效应；今后测量程序使用完整峰值显示，形态判断以 `morphology_review/` 新图为准。数值排序不受预览拉伸影响。0083是全场折中最优，不代表各处完全合焦。
+
+## 其他波段与陈旧图头
+
+`run_remote.py --band i`要求FITS头为i。实际滤镜已获现场确认但头陈旧时，可显式加`--allow-header-mismatch`，摘要同时保存实际band、header_band和override标志；不得仅凭文件名擅自覆盖。尚未确认时用`--band unconfirmed`先测形态。各波段使用不同输出目录，compare_focus拒绝混合band排名；独立跨波段的同星图像质量对照不代表滤镜焦差测定。2026-11-11的0091单帧结果在results/20261111_i。
