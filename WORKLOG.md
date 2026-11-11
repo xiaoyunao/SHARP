@@ -2,6 +2,9 @@
 
 ## 2026-11-11
 
+- 晨昏方案收敛：用户否决双口径，并提出亮天光短曝光与四场短弧问题。核对Bolin 2024/2025原文（3–7分钟、4/5访）及Sheppard 2022（28秒、2–4分钟）；数分钟可构建短弧，不能等同于独立定轨。更新GOAL/PLAN为单一方案，建议8分钟重访、目标5访/最低3访及背景反馈5/10/30秒，均待本地实现验证。
+- 工程风险：本地unknown入口vmax=63 arcsec/h，_header_mid_mjd固定start+15s，不适合直接承接短曝光/快速近太阳目标。已列入适配要求；不修改生产。仅源代码/原文核对与文档diff检查，无新调度模拟或现场背景标定，未宣称cadence/关联性能通过。
+
 - 晨昏原始曝光时段核查：默认 SSH 只读并发读取 `/raw1` 54,544 个标准 MP FITS 头的 `EXPSTA/EXPEND`，按 UTC+8 当地中午切分实际观测夜，再与太阳中心 −18° 晨昏交点比较。171 个实际有可读曝光的夜晚中，首帧相对昏影中位 −0.30 h、末帧相对晨光中位 +0.32 h（即晨光后）；46 夜末帧提前晨光 ≥2 h。MPC 已识别 54 条轨迹所在的 34 夜，末帧提前 ≥2 h 的 6 夜（2.55–9.27 h），6 夜在晨光前 2 h 内结束，22 夜拍至晨光后；这 6 夜含 7 条已识别轨迹，其余 28 夜仍为近昏 21/近晨 8 条（各距边界 ≤2 h），不能仅用提前结束解释差异。10 个零字节文件和 1 个异常 `:60` 时间头不纳入边界；95 条候选代表时刻均在对应原始曝光首末之间。文件：`outputs/candidate_twilight_20261111/{raw_exposure_boundaries.py,raw_exposure_boundaries.json,analyze_raw_exposure_boundaries.py,raw_exposure_twilight_by_night.csv,raw_exposure_twilight_summary.json}`。命令：SSH 运行并发读取脚本、`python3 -m py_compile`、本地分析脚本及候选交叉核对。下一步如需归因观测助手，应查当夜日志/停机原因；本轮仅验证曝光时间。
 - MPC已识别天体晨昏图：复用已核实的 WAMO 身份交叉表，从筛后 89 条人审保留轨迹中取 54 条已识别目标（179 次测量、34 夜，pass 51/review 3）；新增与原两图共轴、共分箱的 PNG/PDF 三联图及逐条 `in_mpc_identified_plot` 标记。命令：`python3 -m py_compile outputs/candidate_twilight_20261111/rescreen/plot_after_screening.py`、`python3 outputs/candidate_twilight_20261111/rescreen/plot_after_screening.py`。图件目视通过；以观测夜、轨迹标识、关联 ID 三字段验算 54+35=89、179+110=289，三组 PNG/PDF 齐全。轨迹 ID 单独跨夜重复，不作唯一键。下一步按新数据批次重算。
 - 晨昏一致性核查：git status/branch/fetch/log后对照survey和targeted_observing的scheduler/config/joint_twilight/feedback及两次服务器原表快照。当前TW自由中心未复用MP；旧流程RA排序非单轴保证；新默认完整5访，无3访计划降级，质量统计仍4点/12分钟。
