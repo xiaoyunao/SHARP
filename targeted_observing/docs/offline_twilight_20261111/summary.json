@@ -1,0 +1,89 @@
+{
+  "nights": 365,
+  "windows": 730,
+  "zero_windows": 56,
+  "exposures": 16790,
+  "distinct_MP_fields": 668,
+  "all_verified": true,
+  "weather": {
+    "realizations": 200,
+    "seed": 20261104,
+    "field_windows_with_at_least_three_valid_frames_P10_P50_P90": [
+      1426.3,
+      1591.0,
+      1739.6
+    ],
+    "unsafe_frames_if_list_runs_through_P10_P50_P90": [
+      0.0,
+      1.0,
+      4.0
+    ],
+    "frames_outside_timing_envelope_P10_P50_P90": [
+      45.0,
+      75.5,
+      120.0
+    ],
+    "scope": "fixed-list replay with hypothetical weather and depth; no reactive controller, no NEO discovery rate",
+    "depth_assumption": "r30=20 at zenith/dark, 2arcsec seeing; uncalibrated, background/trailing loss included"
+  },
+  "exposure_counts": {
+    "5": 300,
+    "10": 712,
+    "15": 526,
+    "20": 451,
+    "25": 437,
+    "30": 14364
+  },
+  "source_hashes": {
+    "offline_twilight.py": "4419ad2c55a497b00ad2ae754a72834749210a4f27bacf863bedbcd3cf8a8e44",
+    "offline_annual.py": "5de52f518f77400a2c076d99ae6387e1b0b5bb52b94717bcdf941f72b5a4ccc3",
+    "offline_defaults.json": "b298334b8f5b62806be55982aee94f5670d89e7fd0ee4fd0b228e9da779971b1",
+    "data/mp_footprints.json": "2c14f027f8d976cd8b6afdf08d78823a5e6a6550e6dbf912d728d4c12b074a3e"
+  },
+  "assumptions": [
+    "Exposure law is an uncalibrated planning prior: Patat near-zenith R, not measured Xinglong r.",
+    "Anchor is 5s at Sun=-10deg, field altitude=25deg, elongation=40deg, Moon down.",
+    "Airmass and near-Sun background factors are explicit heuristic assumptions.",
+    "No realtime feedback, no WAIT commands, no automatic telescope connection.",
+    "Lists require operator/controller start at stated time; a static list cannot enforce a deadline after arbitrary hardware delays.",
+    "Original MP coordinates and footprint vertices are preserved; no latitude extension."
+  ],
+  "export_audit": {
+    "nights": 365,
+    "lists": 730,
+    "frames": 16790,
+    "eight_columns_original_MP_R_exposure_and_hashes_passed": true
+  },
+  "delivery_source_hashes": {
+    "offline_delivery.py": "f16b91ffbcf64235929c7d0fbfcc82fd9cd7caaf545abcdc1f7124bd25ba2268",
+    "annual_weather.py": "70461ec3a69c17ebbb72c46ccf6d7b93d92d1ab4936bf66ce2237a847919f3e2",
+    "data/weather_prior.json": "5ad5a6f2d8010573b5b5702b141d6e0cb589614791873e7cb997f253e1d7588d"
+  },
+  "coverage": {
+    "nside": 512,
+    "unique_nominal_area_deg2": 4947.032796212333,
+    "nominal_area_ge3_nights_deg2": 3053.324053351812,
+    "method": "HEALPix pixel centres within original four-corner spherical polygons; nominal, not weather-adjusted"
+  },
+  "trojan_compatibility": {
+    "existing_B_blocks": 304,
+    "all_fit_new_shared_night": true,
+    "scope": "Existing B Trojan scheduling and science yields are preserved, not rerun by this twilight experiment"
+  },
+  "cadence_seconds_min_median_max": [
+    300.01394748687744,
+    369.13204634189606,
+    682.1110079288483
+  ],
+  "mean_optimized_cycle_slew_s": 149.69086226985118,
+  "mean_RA_order_cycle_slew_s": 156.75969441919594,
+  "visit_count_windows": {
+    "0": 56,
+    "5": 674
+  },
+  "solar_elongation_P10_P50_P90": [
+    47.421189571193956,
+    58.113195256170215,
+    78.35708506255787
+  ]
+}

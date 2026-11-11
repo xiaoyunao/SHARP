@@ -1,6 +1,54 @@
 # 晨昏搜寻 + 木星特洛伊监测（本地研发模式）
 
-本目录是独立 Python 包，不导入/改写旧 `survey` 调度，不包含 SSH、cron、生产发布或望远镜控制功能。所有计划标记 `LOCAL_SIMULATION_NOT_FOR_TELESCOPE`。
+
+## 当前晨昏入口：MP 离线固定列表（2026-11-11）
+
+全年365夜已生成并校验，结果与局限见 [本轮结果](docs/offline_twilight_20261111/RESULTS.md)。
+
+本入口适用于控制软件与服务器不联通的情况。每天提前生成两份八列观测列表；**没有实时反馈、没有列表内WAIT指令**。控制滤镜token由用户确认为 `R`，目标名沿用 `MP_0001` 格式。仅本地开发测试，不部署、不改cron。
+
+```bash
+python3 -m targeted_observing.offline_twilight --date 2026-11-11 \
+  --output targeted_observing/products/mp_nights/2026-11-11
+```
+
+输出 `EV.txt`、`AM.txt`、`START_TIMES.json`、逐曝光时间CSV和完整 `plan.json`。**按START_TIMES中的北京时间启动各列表**，清晨属于次日。程序在单侧1小时窗口内比较开始时刻和晚15分钟两个预定启动时刻；启动时刻提前固定，不由现场反馈决定。空列表表示本次有限候选搜索未找到可行场组。
+
+只使用生产原表1855个MP场，原编号、中心及角点保存在 `data/mp_footprints.json`，含原FITS来源hash。晨昏足迹高度25度（中心含边缘余量），月距沿用30/40度相位规则；从太阳−10度边界规划。先争取5访，不可行再降至4或3访。场数4–12，实际连续扫描的同场间隔要求5–12分钟，8分钟是软目标。近太阳优先，路线优化比较近赤纬和紧凑场组、RA顺序及闭合路线；不承诺全局数学最优。
+
+曝光用Patat近天顶R背景先验、显式假设的低空/日距角/月光修正，按较亮的时序包络预计算5–30秒（5秒档位），−18度以下正常30秒。基准为太阳−10度、天区高度25度、日距角40度、月落时5秒；这是试观测初值，**未测得本机r的ADU/线性上限或极限星等**。使用 `offline_defaults.json` 调整初值，试观测数夜后重生成后续列表。
+
+slew采用 `9.11+max(11.95*sqrt(dRA),12.30*sqrt(dDec))`，RA轴角不乘cos(dec)，跨零处理；读出预算15秒另加。首转场名义90秒、首次换片10秒。独立5秒网格检验还覆盖首转场更早及逐帧提前误差、合计300秒晚到包络；晚到和累计开销共同消耗这一预算，**不是允许任意延迟后继续执行的保证**。静态TXT不能自动截止，超出允许启动时间或严重延迟时须由观测端停止/换用重生成列表。天气回放会报告列表继续执行造成的不合格帧，不虚构实时中止或补拍。
+
+全年固定列表及200条天气回放（汇总依赖沿用 `requirements-annual.txt` 中的 pandas/healpy）：
+
+```bash
+python3 -m targeted_observing.offline_annual --workers 8 --resume \
+  --output targeted_observing/products/mp_offline_20261111
+python3 -m targeted_observing.offline_delivery \
+  --input targeted_observing/products/mp_offline_20261111 \
+  --report targeted_observing/docs/offline_twilight_20261111 \
+  --trojan-source targeted_observing/products/annual/selected_nominal_B_20261105
+```
+
+默认模拟2026-11-01至2027-10-31。`--resume`仅复用配置、输入grid/IERS哈希一致且验收通过的日计划；`--reuse`用于已有完整全年计划的回放。IERS沿用 `cache/iers_20261104.all`，缺缓存时按下方原年度说明获取覆盖全年的表。Trojan兼容审计可不传；该参数只核查旧B项目时间块仍在共享夜间内，不重跑或改变其科学策略。当前改的是晨昏，旧TW年度结果独立保留。
+
+本地 masked catalogs 的新模式关联入口：
+
+```bash
+python3 -m targeted_observing.offline_processing --night 20261111 \
+  --root /absolute/local/data --output /absolute/local/tracklets --workers 4
+```
+
+输入为 `<root>/<night>/mask_gaia/OBJ_MP_*_cat.fits.gz`。新入口从offline配置读取3–750″/小时，保留原下限与静态源/星等差筛选；原 `heliolincrr/run_single_night.sh` 默认仍为3–63，增加 `TRACKLET_VMIN/TRACKLET_VMAX` 环境覆盖接口。实际曝光中点优先EXPSTA/EXPEND，回退到开始＋EXPOSURE/EXPTIME的一半，支持primary HDU时间与extension WCS，不再固定加15秒。缺失/矛盾时间拒绝处理而非暗中假定30秒。
+
+验证命令：`python3 -m unittest discover -s targeted_observing/tests -q`。近太阳速度注入仅验证配对范围及时间处理；全年条件检出模拟使用真值身份，**不是实际链接效率、定轨成功率或NEO发现数**。旧 `feedback.py` 与TW报告属于历史原型，不是新MP模式的第二套验收口径。
+
+试观测后需保存每帧实际曝光起止、读出/转场、滤镜、源屏蔽后的分块背景及梯度、饱和比例、零点/极限星等和移动目标检出。离线修改理论曝光参数后重新生成下一晚列表；不要求现场实时传回。
+
+## 历史 v0 入口与说明
+
+以下直到后续年度审查章节为原 TW/v0 入口文档，仅供历史复现；其中固定30秒、−12度、实时执行闸门及4点/12分钟口径均不适用于上方当前MP入口。新MP计划标记 `OFFLINE_FIXED_LIST_LOCAL_TEST`，原v0标记 `LOCAL_SIMULATION_NOT_FOR_TELESCOPE`。两者均不连接服务器或直接控制望远镜。
 
 详细工作目标见 [docs/GOAL.md](docs/GOAL.md)，来源和样本解释见 [docs/SCIENCE.md](docs/SCIENCE.md)，2026-11-03实际本地结果见 [docs/RESULTS.md](docs/RESULTS.md)。原对话快照在 `docs/conversation_20261103.md`；四份原交接附件现已原样归档到 [docs/specification](docs/specification/manifest.json)。逐项差异与后续工作见 [附件对照审计](docs/SPEC_ALIGNMENT_20261103.md)。`defaults.json` 是当前程序配置，**不等于原 YAML 已完整接入**。
 
