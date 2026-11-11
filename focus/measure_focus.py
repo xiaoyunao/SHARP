@@ -159,13 +159,13 @@ def analyze(path, out, snr_min=30, saturation=45000, expected_band="r", allow_he
     axes[0].set(xlim=(0,9216),ylim=(0,9232),title='All usable sources',xlabel='x [pixel]',ylabel='y [pixel]');fig.colorbar(sc,ax=axes[0],label='D50 [arcsec]')
     axes[1].hist([r['d50']*scale for r in rows],bins=50);axes[1].set(xlabel='D50 [arcsec]',ylabel='Sources',title=f'N = {len(rows)}')
     axes[2].scatter([r['snr'] for r in rows],[r['d50']*scale for r in rows],s=3);axes[2].set(xscale='log',xlabel='S/N',ylabel='D50 [arcsec]',title='Check brightness dependence')
-    fig.suptitle(name);fig.tight_layout();fig.savefig(out/(name+'_diagnostic.png'),dpi=150);plt.close(fig)
+    fig.suptitle(name);fig.subplots_adjust(left=.065,right=.985,bottom=.15,top=.84,wspace=.32);fig.savefig(out/(name+'_diagnostic.png'),dpi=150);plt.close(fig)
     fig,axes=plt.subplots(4,8,figsize=(16,8))
     for ax,(cut,row) in zip(axes.ravel(),previews):
         lim=15;cy,cx=np.array(cut.shape)//2;stamp=cut[cy-lim:cy+lim+1,cx-lim:cx+lim+1]
         ax.imshow(stamp,origin='lower',cmap='gray',vmin=0,vmax=np.max(stamp),interpolation='nearest');ax.set_title(f"A{row['amp']} D50={row['d50']*scale:.2f}\"",fontsize=8)
     for ax in axes.ravel():ax.set_xticks([]);ax.set_yticks([])
-    fig.suptitle(name+' / representative sources (same pixel scale; full peak)');fig.tight_layout();fig.savefig(out/(name+'_stamps.png'),dpi=130);plt.close(fig)
+    fig.suptitle(name+' / representative sources (same pixel scale; full peak)');fig.subplots_adjust(left=.03,right=.97,bottom=.025,top=.92,wspace=.15,hspace=.28);fig.savefig(out/(name+'_stamps.png'),dpi=130);plt.close(fig)
     print('SUMMARY '+json.dumps(summary),flush=True)
     return summary
 
@@ -174,7 +174,7 @@ if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('images',nargs='+');parser.add_argument('--out',required=True);parser.add_argument('--snr-min',type=float,default=30)
     parser.add_argument('--saturation',type=float,default=45000,help='Conservative ceiling after overscan; SMT r plateau observed near 51000 ADU')
-    parser.add_argument('--band',choices=['r','i','unconfirmed'],default='r')
+    parser.add_argument('--band',choices=['g','r','i','z','unconfirmed'],default='r')
     parser.add_argument('--allow-header-mismatch',action='store_true',help='Only after actual filter is independently confirmed')
     args=parser.parse_args()
     for path in args.images:analyze(path,args.out,args.snr_min,args.saturation,args.band,args.allow_header_mismatch)

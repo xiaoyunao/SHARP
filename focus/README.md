@@ -64,4 +64,8 @@ SEP包围能量实现参考：[flux_radius API](https://sep.readthedocs.io/en/st
 
 ## 其他波段与陈旧图头
 
-`run_remote.py --band i`要求FITS头为i。实际滤镜已获现场确认但头陈旧时，可显式加`--allow-header-mismatch`，摘要同时保存实际band、header_band和override标志；不得仅凭文件名擅自覆盖。尚未确认时用`--band unconfirmed`先测形态。各波段使用不同输出目录，compare_focus拒绝混合band排名；独立跨波段的同星图像质量对照不代表滤镜焦差测定。2026-11-11的0091单帧结果在results/20261111_i。
+`run_remote.py --band g/r/i/z`要求FITS头与指定波段一致。实际滤镜已获现场确认但头陈旧时，可显式加`--allow-header-mismatch`，摘要同时保存实际band、header_band和override标志；不得仅凭文件名擅自覆盖。尚未确认时用`--band unconfirmed`先测形态。各波段使用不同输出目录，compare_focus拒绝混合band排名；独立跨波段的同星图像质量对照不代表滤镜焦差测定。2026-11-11的0091单帧结果在results/20261111_i。
+
+## 不同波段的同星图像质量对照
+
+`compare_passbands.py <reference_summary.json> <other_summary.json> ... --out <directory>`比较所有帧都存在的相同源并给出高S/N子样本和4×4分区图。每个band只允许一帧，必须有明确band归属；参考是第一个输入。此工具不拟合滤镜焦距差、不把不同band放进焦扫排名。2026-11-11的r/i/G/Z 5.88对照在results/20261111_passbands，计算时摘要快照保留在input_snapshots。

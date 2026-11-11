@@ -52,5 +52,5 @@ def run(images,destination,final_through=None,band="r",allow_header_mismatch=Fal
 
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('images',nargs='*');p.add_argument('--out',required=True);p.add_argument('--final-through',type=int)
-    p.add_argument('--band',choices=['r','i','unconfirmed'],default='r');p.add_argument('--allow-header-mismatch',action='store_true')
+    p.add_argument('--band',choices=['g','r','i','z','unconfirmed'],default='r');p.add_argument('--allow-header-mismatch',action='store_true')
     a=p.parse_args();run(a.images,a.out,a.final_through,a.band,a.allow_header_mismatch)
