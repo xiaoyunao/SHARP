@@ -21,6 +21,12 @@
 - 允许此新增子目录；其余服务器镜像、MPC暂停、依赖及文档规则继续适用。
 - 目标、验收和缺失现场输入以 `targeted_observing/docs/GOAL.md` 为准。
 
+## 新模式生产隔离补充（2026-11-11 用户明确要求）
+
+- 开发新模式时，不修改main分支，也不修改本地或服务器的survey/known_asteroid/heliolincrr生产代码。
+- 速度/曝光中点等新适配只能写入targeted_observing/unknown_pipeline；新入口和新测试不得导入原生产实现。
+- 380b777b曾在本地专用分支改动heliolincrr；已在后续隔离修正中恢复954e43d5原样。不得再次把新模式适配同步回生产目录。
+
 ## Environment rules
 
 - `survey` 相关程序：

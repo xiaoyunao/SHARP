@@ -5,8 +5,8 @@ import unittest
 import numpy as np
 from astropy.table import Table
 from astropy.time import Time
-from heliolincrr.exposure_timing import header_mid_mjd
-from heliolincrr.make_tracklet_linreproj import pair_two_exposures, image_center_and_radius
+from targeted_observing.unknown_pipeline.exposure_timing import header_mid_mjd
+from targeted_observing.unknown_pipeline.make_tracklet_linreproj import pair_two_exposures, image_center_and_radius
 from targeted_observing.offline_twilight import (
     load_config, load_grid, slew, route_order, exposure, write_plan)
 
@@ -87,6 +87,8 @@ class OfflineContracts(unittest.TestCase):
         self.assertEqual(cmd[cmd.index('--vmin')+1],'3')
         self.assertEqual(cmd[cmd.index('--vmax')+1],'750')
         self.assertNotIn('submit',str(cmd))
+        self.assertIn('targeted_observing/unknown_pipeline/',cmd[1])
+        self.assertNotIn('/heliolincrr/',cmd[1])
 
     def test_static_export_has_real_R_and_no_waits(self):
         row={'field_id':'MP0001','ra_deg':7.590927324098,'dec_deg':-16.93414391,

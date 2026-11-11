@@ -35,8 +35,6 @@ VALIDATE_UNKNOWN_MPC="${VALIDATE_UNKNOWN_MPC:-0}"
 SUBMIT_UNKNOWN_MPC="${SUBMIT_UNKNOWN_MPC:-0}"
 MAX_TRACKLETS_PER_GROUP="${MAX_TRACKLETS_PER_GROUP:-100000}"
 MAX_UNKNOWN_LINKS_AFTER_KNOWN="${MAX_UNKNOWN_LINKS_AFTER_KNOWN:-200}"
-TRACKLET_VMIN="${TRACKLET_VMIN:-3.0}"
-TRACKLET_VMAX="${TRACKLET_VMAX:-63.0}"
 REQUIRE_KNOWN_MASK15="${REQUIRE_KNOWN_MASK15:-1}"
 UNKNOWN_LINK_SKIP_CODE=20
 
@@ -138,8 +136,8 @@ run_make_tracklets_step() {
     --input-subdir "mask_gaia" \
     --outdir "${tracklet_dir}" \
     --mag-max 0 \
-    --vmin "${TRACKLET_VMIN}" \
-    --vmax "${TRACKLET_VMAX}" \
+    --vmin 3.0 \
+    --vmax 63.0 \
     --dmag-max 1.0 \
     --r-static 2.0 \
     --min-repeat 2 \

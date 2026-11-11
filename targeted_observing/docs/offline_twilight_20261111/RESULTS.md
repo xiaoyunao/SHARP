@@ -50,9 +50,9 @@
 
 ## 两处处理兼容及原模式边界
 
-`heliolincrr/exposure_timing.py`优先用EXPSTA/EXPEND中点，或明确中点字段，再用开始时间＋实际EXPOSURE/EXPTIME的一半；不再隐含30秒。支持主HDU时标和扩展HDU的WCS。缺失/矛盾时间拒绝。
+`targeted_observing/unknown_pipeline/exposure_timing.py`优先用EXPSTA/EXPEND中点，或明确中点字段，再用开始时间＋实际EXPOSURE/EXPTIME的一半；不再隐含30秒。支持主HDU时标和扩展HDU的WCS。缺失/矛盾时间拒绝。
 
-`offline_processing`本地关联入口读取 **3–750″/小时**；原下限3保留。原 `run_single_night.sh`默认仍为3–63，只增加环境变量覆盖。真实配对器回归测试验证了新范围内快速源通过、过慢与超范围源拒绝；扩范围后的真实假源率尚未由图像验证。
+`offline_processing`本地关联入口读取 **3–750″/小时**；原下限3保留。新关联器完全位于 `targeted_observing/unknown_pipeline/`，不导入生产代码。上一轮本地分支上的 `heliolincrr/` 修改已于用户重申隔离后全部恢复至954e43d5原样；不修改main或服务器，原入口仍为原3–63与原中点逻辑。真实配对器回归测试验证了新范围内快速源通过、过慢与超范围源拒绝；扩范围后的真实假源率尚未由图像验证。
 
 旧B方案304个Trojan块全部仍在新的共享夜间内；不改变其场、曝光或科学产额。本包只包含晨昏列表，未把Trojan自动拼进控制脚本。
 

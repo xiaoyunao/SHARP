@@ -40,7 +40,17 @@ python3 -m targeted_observing.offline_processing --night 20261111 \
   --root /absolute/local/data --output /absolute/local/tracklets --workers 4
 ```
 
-输入为 `<root>/<night>/mask_gaia/OBJ_MP_*_cat.fits.gz`。新入口从offline配置读取3–750″/小时，保留原下限与静态源/星等差筛选；原 `heliolincrr/run_single_night.sh` 默认仍为3–63，增加 `TRACKLET_VMIN/TRACKLET_VMAX` 环境覆盖接口。实际曝光中点优先EXPSTA/EXPEND，回退到开始＋EXPOSURE/EXPTIME的一半，支持primary HDU时间与extension WCS，不再固定加15秒。缺失/矛盾时间拒绝处理而非暗中假定30秒。
+输入为 `<root>/<night>/mask_gaia/OBJ_MP_*_cat.fits.gz`。新入口从offline配置读取3–750″/小时，保留原下限与静态源/星等差筛选。关联器及时间处理完整隔离在 `targeted_observing/unknown_pipeline/`，不导入生产目录。原 `heliolincrr/` 已恢复本轮开发前源码（包括3–63范围、原中点逻辑）；main分支与服务器不改。**仅新模式**的实际曝光中点优先EXPSTA/EXPEND，回退到开始＋EXPOSURE/EXPTIME的一半，支持primary HDU时间与extension WCS，不再固定加15秒。缺失/矛盾时间拒绝处理而非暗中假定30秒。
+
+今晚/任一已生成夜的列表与审阅图：
+
+```bash
+python3 -m targeted_observing.offline_night_report \
+  --source targeted_observing/products/mp_offline_20261111/nights/2026-11-11 \
+  --output targeted_observing/products/tonight_20261111
+```
+
+包含原MP足迹/闭合路线、同历元地平位置、逐场高度及曝光时间轴、四个复访间隔和CSV统计。图是预排结果，不是实拍。今晚全部30秒；5–30秒允许范围不代表每夜都用短曝光。这里仅输出晨昏清单，未拼接Trojan。
 
 验证命令：`python3 -m unittest discover -s targeted_observing/tests -q`。近太阳速度注入仅验证配对范围及时间处理；全年条件检出模拟使用真值身份，**不是实际链接效率、定轨成功率或NEO发现数**。旧 `feedback.py` 与TW报告属于历史原型，不是新MP模式的第二套验收口径。
 
