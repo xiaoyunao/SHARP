@@ -296,7 +296,7 @@ def common_mask_from_group_reproject(files, hdu_index=1, erode_pix=0):
     else:
         # No scipy: do nothing (still works)
         pass
-    
+
     return ref_wcs, common
 
 
