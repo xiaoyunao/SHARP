@@ -57,3 +57,7 @@ python3 focus/run_remote.py --out focus/results/20261111 --final-through 88
 `python3 -m py_compile focus/*.py`；在上述服务器环境中运行 `python -B validate_synthetic.py`。解析高斯D50误差分别0.88%/0.18%，Moffat为2.65%；环状源识别、宽度排序、饱和/宇宙线剔除通过。相近帧排序还以真实同源、亮星和空间分区复核。
 
 SEP包围能量实现参考：[flux_radius API](https://sep.readthedocs.io/en/stable/api/sep.flux_radius.html)。
+
+## 形态与显示复核
+
+`python3 focus/review_morphology.py` 从服务器只读提取0081–0085共同未饱和源切图（SSH stdin/stdout，无远程文件），本地生成subscan前后公平显示、完整峰值PSF叠加及同星分区图。旧99%分位预览有截白效应；今后测量程序使用完整峰值显示，形态判断以 `morphology_review/` 新图为准。数值排序不受预览拉伸影响。0083是全场折中最优，不代表各处完全合焦。

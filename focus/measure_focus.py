@@ -161,9 +161,9 @@ def analyze(path, out, snr_min=30, saturation=45000):
     fig,axes=plt.subplots(4,8,figsize=(16,8))
     for ax,(cut,row) in zip(axes.ravel(),previews):
         lim=15;cy,cx=np.array(cut.shape)//2;stamp=cut[cy-lim:cy+lim+1,cx-lim:cx+lim+1]
-        ax.imshow(stamp,origin='lower',cmap='gray',vmin=0,vmax=np.percentile(stamp,99));ax.set_title(f"A{row['amp']} D50={row['d50']*scale:.2f}\"",fontsize=8)
+        ax.imshow(stamp,origin='lower',cmap='gray',vmin=0,vmax=np.max(stamp),interpolation='nearest');ax.set_title(f"A{row['amp']} D50={row['d50']*scale:.2f}\"",fontsize=8)
     for ax in axes.ravel():ax.set_xticks([]);ax.set_yticks([])
-    fig.suptitle(name+' / representative sources (same pixel scale)');fig.tight_layout();fig.savefig(out/(name+'_stamps.png'),dpi=130);plt.close(fig)
+    fig.suptitle(name+' / representative sources (same pixel scale; full peak)');fig.tight_layout();fig.savefig(out/(name+'_stamps.png'),dpi=130);plt.close(fig)
     print('SUMMARY '+json.dumps(summary),flush=True)
     return summary
 
