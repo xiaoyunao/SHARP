@@ -90,7 +90,7 @@ class OfflineContracts(unittest.TestCase):
         self.assertIn('targeted_observing/unknown_pipeline/',cmd[1])
         self.assertNotIn('/heliolincrr/',cmd[1])
 
-    def test_static_export_has_real_R_and_no_waits(self):
+    def test_static_export_has_lowercase_r_and_no_waits(self):
         row={'field_id':'MP0001','ra_deg':7.590927324098,'dec_deg':-16.93414391,
              'exposure_s':5,'start_unix':1800000000,'mid_unix':1800000002.5,'end_unix':1800000005,
              'release_unix':1800000020}
@@ -101,7 +101,7 @@ class OfflineContracts(unittest.TestCase):
             tokens=(Path(tmp)/'EV.txt').read_text().strip().split('\t')
             self.assertEqual(len(tokens),8)
             self.assertEqual(tokens[0],'MP_0001')
-            self.assertEqual(tokens[4],'R');self.assertEqual(tokens[6],'5')
+            self.assertEqual(tokens[4],'r');self.assertEqual(tokens[6],'5')
             self.assertNotIn('WAIT',(Path(tmp)/'EV.txt').read_text())
 
     def full_hour_fixture(self, morning=False):

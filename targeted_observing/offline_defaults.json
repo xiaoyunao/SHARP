@@ -42,7 +42,7 @@
   "vmax_arcsec_hour": 750,
   "weather_realizations": 200,
   "seed": 20261104,
-  "controller_filter_token": "R",
+  "controller_filter_token": "r",
   "assumptions": [
     "Exposure law is an uncalibrated planning prior: Patat near-zenith R, not measured Xinglong r.",
     "Anchor is 5s at Sun=-10deg, field altitude=25deg, elongation=40deg, Moon down.",
@@ -52,7 +52,7 @@
     "Original MP coordinates and footprint vertices are preserved; no latitude extension.",
     "Full-hour mode starts at the fixed boundary and repeats beyond five visits. Tail below 10s is reported; no 300s late-start reserve."
   ],
-  "controller_filter_evidence": "User explicitly confirmed R in this chat, 2026-11-11",
+  "controller_filter_evidence": "User corrected filter names to lowercase on 2026-11-11; supersedes earlier R confirmation",
   "initial_early_tolerance_s": 90,
   "start_offsets_s": [
     0

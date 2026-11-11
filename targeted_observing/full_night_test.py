@@ -3,7 +3,7 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
-import shutil
+import re
 import zipfile
 from datetime import datetime
 from zoneinfo import ZoneInfo
@@ -17,9 +17,16 @@ from .geometry import coord, footprint, in_field, local_time, setup_iers
 from .offline_twilight import make_sky, slew, load_grid
 from .bright_stars import load as load_bright_stars
 
-TJ = {'field_id':'TJ_17365', 'ra_deg':79.002262, 'dec_deg':23.719287}
-YSO = {'field_id':'YSO_84', 'ra_deg':84., 'dec_deg':-4.8}
+TJ = {'field_id':'TJN_17365', 'ra_deg':79.002262, 'dec_deg':23.719287}
+YSO_FIELDS = json.loads((BASE/'data/fixed_yso_fields.json').read_text())
+YSO = {'field_id':'YSO_ORI', **YSO_FIELDS['YSO_ORI']}
 TZ = ZoneInfo('Asia/Shanghai')
+
+
+def lowercase_filters(text):
+    # Change ONLY column 5, preserving object labels, coordinates, counts and whitespace.
+    return re.sub(r'^(\S+\s+\S+\s+\S+\s+\S+\s+)([GRIZgriz])(?=\s)',
+                  lambda m:m.group(1)+m.group(2).lower(),text,flags=re.MULTILINE)
 
 
 def read_lines(text, block):
@@ -30,9 +37,9 @@ def read_lines(text, block):
         if len(a)!=8:raise ValueError('Expected eight controller columns')
         p=SkyCoord(a[1],a[2],unit=(u.hourangle,u.deg))
         count=int(a[5]);exposure=int(a[6])
-        if count<1 or exposure<1 or a[4] not in ('G','R','I','Z'):raise ValueError('Invalid exposure')
+        if count<1 or exposure<1 or a[4].lower() not in ('g','r','i','z'):raise ValueError('Invalid exposure')
         result.append({'field_id':a[0],'ra_deg':float(p.ra.deg),'dec_deg':float(p.dec.deg),
-            'filter':a[4],'count':count,'exposure_s':exposure,'block':block,'line':line})
+            'filter':a[4].lower(),'count':count,'exposure_s':exposure,'block':block,'line':line})
     return result
 
 
@@ -40,7 +47,7 @@ def command(field, band, count, exposure):
     p=coord(field['ra_deg'],field['dec_deg'])
     return '\t'.join([field['field_id'],p.ra.to_string(unit=u.hour,sep=':',precision=3,pad=True),
         p.dec.to_string(unit=u.deg,sep=':',precision=2,pad=True,alwayssign=True),
-        '0',band,str(count),str(exposure),'0'])+'\n'
+        '0',band.lower(),str(count),str(exposure),'0'])+'\n'
 
 
 def movement(a,b):
@@ -181,7 +188,9 @@ def build(twilight_dir,m31_file,output):
     output.mkdir(parents=True,exist_ok=True)
     twilight=json.loads((twilight_dir/'plan.json').read_text())
     setup_iers(BASE/'cache'/twilight['config']['iers_file']);sky=make_sky()
-    ev=(twilight_dir/'EV.txt').read_text();am=(twilight_dir/'AM.txt').read_text();m31=m31_file.read_text()
+    ev=lowercase_filters((twilight_dir/'EV.txt').read_text())
+    am=lowercase_filters((twilight_dir/'AM.txt').read_text())
+    m31=lowercase_filters(m31_file.read_text())
     first=twilight['blocks'][0]['window_unix'][0]
     initial=read_lines(ev,'EV')+read_lines(m31,'M31')
     prefix=replay(initial,first);last=prefix[-1]
@@ -202,14 +211,16 @@ def build(twilight_dir,m31_file,output):
     yso_text=command(YSO,'G',72,60)+command(YSO,'R',72,60)
     commands=initial+read_lines(tj_text,'TROJAN')+[yg,yr]+am_commands
     rows=replay(commands,first);summary=validate(rows,twilight,sky)
-    # Preserve supplied M31 text and accepted twilight rows rather than rewriting their counts.
+    # Preserve all M31/twilight columns except the user-corrected lowercase filter token.
     full=''.join(text if text.endswith('\n') else text+'\n' for text in (ev,m31,tj_text,yso_text,am))
     file=output/'FULL_NIGHT_20261111.txt';file.write_text(full)
     check=read_lines(full,'ALL');expanded=replay(check,first)
     assert len(expanded)==len(rows)
     assert all(abs(a['start_unix']-b['start_unix'])<.001 for a,b in zip(rows,expanded))
     assert m31 in full and full.startswith(ev) and full.endswith(am)
-    for name,text in [('01_EV.txt',ev),('02_M31_ORIGINAL.txt',m31),('03_TROJAN.txt',tj_text),('04_YSO_GR.txt',yso_text),('05_AM.txt',am)]:
+    old_copy=output/'02_M31_ORIGINAL.txt'
+    if old_copy.exists():old_copy.unlink()  # Obsolete generated uppercase controller copy.
+    for name,text in [('01_EV.txt',ev),('02_M31.txt',m31),('03_TROJAN.txt',tj_text),('04_YSO_GR.txt',yso_text),('05_AM.txt',am)]:
         (output/name).write_text(text)
     write_csv(output/'exposures.csv',[{**r,'start_local':local_time(r['start_unix']),
         'mid_local':local_time(r['mid_unix']),'end_local':local_time(r['end_unix'])} for r in rows])
@@ -222,7 +233,8 @@ def build(twilight_dir,m31_file,output):
         'trojan':{'field':TJ,'R120_frames':n,'final_R_exposure_s':final_exposure,'targets':selected['targets']},
         'YSO_candidate_comparison':comparison,
         'AM_first_exposure_shift_s':next(r['start_unix'] for r in rows if r['block']=='AM')-ref_am['rows'][0]['start_unix'],
-        'approved_twilight_preserved':True,'M31_input_sha256':hashlib.sha256(m31_file.read_bytes()).hexdigest(),
+        'approved_twilight_preserved_except_filter_case':True,'controller_filter_case':'lowercase',
+        'yso_field_registry':YSO_FIELDS,'M31_preserved_except_filter_case':True,'M31_input_sha256':hashlib.sha256(m31_file.read_bytes()).hexdigest(),
         'twilight_plan_sha256':hashlib.sha256((twilight_dir/'plan.json').read_bytes()).hexdigest(),
         'assumptions':['Same fixed position: no extra slew between repeats or filter-only changes.',
             'Nominal readout=15s, filter change=10s, measured two-axis slew formula.',
@@ -231,7 +243,8 @@ def build(twilight_dir,m31_file,output):
             'No server operation or annual rerun.']}
     (output/'summary.json').write_text(json.dumps(result,indent=2)+'\n')
     readme=(f"SHARP full-night test 2026-11-11\nStart FULL_NIGHT_20261111.txt at {result['start_local']} once.\n"
-        "Sequence: EV -> original M31 GRIZ -> Trojan -> YSO G then R -> AM.\n"
+        "Sequence: EV -> M31 griz -> TJN_17365 -> YSO_ORI g then r -> AM. Filter tokens are lowercase.\n"
+        "M31 coordinates/counts/exposures are unchanged; only filter tokens have been lowercased.\n"
         "The numbered files are reference copies, NOT additional jobs after the combined list.\n"
         "YSO: 72x60s per band, with 15s readouts = 90min per band; filter switch adds 10s.\n"
         f"Trojan: {n}x120s + one {final_exposure}s bridging exposure in R, same fixed field.\n"

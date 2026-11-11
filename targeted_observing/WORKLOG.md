@@ -2,6 +2,11 @@
 
 ## 2026-11-11
 
+- 最新用户纠正：YSO固定名YSO_ORI/YSO_CYG；今晚Trojan命名TJN_17365；执行滤镜全部小写。新增data/fixed_yso_fields.json，修改full_night_test、offline_defaults、offline_night_report及相关测试/说明。
+- 重生成今晚整夜与晨昏包：M31原始输入未改，仅执行副本第5列转小写；移除过时生成副本02_M31_ORIGINAL.txt，以02_M31.txt交付。逐项对比452张起止/中点/读出时刻、坐标、曝光秒数完全一致。
+- 高度：首曝17:48:45太阳−10.3053°/MP_1570中心33.5133°；末读出06:00:47太阳−10.0156°/MP_1662中心38.8508°。末曝光约06:00:27–32。
+- 验证通过：full_night_test、offline_night_report重生成；py_compile；unittest discover共67项；两个ZIP CRC/SHA、全部执行列小写、原始M31逐字/哈希核验。长期固定Trojan场/模板设计留待后续，不重跑全年，不操作服务器，所有修改仅在targeted_observing。
+
 - 整夜组合：用户提供M31脚本，确认YSO三小时含读出。原文归档data/night_inputs；新增full_night_test组合器，读重复列并计读出、换片及跨段真实slew，相同坐标不转场。M31104张/10245秒净曝原样保留。
 - 场/顺序：利用冻结站点/IERS和Horizons，比较两YSO场；314度在22:06后只剩约63分钟整场>30度，84度选后半夜。M31→Trojan17365/4722场R120→YSO84先G后R→AM。Carry2023主文核对17365为显著光变/约12.672h模型对象；本晚仅测试部分曲线。
 - 排程：EV50+M31104+TJ103(102×120+40)+YSO144(各72×60)+AM51=452张；116行，17:47:05至次日06:00:47。AM预转场约129.94秒，保持原快门时刻误差−0.202秒；原EV/AM文本原样保留，无WAIT或大空档。

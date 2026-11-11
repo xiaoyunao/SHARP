@@ -171,7 +171,7 @@ def report(source, output):
         ax.legend(loc='upper left', fontsize=9)
         sun_axis.legend(loc='upper right', fontsize=9)
         spent = sum(r['exposure_s']+r['readout_s']+r['slew_s']+r['filter_change_s'] for r in rows)
-        summaries.append({'side': side, 'fields': len(fields), 'frames': len(rows), 'filter': 'R',
+        summaries.append({'side': side, 'fields': len(fields), 'frames': len(rows), 'filter': plan['config']['controller_filter_token'],
             'dispatch_local': local_time(block['window_unix'][0]),
             'first_shutter_local': local_time(rows[0]['start_unix']),
             'last_shutter_end_local': local_time(rows[-1]['end_unix']),
@@ -187,7 +187,7 @@ def report(source, output):
             'verified': True})
     for ax in [*maps.flat, *axes.flat]:
         ax.grid(alpha=.15)
-    field_fig.suptitle(f"SHARP MP night {plan['date']} | fixed lists, R | original grid", fontsize=20)
+    field_fig.suptitle(f"SHARP MP night {plan['date']} | fixed lists, {plan['config']['controller_filter_token']} | original grid", fontsize=20)
     stats_fig.suptitle(f"SHARP MP night {plan['date']} | planned sampling, not observed data", fontsize=20)
     save_pair(field_fig, output/'fields', 'Original MP footprint corners and same-epoch sky snapshots')
     save_pair(stats_fig, output/'statistics', 'Fixed-list altitude bounds, exposures and revisit cadence')
@@ -199,7 +199,7 @@ def report(source, output):
     (output/'READ_ME.txt').write_text(
         'SHARP '+plan['date']+' night review\n'
         'Read START_TIMES.json. Start EV.txt and AM.txt separately at their Beijing times; AM is the next day.\n'
-        'These are twilight-only eight-column lists, filter R, no WAIT or automatic cutoff.\n'
+        'These are twilight-only eight-column lists, filter r, no WAIT or automatic cutoff.\n'
         'Exposure is a theoretical prior. Start at the fixed boundary; full-hour lists have no reserved 300-second delay budget.\n'
         'Fields/statistics figures are predictions, not observed data.\n')
     files=[p for p in sorted(output.iterdir()) if p.is_file() and p.suffix!='.zip' and p.name!='manifest.json']
