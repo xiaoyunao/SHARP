@@ -2,6 +2,7 @@
 
 ## 2026-11-11
 
+- 晨昏原始曝光时段核查：默认 SSH 只读并发读取 `/raw1` 54,544 个标准 MP FITS 头的 `EXPSTA/EXPEND`，按 UTC+8 当地中午切分实际观测夜，再与太阳中心 −18° 晨昏交点比较。171 个实际有可读曝光的夜晚中，首帧相对昏影中位 −0.30 h、末帧相对晨光中位 +0.32 h（即晨光后）；46 夜末帧提前晨光 ≥2 h。MPC 已识别 54 条轨迹所在的 34 夜，末帧提前 ≥2 h 的 6 夜（2.55–9.27 h），6 夜在晨光前 2 h 内结束，22 夜拍至晨光后；这 6 夜含 7 条已识别轨迹，其余 28 夜仍为近昏 21/近晨 8 条（各距边界 ≤2 h），不能仅用提前结束解释差异。10 个零字节文件和 1 个异常 `:60` 时间头不纳入边界；95 条候选代表时刻均在对应原始曝光首末之间。文件：`outputs/candidate_twilight_20261111/{raw_exposure_boundaries.py,raw_exposure_boundaries.json,analyze_raw_exposure_boundaries.py,raw_exposure_twilight_by_night.csv,raw_exposure_twilight_summary.json}`。命令：SSH 运行并发读取脚本、`python3 -m py_compile`、本地分析脚本及候选交叉核对。下一步如需归因观测助手，应查当夜日志/停机原因；本轮仅验证曝光时间。
 - MPC已识别天体晨昏图：复用已核实的 WAMO 身份交叉表，从筛后 89 条人审保留轨迹中取 54 条已识别目标（179 次测量、34 夜，pass 51/review 3）；新增与原两图共轴、共分箱的 PNG/PDF 三联图及逐条 `in_mpc_identified_plot` 标记。命令：`python3 -m py_compile outputs/candidate_twilight_20261111/rescreen/plot_after_screening.py`、`python3 outputs/candidate_twilight_20261111/rescreen/plot_after_screening.py`。图件目视通过；以观测夜、轨迹标识、关联 ID 三字段验算 54+35=89、179+110=289，三组 PNG/PDF 齐全。轨迹 ID 单独跨夜重复，不作唯一键。下一步按新数据批次重算。
 - 晨昏一致性核查：git status/branch/fetch/log后对照survey和targeted_observing的scheduler/config/joint_twilight/feedback及两次服务器原表快照。当前TW自由中心未复用MP；旧流程RA排序非单轴保证；新默认完整5访，无3访计划降级，质量统计仍4点/12分钟。
 - 原表发现：1855场，10/22与11/09来源SHA一致，1855个不同Dec；仓库equatorial_footprints为1976场，同ID不同坐标，不可替代。读取表头/前三行及SHA交叉核验，无服务器连接。更新GOAL和PLAN登记待实现边界；本次无调度代码变更或新运行结果。
