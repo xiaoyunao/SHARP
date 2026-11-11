@@ -8,7 +8,7 @@ from astropy.time import Time
 from targeted_observing.unknown_pipeline.exposure_timing import header_mid_mjd
 from targeted_observing.unknown_pipeline.make_tracklet_linreproj import pair_two_exposures, image_center_and_radius
 from targeted_observing.offline_twilight import (
-    load_config, load_grid, slew, route_order, exposure, write_plan)
+    load_config, load_grid, slew, route_order, exposure, write_plan, simulate_route, verify_window)
 
 
 class OfflineContracts(unittest.TestCase):
@@ -92,7 +92,8 @@ class OfflineContracts(unittest.TestCase):
 
     def test_static_export_has_real_R_and_no_waits(self):
         row={'field_id':'MP0001','ra_deg':7.590927324098,'dec_deg':-16.93414391,
-             'exposure_s':5,'start_unix':1800000000,'mid_unix':1800000002.5,'end_unix':1800000005}
+             'exposure_s':5,'start_unix':1800000000,'mid_unix':1800000002.5,'end_unix':1800000005,
+             'release_unix':1800000020}
         block={'side':'EV','rows':[row],'window_unix':[1800000000,1800003600],'reason':'test'}
         plan={'date':'2026-11-11','config':self.c,'blocks':[block]}
         with tempfile.TemporaryDirectory() as tmp:
@@ -102,6 +103,47 @@ class OfflineContracts(unittest.TestCase):
             self.assertEqual(tokens[0],'MP_0001')
             self.assertEqual(tokens[4],'R');self.assertEqual(tokens[6],'5')
             self.assertNotIn('WAIT',(Path(tmp)/'EV.txt').read_text())
+
+    def full_hour_fixture(self, morning=False):
+        from types import SimpleNamespace
+        fields=[{'field_id':f'MP{i:04d}','ra_deg':3.*i,'dec_deg':20.,'radius_deg':2.1}
+                for i in range(6)]
+        def at(i,t):
+            return {'sun_alt':(-20+t/360 if morning else -10-t/360),
+                    'alt':35.,'elong':50.,'moon_fraction':0.,'moon_sep':120.,'moon_alt':-30.}
+        g=SimpleNamespace(fields=fields,bounds=[0.,3600.],at=at,valid=lambda *args:True)
+        return fields,simulate_route(g,list(range(6)),None,self.c)
+
+    def test_full_hour_continues_beyond_five_and_changes_exposure(self):
+        for morning in (False,True):
+            fields,rows=self.full_hour_fixture(morning)
+            self.assertIsNotNone(rows)
+            self.assertGreater(rows[-1]['release_unix'],3500)
+            self.assertLessEqual(rows[-1]['release_unix'],3600)
+            self.assertGreater(min(sum(r['field_id']==f['field_id'] for r in rows) for f in fields),5)
+            if morning:
+                self.assertEqual(rows[0]['exposure_s'],30)
+                self.assertLess(rows[-1]['exposure_s'],30)
+            else:
+                self.assertLess(rows[0]['exposure_s'],30)
+                self.assertEqual(rows[-1]['exposure_s'],30)
+
+    def test_verifier_rejects_shifted_start_and_five_round_early_stop(self):
+        from types import SimpleNamespace
+        fields,rows=self.full_hour_fixture()
+        def metrics(ra,dec,times):
+            shape=(len(ra),len(times))
+            return {'alt':np.full(shape,50.),'elong':np.full(shape,50.),'moon_sep':np.full(shape,120.),
+                    'sun_alt':np.full(len(times),-20.),'moon_alt':np.full(len(times),-30.),
+                    'moon_fraction':np.zeros(len(times))}
+        sky=SimpleNamespace(metrics=metrics)
+        c={**self.c,'max_tail_gap_s':100}
+        block={'fields':fields,'rows':rows,'window_unix':[0.,3600.],'reserved_window_unix':[0.,3600.]}
+        self.assertTrue(verify_window(sky,block,c)['passed'])
+        early={**block,'rows':[r for r in rows if r['visit']<=5]}
+        self.assertIn('early stop',verify_window(sky,early,c)['errors'])
+        shifted={**block,'window_unix':[900.,3600.]}
+        self.assertIn('shifted window',verify_window(sky,shifted,c)['errors'])
 
 
 if __name__=='__main__':unittest.main()

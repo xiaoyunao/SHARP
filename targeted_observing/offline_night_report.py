@@ -46,7 +46,7 @@ def report(source, output):
     all_fields, _ = load_grid()
     apply_style()
     field_fig, maps = plt.subplots(2, 2, figsize=(15, 11), layout='constrained')
-    stats_fig, axes = plt.subplots(3, 2, figsize=(15, 12), layout='constrained')
+    stats_fig, axes = plt.subplots(4, 2, figsize=(15, 15), layout='constrained')
     field_stats = []
     summaries = []
     ecliptic = SkyCoord(lon=np.linspace(0, 360, 1441)*u.deg, lat=np.zeros(1441)*u.deg,
@@ -137,24 +137,39 @@ def report(source, output):
             axes[0, column].scatter([stamp(t) for t in mids], m['alt'][0]-f['radius_deg'], color=color, s=25)
             axes[1, column].barh(np.full(len(rr), i+1), [r['exposure_s']/86400 for r in rr],
                 left=mdates.date2num([stamp(r['start_unix']) for r in rr]), height=.6, color=color)
-            axes[2, column].scatter(i+1+np.linspace(-.15,.15,len(gaps)), gaps, color=color, s=30)
+            axes[3, column].scatter(i+1+np.linspace(-.15,.15,len(gaps)), gaps, color=color, s=30)
         axes[0, column].axhline(25, color='red', ls='--', lw=1)
         axes[0, column].set(ylabel='Footprint altitude\nlower bound (deg)', title=f'{side}: altitude; dots = exposure midpoints')
         axes[0, column].legend(fontsize=9, ncol=3, loc='upper right')
         axes[1, column].set(yticks=np.arange(1, len(fields)+1),
-            yticklabels=[f['field_id'] for f in fields], title=f'{side}: fixed exposures {sorted({r["exposure_s"] for r in rows})} s', ylabel='Field')
+            yticklabels=[f['field_id'] for f in fields], title=f'{side}: continuous exposure timeline', ylabel='Field')
         for ax in axes[:2, column]:
             ax.set_xlim(stamp(start), stamp(stop))
             ax.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M', tz=TZ))
             ax.set_xlabel(f'{stamp(start):%Y-%m-%d} Beijing time (UTC+8)')
             ax.axvline(stamp(block['window_unix'][0]), color='.3', ls=':', lw=1)
-        axes[2, column].axhline(8, color='.5', ls='--', label='8 min preference')
-        axes[2, column].axhline(5, color='red', ls=':', label='5 min floor')
-        axes[2, column].set(xticks=np.arange(1, len(fields)+1), xticklabels=[f['field_id'] for f in fields],
+        axes[3, column].axhline(8, color='.5', ls='--', label='8 min preference')
+        axes[3, column].axhline(5, color='red', ls=':', label='5 min floor')
+        axes[3, column].set(xticks=np.arange(1, len(fields)+1), xticklabels=[f['field_id'] for f in fields],
             ylim=(4.5, max(9., max(gaps_all)+.5)), ylabel='Successive midpoints (min)',
-            title=f'{side}: all four revisit intervals per field')
-        axes[2, column].tick_params(axis='x', rotation=30)
-        axes[2, column].legend(fontsize=10)
+            title=f'{side}: successive visits to the same field')
+        axes[3, column].tick_params(axis='x', rotation=30)
+        axes[3, column].legend(fontsize=10)
+        ax = axes[2, column]
+        ax.step([stamp(r['mid_unix']) for r in rows], [r['exposure_s'] for r in rows],
+                where='mid', color='navy', lw=1.3, label='Fixed exposure')
+        ax.scatter([stamp(r['mid_unix']) for r in rows], [r['exposure_s'] for r in rows], s=10, color='navy')
+        ax.set(ylabel='Exposure (s)', yticks=[5,10,15,20,25,30], ylim=(0,35),
+               title=f'{side}: exposure follows predicted twilight')
+        ax.set_xlim(stamp(start), stamp(stop))
+        ax.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M', tz=TZ))
+        ax.set_xlabel(f'{stamp(start):%Y-%m-%d} Beijing time (UTC+8)')
+        sun_axis = ax.twinx()
+        sun_axis.plot([stamp(t) for t in times], metrics['sun_alt'], color='goldenrod', lw=1, label='Sun altitude')
+        sun_axis.axhline(-18, color='goldenrod', ls=':', lw=1)
+        sun_axis.set_ylabel('Sun altitude (deg)', color='goldenrod')
+        ax.legend(loc='upper left', fontsize=9)
+        sun_axis.legend(loc='upper right', fontsize=9)
         spent = sum(r['exposure_s']+r['readout_s']+r['slew_s']+r['filter_change_s'] for r in rows)
         summaries.append({'side': side, 'fields': len(fields), 'frames': len(rows), 'filter': 'R',
             'dispatch_local': local_time(block['window_unix'][0]),
@@ -162,6 +177,9 @@ def report(source, output):
             'last_shutter_end_local': local_time(rows[-1]['end_unix']),
             'nominal_readout_complete_local': local_time(rows[-1]['release_unix']),
             'hard_end_local': local_time(stop),
+            'window_seconds': stop-start, 'tail_unused_seconds': stop-rows[-1]['release_unix'],
+            'visits_per_field': {f['field_id']: sum(r['field_id']==f['field_id'] for r in rows) for f in fields},
+            'exposure_counts': {str(t): sum(r['exposure_s']==t for r in rows) for t in sorted({r['exposure_s'] for r in rows})},
             'exposures_seconds': sorted({r['exposure_s'] for r in rows}),
             'cadence_minutes_min_median_max': [float(min(gaps_all)), float(np.median(gaps_all)), float(max(gaps_all))],
             'integration_seconds': sum(r['exposure_s'] for r in rows), 'execution_seconds': spent,
@@ -182,12 +200,13 @@ def report(source, output):
         'SHARP '+plan['date']+' night review\n'
         'Read START_TIMES.json. Start EV.txt and AM.txt separately at their Beijing times; AM is the next day.\n'
         'These are twilight-only eight-column lists, filter R, no WAIT or automatic cutoff.\n'
-        'Exposure is a theoretical prior. Start delay and accumulated overhead share 300 seconds.\n'
+        'Exposure is a theoretical prior. Start at the fixed boundary; full-hour lists have no reserved 300-second delay budget.\n'
         'Fields/statistics figures are predictions, not observed data.\n')
     files=[p for p in sorted(output.iterdir()) if p.is_file() and p.suffix!='.zip' and p.name!='manifest.json']
     manifest={p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in files}
     (output/'manifest.json').write_text(json.dumps(manifest, indent=2)+'\n')
-    with zipfile.ZipFile(output/('SHARP_'+plan['date']+'_tonight.zip'), 'w', zipfile.ZIP_DEFLATED) as z:
+    suffix = '_full_hour_review.zip' if plan['config'].get('fill_window') else '_tonight.zip'
+    with zipfile.ZipFile(output/('SHARP_'+plan['date']+suffix), 'w', zipfile.ZIP_DEFLATED) as z:
         for file in files+[output/'manifest.json']:
             z.write(file, file.name)
     print(json.dumps(summary, indent=2))

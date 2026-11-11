@@ -31,6 +31,8 @@ def load_config(path=None):
         raise ValueError('Invalid cadence bounds')
     if c['min_footprint_alt_deg'] < 25 or c['sun_start_deg'] > -10:
         raise ValueError('Outside approved geometry')
+    if c.get('fill_window') and (c['window_s'] != 3600 or c['start_offsets_s'] != [0]):
+        raise ValueError('Full-hour mode requires 3600 seconds and the fixed start')
     return c
 
 
@@ -224,21 +226,28 @@ def candidate_routes(g, c):
 
 
 def simulate_route(g, ids, cycles, c):
-    rows=[];t=g.bounds[0];last=None
-    for visit in range(1,cycles+1):
+    # cycles=None fills the window, including a partial final round.
+    rows=[];t=g.bounds[0];last=None;visit=0;done=False
+    while not done and (cycles is None or visit < cycles):
+        visit += 1
         for i in ids:
             f=g.fields[i];turn=c['initial_slew_s'] if last is None else slew(g.fields[last],f)
             change=c['filter_change_s'] if last is None else 0
             begin=t+turn+change
-            if begin+c['max_exposure_s']+c['readout_s']+c['late_tolerance_s']>g.bounds[1]:return None
+            if begin+c['min_exposure_s']+c['readout_s']+c['late_tolerance_s']>g.bounds[1]:
+                if cycles is not None:return None
+                done=True;break
             # Fixed dose uses the brighter geometry over an early/late timing envelope.
             early=max(g.bounds[0],begin-c['initial_early_tolerance_s']-c['early_per_frame_s']*len(rows))
-            late=begin+c['late_tolerance_s']+c['max_exposure_s']
+            late=min(begin+c['late_tolerance_s']+c['max_exposure_s'],g.bounds[1])
             options=[g.at(i,x) for x in (early,begin,late)]
             if any(x is None for x in options):return None
             ex=min(exposure(x['sun_alt'],x['alt'],x['elong'],x['moon_fraction'],
                             x['moon_sep'],x['moon_alt'],c) for x in options)
             finish=begin+ex
+            if finish+c['readout_s']+c['late_tolerance_s']>g.bounds[1]:
+                if cycles is not None:return None
+                done=True;break
             if not g.valid(i,early,finish+c['late_tolerance_s']):return None
             m=g.at(i,begin+ex/2)
             rows.append({'field_id':f['field_id'],'ra_deg':f['ra_deg'],'dec_deg':f['dec_deg'],
@@ -250,6 +259,8 @@ def simulate_route(g, ids, cycles, c):
                          'sky_factor':float(sky_factor(m['sun_alt'],m['alt'],m['elong'],
                                      m['moon_fraction'],m['moon_sep'],m['moon_alt'],c))})
             t=finish+c['readout_s'];last=i
+    counts=[sum(r['field_index']==i for r in rows) for i in ids]
+    if min(counts,default=0)<c['minimum_visits']:return None
     intervals=[np.diff([r['mid_unix'] for r in rows if r['field_index']==i]) for i in ids]
     gaps=np.concatenate(intervals)
     if gaps.min()<c['cadence_min_s'] or gaps.max()>c['cadence_max_s']:return None
@@ -257,6 +268,8 @@ def simulate_route(g, ids, cycles, c):
 
 
 def plan_window(sky, fields, bounds, side, c):
+    if c.get('fill_window'):
+        return plan_full_window(sky,fields,bounds,side,c)
     full=WindowGeometry(sky,fields,bounds,c)
     alternatives=[]
     for delay in c['start_offsets_s']:
@@ -292,6 +305,38 @@ def plan_window(sky, fields, bounds, side, c):
             'candidate_routes':sum(len(r) for _,r in alternatives)}
 
 
+def plan_full_window(sky, fields, bounds, side, c):
+    g=WindowGeometry(sky,fields,bounds,c)
+    routes=candidate_routes(g,c)
+    feasible=[]
+    for _,ids,baseline,optimized in routes:
+        for order in (ids,ids[::-1]):
+            for rotation in range(len(ids)):
+                path=order[rotation:]+order[:rotation]
+                rows=simulate_route(g,path,None,c)
+                if not rows:continue
+                tail=bounds[1]-rows[-1]['release_unix']
+                if tail>c['max_tail_gap_s']:continue
+                counts={fields[i]['field_id']:int(sum(r['field_index']==i for r in rows)) for i in ids}
+                gaps=np.concatenate([np.diff([r['mid_unix'] for r in rows if r['field_index']==i]) for i in ids])
+                score=(max(0,c['visits']-min(counts.values())),
+                       np.mean([r['elongation_deg'] for r in rows]),
+                       abs(np.median(gaps)-c['cadence_target_s']),tail,optimized)
+                feasible.append((score,rows,path,baseline,optimized,counts,tail))
+    if not feasible:
+        return {'side':side,'window_unix':bounds,'reserved_window_unix':bounds,
+                'rows':[],'fields':[],'visits':0,'full_hour':True,'candidate_routes':len(routes),
+                'reason':'No full-hour MP route found; do not substitute an early-ending list'}
+    _,rows,path,baseline,optimized,counts,tail=min(feasible,key=lambda x:x[0])
+    for row in rows:row['side']=side
+    return {'side':side,'window_unix':bounds,'reserved_window_unix':bounds,
+            'rows':rows,'fields':[fields[i] for i in path],'visits':min(counts.values()),
+            'visits_per_field':counts,'full_hour':True,'tail_unused_s':tail,
+            'ra_order_cycle_slew_s':baseline,'optimized_cycle_slew_s':optimized,
+            'reason':'Fixed one-hour window; repeat beyond five visits, no early stop',
+            'candidate_routes':len(routes)}
+
+
 def verify_window(sky, block, c):
     """Direct ephemerides on <=5s grid; independent of planning interpolation."""
     errors=[];rows=block['rows'];lookup={f['field_id']:f for f in block['fields']}
@@ -318,8 +363,14 @@ def verify_window(sky, block, c):
         for f in fields:
             rr=[r for r in rows if r['field_id']==f['field_id']]
             gaps=np.diff([r['mid_unix'] for r in rr])
-            if not c['minimum_visits']<=len(rr)<=c['visits']:errors.append('visits')
+            if len(rr)<c['minimum_visits'] or (not c.get('fill_window') and len(rr)>c['visits']):errors.append('visits')
             if np.any(gaps<c['cadence_min_s']) or np.any(gaps>c['cadence_max_s']):errors.append('cadence')
+    if c.get('fill_window'):
+        if not rows:errors.append('no full-hour schedule')
+        else:
+            if block['window_unix'] != block['reserved_window_unix']:errors.append('shifted window')
+            if abs(block['window_unix'][1]-block['window_unix'][0]-3600)>.001:errors.append('hour duration')
+            if block['window_unix'][1]-rows[-1]['release_unix']>c['max_tail_gap_s']:errors.append('early stop')
     return {'passed':not errors,'errors':sorted(set(errors)),'samples':len(samples),
             'scope':'nominal and configured timing envelope, original footprint enclosing cap'}
 
@@ -361,9 +412,14 @@ def write_plan(plan, directory):
         manifest.append({'side':side,'list':file.name,'start_local':local(start),
                          'latest_start_local':local(start+c['late_tolerance_s']),
                          'hard_end_local':local(end),'exposures':len(rows),'reason':block['reason'],
+                         'nominal_finish_local':local(rows[-1]['release_unix']) if rows else None,
+                         'tail_unused_s':end-rows[-1]['release_unix'] if rows else end-start,
                          'sha256':hashlib.sha256(file.read_bytes()).hexdigest()})
     (path/'START_TIMES.json').write_text(json.dumps({'date':plan['date'],'lists':manifest,
-        'read_before_use':'Sequential fixed lists; no waits and no feedback. Start-time allowance and accumulated slew/readout delays SHARE the configured late envelope. Beyond it stop/replan; TXT cannot enforce this. Morning is next local day. No server deployment.'},indent=2)+'\n')
+        'read_before_use':('Full-hour fixed lists: start at the stated boundary, no 300-second lateness reserve. '
+        'Exposure/readout/slew fill the hour except the reported sub-frame tail. '
+        'No waits, feedback or automatic cutoff; morning is the next local day. No server deployment.'
+        if c.get('fill_window') else 'Sequential fixed lists; start-time and accumulated delays share the configured envelope. No automatic cutoff.')},indent=2)+'\n')
 
 
 def main():

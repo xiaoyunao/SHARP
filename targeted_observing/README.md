@@ -3,35 +3,27 @@
 
 ## 当前晨昏入口：MP 离线固定列表（2026-11-11）
 
-全年365夜已生成并校验，结果与局限见 [本轮结果](docs/offline_twilight_20261111/RESULTS.md)。
+**当前是晨昏各完整一小时的修正版，先交付2026-11-11夜审阅，用户确认前不重跑全年。** 上一版365夜结果把一小时当上限且允许晚15分钟启动，不能作为当前要求的验收结果。
 
-本入口适用于控制软件与服务器不联通的情况。每天提前生成两份八列观测列表；**没有实时反馈、没有列表内WAIT指令**。控制滤镜token由用户确认为 `R`，目标名沿用 `MP_0001` 格式。仅本地开发测试，不部署、不改cron。
+控制软件与服务器不联通，每天提前固定两份八列观测列表；滤镜token为用户确认的 `R`，目标名沿用 `MP_0001`。仅本地，不连接/部署服务器，main和本地三个生产目录不改。
 
 ```bash
 python3 -m targeted_observing.offline_twilight --date 2026-11-11 \
-  --output targeted_observing/products/mp_nights/2026-11-11
+  --output targeted_observing/products/tonight_full_hour_20261111
+python3 -m targeted_observing.offline_night_report \
+  --source targeted_observing/products/tonight_full_hour_20261111 \
+  --output targeted_observing/products/tonight_full_hour_20261111
 ```
 
-输出 `EV.txt`、`AM.txt`、`START_TIMES.json`、逐曝光时间CSV和完整 `plan.json`。**按START_TIMES中的北京时间启动各列表**，清晨属于次日。程序在单侧1小时窗口内比较开始时刻和晚15分钟两个预定启动时刻；启动时刻提前固定，不由现场反馈决定。空列表表示本次有限候选搜索未找到可行场组。
+输出EV.txt、AM.txt、START_TIMES.json、逐曝光CSV、plan.json、天区图/统计图及 `SHARP_2026-11-11_full_hour_review.zip`。晨间属于次日北京时间。**分别按START_TIMES里的固定边界启动**：不延后15分钟，不完成5轮就停。只使用原1855个MP场，不扩黄纬，足迹高度>25度、月距30/40度；按实测双轴转场模型连续轮巡到窗口末尾。
 
-只使用生产原表1855个MP场，原编号、中心及角点保存在 `data/mp_footprints.json`，含原FITS来源hash。晨昏足迹高度25度（中心含边缘余量），月距沿用30/40度相位规则；从太阳−10度边界规划。先争取5访，不可行再降至4或3访。场数4–12，实际连续扫描的同场间隔要求5–12分钟，8分钟是软目标。近太阳优先，路线优化比较近赤纬和紧凑场组、RA顺序及闭合路线；不承诺全局数学最优。
+一小时包含首转场90秒、首次换片10秒、逐张曝光、读出15秒和场间转场。每场目标至少5次（最低3次），5次不设上限，最后允许部分轮次；同场相邻曝光中点间隔限定5–12分钟、8分钟为次级偏好。连续列表填到距截止≤10秒，剩余不足一张的时间明确输出 `tail_unused_s`，不假装曝光或插入WAIT。不能排满则报错，不以短列表冒充完成。
 
-曝光用Patat近天顶R背景先验、显式假设的低空/日距角/月光修正，按较亮的时序包络预计算5–30秒（5秒档位），−18度以下正常30秒。基准为太阳−10度、天区高度25度、日距角40度、月落时5秒；这是试观测初值，**未测得本机r的ADU/线性上限或极限星等**。使用 `offline_defaults.json` 调整初值，试观测数夜后重生成后续列表。
+曝光按照各帧太阳高度、天区高度、日距角/月光的理论背景计算，以5秒档取5–30秒；−18度以下正常30秒。黄昏覆盖−10度较亮阶段逐渐加长、清晨反向缩短；不以太阳高度线性映射替代既有背景先验。先验来自Patat近天顶R，气质量/方向/月光因子是明确假设，未标定兴隆r的ADU或饱和上限。试拍后离线修正下一晚，不需要实时反馈。
 
-slew采用 `9.11+max(11.95*sqrt(dRA),12.30*sqrt(dDec))`，RA轴角不乘cos(dec)，跨零处理；读出预算15秒另加。首转场名义90秒、首次换片10秒。独立5秒网格检验还覆盖首转场更早及逐帧提前误差、合计300秒晚到包络；晚到和累计开销共同消耗这一预算，**不是允许任意延迟后继续执行的保证**。静态TXT不能自动截止，超出允许启动时间或严重延迟时须由观测端停止/换用重生成列表。天气回放会报告列表继续执行造成的不合格帧，不虚构实时中止或补拍。
+**满小时版本取消原300秒晚到预留。** 计划填充按当前名义模型计算，控制软件TXT无自动截止/补时能力；实际延误不会自动重新规划。太阳/高度/月距安全仍逐曝光校验，保留更早到位的校验包络。今晚详细数字与审阅边界见 [完整一小时修订](docs/FULL_HOUR_REVIEW_20261111.md)。
 
-全年固定列表及200条天气回放（汇总依赖沿用 `requirements-annual.txt` 中的 pandas/healpy）：
-
-```bash
-python3 -m targeted_observing.offline_annual --workers 8 --resume \
-  --output targeted_observing/products/mp_offline_20261111
-python3 -m targeted_observing.offline_delivery \
-  --input targeted_observing/products/mp_offline_20261111 \
-  --report targeted_observing/docs/offline_twilight_20261111 \
-  --trojan-source targeted_observing/products/annual/selected_nominal_B_20261105
-```
-
-默认模拟2026-11-01至2027-10-31。`--resume`仅复用配置、输入grid/IERS哈希一致且验收通过的日计划；`--reuse`用于已有完整全年计划的回放。IERS沿用 `cache/iers_20261104.all`，缺缓存时按下方原年度说明获取覆盖全年的表。Trojan兼容审计可不传；该参数只核查旧B项目时间块仍在共享夜间内，不重跑或改变其科学策略。当前改的是晨昏，旧TW年度结果独立保留。
+全年执行器代码保留，但本轮未运行；旧年度产品独立保留并标记不满足完整小时约束。等用户确认今晚版本后，再用新配置重算。报告依赖沿用 `requirements-annual.txt` 中的pandas/healpy，IERS沿用固定 `cache/iers_20261104.all`。
 
 本地 masked catalogs 的新模式关联入口：
 
@@ -46,11 +38,11 @@ python3 -m targeted_observing.offline_processing --night 20261111 \
 
 ```bash
 python3 -m targeted_observing.offline_night_report \
-  --source targeted_observing/products/mp_offline_20261111/nights/2026-11-11 \
-  --output targeted_observing/products/tonight_20261111
+  --source targeted_observing/products/tonight_full_hour_20261111 \
+  --output targeted_observing/products/tonight_full_hour_20261111
 ```
 
-包含原MP足迹/闭合路线、同历元地平位置、逐场高度及曝光时间轴、四个复访间隔和CSV统计。图是预排结果，不是实拍。今晚全部30秒；5–30秒允许范围不代表每夜都用短曝光。这里仅输出晨昏清单，未拼接Trojan。
+包含原MP足迹/闭合路线、同历元地平位置、逐场高度及曝光时间轴、全部复访间隔和CSV统计。图是预排结果，不是实拍。本轮今晚覆盖5/10/15/20/25/30秒，黄昏增加、清晨缩短。这里仅输出晨昏清单，未拼接Trojan。
 
 验证命令：`python3 -m unittest discover -s targeted_observing/tests -q`。近太阳速度注入仅验证配对范围及时间处理；全年条件检出模拟使用真值身份，**不是实际链接效率、定轨成功率或NEO发现数**。旧 `feedback.py` 与TW报告属于历史原型，不是新MP模式的第二套验收口径。
 

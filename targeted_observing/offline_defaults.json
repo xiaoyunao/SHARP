@@ -1,5 +1,5 @@
 {
-  "version": "MP-offline-20261111",
+  "version": "MP-full-hour-20261111",
   "start_date": "2026-11-01",
   "stop_date_exclusive": "2027-11-01",
   "iers_file": "iers_20261104.all",
@@ -11,7 +11,7 @@
   "readout_s": 15,
   "filter_change_s": 10,
   "initial_slew_s": 90,
-  "late_tolerance_s": 300,
+  "late_tolerance_s": 0,
   "early_per_frame_s": 2,
   "visits": 5,
   "minimum_visits": 3,
@@ -49,12 +49,14 @@
     "Airmass and near-Sun background factors are explicit heuristic assumptions.",
     "No realtime feedback, no WAIT commands, no automatic telescope connection.",
     "Lists require operator/controller start at stated time; a static list cannot enforce a deadline after arbitrary hardware delays.",
-    "Original MP coordinates and footprint vertices are preserved; no latitude extension."
+    "Original MP coordinates and footprint vertices are preserved; no latitude extension.",
+    "Full-hour mode starts at the fixed boundary and repeats beyond five visits. Tail below 10s is reported; no 300s late-start reserve."
   ],
   "controller_filter_evidence": "User explicitly confirmed R in this chat, 2026-11-11",
   "initial_early_tolerance_s": 90,
   "start_offsets_s": [
-    0,
-    900
-  ]
+    0
+  ],
+  "fill_window": true,
+  "max_tail_gap_s": 10
 }
