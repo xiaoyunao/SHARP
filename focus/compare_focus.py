@@ -45,9 +45,14 @@ def summarize_ratio(values,cells):
                 cells=len(groups),cell_ratios={str(int(c)):float(np.exp(m)) for c,m in zip(goodcells,med)})
 
 
-def compare(directory):
+def compare(directory, final_through=None):
     directory=Path(directory)
     summaries=sorted([json.loads(p.read_text()) for p in directory.glob('*_summary.json')],key=lambda s:s['utc'])
+    if not summaries: raise ValueError('No measured frames')
+    if final_through is not None:
+        seq=[int(s['name'].rsplit('_',1)[1]) for s in summaries]
+        if max(seq)!=int(final_through) or sorted(seq)!=list(range(min(seq),int(final_through)+1)):
+            raise ValueError('Final range must be complete and end at --final-through')
     ref=summaries[0]; rc=read_catalog(directory/(ref['name']+'_sources.csv'))
     results=[]; pairs=[]
     for s in summaries:
@@ -77,6 +82,10 @@ def compare(directory):
             except ValueError:row['vs_best']['bright_d50']=None
     report=dict(status='PROVISIONAL: acquisition completion not asserted',reference=ref['name'],best=winner['name'] if winner else None,ranking=valid,excluded=[r for r in results if r['status']!='measured'],
                 caveat='Bootstrap intervals quantify source sampling only, not time-variable seeing. Focus cannot be isolated from seeing without repeated exposures.')
+    if final_through is not None:
+        if report['excluded']: raise ValueError('Cannot finalize with unranked frames')
+        report['status']=f'FINAL for user-approved exposure range {min(seq):04d}-{int(final_through):04d}'
+        report['final_through']=int(final_through)
     (directory/'comparison.json').write_text(json.dumps(report,indent=2))
     lines=['# r-band focus comparison','',report['status'],'','Smaller D50/D80 is better; dimensions in arcsec. D50 is half-light diameter, not FWHM.','',
            '| Rank | Image | Usable | Matched | D50 | D80 | Relative D50 |','|---|---|---:|---:|---:|---:|---:|']
@@ -92,10 +101,10 @@ def compare(directory):
         vals=np.array([r[key+'_relative']['ratio'] for r in ordered]);ci=np.array([r[key+'_relative']['ci95'] for r in ordered])
         ax.errorbar(range(len(ordered)),vals,yerr=np.maximum(0,np.vstack((vals-ci[:,0],ci[:,1]-vals))),fmt='o-',capsize=3)
         ax.set_xticks(range(len(ordered)),[r['name'].split('_')[-1] for r in ordered]);ax.set(xlabel='Exposure sequence',ylabel=key.upper()+' relative to first frame',title='Same stars / equal-area spatial cells');ax.grid(alpha=.2)
-    fig.suptitle('r-band focus comparison (provisional)');fig.tight_layout();fig.savefig(directory/'comparison.png',dpi=160);plt.close(fig)
+    fig.suptitle('r-band focus comparison'+(' / final selected range' if final_through is not None else ' (provisional)'));fig.tight_layout();fig.savefig(directory/'comparison.png',dpi=160);plt.close(fig)
     print('\n'.join(lines))
     return report
 
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('directory');compare(p.parse_args().directory)
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('directory');p.add_argument('--final-through',type=int);a=p.parse_args();compare(a.directory,a.final_through)

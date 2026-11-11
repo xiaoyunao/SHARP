@@ -16,12 +16,12 @@ def ssh(command,**kwargs):
     return subprocess.run(['ssh','-p','20093','-o','BatchMode=yes',HOST,command],check=True,**kwargs)
 
 
-def run(images,destination):
+def run(images,destination,final_through=None):
     destination=Path(destination).resolve();destination.mkdir(parents=True,exist_ok=True)
     temp=ssh('mktemp -d /tmp/smt_focus_XXXXXXXX',capture_output=True,text=True).stdout.strip()
     if not temp.startswith('/tmp/smt_focus_') or '/' in temp[len('/tmp/'):]:
         raise RuntimeError('Unexpected temporary directory: '+repr(temp))
-    record=dict(remote_directory=temp,images=images,cleaned=False)
+    record=dict(remote_directory=temp,images=images,final_through=final_through,cleaned=False)
     (destination/'last_remote_run.json').write_text(json.dumps(record,indent=2))
     try:
         subprocess.run(['scp','-P','20093',str(HERE/'measure_focus.py'),str(HERE/'compare_focus.py'),HOST+':'+temp+'/'],check=True)
@@ -33,8 +33,8 @@ def run(images,destination):
         command=' '.join(['env', 'MPLCONFIGDIR='+shlex.quote(temp+'/mpl'), 'TMPDIR='+shlex.quote(temp),
                           'OPENBLAS_NUM_THREADS=1', shlex.quote(PYTHON),'-B',shlex.quote(temp+'/measure_focus.py'),
                           *[shlex.quote(p) for p in images],'--out',shlex.quote(temp+'/results')])
-        ssh(command)
-        ssh(' '.join(['env','MPLCONFIGDIR='+shlex.quote(temp+'/mpl'),'TMPDIR='+shlex.quote(temp),'OPENBLAS_NUM_THREADS=1',shlex.quote(PYTHON),'-B',shlex.quote(temp+'/compare_focus.py'),shlex.quote(temp+'/results')]))
+        if images: ssh(command)
+        ssh(' '.join(['env','MPLCONFIGDIR='+shlex.quote(temp+'/mpl'),'TMPDIR='+shlex.quote(temp),'OPENBLAS_NUM_THREADS=1',shlex.quote(PYTHON),'-B',shlex.quote(temp+'/compare_focus.py'),shlex.quote(temp+'/results'),*(['--final-through',str(int(final_through))] if final_through is not None else [])]))
         # Capture a manifest before copying; verify every returned artifact locally.
         manifest_code="from pathlib import Path; import hashlib,json; p=Path("+repr(temp+'/results')+"); print(json.dumps({x.name:hashlib.sha256(x.read_bytes()).hexdigest() for x in p.iterdir() if x.is_file()}))"
         hashes=json.loads(ssh(shlex.quote(PYTHON)+' -B -c '+shlex.quote(manifest_code),capture_output=True,text=True).stdout)
@@ -51,5 +51,5 @@ def run(images,destination):
 
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('images',nargs='+');p.add_argument('--out',required=True)
-    a=p.parse_args();run(a.images,a.out)
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('images',nargs='*');p.add_argument('--out',required=True);p.add_argument('--final-through',type=int)
+    a=p.parse_args();run(a.images,a.out,a.final_through)

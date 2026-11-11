@@ -42,7 +42,15 @@ python3 focus/run_remote.py \
 
 `last_remote_run.json` 保存本次远程临时路径、SHA256和清理状态。中断/断网时检查 `cleaned`；若为false，只处理该记录中的确切临时目录，不清理其他任务。
 
-结果包括：逐源CSV、逐帧JSON、全场尺寸图、固定31×31像素源切图、`comparison.json`、`comparison.png`、`RESULTS.md`。结果保持 provisional，拍摄结束范围必须由现场确认，不能靠一段时间无新文件推断结束。
+结果包括：逐源CSV、逐帧JSON、全场尺寸图、固定31×31像素源切图、`comparison.json`、`comparison.png`、`RESULTS.md`。未指定范围时结果保持 provisional，最终比较范围必须由现场确认，不能靠一段时间无新文件推断结束。用户已确认本次用到0088，最终选择0083。
+
+仅按已测数据定稿（不重测FITS）：
+
+```bash
+python3 focus/run_remote.py --out focus/results/20261111 --final-through 88
+```
+
+定稿要求源表序号连续、末帧等于指定值、所有帧都能排序；在服务器临时目录重算比较、校验传回并清理。
 
 ## 验证
 
