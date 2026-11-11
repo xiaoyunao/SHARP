@@ -1,0 +1,19 @@
+{
+  "samples": 12,
+  "complete_TPV": true,
+  "origin_zero_reconstruction_max_pix": 4.718235516537631e-10,
+  "dense_boundary_roundtrip_max_pix": 6.791790650988544e-10,
+  "transported_quality_all_pass": true,
+  "minimum_transported_edge_pix": 593.3924163749259,
+  "actual_science_mask": null,
+  "template_common_region": null,
+  "pointing_repeatability": null,
+  "hardware_PA_zero_certified": false,
+  "formal_freeze_ready": false,
+  "missing_inputs": [
+    "full detector bad-pixel/vignette mask",
+    "template common crop",
+    "repeated-pointing and PA range at TJN low/high declination"
+  ],
+  "evidence_sha256": "dc99a2d7eb31755b6cad18f1e834beb0b490207cf0ca94ff536f30fb08e0869b"
+}

@@ -1,0 +1,21 @@
+{
+  "reviewed_repository": "https://github.com/xiaoyunao/SHARP",
+  "branch": "codex/twilight-trojan",
+  "user_reference_commit": "9734af0a04253bf3e7f2caccc68c0a87f48bfe06",
+  "reviewed_head": "7747cc1650fdeb255e677e496f50a376a99cb57b",
+  "legacy_B_plan_generation_commit": "4605b372fde47692ddcd66ed809905b07caf05bb",
+  "B_fields_git_blob_sha": "36285286bba0465cdb9cff929cdb45c4db6dd4f4",
+  "B_fields_sha256": "a14ea172d34f3e9fab82a0a83e0987ae53d661d816b337717d1801b26b910bba",
+  "parent_gzip_git_blob_sha": "946b8826e0ce53c15b0abf39238085d9506bea4a",
+  "parent_gzip_sha256": "2b8f74b31b8115adc223ffc17f901de4b52adea7e558e5729ae7aca23c7dfb92",
+  "source_scope": "Frozen parent screening and legacy B pointings. Some UTF-8 input copies may have a normalized trailing newline; original Git blob is stated only for byte-exact binary/CSV files.",
+  "cloud_association": "union(core,secondary,anchor) joined to frozen parent instantaneous heliocentric longitude cloud_proxy",
+  "new_computation": "constant-Dec closed-RA mother grid, legacy nominal footprint envelope selection, independent nominal TAN audit",
+  "not_included": [
+    "full 1063 annual Horizons time-series caches",
+    "measured image WCS and effective CCD/template masks",
+    "telescope executable observation list"
+  ],
+  "repo_modified": false,
+  "project_builtin_memory_modified": false
+}

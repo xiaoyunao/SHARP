@@ -1,0 +1,6 @@
+# Preserve the supplied archive byte-for-byte for its SHA256 manifest.
+# Source CSV CRLF and source terminal blank lines are intentional provenance.
+* -text whitespace=blank-at-eol,space-before-tab,cr-at-eol,-blank-at-eof
+*.pdf binary
+*.png binary
+*.gz binary

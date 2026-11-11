@@ -1,0 +1,23 @@
+{
+  "field_id_unique": true,
+  "cell_id_unique": true,
+  "declination_rows_exact": true,
+  "closed_ra_rows": true,
+  "north_orientation_all_zero": true,
+  "all_rows_explicit_proposal": true,
+  "catalog_counts": {
+    "L4": 241,
+    "L5": 281
+  },
+  "geometry_script_reproduced": true,
+  "association_outputs_reproduced": {
+    "tjn_B_field_nights_with_cloud.csv": true,
+    "tjn_B_unique_fields_with_cloud.csv": true,
+    "tjn_annual_candidates_1063.csv": true,
+    "tjn_parent_screening_16445.csv": true,
+    "tjn_special_16_cloud_labels.csv": true
+  },
+  "nominal_seed_test_points": 368063,
+  "nominal_uncovered_points": 0,
+  "figure_review": "Both PNGs inspected; clipped labels corrected in the local test-field close-up."
+}

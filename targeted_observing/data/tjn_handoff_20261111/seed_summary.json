@@ -1,0 +1,68 @@
+{
+  "status": "PROPOSAL_NOT_FROZEN",
+  "planning_start": "2026-11-01",
+  "planning_stop_exclusive": "2027-11-01",
+  "source_commit": "9734af0a04253bf3e7f2caccc68c0a87f48bfe06",
+  "latest_reviewed_commit": "7747cc1650fdeb255e677e496f50a376a99cb57b",
+  "source_B_generation_commit": "4605b372fde47692ddcd66ed809905b07caf05bb",
+  "input_sha256": "26397545c29b3de7d8d179be4cfa1ddc31953ab8defce3520771ed3175ac2f39",
+  "grid": {
+    "dec_anchor_deg": 0.0,
+    "ra_anchor_deg": 0.0,
+    "nominal_dec_step_deg": 2.67496,
+    "nominal_east_west_pitch_deg": 2.67264,
+    "row_columns": "ceil(360*cos(dec_row)/east_west_pitch)",
+    "ra_step": "360/row_columns",
+    "ra_centers": "k*ra_step",
+    "pa_deg": 0.0,
+    "nominal_detector_arcsec_per_pixel": 1.15,
+    "mp_reference_arcsec_per_pixel": 1.16
+  },
+  "counts": {
+    "L4": 241,
+    "L5": 281
+  },
+  "legacy_fields": 383,
+  "nominal_coverage_audit": {
+    "legacy_footprint_test_points": 368063,
+    "uncovered_points": 0,
+    "minimum_sampled_edge_margin_x_arcmin": 5.759070753920306,
+    "minimum_sampled_edge_margin_y_arcmin": 7.481787973051593,
+    "scope": "31x31 samples per legacy nominal spherical-offset footprint, ideal 1.15-arcsec TAN new footprints; no real WCS or target ephemerides"
+  },
+  "tonight_test": {
+    "legacy_field_id": "AF_148ecdaae5",
+    "legacy_name": "TJ_test",
+    "legacy_ra_deg": 79.002262,
+    "legacy_dec_deg": 23.719287,
+    "proposed_nearby_field_id": "TJL5_169",
+    "proposed_ra_deg": 79.02439024390243,
+    "proposed_dec_deg": 24.07464,
+    "target_ids": [
+      "17365",
+      "4722"
+    ],
+    "target_containment_verified": false
+  },
+  "limitations": [
+    "Seed only: covers legacy B footprint envelopes, not all 1063 annual candidate tracks.",
+    "cloud_proxy is inherited instantaneous heliocentric longitude proxy; no new resonance classification.",
+    "Proposed field IDs are not frozen and must not replace tonight executable list.",
+    "Actual usable WCS, pointing repeatability, PA and template masks were not available.",
+    "Field coverage is not number of successful lightcurves or recovered periods."
+  ],
+  "regions": {
+    "L4": {
+      "ra_center_min_deg": 176.94915254237287,
+      "ra_center_max_deg": 245.33333333333331,
+      "dec_center_min_deg": -16.04976,
+      "dec_center_max_deg": 34.77448
+    },
+    "L5": {
+      "ra_center_min_deg": 34.666666666666664,
+      "ra_center_max_deg": 132.0,
+      "dec_center_min_deg": -10.69984,
+      "dec_center_max_deg": 56.17416
+    }
+  }
+}

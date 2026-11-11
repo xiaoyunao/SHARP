@@ -1,0 +1,16 @@
+{
+  "input_exposures_sha256": "6ca3d37dfaca60615efa4f367340d5b19216a44f2b8b377fb767efce90a1726e",
+  "controller_sha256": "e43db50712f924f382b9f776f62d825abca5d8dc54d46e598427b29daf78147b",
+  "historical_identity": "TJ_test / AF_148ecdaae5",
+  "original_centre": [
+    79.002262,
+    23.719287
+  ],
+  "nearby_new_field": {
+    "field_id": "TJL5_468",
+    "ra_deg": 79.69465648854963,
+    "dec_deg": 25.0,
+    "grid_cell_id": "EQ25-v1_R+010_C029"
+  },
+  "comparison": "nominal TAN model; historical images keep original geometry; no executable file changes"
+}

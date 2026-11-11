@@ -1,0 +1,18 @@
+object_id,name,original_review_tier,annual_parent_member,nominal_V_min_proxy,anchor_menu_eligible_nights,free_menu_eligible_nights,selection_gate_reason,periods_h,tags
+17365,Thymbraeus,A: 建议年度加强,True,17.147,91,99,"eligible; competition, task precision and budget decide actual sampling","[12.671821, 12.672607]","[""high_amplitude"", ""bilobate_shape"", ""model_validation""]"
+22180,Paeon,A: 建议年度加强,True,16.664,111,111,"eligible; competition, task precision and budget decide actual sampling","[19.39, 26.1284]","[""period_discrepancy""]"
+5012,Eurymedon,A: 建议年度加强,True,17.852,101,106,"eligible; competition, task precision and budget decide actual sampling","[16.69, 33.369376]","[""published_period_discrepancy"", ""factor_two""]"
+7543,Prylis,A: 建议年度加强,True,17.86,78,80,"eligible; competition, task precision and budget decide actual sampling","[17.8, 763.739412]","[""published_period_discrepancy"", ""very_slow_model""]"
+5511,Cloanthus,A: 建议年度加强,True,17.808,77,97,"eligible; competition, task precision and budget decide actual sampling","[322.77335, 336.0]","[""slow_rotator"", ""model_validation""]"
+4902,Thessandrus,A: 建议年度加强,True,16.81,97,100,"eligible; competition, task precision and budget decide actual sampling","[738.0, 510.0]","[""very_slow_rotator"", ""tumbling_candidate""]"
+617,Patroclus–Menoetius,A: 建议年度加强,True,15.173,135,135,"eligible; competition, task precision and budget decide actual sampling","[102.873, 103.09]","[""resolved_binary"", ""lucy"", ""event_conditional""]"
+21900,Orus,B: 需精确几何/精度后定,True,16.969,0,0,no whole-footprint/Moon/bright-star-safe two-hour interval,[13.48619],"[""lucy"", ""known_shape""]"
+15094,Polymele,B: 需精确几何/精度后定,True,18.918,0,0,no whole-footprint/Moon/bright-star-safe two-hour interval,"[5.762, 5.8607]","[""lucy"", ""low_amplitude"", ""event_conditional""]"
+13383,1998 XS31,C: 本年度不纳入主计划,True,18.475,0,0,no whole-footprint/Moon/bright-star-safe two-hour interval,[2.926],"[""fast_rotator""]"
+38615,2000 AV121,C: 本年度不纳入主计划,False,,0,0,outside unchanged annual preselection,[4.259],"[""fast_rotator""]"
+228155,2009 SF61,C: 本年度不纳入主计划,False,,0,0,outside unchanged annual preselection,[4.749],"[""fast_rotator""]"
+624,Hektor,C: 本年度不纳入主计划,True,14.366,0,0,no whole-footprint/Moon/bright-star-safe two-hour interval,[6.921],"[""high_amplitude"", ""bilobate_primary"", ""satellite""]"
+3548,Eurybates,C: 本年度不纳入主计划,True,16.937,0,0,no whole-footprint/Moon/bright-star-safe two-hour interval,[8.7027283],"[""lucy"", ""known_shape""]"
+11351,Leucus,C: 本年度不纳入主计划,True,18.143,0,0,no whole-footprint/Moon/bright-star-safe two-hour interval,[445.683],"[""lucy"", ""very_slow_rotator""]"
+5284,Orsilocus,B: 精度验证后的第二批候选,True,17.451,120,120,"eligible; competition, task precision and budget decide actual sampling","[7.847, 15.677923, 10.31]","[""period_conflict_review"", ""low_amplitude"", ""model_validation""]"
+

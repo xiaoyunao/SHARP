@@ -1,5 +1,19 @@
 # 晨昏搜寻 + 木星特洛伊监测（本地研发模式）
 
+## TJN 长期固定场（候选发行版）
+
+固定场库为L4 466场、L5 768场；采用2.50°恒Dec行和逐行RA投影，目标按星历跨场，ID/中心/方向不随campaign重定心。见[完整报告与图件](docs/tjn_fixed_20261111/REPORT.md)、[长期项目备忘](docs/PROJECT_MEMORY.md)。场库已通过全年名义覆盖和本地TPV情景检查；真实科学遮罩、模板公共裁边与指向/PA重复性未验收，正式冻结尚未完成。
+
+```python
+from targeted_observing.fixed_fields import FixedFields, REGISTRY_PATH
+catalog = FixedFields.read(REGISTRY_PATH)
+fields = catalog.locate([79.0], [23.7], quality=True)  # 全部重叠质量模型场
+# catalog.at(tracks, unix_seconds) 查询当时对象成员，不改静态场中心。
+```
+
+本地复现入口依次为`fixed_field_build`、`fixed_field_wcs`、`fixed_trojan`、`fixed_field_audit`、`fixed_field_report`；均用`python3 -m targeted_observing.<模块>`运行。依赖沿用现有requirements；build需要已冻结年度缓存，可用`--reuse-samples`复用已核验缓存。默认读取已有注册表保持ID；新区域追加需显式`--release`新标识，不允许改已有网格几何。
+
+本模块不生成今晚可执行列表。旧`TJ_test`中的17365/4722在新网格分属两个场，不能直接替换今晚中心。完整CSV/FITS/动态表/图件/ZIP位于`products/tjn_fixed_20261111/`，正式基准JSON保存在`data/tjn_fixed_20261111/`。
 
 ## 今晚完整脚本（2026-11-11）
 

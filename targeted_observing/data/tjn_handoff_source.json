@@ -1,0 +1,10 @@
+{
+  "source_zip_name": "SHARP_TJN_fixed_fields_20261111.zip",
+  "source_zip_sha256": "063ba7cce5f3015144482d6cf57c462527f27a4eb63a61bb38727be37b227242",
+  "conversation_id": "6af40326-f85c-83ea-b157-767815703447",
+  "conversation_title": "固定TJN观测天区 pipeline",
+  "read_turns": 1,
+  "handoff_files_verified": 32,
+  "task_scope": "TJN fixed fields only; tonight script untouched",
+  "baseline_commit": "7747cc1650fdeb255e677e496f50a376a99cb57b"
+}

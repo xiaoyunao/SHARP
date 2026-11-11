@@ -1,0 +1,5 @@
+period,object_id,new_nearby_field_id,samples,new_same_field_quality_fraction,old_nominal_model_quality_fraction,new_same_field_minimum_edge_deg,visible_samples,visible_same_field_quality_fraction,any_fixed_field_quality_fraction,all_fields_json
+tonight,17365,TJL5_468,102,0.0,1.0,-0.9184052564120462,102,0.0,1.0,"[""TJL5_436""]"
+tonight,4722,TJL5_468,102,1.0,1.0,1.17389895357723,102,1.0,1.0,"[""TJL5_468""]"
+35days,17365,TJL5_468,1680,0.0,0.20238095238095238,-3.9421106620124546,589,0.0,1.0,"[""TJL5_434"", ""TJL5_435"", ""TJL5_436""]"
+35days,4722,TJL5_468,1680,0.26904761904761904,0.4089285714285714,-3.3709547651111795,606,0.2376237623762376,1.0,"[""TJL5_466"", ""TJL5_467"", ""TJL5_468""]"

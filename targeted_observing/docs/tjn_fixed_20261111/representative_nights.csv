@@ -1,0 +1,5 @@
+date,case,fields,field_ids,exposures,exposure_s,slew_s,readout_s,unique_targets,min_dec_deg,max_dec_deg,passed,reason
+2026-12-15,L5_winter,4,TJL5_489;TJL5_466;TJL5_302;TJL5_271,40,4800,1080.4588707863852,600.0,10,10.0,27.5,True,
+2027-04-15,L4_spring,4,TJL4_160;TJL4_151;TJL4_214;TJL4_117,40,4800,1296.8043954307448,600.0,13,-10.0,0.0,True,
+2027-09-15,season_transition,4,TJL5_498;TJL5_401;TJL5_370;TJL5_736,40,4800,1341.7925880469782,600.0,4,17.5,50.0,True,
+2027-01-15,high_declination,4,TJL5_643;TJL5_708;TJL5_751;TJL5_640,40,4800,1200.0,600.0,4,40.0,52.5,True,

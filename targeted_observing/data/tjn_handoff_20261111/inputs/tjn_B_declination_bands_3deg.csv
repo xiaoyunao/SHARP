@@ -1,0 +1,39 @@
+cloud_proxy,dec_band_min_deg,dec_band_max_deg,unique_fields,field_nights,ra_min_deg,ra_max_deg,ra_groups_gap_gt10deg_json,group_note
+L4,-15,-12,9,28,206.51823,226.781238,"[[206.51823, 226.781238]]",Descriptive split at gaps >10 deg in selected centres; not a science coverage boundary
+L4,-12,-9,16,39,196.184425,225.332367,"[[196.184425, 225.332367]]",Descriptive split at gaps >10 deg in selected centres; not a science coverage boundary
+L4,-9,-6,36,99,193.133159,236.43454,"[[193.133159, 236.43454]]",Descriptive split at gaps >10 deg in selected centres; not a science coverage boundary
+L4,-6,-3,28,100,200.765447,219.19151,"[[200.765447, 219.19151]]",Descriptive split at gaps >10 deg in selected centres; not a science coverage boundary
+L4,-3,0,34,113,183.69534,244.77592,"[[183.69534, 228.047364], [241.98043, 244.77592]]",Descriptive split at gaps >10 deg in selected centres; not a science coverage boundary
+L4,0,3,10,36,201.882813,230.27789,"[[201.882813, 214.601748], [230.27789, 230.27789]]",Descriptive split at gaps >10 deg in selected centres; not a science coverage boundary
+L4,3,6,10,25,198.14964,223.57485,"[[198.14964, 200.00995], [212.951831, 223.57485]]",Descriptive split at gaps >10 deg in selected centres; not a science coverage boundary
+L4,6,9,11,45,211.880244,241.23267,"[[211.880244, 217.08395], [231.63809, 241.23267]]",Descriptive split at gaps >10 deg in selected centres; not a science coverage boundary
+L4,9,12,10,22,208.163257,239.66611,"[[208.163257, 210.449816], [221.102609, 221.193008], [231.787298, 239.66611]]",Descriptive split at gaps >10 deg in selected centres; not a science coverage boundary
+L4,12,15,5,9,196.36395,220.865005,"[[196.36395, 220.865005]]",Descriptive split at gaps >10 deg in selected centres; not a science coverage boundary
+L4,15,18,4,8,188.55657,197.92952,"[[188.55657, 197.92952]]",Descriptive split at gaps >10 deg in selected centres; not a science coverage boundary
+L4,18,21,4,11,195.14152,202.8566,"[[195.14152, 202.8566]]",Descriptive split at gaps >10 deg in selected centres; not a science coverage boundary
+L4,21,24,7,31,187.56754,233.17134,"[[187.56754, 187.56754], [209.99553, 210.5365], [230.74274, 233.17134]]",Descriptive split at gaps >10 deg in selected centres; not a science coverage boundary
+L4,24,27,2,2,206.80966,212.29782,"[[206.80966, 212.29782]]",Descriptive split at gaps >10 deg in selected centres; not a science coverage boundary
+L4,27,30,3,9,210.07525,210.89781,"[[210.07525, 210.89781]]",Descriptive split at gaps >10 deg in selected centres; not a science coverage boundary
+L4,30,33,5,16,179.95186,217.28066,"[[179.95186, 185.00723], [217.28066, 217.28066]]",Descriptive split at gaps >10 deg in selected centres; not a science coverage boundary
+L4,33,36,5,26,209.3522,214.08299,"[[209.3522, 214.08299]]",Descriptive split at gaps >10 deg in selected centres; not a science coverage boundary
+L5,-12,-9,1,1,85.36547,85.36547,"[[85.36547, 85.36547]]",Descriptive split at gaps >10 deg in selected centres; not a science coverage boundary
+L5,-9,-6,2,2,88.91352,103.31888,"[[88.91352, 88.91352], [103.31888, 103.31888]]",Descriptive split at gaps >10 deg in selected centres; not a science coverage boundary
+L5,-6,-3,5,8,40.64902,106.1702,"[[40.64902, 40.64902], [56.631239, 60.39701], [97.23489, 106.1702]]",Descriptive split at gaps >10 deg in selected centres; not a science coverage boundary
+L5,-3,0,3,3,55.91478,97.756463,"[[55.91478, 55.91478], [94.308862, 97.756463]]",Descriptive split at gaps >10 deg in selected centres; not a science coverage boundary
+L5,0,3,5,12,57.306144,98.63661,"[[57.306144, 62.750043], [98.63661, 98.63661]]",Descriptive split at gaps >10 deg in selected centres; not a science coverage boundary
+L5,3,6,2,2,35.8066,98.87523,"[[35.8066, 35.8066], [98.87523, 98.87523]]",Descriptive split at gaps >10 deg in selected centres; not a science coverage boundary
+L5,6,9,4,16,47.796868,84.796955,"[[47.796868, 49.196407], [84.796955, 84.796955]]",Descriptive split at gaps >10 deg in selected centres; not a science coverage boundary
+L5,9,12,22,63,51.56775,85.613182,"[[51.56775, 51.56775], [63.060459, 85.613182]]",Descriptive split at gaps >10 deg in selected centres; not a science coverage boundary
+L5,12,15,20,36,61.523756,126.53169,"[[61.523756, 83.03131], [95.402556, 95.402556], [111.294897, 111.294897], [125.21381, 126.53169]]",Descriptive split at gaps >10 deg in selected centres; not a science coverage boundary
+L5,15,18,19,61,46.53333,114.18433,"[[46.53333, 49.24404], [76.748721, 79.557371], [112.27773, 114.18433]]",Descriptive split at gaps >10 deg in selected centres; not a science coverage boundary
+L5,18,21,24,64,39.68817,98.005279,"[[39.68817, 39.68817], [67.382737, 98.005279]]",Descriptive split at gaps >10 deg in selected centres; not a science coverage boundary
+L5,21,24,12,32,45.29802,118.045544,"[[45.29802, 45.29802], [69.17096, 79.002262], [97.383944, 100.111707], [118.045544, 118.045544]]",Descriptive split at gaps >10 deg in selected centres; not a science coverage boundary
+L5,24,27,16,57,44.036518,120.377515,"[[44.036518, 44.036518], [69.589328, 78.7887], [89.375842, 97.91319], [120.377515, 120.377515]]",Descriptive split at gaps >10 deg in selected centres; not a science coverage boundary
+L5,27,30,8,21,44.426861,89.592076,"[[44.426861, 47.386248], [63.891536, 70.170892], [87.136902, 89.592076]]",Descriptive split at gaps >10 deg in selected centres; not a science coverage boundary
+L5,30,33,10,31,46.222204,93.06174,"[[46.222204, 51.672232], [66.070603, 93.06174]]",Descriptive split at gaps >10 deg in selected centres; not a science coverage boundary
+L5,33,36,5,14,47.54921,88.49712,"[[47.54921, 51.60278], [85.894385, 88.49712]]",Descriptive split at gaps >10 deg in selected centres; not a science coverage boundary
+L5,36,39,5,11,72.71773,89.868348,"[[72.71773, 72.71773], [82.94149, 89.868348]]",Descriptive split at gaps >10 deg in selected centres; not a science coverage boundary
+L5,39,42,10,36,56.324835,124.05,"[[56.324835, 63.631662], [86.538077, 86.538077], [123.00989, 124.05]]",Descriptive split at gaps >10 deg in selected centres; not a science coverage boundary
+L5,48,51,7,31,90.8198,128.52033,"[[90.8198, 92.97846], [125.15708, 128.52033]]",Descriptive split at gaps >10 deg in selected centres; not a science coverage boundary
+L5,51,54,3,8,93.79793,94.9796,"[[93.79793, 94.9796]]",Descriptive split at gaps >10 deg in selected centres; not a science coverage boundary
+L5,54,57,1,2,94.88987,94.88987,"[[94.88987, 94.88987]]",Descriptive split at gaps >10 deg in selected centres; not a science coverage boundary

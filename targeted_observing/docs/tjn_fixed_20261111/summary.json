@@ -1,0 +1,29 @@
+{
+  "status": "nominal RC identities stable; formal instrument release pending masks/PA/repeatability",
+  "counts": {
+    "L4": 466,
+    "L5": 768
+  },
+  "objects": 1063,
+  "with_strict_visible_samples": 527,
+  "with_core_samples": 253,
+  "visible_samples": 534753,
+  "covered_visible_samples": 534753,
+  "conservative_envelope_samples": 658882,
+  "proposed_pitch_quality_loss_samples": 18314,
+  "grid": {
+    "sx": 2.5,
+    "sy": 2.5,
+    "version": "EQ25-v1",
+    "width": 2.944,
+    "margin": 0.15,
+    "guard": 0.01
+  },
+  "nominal_min_cell_edge_deg": 0.1893310722564452,
+  "geometry_certification": "nominal cell union + transported measured WCS checks; actual masks and repeated pointing still unknown",
+  "quality_yield": "not recomputed; legacy B lightcurve/period yields do not apply",
+  "r_template_count": 1234,
+  "griz_template_count": 4936,
+  "mean_active_simultaneous_assigned_objects": 1.231653135256521,
+  "median_object_field_changes_visible_sample": 5.0
+}

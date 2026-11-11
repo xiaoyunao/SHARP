@@ -1,0 +1,3755 @@
+{
+  "audit_kind": "independent_nominal_TAN_geometry_only",
+  "measured_image_WCS_used": false,
+  "production_source_modified": false,
+  "numpy_version": "2.3.5",
+  "script_sha256": "e8eda5760f5a26154ebc413b6629a75d49ea76e5dbcb53a68f64b4d06b0d25b1",
+  "mp_source_audit": {
+    "local_path": "/workspace/scratch/65f6f51d97d2/sharp_source/targeted_observing/data/mp_footprints.json",
+    "local_sha256": "20e1feb1147351b5f3e90f60efc99ff31b1a7579cfc67e3ff96f68c09e4d4bf6",
+    "upstream_source_path": "/pipeline/xiaoyunao/survey/footprints/survey_fov_footprints_with_visibility.fits",
+    "upstream_source_sha256": "13f394877ce26e50e5cee5053a4ad845f412be4520421e46931b3e157d9e0225",
+    "upstream_retrieved_at": "2026-11-09T17:30:02.185999+08:00",
+    "field_count": 1855,
+    "dec_min_deg": -41.95197822234299,
+    "dec_max_deg": 39.698580366208496,
+    "distinct_dec_count": 1855,
+    "rectangle_width_cosdec_median_deg": 2.9696,
+    "rectangle_height_median_deg": 2.9721777777777785,
+    "inferred_nominal_scale_x_arcsec_per_pix": 1.16,
+    "inferred_nominal_scale_y_arcsec_per_pix": 1.1589948006932411,
+    "equivalent_width_pixels_at_1p16_arcsec": 9216.0,
+    "equivalent_height_pixels_at_1p16_arcsec": 9224.000000000002,
+    "height_difference_from_9232_pixels_at_1p16_arcsec": 7.999999999998181,
+    "ninety_percent_width_deg": 2.67264,
+    "ninety_percent_height_deg": 2.674960000000001,
+    "nearest_center_separation_min_deg": 0.4241192706061144,
+    "nearest_center_separation_median_deg": 2.6726201185022562,
+    "nearest_center_separation_max_deg": 2.672909866260129,
+    "caution": "MP corners are RA-Dec rectangle approximations; not measured WCS. RA differences were wrapped before measuring widths. At 1.16 arcsec/pixel the stored height implies 9224 pixels, eight fewer than the assumed 9232-pixel nominal model; the reason for this discrepancy is not inferred."
+  },
+  "grid_definition": {
+    "ra_anchor_deg": 0.0,
+    "dec_anchor_deg": 0.0,
+    "nominal_east_west_pitch_deg": 2.67264,
+    "constant_dec_pitch_deg": 2.67496,
+    "full_ring_formula": "N_j=ceil(360*cos(dec_j)/2.67264); ra_jk=k*360/N_j",
+    "center_dec_formula": "dec_j=j*2.67496",
+    "requested_center_dec_range_deg": [
+      -26.0,
+      57.0
+    ],
+    "center_in_range_row_indices": [
+      -9,
+      21
+    ],
+    "cell_intersects_requested_range_row_indices": [
+      -10,
+      21
+    ],
+    "orientation": "local north-up PA=0; detector x may be mirrored",
+    "boundary_samples_per_edge": 2049,
+    "detector_pixel_shape_xy": [
+      9216,
+      9232
+    ]
+  },
+  "summary_center_in_range": {
+    "nominal_1.15_arcsec_per_pix": {
+      "row_count": 31,
+      "worst_row_index": 21,
+      "worst_center_dec_deg": 56.17416,
+      "minimum_any_edge_margin_deg": 0.08945692818246709,
+      "minimum_any_edge_margin_arcmin": 5.367415690948025,
+      "minimum_any_edge_margin_pixels": 280.0390795277231,
+      "all_nominal_uncropped_cells_covered": true,
+      "rows_passing_0p15_deg_per_edge_crop": 0
+    },
+    "nominal_1.16_arcsec_per_pix": {
+      "row_count": 31,
+      "worst_row_index": 21,
+      "worst_center_dec_deg": 56.17416,
+      "minimum_any_edge_margin_deg": 0.10225692818246701,
+      "minimum_any_edge_margin_arcmin": 6.135415690948021,
+      "minimum_any_edge_margin_pixels": 317.34908746282866,
+      "all_nominal_uncropped_cells_covered": true,
+      "rows_passing_0p15_deg_per_edge_crop": 0
+    }
+  },
+  "rows_center_in_range": [
+    {
+      "row_index": -9,
+      "center_dec_deg": -24.07464,
+      "cell_dec_min_deg": -25.412119999999998,
+      "cell_dec_max_deg": -22.73716,
+      "n_ra_full_circle": 123,
+      "ra_pitch_deg": 2.926829268292683,
+      "local_parallel_pitch_deg": 2.6722385010771523,
+      "great_circle_center_separation_deg": 2.6721901429798867,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3502811761745968,
+        "maximum_abs_tan_y_deg": 1.3449723977638999,
+        "minimum_denominator": 0.9994529041912068,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.4634146341463414,
+          "dec_deg": -22.73716
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.4634146341463414,
+          "dec_deg": -25.412119999999998
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.12171882382540322,
+          "minimum_y_edge_margin_deg": 0.12958315779165552,
+          "minimum_any_edge_margin_deg": 0.12171882382540322,
+          "minimum_x_edge_margin_arcmin": 7.303129429524193,
+          "minimum_y_edge_margin_arcmin": 7.774989467499331,
+          "minimum_x_edge_margin_pixels": 381.0328398012623,
+          "minimum_y_edge_margin_pixels": 405.65162439126954,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.028281176174596773
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.13451882382540314,
+          "minimum_y_edge_margin_deg": 0.1424053800138778,
+          "minimum_any_edge_margin_deg": 0.13451882382540314,
+          "minimum_x_edge_margin_arcmin": 8.071129429524188,
+          "minimum_y_edge_margin_arcmin": 8.544322800832669,
+          "minimum_x_edge_margin_pixels": 417.47221187194083,
+          "minimum_y_edge_margin_pixels": 441.94773107755185,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.01548117617459685
+        }
+      }
+    },
+    {
+      "row_index": -8,
+      "center_dec_deg": -21.39968,
+      "cell_dec_min_deg": -22.73716,
+      "cell_dec_max_deg": -20.0622,
+      "n_ra_full_circle": 126,
+      "ra_pitch_deg": 2.857142857142857,
+      "local_parallel_pitch_deg": 2.660165296298307,
+      "great_circle_center_separation_deg": 2.660128594449482,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3424784641067342,
+        "maximum_abs_tan_y_deg": 1.344076331221467,
+        "minimum_denominator": 0.9994557249120477,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.4285714285714286,
+          "dec_deg": -20.0622
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.4285714285714286,
+          "dec_deg": -22.73716
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.12952153589326576,
+          "minimum_y_edge_margin_deg": 0.13047922433408843,
+          "minimum_any_edge_margin_deg": 0.12952153589326576,
+          "minimum_x_edge_margin_arcmin": 7.771292153595946,
+          "minimum_y_edge_margin_arcmin": 7.828753460045306,
+          "minimum_x_edge_margin_pixels": 405.4587210571798,
+          "minimum_y_edge_margin_pixels": 408.45670226323335,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.020478464106734234
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.14232153589326568,
+          "minimum_y_edge_margin_deg": 0.14330144655631072,
+          "minimum_any_edge_margin_deg": 0.14232153589326568,
+          "minimum_x_edge_margin_arcmin": 8.539292153595941,
+          "minimum_y_edge_margin_arcmin": 8.598086793378643,
+          "minimum_x_edge_margin_pixels": 441.687525185997,
+          "minimum_y_edge_margin_pixels": 444.7286272437229,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.007678464106734312
+        }
+      }
+    },
+    {
+      "row_index": -7,
+      "center_dec_deg": -18.72472,
+      "cell_dec_min_deg": -20.0622,
+      "cell_dec_max_deg": -17.387240000000002,
+      "n_ra_full_circle": 128,
+      "ra_pitch_deg": 2.8125,
+      "local_parallel_pitch_deg": 2.663639613545403,
+      "great_circle_center_separation_deg": 2.663612048092288,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.342590596067972,
+        "maximum_abs_tan_y_deg": 1.343287956726949,
+        "minimum_denominator": 0.9994553476936322,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.40625,
+          "dec_deg": -17.387240000000002
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.40625,
+          "dec_deg": -20.0622
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.12940940393202793,
+          "minimum_y_edge_margin_deg": 0.1312675988286065,
+          "minimum_any_edge_margin_deg": 0.12940940393202793,
+          "minimum_x_edge_margin_arcmin": 7.764564235921676,
+          "minimum_y_edge_margin_arcmin": 7.87605592971639,
+          "minimum_x_edge_margin_pixels": 405.10769926547874,
+          "minimum_y_edge_margin_pixels": 410.9246572025943,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.02059059606797206
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.14220940393202786,
+          "minimum_y_edge_margin_deg": 0.1440898210508288,
+          "minimum_any_edge_margin_deg": 0.14220940393202786,
+          "minimum_x_edge_margin_arcmin": 8.532564235921672,
+          "minimum_y_edge_margin_arcmin": 8.645389263049728,
+          "minimum_x_edge_margin_pixels": 441.3395294442244,
+          "minimum_y_edge_margin_pixels": 447.17530670946866,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.007790596067972139
+        }
+      }
+    },
+    {
+      "row_index": -6,
+      "center_dec_deg": -16.04976,
+      "cell_dec_min_deg": -17.38724,
+      "cell_dec_max_deg": -14.71228,
+      "n_ra_full_circle": 130,
+      "ra_pitch_deg": 2.769230769230769,
+      "local_parallel_pitch_deg": 2.6612915512694264,
+      "great_circle_center_separation_deg": 2.661271747422731,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3398167885151542,
+        "maximum_abs_tan_y_deg": 1.3424977043278192,
+        "minimum_denominator": 0.9994561497353647,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.3846153846153846,
+          "dec_deg": -14.71228
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.3846153846153846,
+          "dec_deg": -17.38724
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.1321832114848458,
+          "minimum_y_edge_margin_deg": 0.13205785122773617,
+          "minimum_any_edge_margin_deg": 0.13205785122773617,
+          "minimum_x_edge_margin_arcmin": 7.930992689090748,
+          "minimum_y_edge_margin_arcmin": 7.92347107366417,
+          "minimum_x_edge_margin_pixels": 413.79092290908255,
+          "minimum_y_edge_margin_pixels": 413.39849079986976,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.017942148772263827
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.14498321148484572,
+          "minimum_y_edge_margin_deg": 0.14488007344995846,
+          "minimum_any_edge_margin_deg": 0.14488007344995846,
+          "minimum_x_edge_margin_arcmin": 8.698992689090744,
+          "minimum_y_edge_margin_arcmin": 8.692804406997507,
+          "minimum_x_edge_margin_pixels": 449.94789771159026,
+          "minimum_y_edge_margin_pixels": 449.62781415504355,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.005119926550041537
+        }
+      }
+    },
+    {
+      "row_index": -5,
+      "center_dec_deg": -13.3748,
+      "cell_dec_min_deg": -14.71228,
+      "cell_dec_max_deg": -12.037320000000001,
+      "n_ra_full_circle": 132,
+      "ra_pitch_deg": 2.727272727272727,
+      "local_parallel_pitch_deg": 2.6533028513692303,
+      "great_circle_center_separation_deg": 2.653289445146519,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3342498279842698,
+        "maximum_abs_tan_y_deg": 1.341712073734062,
+        "minimum_denominator": 0.9994580886196257,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.3636363636363635,
+          "dec_deg": -12.037320000000001
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.3636363636363635,
+          "dec_deg": -14.71228
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.13775017201573014,
+          "minimum_y_edge_margin_deg": 0.13284348182149341,
+          "minimum_any_edge_margin_deg": 0.13284348182149341,
+          "minimum_x_edge_margin_arcmin": 8.265010320943809,
+          "minimum_y_edge_margin_arcmin": 7.970608909289605,
+          "minimum_x_edge_margin_pixels": 431.21792978837266,
+          "minimum_y_edge_margin_pixels": 415.85785613684897,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.01715651817850658
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.15055017201573007,
+          "minimum_y_edge_margin_deg": 0.1456657040437157,
+          "minimum_any_edge_margin_deg": 0.1456657040437157,
+          "minimum_x_edge_margin_arcmin": 9.033010320943804,
+          "minimum_y_edge_margin_arcmin": 8.739942242622941,
+          "minimum_x_edge_margin_pixels": 467.2246717729554,
+          "minimum_y_edge_margin_pixels": 452.0659780667039,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.00433429595628429
+        }
+      }
+    },
+    {
+      "row_index": -4,
+      "center_dec_deg": -10.69984,
+      "cell_dec_min_deg": -12.03732,
+      "cell_dec_max_deg": -9.36236,
+      "n_ra_full_circle": 133,
+      "ra_pitch_deg": 2.706766917293233,
+      "local_parallel_pitch_deg": 2.6597052135846777,
+      "great_circle_center_separation_deg": 2.659696685987073,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3359564942031938,
+        "maximum_abs_tan_y_deg": 1.3409856662535895,
+        "minimum_denominator": 0.9994570933538178,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.3533834586466165,
+          "dec_deg": -9.36236
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.3533834586466165,
+          "dec_deg": -12.03732
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.13604350579680613,
+          "minimum_y_edge_margin_deg": 0.1335698893019659,
+          "minimum_any_edge_margin_deg": 0.1335698893019659,
+          "minimum_x_edge_margin_arcmin": 8.162610347808368,
+          "minimum_y_edge_margin_arcmin": 8.014193358117954,
+          "minimum_x_edge_margin_pixels": 425.87532249434963,
+          "minimum_y_edge_margin_pixels": 418.1318273800672,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.0164301106980341
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.14884350579680605,
+          "minimum_y_edge_margin_deg": 0.14639211152418818,
+          "minimum_any_edge_margin_deg": 0.14639211152418818,
+          "minimum_x_edge_margin_arcmin": 8.930610347808363,
+          "minimum_y_edge_margin_arcmin": 8.783526691451291,
+          "minimum_x_edge_margin_pixels": 461.92812143836363,
+          "minimum_y_edge_margin_pixels": 454.3203461095495,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.00360788847581181
+        }
+      }
+    },
+    {
+      "row_index": -3,
+      "center_dec_deg": -8.02488,
+      "cell_dec_min_deg": -9.362359999999999,
+      "cell_dec_max_deg": -6.687399999999999,
+      "n_ra_full_circle": 134,
+      "ra_pitch_deg": 2.6865671641791047,
+      "local_parallel_pitch_deg": 2.660259065754996,
+      "great_circle_center_separation_deg": 2.6602543151780735,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.334746434602491,
+        "maximum_abs_tan_y_deg": 1.340252408443438,
+        "minimum_denominator": 0.9994572821939393,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.3432835820895526,
+          "dec_deg": -6.687399999999999
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.3432835820895526,
+          "dec_deg": -9.362359999999999
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.13725356539750888,
+          "minimum_y_edge_margin_deg": 0.13430314711211744,
+          "minimum_any_edge_margin_deg": 0.13430314711211744,
+          "minimum_x_edge_margin_arcmin": 8.235213923850534,
+          "minimum_y_edge_margin_arcmin": 8.058188826727047,
+          "minimum_x_edge_margin_pixels": 429.6633351574191,
+          "minimum_y_edge_margin_pixels": 420.4272431335851,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.015696852887882556
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.1500535653975088,
+          "minimum_y_edge_margin_deg": 0.14712536933433973,
+          "minimum_any_edge_margin_deg": 0.14712536933433973,
+          "minimum_x_edge_margin_arcmin": 9.003213923850527,
+          "minimum_y_edge_margin_arcmin": 8.827522160060383,
+          "minimum_x_edge_margin_pixels": 465.6834788198549,
+          "minimum_y_edge_margin_pixels": 456.59597379622676,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.002874630665660266
+        }
+      }
+    },
+    {
+      "row_index": -2,
+      "center_dec_deg": -5.34992,
+      "cell_dec_min_deg": -6.6874,
+      "cell_dec_max_deg": -4.01244,
+      "n_ra_full_circle": 135,
+      "ra_pitch_deg": 2.6666666666666665,
+      "local_parallel_pitch_deg": 2.6550502418473085,
+      "great_circle_center_separation_deg": 2.655048158154672,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3306655050842482,
+        "maximum_abs_tan_y_deg": 1.3395187228145813,
+        "minimum_denominator": 0.9994586359363966,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.3333333333333333,
+          "dec_deg": -4.01244
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.3333333333333333,
+          "dec_deg": -6.6874
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.14133449491575178,
+          "minimum_y_edge_margin_deg": 0.1350368327409741,
+          "minimum_any_edge_margin_deg": 0.1350368327409741,
+          "minimum_x_edge_margin_arcmin": 8.480069694945108,
+          "minimum_y_edge_margin_arcmin": 8.102209964458446,
+          "minimum_x_edge_margin_pixels": 442.4384188667013,
+          "minimum_y_edge_margin_pixels": 422.7239981456581,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.014963167259025884
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.1541344949157517,
+          "minimum_y_edge_margin_deg": 0.1478590549631964,
+          "minimum_any_edge_margin_deg": 0.1478590549631964,
+          "minimum_x_edge_margin_arcmin": 9.248069694945102,
+          "minimum_y_edge_margin_arcmin": 8.871543297791785,
+          "minimum_x_edge_margin_pixels": 478.3484324971605,
+          "minimum_y_edge_margin_pixels": 458.87292919612685,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.002140945036803593
+        }
+      }
+    },
+    {
+      "row_index": -1,
+      "center_dec_deg": -2.67496,
+      "cell_dec_min_deg": -4.01244,
+      "cell_dec_max_deg": -1.33748,
+      "n_ra_full_circle": 135,
+      "ra_pitch_deg": 2.6666666666666665,
+      "local_parallel_pitch_deg": 2.6637609773936735,
+      "great_circle_center_separation_deg": 2.663760453619809,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3335736773020215,
+        "maximum_abs_tan_y_deg": 1.3388067286845464,
+        "minimum_denominator": 0.9994571644113617,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.3333333333333333,
+          "dec_deg": -1.33748
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.3333333333333333,
+          "dec_deg": -4.01244
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.1384263226979785,
+          "minimum_y_edge_margin_deg": 0.13574882687100898,
+          "minimum_any_edge_margin_deg": 0.13574882687100898,
+          "minimum_x_edge_margin_arcmin": 8.30557936187871,
+          "minimum_y_edge_margin_arcmin": 8.144929612260539,
+          "minimum_x_edge_margin_pixels": 433.3345754023675,
+          "minimum_y_edge_margin_pixels": 424.9528493353325,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.014251173128991018
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.15122632269797842,
+          "minimum_y_edge_margin_deg": 0.14857104909323127,
+          "minimum_any_edge_margin_deg": 0.14857104909323127,
+          "minimum_x_edge_margin_arcmin": 9.073579361878705,
+          "minimum_y_edge_margin_arcmin": 8.914262945593876,
+          "minimum_x_edge_margin_pixels": 469.32307044200206,
+          "minimum_y_edge_margin_pixels": 461.08256615140743,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.0014289509067687278
+        }
+      }
+    },
+    {
+      "row_index": 0,
+      "center_dec_deg": 0.0,
+      "cell_dec_min_deg": -1.33748,
+      "cell_dec_max_deg": 1.33748,
+      "n_ra_full_circle": 135,
+      "ra_pitch_deg": 2.6666666666666665,
+      "local_parallel_pitch_deg": 2.6666666666666665,
+      "great_circle_center_separation_deg": 2.6666666666666665,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3335740708499864,
+        "maximum_abs_tan_y_deg": 1.338085289312928,
+        "minimum_denominator": 0.9994568694638656,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.3333333333333333,
+          "dec_deg": -1.33748
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.3333333333333333,
+          "dec_deg": -1.33748
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.13842592915001362,
+          "minimum_y_edge_margin_deg": 0.13647026624262737,
+          "minimum_any_edge_margin_deg": 0.13647026624262737,
+          "minimum_x_edge_margin_arcmin": 8.305555749000817,
+          "minimum_y_edge_margin_arcmin": 8.188215974557643,
+          "minimum_x_edge_margin_pixels": 433.3333434261296,
+          "minimum_y_edge_margin_pixels": 427.2112682377901,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.013529733757372625
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.15122592915001354,
+          "minimum_y_edge_margin_deg": 0.14929248846484966,
+          "minimum_any_edge_margin_deg": 0.14929248846484966,
+          "minimum_x_edge_margin_arcmin": 9.073555749000812,
+          "minimum_y_edge_margin_arcmin": 8.957549307890979,
+          "minimum_x_edge_margin_pixels": 469.32184908624896,
+          "minimum_y_edge_margin_pixels": 463.32151592539554,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.0007075115351503347
+        }
+      }
+    },
+    {
+      "row_index": 1,
+      "center_dec_deg": 2.67496,
+      "cell_dec_min_deg": 1.33748,
+      "cell_dec_max_deg": 4.01244,
+      "n_ra_full_circle": 135,
+      "ra_pitch_deg": 2.6666666666666665,
+      "local_parallel_pitch_deg": 2.6637609773936735,
+      "great_circle_center_separation_deg": 2.663760453619809,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3335736773020215,
+        "maximum_abs_tan_y_deg": 1.3388067286845464,
+        "minimum_denominator": 0.9994571644113617,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.3333333333333333,
+          "dec_deg": 1.33748
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.3333333333333333,
+          "dec_deg": 4.01244
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.1384263226979785,
+          "minimum_y_edge_margin_deg": 0.13574882687100898,
+          "minimum_any_edge_margin_deg": 0.13574882687100898,
+          "minimum_x_edge_margin_arcmin": 8.30557936187871,
+          "minimum_y_edge_margin_arcmin": 8.144929612260539,
+          "minimum_x_edge_margin_pixels": 433.3345754023675,
+          "minimum_y_edge_margin_pixels": 424.9528493353325,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.014251173128991018
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.15122632269797842,
+          "minimum_y_edge_margin_deg": 0.14857104909323127,
+          "minimum_any_edge_margin_deg": 0.14857104909323127,
+          "minimum_x_edge_margin_arcmin": 9.073579361878705,
+          "minimum_y_edge_margin_arcmin": 8.914262945593876,
+          "minimum_x_edge_margin_pixels": 469.32307044200206,
+          "minimum_y_edge_margin_pixels": 461.08256615140743,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.0014289509067687278
+        }
+      }
+    },
+    {
+      "row_index": 2,
+      "center_dec_deg": 5.34992,
+      "cell_dec_min_deg": 4.01244,
+      "cell_dec_max_deg": 6.6874,
+      "n_ra_full_circle": 135,
+      "ra_pitch_deg": 2.6666666666666665,
+      "local_parallel_pitch_deg": 2.6550502418473085,
+      "great_circle_center_separation_deg": 2.655048158154672,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3306655050842482,
+        "maximum_abs_tan_y_deg": 1.3395187228145813,
+        "minimum_denominator": 0.9994586359363966,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.3333333333333333,
+          "dec_deg": 4.01244
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.3333333333333333,
+          "dec_deg": 6.6874
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.14133449491575178,
+          "minimum_y_edge_margin_deg": 0.1350368327409741,
+          "minimum_any_edge_margin_deg": 0.1350368327409741,
+          "minimum_x_edge_margin_arcmin": 8.480069694945108,
+          "minimum_y_edge_margin_arcmin": 8.102209964458446,
+          "minimum_x_edge_margin_pixels": 442.4384188667013,
+          "minimum_y_edge_margin_pixels": 422.7239981456581,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.014963167259025884
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.1541344949157517,
+          "minimum_y_edge_margin_deg": 0.1478590549631964,
+          "minimum_any_edge_margin_deg": 0.1478590549631964,
+          "minimum_x_edge_margin_arcmin": 9.248069694945102,
+          "minimum_y_edge_margin_arcmin": 8.871543297791785,
+          "minimum_x_edge_margin_pixels": 478.3484324971605,
+          "minimum_y_edge_margin_pixels": 458.87292919612685,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.002140945036803593
+        }
+      }
+    },
+    {
+      "row_index": 3,
+      "center_dec_deg": 8.02488,
+      "cell_dec_min_deg": 6.687399999999999,
+      "cell_dec_max_deg": 9.362359999999999,
+      "n_ra_full_circle": 134,
+      "ra_pitch_deg": 2.6865671641791047,
+      "local_parallel_pitch_deg": 2.660259065754996,
+      "great_circle_center_separation_deg": 2.6602543151780735,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.334746434602491,
+        "maximum_abs_tan_y_deg": 1.340252408443438,
+        "minimum_denominator": 0.9994572821939393,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.3432835820895526,
+          "dec_deg": 6.687399999999999
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.3432835820895526,
+          "dec_deg": 9.362359999999999
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.13725356539750888,
+          "minimum_y_edge_margin_deg": 0.13430314711211744,
+          "minimum_any_edge_margin_deg": 0.13430314711211744,
+          "minimum_x_edge_margin_arcmin": 8.235213923850534,
+          "minimum_y_edge_margin_arcmin": 8.058188826727047,
+          "minimum_x_edge_margin_pixels": 429.6633351574191,
+          "minimum_y_edge_margin_pixels": 420.4272431335851,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.015696852887882556
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.1500535653975088,
+          "minimum_y_edge_margin_deg": 0.14712536933433973,
+          "minimum_any_edge_margin_deg": 0.14712536933433973,
+          "minimum_x_edge_margin_arcmin": 9.003213923850527,
+          "minimum_y_edge_margin_arcmin": 8.827522160060383,
+          "minimum_x_edge_margin_pixels": 465.6834788198549,
+          "minimum_y_edge_margin_pixels": 456.59597379622676,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.002874630665660266
+        }
+      }
+    },
+    {
+      "row_index": 4,
+      "center_dec_deg": 10.69984,
+      "cell_dec_min_deg": 9.36236,
+      "cell_dec_max_deg": 12.03732,
+      "n_ra_full_circle": 133,
+      "ra_pitch_deg": 2.706766917293233,
+      "local_parallel_pitch_deg": 2.6597052135846777,
+      "great_circle_center_separation_deg": 2.659696685987073,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3359564942031938,
+        "maximum_abs_tan_y_deg": 1.3409856662535895,
+        "minimum_denominator": 0.9994570933538178,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.3533834586466165,
+          "dec_deg": 9.36236
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.3533834586466165,
+          "dec_deg": 12.03732
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.13604350579680613,
+          "minimum_y_edge_margin_deg": 0.1335698893019659,
+          "minimum_any_edge_margin_deg": 0.1335698893019659,
+          "minimum_x_edge_margin_arcmin": 8.162610347808368,
+          "minimum_y_edge_margin_arcmin": 8.014193358117954,
+          "minimum_x_edge_margin_pixels": 425.87532249434963,
+          "minimum_y_edge_margin_pixels": 418.1318273800672,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.0164301106980341
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.14884350579680605,
+          "minimum_y_edge_margin_deg": 0.14639211152418818,
+          "minimum_any_edge_margin_deg": 0.14639211152418818,
+          "minimum_x_edge_margin_arcmin": 8.930610347808363,
+          "minimum_y_edge_margin_arcmin": 8.783526691451291,
+          "minimum_x_edge_margin_pixels": 461.92812143836363,
+          "minimum_y_edge_margin_pixels": 454.3203461095495,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.00360788847581181
+        }
+      }
+    },
+    {
+      "row_index": 5,
+      "center_dec_deg": 13.3748,
+      "cell_dec_min_deg": 12.037320000000001,
+      "cell_dec_max_deg": 14.71228,
+      "n_ra_full_circle": 132,
+      "ra_pitch_deg": 2.727272727272727,
+      "local_parallel_pitch_deg": 2.6533028513692303,
+      "great_circle_center_separation_deg": 2.653289445146519,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3342498279842698,
+        "maximum_abs_tan_y_deg": 1.341712073734062,
+        "minimum_denominator": 0.9994580886196257,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.3636363636363635,
+          "dec_deg": 12.037320000000001
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.3636363636363635,
+          "dec_deg": 14.71228
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.13775017201573014,
+          "minimum_y_edge_margin_deg": 0.13284348182149341,
+          "minimum_any_edge_margin_deg": 0.13284348182149341,
+          "minimum_x_edge_margin_arcmin": 8.265010320943809,
+          "minimum_y_edge_margin_arcmin": 7.970608909289605,
+          "minimum_x_edge_margin_pixels": 431.21792978837266,
+          "minimum_y_edge_margin_pixels": 415.85785613684897,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.01715651817850658
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.15055017201573007,
+          "minimum_y_edge_margin_deg": 0.1456657040437157,
+          "minimum_any_edge_margin_deg": 0.1456657040437157,
+          "minimum_x_edge_margin_arcmin": 9.033010320943804,
+          "minimum_y_edge_margin_arcmin": 8.739942242622941,
+          "minimum_x_edge_margin_pixels": 467.2246717729554,
+          "minimum_y_edge_margin_pixels": 452.0659780667039,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.00433429595628429
+        }
+      }
+    },
+    {
+      "row_index": 6,
+      "center_dec_deg": 16.04976,
+      "cell_dec_min_deg": 14.71228,
+      "cell_dec_max_deg": 17.38724,
+      "n_ra_full_circle": 130,
+      "ra_pitch_deg": 2.769230769230769,
+      "local_parallel_pitch_deg": 2.6612915512694264,
+      "great_circle_center_separation_deg": 2.661271747422731,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3398167885151542,
+        "maximum_abs_tan_y_deg": 1.3424977043278192,
+        "minimum_denominator": 0.9994561497353647,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.3846153846153846,
+          "dec_deg": 14.71228
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.3846153846153846,
+          "dec_deg": 17.38724
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.1321832114848458,
+          "minimum_y_edge_margin_deg": 0.13205785122773617,
+          "minimum_any_edge_margin_deg": 0.13205785122773617,
+          "minimum_x_edge_margin_arcmin": 7.930992689090748,
+          "minimum_y_edge_margin_arcmin": 7.92347107366417,
+          "minimum_x_edge_margin_pixels": 413.79092290908255,
+          "minimum_y_edge_margin_pixels": 413.39849079986976,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.017942148772263827
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.14498321148484572,
+          "minimum_y_edge_margin_deg": 0.14488007344995846,
+          "minimum_any_edge_margin_deg": 0.14488007344995846,
+          "minimum_x_edge_margin_arcmin": 8.698992689090744,
+          "minimum_y_edge_margin_arcmin": 8.692804406997507,
+          "minimum_x_edge_margin_pixels": 449.94789771159026,
+          "minimum_y_edge_margin_pixels": 449.62781415504355,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.005119926550041537
+        }
+      }
+    },
+    {
+      "row_index": 7,
+      "center_dec_deg": 18.72472,
+      "cell_dec_min_deg": 17.387240000000002,
+      "cell_dec_max_deg": 20.0622,
+      "n_ra_full_circle": 128,
+      "ra_pitch_deg": 2.8125,
+      "local_parallel_pitch_deg": 2.663639613545403,
+      "great_circle_center_separation_deg": 2.663612048092288,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.342590596067972,
+        "maximum_abs_tan_y_deg": 1.343287956726949,
+        "minimum_denominator": 0.9994553476936322,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.40625,
+          "dec_deg": 17.387240000000002
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.40625,
+          "dec_deg": 20.0622
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.12940940393202793,
+          "minimum_y_edge_margin_deg": 0.1312675988286065,
+          "minimum_any_edge_margin_deg": 0.12940940393202793,
+          "minimum_x_edge_margin_arcmin": 7.764564235921676,
+          "minimum_y_edge_margin_arcmin": 7.87605592971639,
+          "minimum_x_edge_margin_pixels": 405.10769926547874,
+          "minimum_y_edge_margin_pixels": 410.9246572025943,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.02059059606797206
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.14220940393202786,
+          "minimum_y_edge_margin_deg": 0.1440898210508288,
+          "minimum_any_edge_margin_deg": 0.14220940393202786,
+          "minimum_x_edge_margin_arcmin": 8.532564235921672,
+          "minimum_y_edge_margin_arcmin": 8.645389263049728,
+          "minimum_x_edge_margin_pixels": 441.3395294442244,
+          "minimum_y_edge_margin_pixels": 447.17530670946866,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.007790596067972139
+        }
+      }
+    },
+    {
+      "row_index": 8,
+      "center_dec_deg": 21.39968,
+      "cell_dec_min_deg": 20.0622,
+      "cell_dec_max_deg": 22.73716,
+      "n_ra_full_circle": 126,
+      "ra_pitch_deg": 2.857142857142857,
+      "local_parallel_pitch_deg": 2.660165296298307,
+      "great_circle_center_separation_deg": 2.660128594449482,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3424784641067342,
+        "maximum_abs_tan_y_deg": 1.344076331221467,
+        "minimum_denominator": 0.9994557249120477,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.4285714285714286,
+          "dec_deg": 20.0622
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.4285714285714286,
+          "dec_deg": 22.73716
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.12952153589326576,
+          "minimum_y_edge_margin_deg": 0.13047922433408843,
+          "minimum_any_edge_margin_deg": 0.12952153589326576,
+          "minimum_x_edge_margin_arcmin": 7.771292153595946,
+          "minimum_y_edge_margin_arcmin": 7.828753460045306,
+          "minimum_x_edge_margin_pixels": 405.4587210571798,
+          "minimum_y_edge_margin_pixels": 408.45670226323335,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.020478464106734234
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.14232153589326568,
+          "minimum_y_edge_margin_deg": 0.14330144655631072,
+          "minimum_any_edge_margin_deg": 0.14232153589326568,
+          "minimum_x_edge_margin_arcmin": 8.539292153595941,
+          "minimum_y_edge_margin_arcmin": 8.598086793378643,
+          "minimum_x_edge_margin_pixels": 441.687525185997,
+          "minimum_y_edge_margin_pixels": 444.7286272437229,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.007678464106734312
+        }
+      }
+    },
+    {
+      "row_index": 9,
+      "center_dec_deg": 24.07464,
+      "cell_dec_min_deg": 22.73716,
+      "cell_dec_max_deg": 25.412119999999998,
+      "n_ra_full_circle": 123,
+      "ra_pitch_deg": 2.926829268292683,
+      "local_parallel_pitch_deg": 2.6722385010771523,
+      "great_circle_center_separation_deg": 2.6721901429798867,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3502811761745968,
+        "maximum_abs_tan_y_deg": 1.3449723977638999,
+        "minimum_denominator": 0.9994529041912068,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.4634146341463414,
+          "dec_deg": 22.73716
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.4634146341463414,
+          "dec_deg": 25.412119999999998
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.12171882382540322,
+          "minimum_y_edge_margin_deg": 0.12958315779165552,
+          "minimum_any_edge_margin_deg": 0.12171882382540322,
+          "minimum_x_edge_margin_arcmin": 7.303129429524193,
+          "minimum_y_edge_margin_arcmin": 7.774989467499331,
+          "minimum_x_edge_margin_pixels": 381.0328398012623,
+          "minimum_y_edge_margin_pixels": 405.65162439126954,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.028281176174596773
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.13451882382540314,
+          "minimum_y_edge_margin_deg": 0.1424053800138778,
+          "minimum_any_edge_margin_deg": 0.13451882382540314,
+          "minimum_x_edge_margin_arcmin": 8.071129429524188,
+          "minimum_y_edge_margin_arcmin": 8.544322800832669,
+          "minimum_x_edge_margin_pixels": 417.47221187194083,
+          "minimum_y_edge_margin_pixels": 441.94773107755185,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.01548117617459685
+        }
+      }
+    },
+    {
+      "row_index": 10,
+      "center_dec_deg": 26.7496,
+      "cell_dec_min_deg": 25.41212,
+      "cell_dec_max_deg": 28.08708,
+      "n_ra_full_circle": 121,
+      "ra_pitch_deg": 2.975206611570248,
+      "local_parallel_pitch_deg": 2.6568062052970234,
+      "great_circle_center_separation_deg": 2.6567457226149744,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.344250267103727,
+        "maximum_abs_tan_y_deg": 1.3457505037710398,
+        "minimum_denominator": 0.9994557086702468,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.487603305785124,
+          "dec_deg": 25.41212
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.487603305785124,
+          "dec_deg": 28.08708
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.1277497328962729,
+          "minimum_y_edge_margin_deg": 0.12880505178451562,
+          "minimum_any_edge_margin_deg": 0.1277497328962729,
+          "minimum_x_edge_margin_arcmin": 7.664983973776374,
+          "minimum_y_edge_margin_arcmin": 7.728303107070937,
+          "minimum_x_edge_margin_pixels": 399.912207327463,
+          "minimum_y_edge_margin_pixels": 403.21581428196197,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.0222502671037271
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.14054973289627282,
+          "minimum_y_edge_margin_deg": 0.1416272740067379,
+          "minimum_any_edge_margin_deg": 0.14054973289627282,
+          "minimum_x_edge_margin_arcmin": 8.43298397377637,
+          "minimum_y_edge_margin_arcmin": 8.497636440404275,
+          "minimum_x_edge_margin_pixels": 436.1888262298122,
+          "minimum_y_edge_margin_pixels": 439.5329193312556,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.009450267103727178
+        }
+      }
+    },
+    {
+      "row_index": 11,
+      "center_dec_deg": 29.42456,
+      "cell_dec_min_deg": 28.08708,
+      "cell_dec_max_deg": 30.76204,
+      "n_ra_full_circle": 118,
+      "ra_pitch_deg": 3.0508474576271185,
+      "local_parallel_pitch_deg": 2.657298214942524,
+      "great_circle_center_separation_deg": 2.657222432669787,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3463537066247493,
+        "maximum_abs_tan_y_deg": 1.3466544454531928,
+        "minimum_denominator": 0.9994552322151651,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.5254237288135593,
+          "dec_deg": 28.08708
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.5254237288135593,
+          "dec_deg": 30.762040000000002
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.12564629337525068,
+          "minimum_y_edge_margin_deg": 0.1279011101023626,
+          "minimum_any_edge_margin_deg": 0.12564629337525068,
+          "minimum_x_edge_margin_arcmin": 7.538777602515041,
+          "minimum_y_edge_margin_arcmin": 7.674066606141756,
+          "minimum_x_edge_margin_pixels": 393.3275270877413,
+          "minimum_y_edge_margin_pixels": 400.3860837987004,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.02435370662474931
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.1384462933752506,
+          "minimum_y_edge_margin_deg": 0.1407233323245849,
+          "minimum_any_edge_margin_deg": 0.1384462933752506,
+          "minimum_x_edge_margin_arcmin": 8.306777602515037,
+          "minimum_y_edge_margin_arcmin": 8.443399939475093,
+          "minimum_x_edge_margin_pixels": 429.6609104749157,
+          "minimum_y_edge_margin_pixels": 436.72758307629795,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.011553706624749388
+        }
+      }
+    },
+    {
+      "row_index": 12,
+      "center_dec_deg": 32.09952,
+      "cell_dec_min_deg": 30.76204,
+      "cell_dec_max_deg": 33.437,
+      "n_ra_full_circle": 115,
+      "ra_pitch_deg": 3.130434782608696,
+      "local_parallel_pitch_deg": 2.6518738638889237,
+      "great_circle_center_separation_deg": 2.6517807052102067,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3455544284086776,
+        "maximum_abs_tan_y_deg": 1.347561072336198,
+        "minimum_denominator": 0.9994559484020902,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.565217391304348,
+          "dec_deg": 30.762040000000002
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.565217391304348,
+          "dec_deg": 33.437
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.12644557159132241,
+          "minimum_y_edge_margin_deg": 0.12699448321935747,
+          "minimum_any_edge_margin_deg": 0.12644557159132241,
+          "minimum_x_edge_margin_arcmin": 7.586734295479345,
+          "minimum_y_edge_margin_arcmin": 7.619668993161448,
+          "minimum_x_edge_margin_pixels": 395.8296154163137,
+          "minimum_y_edge_margin_pixels": 397.547947469293,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.02355442840867758
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.13924557159132234,
+          "minimum_y_edge_margin_deg": 0.13981670544157976,
+          "minimum_any_edge_margin_deg": 0.13924557159132234,
+          "minimum_x_edge_margin_arcmin": 8.35473429547934,
+          "minimum_y_edge_margin_arcmin": 8.389002326494786,
+          "minimum_x_edge_margin_pixels": 432.1414290765176,
+          "minimum_y_edge_margin_pixels": 433.91391343938545,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.010754428408677658
+        }
+      }
+    },
+    {
+      "row_index": 13,
+      "center_dec_deg": 34.77448,
+      "cell_dec_min_deg": 33.437,
+      "cell_dec_max_deg": 36.111959999999996,
+      "n_ra_full_circle": 111,
+      "ra_pitch_deg": 3.2432432432432434,
+      "local_parallel_pitch_deg": 2.6640107937573543,
+      "great_circle_center_separation_deg": 2.6638950743395085,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3537904198562345,
+        "maximum_abs_tan_y_deg": 1.3486573598145528,
+        "minimum_denominator": 0.9994530347998029,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.6216216216216217,
+          "dec_deg": 33.437
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.6216216216216217,
+          "dec_deg": 36.111959999999996
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.11820958014376548,
+          "minimum_y_edge_margin_deg": 0.12589819574100258,
+          "minimum_any_edge_margin_deg": 0.11820958014376548,
+          "minimum_x_edge_margin_arcmin": 7.092574808625929,
+          "minimum_y_edge_margin_arcmin": 7.553891744460155,
+          "minimum_x_edge_margin_pixels": 370.0473813196137,
+          "minimum_y_edge_margin_pixels": 394.11609101531246,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.031790419856234514
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.1310095801437654,
+          "minimum_y_edge_margin_deg": 0.13872041796322487,
+          "minimum_any_edge_margin_deg": 0.1310095801437654,
+          "minimum_x_edge_margin_arcmin": 7.860574808625924,
+          "minimum_y_edge_margin_arcmin": 8.323225077793492,
+          "minimum_x_edge_margin_pixels": 406.5814556185823,
+          "minimum_y_edge_margin_pixels": 430.51164195483585,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.01899041985623459
+        }
+      }
+    },
+    {
+      "row_index": 14,
+      "center_dec_deg": 37.44944,
+      "cell_dec_min_deg": 36.11196,
+      "cell_dec_max_deg": 38.78692,
+      "n_ra_full_circle": 107,
+      "ra_pitch_deg": 3.364485981308411,
+      "local_parallel_pitch_deg": 2.67103253551706,
+      "great_circle_center_separation_deg": 2.6708906160291184,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3595793684690096,
+        "maximum_abs_tan_y_deg": 1.3497906046766392,
+        "minimum_denominator": 0.9994511333781335,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.6822429906542056,
+          "dec_deg": 36.11196
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.6822429906542056,
+          "dec_deg": 38.78692
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.11242063153099036,
+          "minimum_y_edge_margin_deg": 0.12476495087891615,
+          "minimum_any_edge_margin_deg": 0.11242063153099036,
+          "minimum_x_edge_margin_arcmin": 6.745237891859421,
+          "minimum_y_edge_margin_arcmin": 7.485897052734969,
+          "minimum_x_edge_margin_pixels": 351.9254552274481,
+          "minimum_y_edge_margin_pixels": 390.5685418818245,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.03757936846900964
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.12522063153099028,
+          "minimum_y_edge_margin_deg": 0.13758717310113844,
+          "minimum_any_edge_margin_deg": 0.12522063153099028,
+          "minimum_x_edge_margin_arcmin": 7.513237891859417,
+          "minimum_y_edge_margin_arcmin": 8.255230386068305,
+          "minimum_x_edge_margin_pixels": 388.6157530272112,
+          "minimum_y_edge_margin_pixels": 426.99467514146414,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.024779368469009716
+        }
+      }
+    },
+    {
+      "row_index": 15,
+      "center_dec_deg": 40.1244,
+      "cell_dec_min_deg": 38.78692,
+      "cell_dec_max_deg": 41.46188,
+      "n_ra_full_circle": 103,
+      "ra_pitch_deg": 3.495145631067961,
+      "local_parallel_pitch_deg": 2.672552708243074,
+      "great_circle_center_separation_deg": 2.6723805753096874,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3627376434529586,
+        "maximum_abs_tan_y_deg": 1.350956837733812,
+        "minimum_denominator": 0.9994503322168901,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.7475728155339805,
+          "dec_deg": 38.78692
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.7475728155339805,
+          "dec_deg": 41.46188
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.10926235654704142,
+          "minimum_y_edge_margin_deg": 0.12359871782174348,
+          "minimum_any_edge_margin_deg": 0.10926235654704142,
+          "minimum_x_edge_margin_arcmin": 6.555741392822485,
+          "minimum_y_edge_margin_arcmin": 7.4159230693046085,
+          "minimum_x_edge_margin_pixels": 342.03868136465144,
+          "minimum_y_edge_margin_pixels": 386.9177253550231,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.04073764345295858
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.12206235654704134,
+          "minimum_y_edge_margin_deg": 0.13642094004396577,
+          "minimum_any_edge_margin_deg": 0.12206235654704134,
+          "minimum_x_edge_margin_arcmin": 7.32374139282248,
+          "minimum_y_edge_margin_arcmin": 8.185256402637947,
+          "minimum_x_edge_margin_pixels": 378.81420997357657,
+          "minimum_y_edge_margin_pixels": 423.3753311709283,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.027937643452958655
+        }
+      }
+    },
+    {
+      "row_index": 16,
+      "center_dec_deg": 42.79936,
+      "cell_dec_min_deg": 41.46188,
+      "cell_dec_max_deg": 44.13684,
+      "n_ra_full_circle": 99,
+      "ra_pitch_deg": 3.6363636363636362,
+      "local_parallel_pitch_deg": 2.668136195961147,
+      "great_circle_center_separation_deg": 2.6679294373537643,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.363058954305868,
+        "maximum_abs_tan_y_deg": 1.3521511277683558,
+        "minimum_denominator": 0.9994507232049061,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.8181818181818183,
+          "dec_deg": 41.46188
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.8181818181818183,
+          "dec_deg": 44.13684
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.10894104569413199,
+          "minimum_y_edge_margin_deg": 0.12240442778719962,
+          "minimum_any_edge_margin_deg": 0.10894104569413199,
+          "minimum_x_edge_margin_arcmin": 6.536462741647919,
+          "minimum_y_edge_margin_arcmin": 7.344265667231977,
+          "minimum_x_edge_margin_pixels": 341.03283869467407,
+          "minimum_y_edge_margin_pixels": 383.17907829036403,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.041058954305868006
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.12174104569413191,
+          "minimum_y_edge_margin_deg": 0.1352266500094219,
+          "minimum_any_edge_margin_deg": 0.12174104569413191,
+          "minimum_x_edge_margin_arcmin": 7.304462741647915,
+          "minimum_y_edge_margin_arcmin": 8.113599000565316,
+          "minimum_x_edge_margin_pixels": 377.8170383610991,
+          "minimum_y_edge_margin_pixels": 419.6689138223439,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.028258954305868084
+        }
+      }
+    },
+    {
+      "row_index": 17,
+      "center_dec_deg": 45.47432,
+      "cell_dec_min_deg": 44.13684,
+      "cell_dec_max_deg": 46.8118,
+      "n_ra_full_circle": 95,
+      "ra_pitch_deg": 3.789473684210526,
+      "local_parallel_pitch_deg": 2.6572883613479097,
+      "great_circle_center_separation_deg": 2.6570421417124246,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3603093287862966,
+        "maximum_abs_tan_y_deg": 1.353367327647796,
+        "minimum_denominator": 0.9994524024358863,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.8947368421052628,
+          "dec_deg": 44.13684
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.8947368421052628,
+          "dec_deg": 46.8118
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.11169067121370335,
+          "minimum_y_edge_margin_deg": 0.1211882279077594,
+          "minimum_any_edge_margin_deg": 0.11169067121370335,
+          "minimum_x_edge_margin_arcmin": 6.701440272822201,
+          "minimum_y_edge_margin_arcmin": 7.271293674465564,
+          "minimum_x_edge_margin_pixels": 349.6403620602888,
+          "minimum_y_edge_margin_pixels": 379.3718438851599,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.03830932878629664
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.12449067121370327,
+          "minimum_y_edge_margin_deg": 0.1340104501299817,
+          "minimum_any_edge_margin_deg": 0.12449067121370327,
+          "minimum_x_edge_margin_arcmin": 7.4694402728221965,
+          "minimum_y_edge_margin_arcmin": 8.040627007798902,
+          "minimum_x_edge_margin_pixels": 386.3503589390792,
+          "minimum_y_edge_margin_pixels": 415.8945004033915,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.02550932878629672
+        }
+      }
+    },
+    {
+      "row_index": 18,
+      "center_dec_deg": 48.14928,
+      "cell_dec_min_deg": 46.8118,
+      "cell_dec_max_deg": 49.48676,
+      "n_ra_full_circle": 90,
+      "ra_pitch_deg": 4.0,
+      "local_parallel_pitch_deg": 2.6687685098668177,
+      "great_circle_center_separation_deg": 2.6684677408040467,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3692698987866225,
+        "maximum_abs_tan_y_deg": 1.3549748669004211,
+        "minimum_denominator": 0.9994493913529983,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -2.0,
+          "dec_deg": 46.8118
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -2.0,
+          "dec_deg": 49.486760000000004
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.10273010121337744,
+          "minimum_y_edge_margin_deg": 0.11958068865513427,
+          "minimum_any_edge_margin_deg": 0.10273010121337744,
+          "minimum_x_edge_margin_arcmin": 6.163806072802647,
+          "minimum_y_edge_margin_arcmin": 7.174841319308056,
+          "minimum_x_edge_margin_pixels": 321.5898820592686,
+          "minimum_y_edge_margin_pixels": 374.3395470943334,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.04726989878662255
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.11553010121337737,
+          "minimum_y_edge_margin_deg": 0.13240291087735656,
+          "minimum_any_edge_margin_deg": 0.11553010121337737,
+          "minimum_x_edge_margin_arcmin": 6.931806072802642,
+          "minimum_y_edge_margin_arcmin": 7.944174652641394,
+          "minimum_x_edge_margin_pixels": 358.54169342082633,
+          "minimum_y_edge_margin_pixels": 410.9055854814514,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.03446989878662263
+        }
+      }
+    },
+    {
+      "row_index": 19,
+      "center_dec_deg": 50.82424,
+      "cell_dec_min_deg": 49.486760000000004,
+      "cell_dec_max_deg": 52.16172,
+      "n_ra_full_circle": 86,
+      "ra_pitch_deg": 4.186046511627907,
+      "local_parallel_pitch_deg": 2.6443314085566083,
+      "great_circle_center_separation_deg": 2.643977913517021,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3601181540192058,
+        "maximum_abs_tan_y_deg": 1.3562562452653693,
+        "minimum_denominator": 0.9994537766871655,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -2.0930232558139537,
+          "dec_deg": 49.486760000000004
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -2.0930232558139537,
+          "dec_deg": 52.16172
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.1118818459807942,
+          "minimum_y_edge_margin_deg": 0.11829931029018614,
+          "minimum_any_edge_margin_deg": 0.1118818459807942,
+          "minimum_x_edge_margin_arcmin": 6.712910758847652,
+          "minimum_y_edge_margin_arcmin": 7.097958617411169,
+          "minimum_x_edge_margin_pixels": 350.2388222007471,
+          "minimum_y_edge_margin_pixels": 370.32827569101755,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.03811815401920579
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.12468184598079413,
+          "minimum_y_edge_margin_deg": 0.13112153251240843,
+          "minimum_any_edge_margin_deg": 0.12468184598079413,
+          "minimum_x_edge_margin_arcmin": 7.480910758847648,
+          "minimum_y_edge_margin_arcmin": 7.867291950744506,
+          "minimum_x_edge_margin_pixels": 386.9436599403956,
+          "minimum_y_edge_margin_pixels": 406.92889400402623,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.02531815401920587
+        }
+      }
+    },
+    {
+      "row_index": 20,
+      "center_dec_deg": 53.4992,
+      "cell_dec_min_deg": 52.16172,
+      "cell_dec_max_deg": 54.83668,
+      "n_ra_full_circle": 81,
+      "ra_pitch_deg": 4.444444444444445,
+      "local_parallel_pitch_deg": 2.6437067140111337,
+      "great_circle_center_separation_deg": 2.643278351408558,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3635924602690275,
+        "maximum_abs_tan_y_deg": 1.3580262379191115,
+        "minimum_denominator": 0.9994531384781059,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -2.2222222222222223,
+          "dec_deg": 52.16172
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -2.2222222222222223,
+          "dec_deg": 54.83668
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.1084075397309725,
+          "minimum_y_edge_margin_deg": 0.11652931763644392,
+          "minimum_any_edge_margin_deg": 0.1084075397309725,
+          "minimum_x_edge_margin_arcmin": 6.50445238385835,
+          "minimum_y_edge_margin_arcmin": 6.991759058186635,
+          "minimum_x_edge_margin_pixels": 339.3627330708705,
+          "minimum_y_edge_margin_pixels": 364.787429122781,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.04159246026902749
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.12120753973097242,
+          "minimum_y_edge_margin_deg": 0.1293515398586662,
+          "minimum_any_edge_margin_deg": 0.12120753973097242,
+          "minimum_x_edge_margin_arcmin": 7.2724523838583455,
+          "minimum_y_edge_margin_arcmin": 7.7610923915199725,
+          "minimum_x_edge_margin_pixels": 376.1613301995696,
+          "minimum_y_edge_margin_pixels": 401.4358133544814,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.02879246026902757
+        }
+      }
+    },
+    {
+      "row_index": 21,
+      "center_dec_deg": 56.17416,
+      "cell_dec_min_deg": 54.83668,
+      "cell_dec_max_deg": 57.51164,
+      "n_ra_full_circle": 75,
+      "ra_pitch_deg": 4.8,
+      "local_parallel_pitch_deg": 2.6720175703581996,
+      "great_circle_center_separation_deg": 2.6714782375110846,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3825430718175329,
+        "maximum_abs_tan_y_deg": 1.3605117337784431,
+        "minimum_denominator": 0.9994463413101032,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -2.4,
+          "dec_deg": 54.83668
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -2.4,
+          "dec_deg": 57.51164000000001
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.08945692818246709,
+          "minimum_y_edge_margin_deg": 0.11404382177711225,
+          "minimum_any_edge_margin_deg": 0.08945692818246709,
+          "minimum_x_edge_margin_arcmin": 5.367415690948025,
+          "minimum_y_edge_margin_arcmin": 6.842629306626735,
+          "minimum_x_edge_margin_pixels": 280.0390795277231,
+          "minimum_y_edge_margin_pixels": 357.0067464326993,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.060543071817532906
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.10225692818246701,
+          "minimum_y_edge_margin_deg": 0.12686604399933454,
+          "minimum_any_edge_margin_deg": 0.10225692818246701,
+          "minimum_x_edge_margin_arcmin": 6.135415690948021,
+          "minimum_y_edge_margin_arcmin": 7.611962639960073,
+          "minimum_x_edge_margin_pixels": 317.34908746282866,
+          "minimum_y_edge_margin_pixels": 393.7222055151762,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.047743071817532984
+        }
+      }
+    }
+  ],
+  "summary_cell_intersects_range": {
+    "nominal_1.15_arcsec_per_pix": {
+      "row_count": 32,
+      "worst_row_index": 21,
+      "worst_center_dec_deg": 56.17416,
+      "minimum_any_edge_margin_deg": 0.08945692818246709,
+      "minimum_any_edge_margin_arcmin": 5.367415690948025,
+      "minimum_any_edge_margin_pixels": 280.0390795277231,
+      "all_nominal_uncropped_cells_covered": true,
+      "rows_passing_0p15_deg_per_edge_crop": 0
+    },
+    "nominal_1.16_arcsec_per_pix": {
+      "row_count": 32,
+      "worst_row_index": 21,
+      "worst_center_dec_deg": 56.17416,
+      "minimum_any_edge_margin_deg": 0.10225692818246701,
+      "minimum_any_edge_margin_arcmin": 6.135415690948021,
+      "minimum_any_edge_margin_pixels": 317.34908746282866,
+      "all_nominal_uncropped_cells_covered": true,
+      "rows_passing_0p15_deg_per_edge_crop": 0
+    }
+  },
+  "rows_cell_intersects_range": [
+    {
+      "row_index": -10,
+      "center_dec_deg": -26.7496,
+      "cell_dec_min_deg": -28.08708,
+      "cell_dec_max_deg": -25.41212,
+      "n_ra_full_circle": 121,
+      "ra_pitch_deg": 2.975206611570248,
+      "local_parallel_pitch_deg": 2.6568062052970234,
+      "great_circle_center_separation_deg": 2.6567457226149744,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.344250267103727,
+        "maximum_abs_tan_y_deg": 1.3457505037710398,
+        "minimum_denominator": 0.9994557086702468,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.487603305785124,
+          "dec_deg": -25.41212
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.487603305785124,
+          "dec_deg": -28.08708
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.1277497328962729,
+          "minimum_y_edge_margin_deg": 0.12880505178451562,
+          "minimum_any_edge_margin_deg": 0.1277497328962729,
+          "minimum_x_edge_margin_arcmin": 7.664983973776374,
+          "minimum_y_edge_margin_arcmin": 7.728303107070937,
+          "minimum_x_edge_margin_pixels": 399.912207327463,
+          "minimum_y_edge_margin_pixels": 403.21581428196197,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.0222502671037271
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.14054973289627282,
+          "minimum_y_edge_margin_deg": 0.1416272740067379,
+          "minimum_any_edge_margin_deg": 0.14054973289627282,
+          "minimum_x_edge_margin_arcmin": 8.43298397377637,
+          "minimum_y_edge_margin_arcmin": 8.497636440404275,
+          "minimum_x_edge_margin_pixels": 436.1888262298122,
+          "minimum_y_edge_margin_pixels": 439.5329193312556,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.009450267103727178
+        }
+      }
+    },
+    {
+      "row_index": -9,
+      "center_dec_deg": -24.07464,
+      "cell_dec_min_deg": -25.412119999999998,
+      "cell_dec_max_deg": -22.73716,
+      "n_ra_full_circle": 123,
+      "ra_pitch_deg": 2.926829268292683,
+      "local_parallel_pitch_deg": 2.6722385010771523,
+      "great_circle_center_separation_deg": 2.6721901429798867,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3502811761745968,
+        "maximum_abs_tan_y_deg": 1.3449723977638999,
+        "minimum_denominator": 0.9994529041912068,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.4634146341463414,
+          "dec_deg": -22.73716
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.4634146341463414,
+          "dec_deg": -25.412119999999998
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.12171882382540322,
+          "minimum_y_edge_margin_deg": 0.12958315779165552,
+          "minimum_any_edge_margin_deg": 0.12171882382540322,
+          "minimum_x_edge_margin_arcmin": 7.303129429524193,
+          "minimum_y_edge_margin_arcmin": 7.774989467499331,
+          "minimum_x_edge_margin_pixels": 381.0328398012623,
+          "minimum_y_edge_margin_pixels": 405.65162439126954,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.028281176174596773
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.13451882382540314,
+          "minimum_y_edge_margin_deg": 0.1424053800138778,
+          "minimum_any_edge_margin_deg": 0.13451882382540314,
+          "minimum_x_edge_margin_arcmin": 8.071129429524188,
+          "minimum_y_edge_margin_arcmin": 8.544322800832669,
+          "minimum_x_edge_margin_pixels": 417.47221187194083,
+          "minimum_y_edge_margin_pixels": 441.94773107755185,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.01548117617459685
+        }
+      }
+    },
+    {
+      "row_index": -8,
+      "center_dec_deg": -21.39968,
+      "cell_dec_min_deg": -22.73716,
+      "cell_dec_max_deg": -20.0622,
+      "n_ra_full_circle": 126,
+      "ra_pitch_deg": 2.857142857142857,
+      "local_parallel_pitch_deg": 2.660165296298307,
+      "great_circle_center_separation_deg": 2.660128594449482,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3424784641067342,
+        "maximum_abs_tan_y_deg": 1.344076331221467,
+        "minimum_denominator": 0.9994557249120477,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.4285714285714286,
+          "dec_deg": -20.0622
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.4285714285714286,
+          "dec_deg": -22.73716
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.12952153589326576,
+          "minimum_y_edge_margin_deg": 0.13047922433408843,
+          "minimum_any_edge_margin_deg": 0.12952153589326576,
+          "minimum_x_edge_margin_arcmin": 7.771292153595946,
+          "minimum_y_edge_margin_arcmin": 7.828753460045306,
+          "minimum_x_edge_margin_pixels": 405.4587210571798,
+          "minimum_y_edge_margin_pixels": 408.45670226323335,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.020478464106734234
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.14232153589326568,
+          "minimum_y_edge_margin_deg": 0.14330144655631072,
+          "minimum_any_edge_margin_deg": 0.14232153589326568,
+          "minimum_x_edge_margin_arcmin": 8.539292153595941,
+          "minimum_y_edge_margin_arcmin": 8.598086793378643,
+          "minimum_x_edge_margin_pixels": 441.687525185997,
+          "minimum_y_edge_margin_pixels": 444.7286272437229,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.007678464106734312
+        }
+      }
+    },
+    {
+      "row_index": -7,
+      "center_dec_deg": -18.72472,
+      "cell_dec_min_deg": -20.0622,
+      "cell_dec_max_deg": -17.387240000000002,
+      "n_ra_full_circle": 128,
+      "ra_pitch_deg": 2.8125,
+      "local_parallel_pitch_deg": 2.663639613545403,
+      "great_circle_center_separation_deg": 2.663612048092288,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.342590596067972,
+        "maximum_abs_tan_y_deg": 1.343287956726949,
+        "minimum_denominator": 0.9994553476936322,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.40625,
+          "dec_deg": -17.387240000000002
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.40625,
+          "dec_deg": -20.0622
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.12940940393202793,
+          "minimum_y_edge_margin_deg": 0.1312675988286065,
+          "minimum_any_edge_margin_deg": 0.12940940393202793,
+          "minimum_x_edge_margin_arcmin": 7.764564235921676,
+          "minimum_y_edge_margin_arcmin": 7.87605592971639,
+          "minimum_x_edge_margin_pixels": 405.10769926547874,
+          "minimum_y_edge_margin_pixels": 410.9246572025943,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.02059059606797206
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.14220940393202786,
+          "minimum_y_edge_margin_deg": 0.1440898210508288,
+          "minimum_any_edge_margin_deg": 0.14220940393202786,
+          "minimum_x_edge_margin_arcmin": 8.532564235921672,
+          "minimum_y_edge_margin_arcmin": 8.645389263049728,
+          "minimum_x_edge_margin_pixels": 441.3395294442244,
+          "minimum_y_edge_margin_pixels": 447.17530670946866,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.007790596067972139
+        }
+      }
+    },
+    {
+      "row_index": -6,
+      "center_dec_deg": -16.04976,
+      "cell_dec_min_deg": -17.38724,
+      "cell_dec_max_deg": -14.71228,
+      "n_ra_full_circle": 130,
+      "ra_pitch_deg": 2.769230769230769,
+      "local_parallel_pitch_deg": 2.6612915512694264,
+      "great_circle_center_separation_deg": 2.661271747422731,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3398167885151542,
+        "maximum_abs_tan_y_deg": 1.3424977043278192,
+        "minimum_denominator": 0.9994561497353647,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.3846153846153846,
+          "dec_deg": -14.71228
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.3846153846153846,
+          "dec_deg": -17.38724
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.1321832114848458,
+          "minimum_y_edge_margin_deg": 0.13205785122773617,
+          "minimum_any_edge_margin_deg": 0.13205785122773617,
+          "minimum_x_edge_margin_arcmin": 7.930992689090748,
+          "minimum_y_edge_margin_arcmin": 7.92347107366417,
+          "minimum_x_edge_margin_pixels": 413.79092290908255,
+          "minimum_y_edge_margin_pixels": 413.39849079986976,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.017942148772263827
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.14498321148484572,
+          "minimum_y_edge_margin_deg": 0.14488007344995846,
+          "minimum_any_edge_margin_deg": 0.14488007344995846,
+          "minimum_x_edge_margin_arcmin": 8.698992689090744,
+          "minimum_y_edge_margin_arcmin": 8.692804406997507,
+          "minimum_x_edge_margin_pixels": 449.94789771159026,
+          "minimum_y_edge_margin_pixels": 449.62781415504355,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.005119926550041537
+        }
+      }
+    },
+    {
+      "row_index": -5,
+      "center_dec_deg": -13.3748,
+      "cell_dec_min_deg": -14.71228,
+      "cell_dec_max_deg": -12.037320000000001,
+      "n_ra_full_circle": 132,
+      "ra_pitch_deg": 2.727272727272727,
+      "local_parallel_pitch_deg": 2.6533028513692303,
+      "great_circle_center_separation_deg": 2.653289445146519,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3342498279842698,
+        "maximum_abs_tan_y_deg": 1.341712073734062,
+        "minimum_denominator": 0.9994580886196257,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.3636363636363635,
+          "dec_deg": -12.037320000000001
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.3636363636363635,
+          "dec_deg": -14.71228
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.13775017201573014,
+          "minimum_y_edge_margin_deg": 0.13284348182149341,
+          "minimum_any_edge_margin_deg": 0.13284348182149341,
+          "minimum_x_edge_margin_arcmin": 8.265010320943809,
+          "minimum_y_edge_margin_arcmin": 7.970608909289605,
+          "minimum_x_edge_margin_pixels": 431.21792978837266,
+          "minimum_y_edge_margin_pixels": 415.85785613684897,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.01715651817850658
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.15055017201573007,
+          "minimum_y_edge_margin_deg": 0.1456657040437157,
+          "minimum_any_edge_margin_deg": 0.1456657040437157,
+          "minimum_x_edge_margin_arcmin": 9.033010320943804,
+          "minimum_y_edge_margin_arcmin": 8.739942242622941,
+          "minimum_x_edge_margin_pixels": 467.2246717729554,
+          "minimum_y_edge_margin_pixels": 452.0659780667039,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.00433429595628429
+        }
+      }
+    },
+    {
+      "row_index": -4,
+      "center_dec_deg": -10.69984,
+      "cell_dec_min_deg": -12.03732,
+      "cell_dec_max_deg": -9.36236,
+      "n_ra_full_circle": 133,
+      "ra_pitch_deg": 2.706766917293233,
+      "local_parallel_pitch_deg": 2.6597052135846777,
+      "great_circle_center_separation_deg": 2.659696685987073,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3359564942031938,
+        "maximum_abs_tan_y_deg": 1.3409856662535895,
+        "minimum_denominator": 0.9994570933538178,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.3533834586466165,
+          "dec_deg": -9.36236
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.3533834586466165,
+          "dec_deg": -12.03732
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.13604350579680613,
+          "minimum_y_edge_margin_deg": 0.1335698893019659,
+          "minimum_any_edge_margin_deg": 0.1335698893019659,
+          "minimum_x_edge_margin_arcmin": 8.162610347808368,
+          "minimum_y_edge_margin_arcmin": 8.014193358117954,
+          "minimum_x_edge_margin_pixels": 425.87532249434963,
+          "minimum_y_edge_margin_pixels": 418.1318273800672,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.0164301106980341
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.14884350579680605,
+          "minimum_y_edge_margin_deg": 0.14639211152418818,
+          "minimum_any_edge_margin_deg": 0.14639211152418818,
+          "minimum_x_edge_margin_arcmin": 8.930610347808363,
+          "minimum_y_edge_margin_arcmin": 8.783526691451291,
+          "minimum_x_edge_margin_pixels": 461.92812143836363,
+          "minimum_y_edge_margin_pixels": 454.3203461095495,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.00360788847581181
+        }
+      }
+    },
+    {
+      "row_index": -3,
+      "center_dec_deg": -8.02488,
+      "cell_dec_min_deg": -9.362359999999999,
+      "cell_dec_max_deg": -6.687399999999999,
+      "n_ra_full_circle": 134,
+      "ra_pitch_deg": 2.6865671641791047,
+      "local_parallel_pitch_deg": 2.660259065754996,
+      "great_circle_center_separation_deg": 2.6602543151780735,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.334746434602491,
+        "maximum_abs_tan_y_deg": 1.340252408443438,
+        "minimum_denominator": 0.9994572821939393,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.3432835820895526,
+          "dec_deg": -6.687399999999999
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.3432835820895526,
+          "dec_deg": -9.362359999999999
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.13725356539750888,
+          "minimum_y_edge_margin_deg": 0.13430314711211744,
+          "minimum_any_edge_margin_deg": 0.13430314711211744,
+          "minimum_x_edge_margin_arcmin": 8.235213923850534,
+          "minimum_y_edge_margin_arcmin": 8.058188826727047,
+          "minimum_x_edge_margin_pixels": 429.6633351574191,
+          "minimum_y_edge_margin_pixels": 420.4272431335851,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.015696852887882556
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.1500535653975088,
+          "minimum_y_edge_margin_deg": 0.14712536933433973,
+          "minimum_any_edge_margin_deg": 0.14712536933433973,
+          "minimum_x_edge_margin_arcmin": 9.003213923850527,
+          "minimum_y_edge_margin_arcmin": 8.827522160060383,
+          "minimum_x_edge_margin_pixels": 465.6834788198549,
+          "minimum_y_edge_margin_pixels": 456.59597379622676,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.002874630665660266
+        }
+      }
+    },
+    {
+      "row_index": -2,
+      "center_dec_deg": -5.34992,
+      "cell_dec_min_deg": -6.6874,
+      "cell_dec_max_deg": -4.01244,
+      "n_ra_full_circle": 135,
+      "ra_pitch_deg": 2.6666666666666665,
+      "local_parallel_pitch_deg": 2.6550502418473085,
+      "great_circle_center_separation_deg": 2.655048158154672,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3306655050842482,
+        "maximum_abs_tan_y_deg": 1.3395187228145813,
+        "minimum_denominator": 0.9994586359363966,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.3333333333333333,
+          "dec_deg": -4.01244
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.3333333333333333,
+          "dec_deg": -6.6874
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.14133449491575178,
+          "minimum_y_edge_margin_deg": 0.1350368327409741,
+          "minimum_any_edge_margin_deg": 0.1350368327409741,
+          "minimum_x_edge_margin_arcmin": 8.480069694945108,
+          "minimum_y_edge_margin_arcmin": 8.102209964458446,
+          "minimum_x_edge_margin_pixels": 442.4384188667013,
+          "minimum_y_edge_margin_pixels": 422.7239981456581,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.014963167259025884
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.1541344949157517,
+          "minimum_y_edge_margin_deg": 0.1478590549631964,
+          "minimum_any_edge_margin_deg": 0.1478590549631964,
+          "minimum_x_edge_margin_arcmin": 9.248069694945102,
+          "minimum_y_edge_margin_arcmin": 8.871543297791785,
+          "minimum_x_edge_margin_pixels": 478.3484324971605,
+          "minimum_y_edge_margin_pixels": 458.87292919612685,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.002140945036803593
+        }
+      }
+    },
+    {
+      "row_index": -1,
+      "center_dec_deg": -2.67496,
+      "cell_dec_min_deg": -4.01244,
+      "cell_dec_max_deg": -1.33748,
+      "n_ra_full_circle": 135,
+      "ra_pitch_deg": 2.6666666666666665,
+      "local_parallel_pitch_deg": 2.6637609773936735,
+      "great_circle_center_separation_deg": 2.663760453619809,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3335736773020215,
+        "maximum_abs_tan_y_deg": 1.3388067286845464,
+        "minimum_denominator": 0.9994571644113617,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.3333333333333333,
+          "dec_deg": -1.33748
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.3333333333333333,
+          "dec_deg": -4.01244
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.1384263226979785,
+          "minimum_y_edge_margin_deg": 0.13574882687100898,
+          "minimum_any_edge_margin_deg": 0.13574882687100898,
+          "minimum_x_edge_margin_arcmin": 8.30557936187871,
+          "minimum_y_edge_margin_arcmin": 8.144929612260539,
+          "minimum_x_edge_margin_pixels": 433.3345754023675,
+          "minimum_y_edge_margin_pixels": 424.9528493353325,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.014251173128991018
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.15122632269797842,
+          "minimum_y_edge_margin_deg": 0.14857104909323127,
+          "minimum_any_edge_margin_deg": 0.14857104909323127,
+          "minimum_x_edge_margin_arcmin": 9.073579361878705,
+          "minimum_y_edge_margin_arcmin": 8.914262945593876,
+          "minimum_x_edge_margin_pixels": 469.32307044200206,
+          "minimum_y_edge_margin_pixels": 461.08256615140743,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.0014289509067687278
+        }
+      }
+    },
+    {
+      "row_index": 0,
+      "center_dec_deg": 0.0,
+      "cell_dec_min_deg": -1.33748,
+      "cell_dec_max_deg": 1.33748,
+      "n_ra_full_circle": 135,
+      "ra_pitch_deg": 2.6666666666666665,
+      "local_parallel_pitch_deg": 2.6666666666666665,
+      "great_circle_center_separation_deg": 2.6666666666666665,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3335740708499864,
+        "maximum_abs_tan_y_deg": 1.338085289312928,
+        "minimum_denominator": 0.9994568694638656,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.3333333333333333,
+          "dec_deg": -1.33748
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.3333333333333333,
+          "dec_deg": -1.33748
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.13842592915001362,
+          "minimum_y_edge_margin_deg": 0.13647026624262737,
+          "minimum_any_edge_margin_deg": 0.13647026624262737,
+          "minimum_x_edge_margin_arcmin": 8.305555749000817,
+          "minimum_y_edge_margin_arcmin": 8.188215974557643,
+          "minimum_x_edge_margin_pixels": 433.3333434261296,
+          "minimum_y_edge_margin_pixels": 427.2112682377901,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.013529733757372625
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.15122592915001354,
+          "minimum_y_edge_margin_deg": 0.14929248846484966,
+          "minimum_any_edge_margin_deg": 0.14929248846484966,
+          "minimum_x_edge_margin_arcmin": 9.073555749000812,
+          "minimum_y_edge_margin_arcmin": 8.957549307890979,
+          "minimum_x_edge_margin_pixels": 469.32184908624896,
+          "minimum_y_edge_margin_pixels": 463.32151592539554,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.0007075115351503347
+        }
+      }
+    },
+    {
+      "row_index": 1,
+      "center_dec_deg": 2.67496,
+      "cell_dec_min_deg": 1.33748,
+      "cell_dec_max_deg": 4.01244,
+      "n_ra_full_circle": 135,
+      "ra_pitch_deg": 2.6666666666666665,
+      "local_parallel_pitch_deg": 2.6637609773936735,
+      "great_circle_center_separation_deg": 2.663760453619809,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3335736773020215,
+        "maximum_abs_tan_y_deg": 1.3388067286845464,
+        "minimum_denominator": 0.9994571644113617,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.3333333333333333,
+          "dec_deg": 1.33748
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.3333333333333333,
+          "dec_deg": 4.01244
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.1384263226979785,
+          "minimum_y_edge_margin_deg": 0.13574882687100898,
+          "minimum_any_edge_margin_deg": 0.13574882687100898,
+          "minimum_x_edge_margin_arcmin": 8.30557936187871,
+          "minimum_y_edge_margin_arcmin": 8.144929612260539,
+          "minimum_x_edge_margin_pixels": 433.3345754023675,
+          "minimum_y_edge_margin_pixels": 424.9528493353325,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.014251173128991018
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.15122632269797842,
+          "minimum_y_edge_margin_deg": 0.14857104909323127,
+          "minimum_any_edge_margin_deg": 0.14857104909323127,
+          "minimum_x_edge_margin_arcmin": 9.073579361878705,
+          "minimum_y_edge_margin_arcmin": 8.914262945593876,
+          "minimum_x_edge_margin_pixels": 469.32307044200206,
+          "minimum_y_edge_margin_pixels": 461.08256615140743,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.0014289509067687278
+        }
+      }
+    },
+    {
+      "row_index": 2,
+      "center_dec_deg": 5.34992,
+      "cell_dec_min_deg": 4.01244,
+      "cell_dec_max_deg": 6.6874,
+      "n_ra_full_circle": 135,
+      "ra_pitch_deg": 2.6666666666666665,
+      "local_parallel_pitch_deg": 2.6550502418473085,
+      "great_circle_center_separation_deg": 2.655048158154672,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3306655050842482,
+        "maximum_abs_tan_y_deg": 1.3395187228145813,
+        "minimum_denominator": 0.9994586359363966,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.3333333333333333,
+          "dec_deg": 4.01244
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.3333333333333333,
+          "dec_deg": 6.6874
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.14133449491575178,
+          "minimum_y_edge_margin_deg": 0.1350368327409741,
+          "minimum_any_edge_margin_deg": 0.1350368327409741,
+          "minimum_x_edge_margin_arcmin": 8.480069694945108,
+          "minimum_y_edge_margin_arcmin": 8.102209964458446,
+          "minimum_x_edge_margin_pixels": 442.4384188667013,
+          "minimum_y_edge_margin_pixels": 422.7239981456581,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.014963167259025884
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.1541344949157517,
+          "minimum_y_edge_margin_deg": 0.1478590549631964,
+          "minimum_any_edge_margin_deg": 0.1478590549631964,
+          "minimum_x_edge_margin_arcmin": 9.248069694945102,
+          "minimum_y_edge_margin_arcmin": 8.871543297791785,
+          "minimum_x_edge_margin_pixels": 478.3484324971605,
+          "minimum_y_edge_margin_pixels": 458.87292919612685,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.002140945036803593
+        }
+      }
+    },
+    {
+      "row_index": 3,
+      "center_dec_deg": 8.02488,
+      "cell_dec_min_deg": 6.687399999999999,
+      "cell_dec_max_deg": 9.362359999999999,
+      "n_ra_full_circle": 134,
+      "ra_pitch_deg": 2.6865671641791047,
+      "local_parallel_pitch_deg": 2.660259065754996,
+      "great_circle_center_separation_deg": 2.6602543151780735,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.334746434602491,
+        "maximum_abs_tan_y_deg": 1.340252408443438,
+        "minimum_denominator": 0.9994572821939393,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.3432835820895526,
+          "dec_deg": 6.687399999999999
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.3432835820895526,
+          "dec_deg": 9.362359999999999
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.13725356539750888,
+          "minimum_y_edge_margin_deg": 0.13430314711211744,
+          "minimum_any_edge_margin_deg": 0.13430314711211744,
+          "minimum_x_edge_margin_arcmin": 8.235213923850534,
+          "minimum_y_edge_margin_arcmin": 8.058188826727047,
+          "minimum_x_edge_margin_pixels": 429.6633351574191,
+          "minimum_y_edge_margin_pixels": 420.4272431335851,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.015696852887882556
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.1500535653975088,
+          "minimum_y_edge_margin_deg": 0.14712536933433973,
+          "minimum_any_edge_margin_deg": 0.14712536933433973,
+          "minimum_x_edge_margin_arcmin": 9.003213923850527,
+          "minimum_y_edge_margin_arcmin": 8.827522160060383,
+          "minimum_x_edge_margin_pixels": 465.6834788198549,
+          "minimum_y_edge_margin_pixels": 456.59597379622676,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.002874630665660266
+        }
+      }
+    },
+    {
+      "row_index": 4,
+      "center_dec_deg": 10.69984,
+      "cell_dec_min_deg": 9.36236,
+      "cell_dec_max_deg": 12.03732,
+      "n_ra_full_circle": 133,
+      "ra_pitch_deg": 2.706766917293233,
+      "local_parallel_pitch_deg": 2.6597052135846777,
+      "great_circle_center_separation_deg": 2.659696685987073,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3359564942031938,
+        "maximum_abs_tan_y_deg": 1.3409856662535895,
+        "minimum_denominator": 0.9994570933538178,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.3533834586466165,
+          "dec_deg": 9.36236
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.3533834586466165,
+          "dec_deg": 12.03732
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.13604350579680613,
+          "minimum_y_edge_margin_deg": 0.1335698893019659,
+          "minimum_any_edge_margin_deg": 0.1335698893019659,
+          "minimum_x_edge_margin_arcmin": 8.162610347808368,
+          "minimum_y_edge_margin_arcmin": 8.014193358117954,
+          "minimum_x_edge_margin_pixels": 425.87532249434963,
+          "minimum_y_edge_margin_pixels": 418.1318273800672,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.0164301106980341
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.14884350579680605,
+          "minimum_y_edge_margin_deg": 0.14639211152418818,
+          "minimum_any_edge_margin_deg": 0.14639211152418818,
+          "minimum_x_edge_margin_arcmin": 8.930610347808363,
+          "minimum_y_edge_margin_arcmin": 8.783526691451291,
+          "minimum_x_edge_margin_pixels": 461.92812143836363,
+          "minimum_y_edge_margin_pixels": 454.3203461095495,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.00360788847581181
+        }
+      }
+    },
+    {
+      "row_index": 5,
+      "center_dec_deg": 13.3748,
+      "cell_dec_min_deg": 12.037320000000001,
+      "cell_dec_max_deg": 14.71228,
+      "n_ra_full_circle": 132,
+      "ra_pitch_deg": 2.727272727272727,
+      "local_parallel_pitch_deg": 2.6533028513692303,
+      "great_circle_center_separation_deg": 2.653289445146519,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3342498279842698,
+        "maximum_abs_tan_y_deg": 1.341712073734062,
+        "minimum_denominator": 0.9994580886196257,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.3636363636363635,
+          "dec_deg": 12.037320000000001
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.3636363636363635,
+          "dec_deg": 14.71228
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.13775017201573014,
+          "minimum_y_edge_margin_deg": 0.13284348182149341,
+          "minimum_any_edge_margin_deg": 0.13284348182149341,
+          "minimum_x_edge_margin_arcmin": 8.265010320943809,
+          "minimum_y_edge_margin_arcmin": 7.970608909289605,
+          "minimum_x_edge_margin_pixels": 431.21792978837266,
+          "minimum_y_edge_margin_pixels": 415.85785613684897,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.01715651817850658
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.15055017201573007,
+          "minimum_y_edge_margin_deg": 0.1456657040437157,
+          "minimum_any_edge_margin_deg": 0.1456657040437157,
+          "minimum_x_edge_margin_arcmin": 9.033010320943804,
+          "minimum_y_edge_margin_arcmin": 8.739942242622941,
+          "minimum_x_edge_margin_pixels": 467.2246717729554,
+          "minimum_y_edge_margin_pixels": 452.0659780667039,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.00433429595628429
+        }
+      }
+    },
+    {
+      "row_index": 6,
+      "center_dec_deg": 16.04976,
+      "cell_dec_min_deg": 14.71228,
+      "cell_dec_max_deg": 17.38724,
+      "n_ra_full_circle": 130,
+      "ra_pitch_deg": 2.769230769230769,
+      "local_parallel_pitch_deg": 2.6612915512694264,
+      "great_circle_center_separation_deg": 2.661271747422731,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3398167885151542,
+        "maximum_abs_tan_y_deg": 1.3424977043278192,
+        "minimum_denominator": 0.9994561497353647,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.3846153846153846,
+          "dec_deg": 14.71228
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.3846153846153846,
+          "dec_deg": 17.38724
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.1321832114848458,
+          "minimum_y_edge_margin_deg": 0.13205785122773617,
+          "minimum_any_edge_margin_deg": 0.13205785122773617,
+          "minimum_x_edge_margin_arcmin": 7.930992689090748,
+          "minimum_y_edge_margin_arcmin": 7.92347107366417,
+          "minimum_x_edge_margin_pixels": 413.79092290908255,
+          "minimum_y_edge_margin_pixels": 413.39849079986976,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.017942148772263827
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.14498321148484572,
+          "minimum_y_edge_margin_deg": 0.14488007344995846,
+          "minimum_any_edge_margin_deg": 0.14488007344995846,
+          "minimum_x_edge_margin_arcmin": 8.698992689090744,
+          "minimum_y_edge_margin_arcmin": 8.692804406997507,
+          "minimum_x_edge_margin_pixels": 449.94789771159026,
+          "minimum_y_edge_margin_pixels": 449.62781415504355,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.005119926550041537
+        }
+      }
+    },
+    {
+      "row_index": 7,
+      "center_dec_deg": 18.72472,
+      "cell_dec_min_deg": 17.387240000000002,
+      "cell_dec_max_deg": 20.0622,
+      "n_ra_full_circle": 128,
+      "ra_pitch_deg": 2.8125,
+      "local_parallel_pitch_deg": 2.663639613545403,
+      "great_circle_center_separation_deg": 2.663612048092288,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.342590596067972,
+        "maximum_abs_tan_y_deg": 1.343287956726949,
+        "minimum_denominator": 0.9994553476936322,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.40625,
+          "dec_deg": 17.387240000000002
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.40625,
+          "dec_deg": 20.0622
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.12940940393202793,
+          "minimum_y_edge_margin_deg": 0.1312675988286065,
+          "minimum_any_edge_margin_deg": 0.12940940393202793,
+          "minimum_x_edge_margin_arcmin": 7.764564235921676,
+          "minimum_y_edge_margin_arcmin": 7.87605592971639,
+          "minimum_x_edge_margin_pixels": 405.10769926547874,
+          "minimum_y_edge_margin_pixels": 410.9246572025943,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.02059059606797206
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.14220940393202786,
+          "minimum_y_edge_margin_deg": 0.1440898210508288,
+          "minimum_any_edge_margin_deg": 0.14220940393202786,
+          "minimum_x_edge_margin_arcmin": 8.532564235921672,
+          "minimum_y_edge_margin_arcmin": 8.645389263049728,
+          "minimum_x_edge_margin_pixels": 441.3395294442244,
+          "minimum_y_edge_margin_pixels": 447.17530670946866,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.007790596067972139
+        }
+      }
+    },
+    {
+      "row_index": 8,
+      "center_dec_deg": 21.39968,
+      "cell_dec_min_deg": 20.0622,
+      "cell_dec_max_deg": 22.73716,
+      "n_ra_full_circle": 126,
+      "ra_pitch_deg": 2.857142857142857,
+      "local_parallel_pitch_deg": 2.660165296298307,
+      "great_circle_center_separation_deg": 2.660128594449482,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3424784641067342,
+        "maximum_abs_tan_y_deg": 1.344076331221467,
+        "minimum_denominator": 0.9994557249120477,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.4285714285714286,
+          "dec_deg": 20.0622
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.4285714285714286,
+          "dec_deg": 22.73716
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.12952153589326576,
+          "minimum_y_edge_margin_deg": 0.13047922433408843,
+          "minimum_any_edge_margin_deg": 0.12952153589326576,
+          "minimum_x_edge_margin_arcmin": 7.771292153595946,
+          "minimum_y_edge_margin_arcmin": 7.828753460045306,
+          "minimum_x_edge_margin_pixels": 405.4587210571798,
+          "minimum_y_edge_margin_pixels": 408.45670226323335,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.020478464106734234
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.14232153589326568,
+          "minimum_y_edge_margin_deg": 0.14330144655631072,
+          "minimum_any_edge_margin_deg": 0.14232153589326568,
+          "minimum_x_edge_margin_arcmin": 8.539292153595941,
+          "minimum_y_edge_margin_arcmin": 8.598086793378643,
+          "minimum_x_edge_margin_pixels": 441.687525185997,
+          "minimum_y_edge_margin_pixels": 444.7286272437229,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.007678464106734312
+        }
+      }
+    },
+    {
+      "row_index": 9,
+      "center_dec_deg": 24.07464,
+      "cell_dec_min_deg": 22.73716,
+      "cell_dec_max_deg": 25.412119999999998,
+      "n_ra_full_circle": 123,
+      "ra_pitch_deg": 2.926829268292683,
+      "local_parallel_pitch_deg": 2.6722385010771523,
+      "great_circle_center_separation_deg": 2.6721901429798867,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3502811761745968,
+        "maximum_abs_tan_y_deg": 1.3449723977638999,
+        "minimum_denominator": 0.9994529041912068,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.4634146341463414,
+          "dec_deg": 22.73716
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.4634146341463414,
+          "dec_deg": 25.412119999999998
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.12171882382540322,
+          "minimum_y_edge_margin_deg": 0.12958315779165552,
+          "minimum_any_edge_margin_deg": 0.12171882382540322,
+          "minimum_x_edge_margin_arcmin": 7.303129429524193,
+          "minimum_y_edge_margin_arcmin": 7.774989467499331,
+          "minimum_x_edge_margin_pixels": 381.0328398012623,
+          "minimum_y_edge_margin_pixels": 405.65162439126954,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.028281176174596773
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.13451882382540314,
+          "minimum_y_edge_margin_deg": 0.1424053800138778,
+          "minimum_any_edge_margin_deg": 0.13451882382540314,
+          "minimum_x_edge_margin_arcmin": 8.071129429524188,
+          "minimum_y_edge_margin_arcmin": 8.544322800832669,
+          "minimum_x_edge_margin_pixels": 417.47221187194083,
+          "minimum_y_edge_margin_pixels": 441.94773107755185,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.01548117617459685
+        }
+      }
+    },
+    {
+      "row_index": 10,
+      "center_dec_deg": 26.7496,
+      "cell_dec_min_deg": 25.41212,
+      "cell_dec_max_deg": 28.08708,
+      "n_ra_full_circle": 121,
+      "ra_pitch_deg": 2.975206611570248,
+      "local_parallel_pitch_deg": 2.6568062052970234,
+      "great_circle_center_separation_deg": 2.6567457226149744,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.344250267103727,
+        "maximum_abs_tan_y_deg": 1.3457505037710398,
+        "minimum_denominator": 0.9994557086702468,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.487603305785124,
+          "dec_deg": 25.41212
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.487603305785124,
+          "dec_deg": 28.08708
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.1277497328962729,
+          "minimum_y_edge_margin_deg": 0.12880505178451562,
+          "minimum_any_edge_margin_deg": 0.1277497328962729,
+          "minimum_x_edge_margin_arcmin": 7.664983973776374,
+          "minimum_y_edge_margin_arcmin": 7.728303107070937,
+          "minimum_x_edge_margin_pixels": 399.912207327463,
+          "minimum_y_edge_margin_pixels": 403.21581428196197,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.0222502671037271
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.14054973289627282,
+          "minimum_y_edge_margin_deg": 0.1416272740067379,
+          "minimum_any_edge_margin_deg": 0.14054973289627282,
+          "minimum_x_edge_margin_arcmin": 8.43298397377637,
+          "minimum_y_edge_margin_arcmin": 8.497636440404275,
+          "minimum_x_edge_margin_pixels": 436.1888262298122,
+          "minimum_y_edge_margin_pixels": 439.5329193312556,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.009450267103727178
+        }
+      }
+    },
+    {
+      "row_index": 11,
+      "center_dec_deg": 29.42456,
+      "cell_dec_min_deg": 28.08708,
+      "cell_dec_max_deg": 30.76204,
+      "n_ra_full_circle": 118,
+      "ra_pitch_deg": 3.0508474576271185,
+      "local_parallel_pitch_deg": 2.657298214942524,
+      "great_circle_center_separation_deg": 2.657222432669787,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3463537066247493,
+        "maximum_abs_tan_y_deg": 1.3466544454531928,
+        "minimum_denominator": 0.9994552322151651,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.5254237288135593,
+          "dec_deg": 28.08708
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.5254237288135593,
+          "dec_deg": 30.762040000000002
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.12564629337525068,
+          "minimum_y_edge_margin_deg": 0.1279011101023626,
+          "minimum_any_edge_margin_deg": 0.12564629337525068,
+          "minimum_x_edge_margin_arcmin": 7.538777602515041,
+          "minimum_y_edge_margin_arcmin": 7.674066606141756,
+          "minimum_x_edge_margin_pixels": 393.3275270877413,
+          "minimum_y_edge_margin_pixels": 400.3860837987004,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.02435370662474931
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.1384462933752506,
+          "minimum_y_edge_margin_deg": 0.1407233323245849,
+          "minimum_any_edge_margin_deg": 0.1384462933752506,
+          "minimum_x_edge_margin_arcmin": 8.306777602515037,
+          "minimum_y_edge_margin_arcmin": 8.443399939475093,
+          "minimum_x_edge_margin_pixels": 429.6609104749157,
+          "minimum_y_edge_margin_pixels": 436.72758307629795,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.011553706624749388
+        }
+      }
+    },
+    {
+      "row_index": 12,
+      "center_dec_deg": 32.09952,
+      "cell_dec_min_deg": 30.76204,
+      "cell_dec_max_deg": 33.437,
+      "n_ra_full_circle": 115,
+      "ra_pitch_deg": 3.130434782608696,
+      "local_parallel_pitch_deg": 2.6518738638889237,
+      "great_circle_center_separation_deg": 2.6517807052102067,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3455544284086776,
+        "maximum_abs_tan_y_deg": 1.347561072336198,
+        "minimum_denominator": 0.9994559484020902,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.565217391304348,
+          "dec_deg": 30.762040000000002
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.565217391304348,
+          "dec_deg": 33.437
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.12644557159132241,
+          "minimum_y_edge_margin_deg": 0.12699448321935747,
+          "minimum_any_edge_margin_deg": 0.12644557159132241,
+          "minimum_x_edge_margin_arcmin": 7.586734295479345,
+          "minimum_y_edge_margin_arcmin": 7.619668993161448,
+          "minimum_x_edge_margin_pixels": 395.8296154163137,
+          "minimum_y_edge_margin_pixels": 397.547947469293,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.02355442840867758
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.13924557159132234,
+          "minimum_y_edge_margin_deg": 0.13981670544157976,
+          "minimum_any_edge_margin_deg": 0.13924557159132234,
+          "minimum_x_edge_margin_arcmin": 8.35473429547934,
+          "minimum_y_edge_margin_arcmin": 8.389002326494786,
+          "minimum_x_edge_margin_pixels": 432.1414290765176,
+          "minimum_y_edge_margin_pixels": 433.91391343938545,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.010754428408677658
+        }
+      }
+    },
+    {
+      "row_index": 13,
+      "center_dec_deg": 34.77448,
+      "cell_dec_min_deg": 33.437,
+      "cell_dec_max_deg": 36.111959999999996,
+      "n_ra_full_circle": 111,
+      "ra_pitch_deg": 3.2432432432432434,
+      "local_parallel_pitch_deg": 2.6640107937573543,
+      "great_circle_center_separation_deg": 2.6638950743395085,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3537904198562345,
+        "maximum_abs_tan_y_deg": 1.3486573598145528,
+        "minimum_denominator": 0.9994530347998029,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.6216216216216217,
+          "dec_deg": 33.437
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.6216216216216217,
+          "dec_deg": 36.111959999999996
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.11820958014376548,
+          "minimum_y_edge_margin_deg": 0.12589819574100258,
+          "minimum_any_edge_margin_deg": 0.11820958014376548,
+          "minimum_x_edge_margin_arcmin": 7.092574808625929,
+          "minimum_y_edge_margin_arcmin": 7.553891744460155,
+          "minimum_x_edge_margin_pixels": 370.0473813196137,
+          "minimum_y_edge_margin_pixels": 394.11609101531246,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.031790419856234514
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.1310095801437654,
+          "minimum_y_edge_margin_deg": 0.13872041796322487,
+          "minimum_any_edge_margin_deg": 0.1310095801437654,
+          "minimum_x_edge_margin_arcmin": 7.860574808625924,
+          "minimum_y_edge_margin_arcmin": 8.323225077793492,
+          "minimum_x_edge_margin_pixels": 406.5814556185823,
+          "minimum_y_edge_margin_pixels": 430.51164195483585,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.01899041985623459
+        }
+      }
+    },
+    {
+      "row_index": 14,
+      "center_dec_deg": 37.44944,
+      "cell_dec_min_deg": 36.11196,
+      "cell_dec_max_deg": 38.78692,
+      "n_ra_full_circle": 107,
+      "ra_pitch_deg": 3.364485981308411,
+      "local_parallel_pitch_deg": 2.67103253551706,
+      "great_circle_center_separation_deg": 2.6708906160291184,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3595793684690096,
+        "maximum_abs_tan_y_deg": 1.3497906046766392,
+        "minimum_denominator": 0.9994511333781335,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.6822429906542056,
+          "dec_deg": 36.11196
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.6822429906542056,
+          "dec_deg": 38.78692
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.11242063153099036,
+          "minimum_y_edge_margin_deg": 0.12476495087891615,
+          "minimum_any_edge_margin_deg": 0.11242063153099036,
+          "minimum_x_edge_margin_arcmin": 6.745237891859421,
+          "minimum_y_edge_margin_arcmin": 7.485897052734969,
+          "minimum_x_edge_margin_pixels": 351.9254552274481,
+          "minimum_y_edge_margin_pixels": 390.5685418818245,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.03757936846900964
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.12522063153099028,
+          "minimum_y_edge_margin_deg": 0.13758717310113844,
+          "minimum_any_edge_margin_deg": 0.12522063153099028,
+          "minimum_x_edge_margin_arcmin": 7.513237891859417,
+          "minimum_y_edge_margin_arcmin": 8.255230386068305,
+          "minimum_x_edge_margin_pixels": 388.6157530272112,
+          "minimum_y_edge_margin_pixels": 426.99467514146414,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.024779368469009716
+        }
+      }
+    },
+    {
+      "row_index": 15,
+      "center_dec_deg": 40.1244,
+      "cell_dec_min_deg": 38.78692,
+      "cell_dec_max_deg": 41.46188,
+      "n_ra_full_circle": 103,
+      "ra_pitch_deg": 3.495145631067961,
+      "local_parallel_pitch_deg": 2.672552708243074,
+      "great_circle_center_separation_deg": 2.6723805753096874,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3627376434529586,
+        "maximum_abs_tan_y_deg": 1.350956837733812,
+        "minimum_denominator": 0.9994503322168901,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.7475728155339805,
+          "dec_deg": 38.78692
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.7475728155339805,
+          "dec_deg": 41.46188
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.10926235654704142,
+          "minimum_y_edge_margin_deg": 0.12359871782174348,
+          "minimum_any_edge_margin_deg": 0.10926235654704142,
+          "minimum_x_edge_margin_arcmin": 6.555741392822485,
+          "minimum_y_edge_margin_arcmin": 7.4159230693046085,
+          "minimum_x_edge_margin_pixels": 342.03868136465144,
+          "minimum_y_edge_margin_pixels": 386.9177253550231,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.04073764345295858
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.12206235654704134,
+          "minimum_y_edge_margin_deg": 0.13642094004396577,
+          "minimum_any_edge_margin_deg": 0.12206235654704134,
+          "minimum_x_edge_margin_arcmin": 7.32374139282248,
+          "minimum_y_edge_margin_arcmin": 8.185256402637947,
+          "minimum_x_edge_margin_pixels": 378.81420997357657,
+          "minimum_y_edge_margin_pixels": 423.3753311709283,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.027937643452958655
+        }
+      }
+    },
+    {
+      "row_index": 16,
+      "center_dec_deg": 42.79936,
+      "cell_dec_min_deg": 41.46188,
+      "cell_dec_max_deg": 44.13684,
+      "n_ra_full_circle": 99,
+      "ra_pitch_deg": 3.6363636363636362,
+      "local_parallel_pitch_deg": 2.668136195961147,
+      "great_circle_center_separation_deg": 2.6679294373537643,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.363058954305868,
+        "maximum_abs_tan_y_deg": 1.3521511277683558,
+        "minimum_denominator": 0.9994507232049061,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.8181818181818183,
+          "dec_deg": 41.46188
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.8181818181818183,
+          "dec_deg": 44.13684
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.10894104569413199,
+          "minimum_y_edge_margin_deg": 0.12240442778719962,
+          "minimum_any_edge_margin_deg": 0.10894104569413199,
+          "minimum_x_edge_margin_arcmin": 6.536462741647919,
+          "minimum_y_edge_margin_arcmin": 7.344265667231977,
+          "minimum_x_edge_margin_pixels": 341.03283869467407,
+          "minimum_y_edge_margin_pixels": 383.17907829036403,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.041058954305868006
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.12174104569413191,
+          "minimum_y_edge_margin_deg": 0.1352266500094219,
+          "minimum_any_edge_margin_deg": 0.12174104569413191,
+          "minimum_x_edge_margin_arcmin": 7.304462741647915,
+          "minimum_y_edge_margin_arcmin": 8.113599000565316,
+          "minimum_x_edge_margin_pixels": 377.8170383610991,
+          "minimum_y_edge_margin_pixels": 419.6689138223439,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.028258954305868084
+        }
+      }
+    },
+    {
+      "row_index": 17,
+      "center_dec_deg": 45.47432,
+      "cell_dec_min_deg": 44.13684,
+      "cell_dec_max_deg": 46.8118,
+      "n_ra_full_circle": 95,
+      "ra_pitch_deg": 3.789473684210526,
+      "local_parallel_pitch_deg": 2.6572883613479097,
+      "great_circle_center_separation_deg": 2.6570421417124246,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3603093287862966,
+        "maximum_abs_tan_y_deg": 1.353367327647796,
+        "minimum_denominator": 0.9994524024358863,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -1.8947368421052628,
+          "dec_deg": 44.13684
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -1.8947368421052628,
+          "dec_deg": 46.8118
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.11169067121370335,
+          "minimum_y_edge_margin_deg": 0.1211882279077594,
+          "minimum_any_edge_margin_deg": 0.11169067121370335,
+          "minimum_x_edge_margin_arcmin": 6.701440272822201,
+          "minimum_y_edge_margin_arcmin": 7.271293674465564,
+          "minimum_x_edge_margin_pixels": 349.6403620602888,
+          "minimum_y_edge_margin_pixels": 379.3718438851599,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.03830932878629664
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.12449067121370327,
+          "minimum_y_edge_margin_deg": 0.1340104501299817,
+          "minimum_any_edge_margin_deg": 0.12449067121370327,
+          "minimum_x_edge_margin_arcmin": 7.4694402728221965,
+          "minimum_y_edge_margin_arcmin": 8.040627007798902,
+          "minimum_x_edge_margin_pixels": 386.3503589390792,
+          "minimum_y_edge_margin_pixels": 415.8945004033915,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.02550932878629672
+        }
+      }
+    },
+    {
+      "row_index": 18,
+      "center_dec_deg": 48.14928,
+      "cell_dec_min_deg": 46.8118,
+      "cell_dec_max_deg": 49.48676,
+      "n_ra_full_circle": 90,
+      "ra_pitch_deg": 4.0,
+      "local_parallel_pitch_deg": 2.6687685098668177,
+      "great_circle_center_separation_deg": 2.6684677408040467,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3692698987866225,
+        "maximum_abs_tan_y_deg": 1.3549748669004211,
+        "minimum_denominator": 0.9994493913529983,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -2.0,
+          "dec_deg": 46.8118
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -2.0,
+          "dec_deg": 49.486760000000004
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.10273010121337744,
+          "minimum_y_edge_margin_deg": 0.11958068865513427,
+          "minimum_any_edge_margin_deg": 0.10273010121337744,
+          "minimum_x_edge_margin_arcmin": 6.163806072802647,
+          "minimum_y_edge_margin_arcmin": 7.174841319308056,
+          "minimum_x_edge_margin_pixels": 321.5898820592686,
+          "minimum_y_edge_margin_pixels": 374.3395470943334,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.04726989878662255
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.11553010121337737,
+          "minimum_y_edge_margin_deg": 0.13240291087735656,
+          "minimum_any_edge_margin_deg": 0.11553010121337737,
+          "minimum_x_edge_margin_arcmin": 6.931806072802642,
+          "minimum_y_edge_margin_arcmin": 7.944174652641394,
+          "minimum_x_edge_margin_pixels": 358.54169342082633,
+          "minimum_y_edge_margin_pixels": 410.9055854814514,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.03446989878662263
+        }
+      }
+    },
+    {
+      "row_index": 19,
+      "center_dec_deg": 50.82424,
+      "cell_dec_min_deg": 49.486760000000004,
+      "cell_dec_max_deg": 52.16172,
+      "n_ra_full_circle": 86,
+      "ra_pitch_deg": 4.186046511627907,
+      "local_parallel_pitch_deg": 2.6443314085566083,
+      "great_circle_center_separation_deg": 2.643977913517021,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3601181540192058,
+        "maximum_abs_tan_y_deg": 1.3562562452653693,
+        "minimum_denominator": 0.9994537766871655,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -2.0930232558139537,
+          "dec_deg": 49.486760000000004
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -2.0930232558139537,
+          "dec_deg": 52.16172
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.1118818459807942,
+          "minimum_y_edge_margin_deg": 0.11829931029018614,
+          "minimum_any_edge_margin_deg": 0.1118818459807942,
+          "minimum_x_edge_margin_arcmin": 6.712910758847652,
+          "minimum_y_edge_margin_arcmin": 7.097958617411169,
+          "minimum_x_edge_margin_pixels": 350.2388222007471,
+          "minimum_y_edge_margin_pixels": 370.32827569101755,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.03811815401920579
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.12468184598079413,
+          "minimum_y_edge_margin_deg": 0.13112153251240843,
+          "minimum_any_edge_margin_deg": 0.12468184598079413,
+          "minimum_x_edge_margin_arcmin": 7.480910758847648,
+          "minimum_y_edge_margin_arcmin": 7.867291950744506,
+          "minimum_x_edge_margin_pixels": 386.9436599403956,
+          "minimum_y_edge_margin_pixels": 406.92889400402623,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.02531815401920587
+        }
+      }
+    },
+    {
+      "row_index": 20,
+      "center_dec_deg": 53.4992,
+      "cell_dec_min_deg": 52.16172,
+      "cell_dec_max_deg": 54.83668,
+      "n_ra_full_circle": 81,
+      "ra_pitch_deg": 4.444444444444445,
+      "local_parallel_pitch_deg": 2.6437067140111337,
+      "great_circle_center_separation_deg": 2.643278351408558,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3635924602690275,
+        "maximum_abs_tan_y_deg": 1.3580262379191115,
+        "minimum_denominator": 0.9994531384781059,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -2.2222222222222223,
+          "dec_deg": 52.16172
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -2.2222222222222223,
+          "dec_deg": 54.83668
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.1084075397309725,
+          "minimum_y_edge_margin_deg": 0.11652931763644392,
+          "minimum_any_edge_margin_deg": 0.1084075397309725,
+          "minimum_x_edge_margin_arcmin": 6.50445238385835,
+          "minimum_y_edge_margin_arcmin": 6.991759058186635,
+          "minimum_x_edge_margin_pixels": 339.3627330708705,
+          "minimum_y_edge_margin_pixels": 364.787429122781,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.04159246026902749
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.12120753973097242,
+          "minimum_y_edge_margin_deg": 0.1293515398586662,
+          "minimum_any_edge_margin_deg": 0.12120753973097242,
+          "minimum_x_edge_margin_arcmin": 7.2724523838583455,
+          "minimum_y_edge_margin_arcmin": 7.7610923915199725,
+          "minimum_x_edge_margin_pixels": 376.1613301995696,
+          "minimum_y_edge_margin_pixels": 401.4358133544814,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.02879246026902757
+        }
+      }
+    },
+    {
+      "row_index": 21,
+      "center_dec_deg": 56.17416,
+      "cell_dec_min_deg": 54.83668,
+      "cell_dec_max_deg": 57.51164,
+      "n_ra_full_circle": 75,
+      "ra_pitch_deg": 4.8,
+      "local_parallel_pitch_deg": 2.6720175703581996,
+      "great_circle_center_separation_deg": 2.6714782375110846,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3825430718175329,
+        "maximum_abs_tan_y_deg": 1.3605117337784431,
+        "minimum_denominator": 0.9994463413101032,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -2.4,
+          "dec_deg": 54.83668
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -2.4,
+          "dec_deg": 57.51164000000001
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.08945692818246709,
+          "minimum_y_edge_margin_deg": 0.11404382177711225,
+          "minimum_any_edge_margin_deg": 0.08945692818246709,
+          "minimum_x_edge_margin_arcmin": 5.367415690948025,
+          "minimum_y_edge_margin_arcmin": 6.842629306626735,
+          "minimum_x_edge_margin_pixels": 280.0390795277231,
+          "minimum_y_edge_margin_pixels": 357.0067464326993,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.060543071817532906
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.10225692818246701,
+          "minimum_y_edge_margin_deg": 0.12686604399933454,
+          "minimum_any_edge_margin_deg": 0.10225692818246701,
+          "minimum_x_edge_margin_arcmin": 6.135415690948021,
+          "minimum_y_edge_margin_arcmin": 7.611962639960073,
+          "minimum_x_edge_margin_pixels": 317.34908746282866,
+          "minimum_y_edge_margin_pixels": 393.7222055151762,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.047743071817532984
+        }
+      }
+    }
+  ],
+  "hypothetical_rows_not_part_of_frozen_grid": [
+    {
+      "row_index": null,
+      "center_dec_deg": 54.26,
+      "cell_dec_min_deg": 52.92252,
+      "cell_dec_max_deg": 55.59748,
+      "n_ra_full_circle": 79,
+      "ra_pitch_deg": 4.556962025316456,
+      "local_parallel_pitch_deg": 2.661758021886536,
+      "great_circle_center_separation_deg": 2.66129574803847,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3740784560371706,
+        "maximum_abs_tan_y_deg": 1.3588570342255926,
+        "minimum_denominator": 0.9994491394192888,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -2.278481012658228,
+          "dec_deg": 52.92252
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -2.278481012658228,
+          "dec_deg": 55.59748
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.09792154396282937,
+          "minimum_y_edge_margin_deg": 0.11569852132996283,
+          "minimum_any_edge_margin_deg": 0.09792154396282937,
+          "minimum_x_edge_margin_arcmin": 5.875292637769762,
+          "minimum_y_edge_margin_arcmin": 6.94191127979777,
+          "minimum_x_edge_margin_pixels": 306.5370071879876,
+          "minimum_y_edge_margin_pixels": 362.1866754677098,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.05207845603717062
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.1107215439628293,
+          "minimum_y_edge_margin_deg": 0.12852074355218512,
+          "minimum_any_edge_margin_deg": 0.1107215439628293,
+          "minimum_x_edge_margin_arcmin": 6.643292637769758,
+          "minimum_y_edge_margin_arcmin": 7.711244613131107,
+          "minimum_x_edge_margin_pixels": 343.6185847122289,
+          "minimum_y_edge_margin_pixels": 398.8574799895401,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.0392784560371707
+        }
+      }
+    },
+    {
+      "row_index": null,
+      "center_dec_deg": 60.0,
+      "cell_dec_min_deg": 58.66252,
+      "cell_dec_max_deg": 61.33748,
+      "n_ra_full_circle": 68,
+      "ra_pitch_deg": 5.294117647058823,
+      "local_parallel_pitch_deg": 2.647058823529412,
+      "great_circle_center_separation_deg": 2.6463524841170845,
+      "boundary_projection": {
+        "maximum_abs_tan_x_deg": 1.3769444277004297,
+        "maximum_abs_tan_y_deg": 1.3634741417806875,
+        "minimum_denominator": 0.9994500863816733,
+        "x_extreme_sky_offset": {
+          "ra_offset_deg": -2.6470588235294117,
+          "dec_deg": 58.66252000000001
+        },
+        "y_extreme_sky_offset": {
+          "ra_offset_deg": -2.6470588235294117,
+          "dec_deg": 61.33748
+        },
+        "boundary_extrema_equal_corner_extrema": true
+      },
+      "nominal_models": {
+        "nominal_1.15_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.15,
+          "nominal_width_tan_deg": 2.944,
+          "nominal_height_tan_deg": 2.949111111111111,
+          "minimum_x_edge_margin_deg": 0.09505557229957029,
+          "minimum_y_edge_margin_deg": 0.11108141377486791,
+          "minimum_any_edge_margin_deg": 0.09505557229957029,
+          "minimum_x_edge_margin_arcmin": 5.703334337974217,
+          "minimum_y_edge_margin_arcmin": 6.664884826492075,
+          "minimum_x_edge_margin_pixels": 297.5652698073505,
+          "minimum_y_edge_margin_pixels": 347.73312138219524,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.054944427700429704
+        },
+        "nominal_1.16_arcsec_per_pix": {
+          "scale_arcsec_per_pix": 1.16,
+          "nominal_width_tan_deg": 2.9696,
+          "nominal_height_tan_deg": 2.9747555555555554,
+          "minimum_x_edge_margin_deg": 0.10785557229957021,
+          "minimum_y_edge_margin_deg": 0.1239036359970902,
+          "minimum_any_edge_margin_deg": 0.10785557229957021,
+          "minimum_x_edge_margin_arcmin": 6.471334337974213,
+          "minimum_y_edge_margin_arcmin": 7.434218159825412,
+          "minimum_x_edge_margin_pixels": 334.72418989521793,
+          "minimum_y_edge_margin_pixels": 384.52852550821103,
+          "nominal_uncropped_cell_covered": true,
+          "cell_covered_after_0p15_deg_per_edge_crop": false,
+          "minimum_remaining_margin_after_0p15_deg_crop_deg": -0.04214442770042978
+        }
+      }
+    }
+  ],
+  "limitations": [
+    "Nominal pixel scales 1.15 and 1.16 arcsec/pixel are alternative assumptions; neither is a measured WCS for the observing setup.",
+    "No TPV/SIP distortion, bad pixels, chip/readout masks, pointing scatter, PA errors, vignetting or template common-area losses are included.",
+    "Positive nominal margins are necessary geometric room, not a proven operational safety allowance.",
+    "0.15 deg is tested as a single-sided crop on each of four detector edges; it cannot be adopted without reducing pitch or independently validating real footprints.",
+    "Full-ring row counts describe the mother grid; no assumption is made that every field around a full RA ring is selected for TJN.",
+    "Rows_center_in_range has centers inside [-26,57] deg; rows_cell_intersects_range also includes boundary rows needed to cover that full declination interval."
+  ]
+}

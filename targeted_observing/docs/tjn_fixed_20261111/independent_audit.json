@@ -1,0 +1,15 @@
+{
+  "swept_interior_points": 2021730,
+  "swept_minimum_best_edge_deg": 0.19431941534949382,
+  "legacy_footprint_points": 1425143,
+  "legacy_quality_uncovered": 0,
+  "strict_samples": 534753,
+  "seed_nominal_covered": 370379,
+  "seed_nominal_missed": 164374,
+  "final_quality_covered": 534753,
+  "seed_objects_with_any_nominal_miss": 348,
+  "overlap_max_simultaneous_targets": 6,
+  "overlap_mean_simultaneous_targets": 1.2590068615599408,
+  "neighbor_pairs": 3548,
+  "coverage_scope": "nominal and quality model; measured usable masks unknown"
+}

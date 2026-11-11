@@ -1,0 +1,54 @@
+{
+  "passed": true,
+  "scope": "nominal registry, local TPV scenarios and limited planner integration",
+  "registry_repeat_order_and_previous_release": true,
+  "csv_fits_json_roundtrip": true,
+  "daily_sample_object_count_closure": true,
+  "strict_samples": 534753,
+  "object_count": 1063,
+  "fields": 1234,
+  "sampled_envelope_objects": 572,
+  "legacy_fields": 383,
+  "representative_nights": [
+    {
+      "date": "2026-12-15",
+      "passed": true,
+      "exposures": 40
+    },
+    {
+      "date": "2027-01-15",
+      "passed": true,
+      "exposures": 40
+    },
+    {
+      "date": "2027-09-15",
+      "passed": true,
+      "exposures": 40
+    },
+    {
+      "date": "2027-04-15",
+      "passed": true,
+      "exposures": 40
+    }
+  ],
+  "unit_tests": 74,
+  "test_log_sha256": "2a1110998422579f69630e4eab2b58e3e7f5e89d13f82e9a10886206973d7094",
+  "plot_pairs": 6,
+  "plot_visual_review": "all six PNG figures inspected; same canvas PDF pairs",
+  "tonight_controller_sha256": "e43db50712f924f382b9f776f62d825abca5d8dc54d46e598427b29daf78147b",
+  "production_diff_from_954e43d5": "empty",
+  "main_ref": "2d5a46940205fc80398f8c1a1223f372435d32e3",
+  "server_operations": false,
+  "new_twilight_annual_or_weather_simulation": false,
+  "formal_instrument_freeze": false,
+  "source_sha256": {
+    "fixed_field_report.py": "163bd54cd5d407f595cf57ed7b5ed34d119047cdf62dbe92ce3e9c88e02aaae8",
+    "fixed_fields.py": "40c74d1eda210781a2a99b5ec0792f9873932d5fe94e710ccebb04d4b0261a89",
+    "fixed_field_audit.py": "02147801eed52b5f4bce7906a1b80b42f3ca5544cf98b5abcec7ac181c9668aa",
+    "fixed_field_build.py": "c789c2b02938c3e7a498d3d02ce6a88e7b06a3563d7131b74e27ef1c75dcab21",
+    "fixed_field_validate.py": "cb1eda81df8b6e6f8ae7f827f26e7c555a5c11d3743b833dc02a8af239d9b2ee",
+    "fixed_field_wcs.py": "af4da0e9409b0f80849e7e2cb56fca1db496cd919cc7b310d373cd5957bf5689",
+    "fixed_trojan.py": "4c69bafb8cde98e8a6a02030a17b3c537339c4645e18e971b46a3a3cb17b1ccb",
+    "fixed_field_delivery.py": "42c490bf87ce90e93c1f07ecc06138d0db26c18222f85d31657fbb298e92710e"
+  }
+}

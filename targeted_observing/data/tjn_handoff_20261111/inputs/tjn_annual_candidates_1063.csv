@@ -1,0 +1,1064 @@
+object_id,name,H,minimum_sampled_V_proxy,cloud_proxy,status,classification
+588,   588 Achilles (A906 DN),8.2,15.592032148683968,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+617,   617 Patroclus (A906 UL),8.22,15.173010383293068,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+624,   624 Hektor (A907 CF),7.32,14.367611199132458,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+659,   659 Nestor (A908 FE),8.69,15.894079141335396,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+884,   884 Priamus (A917 SU),8.65,16.077147133843884,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+911,   911 Agamemnon (A919 FB),7.87,15.269749140547413,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+1143,  1143 Odysseus (1930 BH),8.38,15.29037628157527,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+1172,  1172 Aneas (1930 UA),8.21,15.521428043472335,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+1173,  1173 Anchises (1930 UB),8.9,15.831427270400944,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+1208,  1208 Troilus (1931 YA),9.03,16.242017722308105,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+1404,  1404 Ajax (1936 QW),9.29,16.809630264799,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+1583,  1583 Antilochus (1950 SA),8.54,15.564910050034442,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+1647,  1647 Menelaus (1957 MK),10.47,17.218035310627133,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+1749,  1749 Telamon (1949 SB),9.46,16.48792213437249,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+1867,  1867 Deiphobus (1971 EA),8.32,15.41450771090533,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+1868,  1868 Thersites (2008 P-L),9.47,16.888933178629927,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+1869,  1869 Philoctetes (4596 P-L),11.12,18.21290026259408,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+1870,  1870 Glaukos (1971 FE),10.65,17.652083713240724,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+1871,  1871 Astyanax (1971 FF),11.24,18.17896369686581,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+1872,  1872 Helenos (1971 FG),10.79,18.049610400229508,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+1873,  1873 Agenor (1971 FH),10.15,17.49112183780171,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+2146,  2146 Stentor (1976 UQ),10.02,17.762643273226857,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+2148,  2148 Epeios (1976 UW),10.82,17.94987800054621,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+2207,  2207 Antenor (1977 QH1),8.9,15.72453357114238,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+2223,  2223 Sarpedon (1977 TL3),9.11,16.21862775693008,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+2241,  2241 Alcathous (1979 WM),8.52,15.70134469512047,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+2260,  2260 Neoptolemus (1975 WM1),9.4,16.64053165274529,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+2357,  2357 Phereclos (1981 AC),8.98,16.06739440106963,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+2363,  2363 Cebriones (1977 TJ3),8.99,16.41880143036063,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+2456,  2456 Palamedes (1966 BA1),9.25,16.49426409160884,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+2594,  2594 Acamas (1978 TB),11.95,19.07803901608209,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+2674,  2674 Pandarus (1982 BC3),9.09,16.16356696635101,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+2759,  2759 Idomeneus (1980 GC),10.05,16.87678807411751,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+2797,  2797 Teucer (1981 LK),8.79,15.74726643904868,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+2893,  2893 Peiroos (1975 QD),8.99,16.18063816839942,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+2895,  2895 Memnon (1981 AE1),10.05,17.055766328358246,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+2920,  2920 Automedon (1981 JR),8.83,15.74477451089955,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+3063,  3063 Makhaon (1983 PV),8.54,15.542587805076256,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+3240,  3240 Laocoon (1978 VG6),10.28,17.329184535749416,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+3317,  3317 Paris (1984 KF),8.41,16.078350580683157,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+3391,  3391 Sinon (1977 DD3),10.37,17.545756916348967,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+3451,  3451 Mentor (1984 HA1),8.41,15.86410660059292,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+3540,  3540 Protesilaos (1973 UF5),9.37,16.14982741788642,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+3548,  3548 Eurybates (1973 SO),9.79,16.978057687347043,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+3564,  3564 Talthybius (1985 TC1),9.48,16.156090678448532,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+3596,  3596 Meriones (1985 VO),9.23,16.618424006577563,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+3708,  3708 Socus (1974 FV1),9.28,16.1704105811388,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+3709,  3709 Polypoites (1985 TL3),9.17,16.133116215234836,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+3793,  3793 Leonteus (1985 TE3),8.78,15.902534139738911,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+3794,  3794 Sthenelos (1985 TF3),10.53,18.037129593288867,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+3801,  3801 Thrasymedes (1985 VS),11.07,18.179771082427383,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+4007,  4007 Euryalos (1973 SR),10.33,17.396927059076223,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+4035,  4035 Thestor (1986 WD),9.53,16.64672529016857,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+4057,  4057 Demophon (1985 TQ),10.27,17.31817120130552,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+4060,  4060 Deipylos (1987 YT1),9.39,16.37607553167376,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+4063,  4063 Euforbo (1989 CG2),8.7,16.22117494268398,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+4068,  4068 Menestheus (1973 SW),9.63,16.358971564138155,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+4086,  4086 Podalirius (1985 VK2),9.27,16.74159647669452,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+4138,  4138 Kalchas (1973 SM),10.13,17.07873376696953,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+4348,  4348 Poulydamas (1988 RU),9.65,16.215062950126242,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+4489,  4489 Dracius (1988 AK),9.03,16.156369346298728,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+4501,  4501 Eurypylos (1989 CJ3),10.51,17.607491379964635,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+4543,  4543 Phoinix (1989 CQ1),9.74,17.166032815843472,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+4707,  4707 Khryses (1988 PY),10.68,17.334010124528774,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+4708,  4708 Polydoros (1988 RT),10.05,16.696636348161064,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+4709,  4709 Ennomos (1988 TU2),8.61,15.617903757945829,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+4715,  4715 Medesicaste (1989 TS1),9.81,16.873157696567244,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+4722,  4722 Agelaos (4271 T-3),10.12,16.60516455081483,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+4754,  4754 Panthoos (5010 T-3),10.09,17.17647680099726,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+4791,  4791 Iphidamas (1988 PB1),10.02,16.66147878577317,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+4792,  4792 Lykaon (1988 RK1),10.19,16.976981893018444,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+4805,  4805 Asteropaios (1990 VH7),10.11,16.737817293045005,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+4827,  4827 Dares (1988 QE),10.57,17.17215904724667,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+4828,  4828 Misenus (1988 RV),10.48,17.380771701476824,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+4829,  4829 Sergestus (1988 RM1),11.27,18.28909947529323,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+4832,  4832 Palinurus (1988 TU1),10.0,17.1363732829833,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+4833,  4833 Meges (1989 AL2),9.02,16.751873538210294,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+4834,  4834 Thoas (1989 AM2),9.2,16.73314989855554,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+4835,  4835 Asaeus (1989 BQ),10.62,18.05779251187561,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+4836,  4836 Medon (1989 CK1),9.56,16.705021581901725,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+4867,  4867 Polites (1989 SZ),9.96,17.241419767715524,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+4902,  4902 Thessandrus (1989 AN2),9.84,16.825116225976025,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+4946,  4946 Askalaphus (1988 BW1),10.18,17.321889359167656,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+5012,  5012 Eurymedon (9507 P-L),10.62,17.852779515214007,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+5023,  5023 Agapenor (1985 TG3),10.43,17.59740875927676,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+5025,  5025 Mecisteus (1986 TS6),10.39,17.54965955772515,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+5027,  5027 Androgeos (1988 BX1),9.8,17.296714283506162,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+5028,  5028 Halaesus (1988 BY1),10.27,17.702886149343836,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+5041,  5041 Theotes (1973 SW1),10.83,17.70265351778268,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+5119,  5119 Imbrius (1988 RA1),10.32,17.469230785766047,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+5120,  5120 Bitias (1988 TZ1),10.37,17.63489668421902,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+5123,  5123 Cynus (1989 BL),10.09,17.02229002758704,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+5126,  5126 Achaemenides (1989 CH2),10.6,17.921981850824356,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+5130,  5130 Ilioneus (1989 SC7),9.82,16.63916605455591,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+5144,  5144 Achates (1991 XX),9.18,16.889027746453248,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+5209,  5209 Oloosson (1989 CW1),10.31,17.50202782524817,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+5233,  5233 Nastes (1988 RL10),11.58,18.478508551249902,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+5244,  5244 Amphilochos (1973 SQ1),10.56,17.415028680501518,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+5254,  5254 Ulysses (1986 VG1),9.19,16.71602227737252,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+5257,  5257 Laogonus (1988 RS10),12.01,18.93328296382344,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+5258,  5258 Rhoeo (1989 AU1),10.34,17.057260760835455,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+5259,  5259 Epeigeus (1989 BB1),10.37,17.220681620346795,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+5264,  5264 Telephus (1991 KC),9.44,16.765890653702435,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+5283,  5283 Pyrrhus (1989 BW),9.79,17.269006455955108,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+5284,  5284 Orsilocus (1989 CK2),10.12,17.451799036049632,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+5285,  5285 Krethon (1989 EO11),10.12,17.54441647724729,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+5436,  5436 Eumelos (1990 DK),10.47,17.359162124018805,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+5476,  5476 Mulius (1989 TO11),10.69,17.922853034700484,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+5511,  5511 Cloanthus (1988 TH1),10.34,17.813610630534953,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+5637,  5637 Gyas (1988 RF1),11.65,19.116911454645702,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+5638,  5638 Deikoon (1988 TA3),10.55,18.000360018547244,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+5648,  5648 Axius (1990 VU1),9.82,16.763080914315147,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+5652,  5652 Amphimachus (1992 HS3),10.21,17.36303738258243,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+5907,  5907 Rhigmus (1989 TU5),11.21,18.377556724113035,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+6002,  6002 Eetion (1988 RO),10.59,17.506938116762168,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+6090,  6090 Aulis (1989 DJ),9.56,16.862656704876244,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+6443,  6443 Harpalion (1988 RH12),12.21,18.925461259662665,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+6545,  6545 Leitus (1986 TR6),10.18,17.33339156119203,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+6997,  6997 Laomedon (3104 T-3),10.59,18.080813455921792,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+6998,  6998 Tithonus (3108 T-3),11.52,18.531830235094898,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+7119,  7119 Hiera (1989 AV2),9.78,17.20544100757468,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+7152,  7152 Euneus (1973 SH1),10.32,17.3917752073604,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+7214,  7214 Anticlus (1973 SM1),11.79,18.893217936814388,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+7352,  7352 Hypsenor (1994 CO),9.96,16.980824419266796,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+7543,  7543 Prylis (1973 SY),10.67,17.861231275744306,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+7641,  7641 Cteatus (1986 TT6),9.46,16.60565718507112,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+7815,  7815 Dolon (1987 QN),10.29,17.29633154365055,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+8060,  8060 Anius (1973 SD1),11.02,18.311123978237926,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+8125,  8125 Tyndareus (5493 T-2),10.82,18.039590590072752,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+8241,  8241 Agrius (1973 SE1),11.32,17.99012858695301,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+8317,  8317 Eurysaces (4523 P-L),11.2,18.11176099125264,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+9023,  9023 Mnesthus (1988 RG1),10.23,17.453881789164466,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+9030,  9030 Othryoneus (1989 UX5),11.22,18.020705030140128,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+9142,  9142 Rhesus (5191 T-3),10.7,17.890470081999702,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+9430,  9430 Erichthonios (1996 HU10),11.45,18.46026934019014,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+9431,  9431 Pytho (1996 PS1),10.64,17.76399238209921,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+9590,  9590 Hyria (1991 DK1),12.07,18.553517715433102,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+9694,  9694 Lycomedes (6581 P-L),10.78,17.63673037250384,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+9712,  9712 Nauplius (1973 SO1),10.99,18.134139623237164,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+9713,  9713 Oeax (1973 SP1),11.35,18.155106957639003,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+9790,  9790 Deipyrus (1995 OK8),11.0,18.116021393637546,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+9799,  9799 Thronium (1996 RJ),9.64,17.056751919383068,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+9807,  9807 Rhene (1997 SJ4),11.46,18.791174050796357,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+9817,  9817 Thersander (6540 P-L),11.55,18.344027421411248,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+9818,  9818 Eurymachos (6591 P-L),11.1,17.850893711304053,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+9828,  9828 Antimachos (1973 SS),12.05,18.96304076540078,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+9857,  9857 Hecamede (1991 EN),10.32,17.36558620255589,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+9907,  9907 Oileus (6541 P-L),11.63,18.754393796003345,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+10247, 10247 Amphiaraos (6629 P-L),11.21,18.15501777644144,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+10664, 10664 Phemios (5187 T-2),11.41,18.272626743149072,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+10989, 10989 Dolios (1973 SL1),11.33,18.57200486257901,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+11089, 11089 (1994 CS8),10.77,17.671276490979277,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+11251, 11251 Icarion (1973 SN1),12.15,18.960627263580808,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+11252, 11252 Laertes (1973 SA2),10.67,17.61813729518385,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+11273, 11273 (1988 RN11),11.68,18.90754464676375,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+11275, 11275 (1988 SL3),11.7,18.82645980461316,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+11351, 11351 Leucus (1997 TS25),10.87,18.1428639200754,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+11395, 11395 Iphinous (1998 XN77),9.92,17.06169579621656,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+11396, 11396 (1998 XZ77),10.63,17.742765771625848,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+11397, 11397 Eriopis (1998 XX93),10.19,17.50231864885499,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+11428, 11428 Alcinoos (4139 P-L),11.17,18.20216330139824,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+11429, 11429 Demodokus (4655 P-L),10.49,17.282927102094565,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+11487, 11487 (1988 RG10),11.36,18.178650164343697,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+11488, 11488 Zeleia (1988 RM11),11.48,18.27996718576901,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+11509, 11509 Thersilochos (1990 VL6),10.23,17.354738513144973,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+11552, 11552 Boucolion (1993 BD4),10.08,17.544519322205122,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+11554, 11554 Asios (1993 BZ12),10.5,17.853585058495288,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+11663, 11663 (1997 GO24),10.98,18.180438637042663,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+11668, 11668 Balios (1997 VV1),11.59,18.91734503889724,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+11869, 11869 (1989 TS2),11.54,18.62301827922636,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+11887, 11887 Echemmon (1990 TV12),10.86,17.734093155510827,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+12052, 12052 Aretaon (1997 JB16),10.66,17.54540187371191,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+12054, 12054 (1997 TT9),11.89,18.896334614058613,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+12126, 12126 Chersidamas (1999 RM11),10.14,17.582427681751284,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+12238, 12238 Actor (1987 YU1),10.92,18.31111302802289,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+12242, 12242 Koon (1988 QY),10.9,18.197745885179195,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+12444, 12444 Prothoon (1996 GE19),9.93,17.266832931292605,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+12649, 12649 Ascanios (2035 T-3),11.83,19.10969343641091,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+12658, 12658 Peiraios (1973 SL),11.3,18.32350243193043,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+12714, 12714 Alkimos (1991 GX1),10.25,17.32291090252834,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+12916, 12916 Eteoneus (1998 TL15),11.41,18.380597192749704,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+12917, 12917 (1998 TG16),11.48,18.44183549300229,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+12921, 12921 (1998 WZ5),11.08,18.33467489756676,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+12929, 12929 Periboea (1999 TZ1),10.07,17.602432230754992,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+12972, 12972 Eumaios (1973 SF1),11.76,19.17208884301396,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+12973, 12973 Melanthios (1973 SY1),11.52,18.525752478851555,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+12974, 12974 Halitherses (1973 SB2),11.43,18.43817607899214,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+13060, 13060 (1991 EJ),10.78,18.426758800513262,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+13062, 13062 Podarkes (1991 HN),11.17,18.07260553258776,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+13181, 13181 Peneleos (1996 RS28),12.12,19.03296604537553,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+13182, 13182 (1996 SO8),10.8,18.18630453139944,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+13183, 13183 (1996 TW),10.79,17.856380354004322,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+13184, 13184 Augeias (1996 TS49),11.13,17.99905965603914,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+13185, 13185 Agasthenes (1996 TH52),12.1,19.188539248588206,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+13229, 13229 Echion (1997 VB1),11.79,18.579944867567217,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+13230, 13230 (1997 VG1),11.38,18.28761447621264,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+13323, 13323 (1998 SQ),11.14,17.987154981104467,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+13331, 13331 Helos (1998 SU52),11.49,18.5743608295881,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+13353, 13353 (1998 TU12),11.52,18.409007478878312,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+13362, 13362 (1998 UQ16),11.09,17.834024305616424,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+13366, 13366 (1998 US24),11.33,18.42651882720524,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+13372, 13372 (1998 VU6),11.36,18.52038239091692,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+13379, 13379 (1998 WX9),11.62,18.6956208521706,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+13383, 13383 (1998 XS31),11.39,18.48333991697872,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+13385, 13385 (1998 XO79),10.99,18.091526926885347,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+13387, 13387 Irus (1998 YW6),12.23,19.49259051949167,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+13402, 13402 (1999 RV165),11.69,19.14750188436188,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+13463, 13463 Antiphos (5159 T-2),11.3,18.30628053332414,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+13475, 13475 Orestes (1973 SX),11.65,18.51607484965622,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+13650, 13650 Perimedes (1996 TN49),11.9,19.144086080390544,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+13694, 13694 (1997 WW7),10.99,18.16394960575238,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+13780, 13780 (1998 UZ8),12.0,18.911023922539822,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+13782, 13782 (1998 UM18),11.57,19.312605632810605,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+13790, 13790 (1998 UF31),11.86,18.76903923994089,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+13862, 13862 Elais (1999 XT160),11.73,18.985948787565192,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+14235, 14235 (1999 XA187),11.39,18.54525067165003,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+14268, 14268 Azeus (2000 AK156),10.55,17.87805304916158,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+14518, 14518 (1996 RZ30),12.17,19.48350954041747,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+14690, 14690 (2000 AR25),10.61,17.579076274465425,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+14707, 14707 (2000 CC20),11.39,18.64066713625133,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+14791, 14791 Atreus (1973 SU),11.94,19.415627207459064,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+14792, 14792 Thyestes (1973 SG1),12.23,19.565834000444056,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+15033, 15033 (1998 VY29),10.68,18.35038561521472,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+15094, 15094 Polymele (1999 WB2),11.77,18.959592426831275,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+15398, 15398 (1997 UZ23),10.9,17.791381994119188,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+15436, 15436 Dexius (1998 VU30),9.11,16.251597943441595,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+15440, 15440 Eioneus (1998 WX4),9.59,16.969067013274326,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+15442, 15442 (1998 WN11),12.02,19.456771643334893,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+15502, 15502 Hypeirochus (1999 NV27),10.08,17.02814495500252,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+15521, 15521 (1999 XH133),11.29,17.893729688626344,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+15527, 15527 (1999 YY2),10.95,18.44029510355945,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+15529, 15529 (2000 AA80),11.51,18.302495845900253,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+15535, 15535 (2000 AT177),10.64,17.86156427495767,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+15536, 15536 (2000 AG191),11.35,18.696830581187232,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+15539, 15539 (2000 CN3),10.5,17.725271190100944,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+15651, 15651 Tlepolemos (9612 P-L),11.47,18.53804676625711,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+15663, 15663 Periphas (4168 T-2),10.88,18.35688047047609,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+15913, 15913 Telemachus (1997 TZ27),12.05,19.100786089381653,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+15977, 15977 Pyraechmes (1998 MA11),10.49,17.1627525643943,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+16070, 16070 Charops (1999 RB101),9.79,17.178984234561018,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+16099, 16099 (1999 VQ24),10.79,18.163129783791565,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+16152, 16152 (1999 YN12),12.02,19.165347158690693,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+16428, 16428 (1988 RD12),11.71,18.60287522862608,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+16560, 16560 Daitor (1991 VZ5),10.74,17.684405779091907,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+16667, 16667 (1993 XM1),10.77,17.73621903327455,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+16956, 16956 (1998 MQ11),10.72,17.883720624417997,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+16974, 16974 Iphthime (1998 WR21),9.94,17.21445270603816,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+17171, 17171 (1999 NB38),10.6,17.89300034733049,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+17172, 17172 (1999 NZ41),10.83,18.015615800166067,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+17314, 17314 Aisakos (1024 T-1),10.96,17.54865071729228,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+17351, 17351 Pheidippos (1973 SV),11.43,18.68571981349333,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+17365, 17365 Thymbraeus (1978 VF11),10.51,17.202483946841745,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+17414, 17414 (1988 RN10),12.13,19.2891478811396,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+17415, 17415 Czeslawlang (1988 RO10),12.22,19.532926295934573,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+17416, 17416 (1988 RR10),12.41,19.69027317306965,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+17417, 17417 (1988 RY10),11.64,18.36066312842167,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+17418, 17418 (1988 RT12),12.27,19.2405184946877,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+17419, 17419 (1988 RH13),11.38,18.34910226122469,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+17420, 17420 (1988 RL13),12.04,18.958918168470056,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+17421, 17421 (1988 SW1),11.89,19.265383414324155,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+17423, 17423 (1988 SK2),12.36,19.580205127010466,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+17424, 17424 (1988 SP2),12.4,19.67952588257079,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+17442, 17442 (1989 UO5),11.89,18.688153687935205,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+17492, 17492 Hippasos (1991 XG1),10.04,17.23961450686338,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+17874, 17874 (1998 YM3),11.87,18.918773883829644,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+18037, 18037 (1999 NA38),11.6,18.380345535328143,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+18046, 18046 (1999 RN116),10.47,17.85324202620364,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+18054, 18054 (1999 SW7),10.72,17.872231734213,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+18058, 18058 (1999 XY129),12.09,19.028198138984425,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+18060, 18060 Zarex (1999 XJ156),11.15,18.169683679469955,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+18062, 18062 (1999 XY187),10.97,17.910587961303843,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+18063, 18063 (1999 XW211),11.28,18.590649471861717,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+18071, 18071 (2000 BA27),11.72,18.905760702245907,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+18137, 18137 (2000 OU30),11.1,17.71992369222477,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+18228, 18228 Hyperenor (3163 T-1),11.86,18.561406035434956,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+18263, 18263 Anchialos (5167 T-2),11.46,18.585660614756968,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+18268, 18268 Dardanos (2140 T-3),12.07,19.188077008187,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+18278, 18278 Dymas (4035 T-3),11.47,18.697143253553552,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+18281, 18281 Tros (4317 T-3),12.56,19.68362230640444,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+18282, 18282 Ilos (4369 T-3),12.61,19.43060387115966,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+18493, 18493 Demoleon (1996 HV9),10.84,17.990579672986783,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+18940, 18940 (2000 QV49),11.71,18.36992523880633,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+18971, 18971 (2000 QY177),11.77,19.268006951576066,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+19018, 19018 (2000 RL100),11.37,18.592844985744808,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+19020, 19020 (2000 SC6),10.58,17.661766053992082,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+19725, 19725 (1999 WT4),10.87,17.792305135456672,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+19844, 19844 (2000 ST317),11.07,18.510099625480592,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+19913, 19913 Aigyptios (1973 SU1),11.3,18.0676339949154,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+20144, 20144 (1996 RA33),11.53,18.269807002440476,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+20424, 20424 (1998 VF30),10.61,18.04674368581633,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+20428, 20428 (1998 WG20),10.98,18.438876655396776,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+20716, 20716 (1999 XG91),11.47,19.262921422012266,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+20720, 20720 (1999 XP101),11.13,18.470363873110557,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+20729, 20729 Opheltius (1999 XS143),10.5,17.94824842351595,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+20738, 20738 (1999 XG191),11.7,18.53494137468473,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+20739, 20739 (1999 XM193),11.63,18.616021909991765,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+20947, 20947 Polyneikes (2638 T-2),12.02,18.728971078512288,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+20952, 20952 Tydeus (5151 T-2),11.74,19.001678518626097,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+20961, 20961 Arkesilaos (1973 SS1),11.92,18.738887754768545,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+20995, 20995 (1985 VY),11.74,18.98194785129112,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+21271, 21271 (1996 RF33),11.92,18.798944580278324,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+21284, 21284 Pandion (1996 TC51),11.55,18.81938636982173,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+21370, 21370 (1997 TB28),11.61,18.49446169313123,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+21371, 21371 (1997 TD28),11.95,18.748812049739044,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+21372, 21372 (1997 TM28),11.85,18.63690902128489,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+21593, 21593 (1998 VL27),11.74,18.72006864771999,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+21595, 21595 (1998 WJ5),10.8,18.53703425009878,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+21599, 21599 (1998 WA15),11.45,18.6426884830222,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+21601, 21601 Aias (1998 XO89),10.0,17.058305409938008,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+21602, 21602 Ialmenus (1998 YW1),12.23,19.12561727051576,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+21900, 21900 Orus (1999 VQ10),10.04,16.972140333142963,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+22008, 22008 (1999 XM71),11.67,18.51663953268709,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+22009, 22009 (1999 XK77),11.87,18.799334957852736,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+22010, 22010 Kuzmina (1999 XM78),12.42,19.21854290892989,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+22012, 22012 (1999 XO82),11.99,18.752172427001877,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+22014, 22014 (1999 XQ96),10.22,17.443171810780214,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+22035, 22035 (1999 XR170),11.91,19.26585834419183,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+22041, 22041 (1999 XK192),11.93,18.841669649838643,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+22042, 22042 (1999 XP194),12.15,19.309920563532373,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+22049, 22049 (1999 XW257),11.91,18.5729308921137,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+22052, 22052 (2000 AQ14),11.27,18.363311773631665,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+22054, 22054 (2000 AP21),11.32,18.32398578059873,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+22055, 22055 (2000 AS25),11.14,18.17148896504886,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+22056, 22056 (2000 AU31),11.92,19.27115081341903,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+22059, 22059 (2000 AD75),11.29,17.700555549026813,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+22149, 22149 Cinyras (2000 WD49),10.29,17.3020501304157,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+22180, 22180 Paeon (2000 YZ),10.24,16.723044431330557,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+22199, 22199 Klonios (4572 P-L),11.76,18.825990363284173,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+22203, 22203 Prothoenor (6020 P-L),11.76,18.61653927597919,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+22222, 22222 Hodios (3156 T-2),12.58,19.35243650749105,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+22227, 22227 Polyxenos (5030 T-2),12.02,19.32668265210836,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+22404, 22404 Skujyte (1995 ME4),12.16,19.391578739730047,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+22503, 22503 Thalpius (1997 TB12),12.31,19.398148075382448,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+23075, 23075 (1999 XV83),11.03,18.623057206582217,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+23114, 23114 (2000 AL16),12.1,19.107729022400665,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+23119, 23119 (2000 AP33),11.27,18.9645144984663,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+23123, 23123 (2000 AU57),11.39,18.58195525034652,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+23126, 23126 (2000 AK95),11.82,18.734530552764465,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+23135, 23135 Pheidas (2000 AN146),9.99,16.928027358851757,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+23144, 23144 (2000 AY182),11.61,18.710450259065105,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+23152, 23152 (2000 CS8),11.92,19.50346744968717,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+23269, 23269 (2000 YH62),11.59,18.46463433643467,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+23285, 23285 (2000 YH119),11.14,18.22728844658337,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+23355, 23355 Elephenor (9602 P-L),12.02,19.18297690149916,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+23382, 23382 Epistrophos (4536 T-2),12.07,19.303921098420005,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+23383, 23383 Schedios (5146 T-2),11.92,19.1095703148259,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+23463, 23463 (1989 TX11),11.6,18.35161070067081,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+23480, 23480 (1991 EL),11.41,18.21253977057042,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+23549, 23549 Epicles (1994 ES6),11.76,18.88499304418886,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+23622, 23622 (1996 RW29),11.49,18.517928022714056,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+23624, 23624 (1996 UX3),11.7,19.18748345189649,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+23694, 23694 (1997 KZ3),11.54,18.46226377829457,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+23706, 23706 (1997 SY32),12.31,19.569036506616,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+23709, 23709 (1997 TA28),11.66,18.83659628798195,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+23710, 23710 (1997 UJ),12.3,19.410354588750906,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+23939, 23939 (1998 TV33),11.49,18.426383696138792,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+23947, 23947 (1998 UH16),11.91,18.40339916253537,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+23958, 23958 Theronice (1998 VD30),10.16,17.19055129089809,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+23963, 23963 (1998 WY8),11.8,19.04402614680364,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+23968, 23968 (1998 XA13),11.25,18.457348203970483,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+23970, 23970 (1998 YP6),11.07,18.42982933251396,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+23987, 23987 (1999 NB63),11.64,18.61238971457346,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24018, 24018 (1999 RU134),11.55,18.714320710494185,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24022, 24022 (1999 RA144),12.24,19.578214059078498,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24212, 24212 (1999 XW59),12.19,19.095926969753883,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24225, 24225 (1999 XV80),11.86,18.77569317804016,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24233, 24233 (1999 XD94),11.48,18.735072192067072,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24275, 24275 (1999 XW167),11.2,18.060496903738997,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24279, 24279 (1999 XR171),12.18,19.407043817790907,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24312, 24312 (1999 YO22),11.66,19.120735843817133,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24313, 24313 (1999 YR27),10.78,18.09676381026774,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24340, 24340 (2000 AP84),12.19,19.60263283397121,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24341, 24341 (2000 AJ87),12.07,19.38263442279831,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24357, 24357 (2000 AC115),11.81,18.928383241098096,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24380, 24380 Dorippe (2000 AA160),11.29,18.582150569583387,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24390, 24390 (2000 AD177),11.74,18.683567522358636,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24403, 24403 (2000 AX193),11.35,18.59859439001115,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24420, 24420 Thasos (2000 BU22),11.55,18.573643083815856,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24426, 24426 Belova (2000 CR12),12.26,19.51221708393966,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24444, 24444 (2000 OP32),11.49,18.46023849648221,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24446, 24446 (2000 PR25),11.15,18.08579570634153,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24448, 24448 (2000 QE42),11.57,18.363219212726943,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24449, 24449 (2000 QL63),11.97,19.21937556707977,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24451, 24451 Molion (2000 QS104),10.35,17.351226677515314,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24452, 24452 (2000 QU167),11.96,18.51159748715552,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24453, 24453 (2000 QG173),11.36,18.385906122645466,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24454, 24454 (2000 QF198),11.49,18.126980169890405,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24456, 24456 (2000 RO25),12.09,18.967821241464023,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24458, 24458 (2000 RP100),11.85,19.10444320892372,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24459, 24459 (2000 RF103),11.95,19.189689476632545,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24467, 24467 (2000 SS165),11.89,19.023535927231865,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24470, 24470 (2000 SJ310),11.01,18.16526287035743,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24471, 24471 (2000 SH313),11.2,17.944586145279942,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24472, 24472 (2000 SY317),11.62,18.6104712784149,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24479, 24479 (2000 WU157),11.86,19.01644558064536,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24485, 24485 (2000 YL102),11.46,18.53690045682265,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24486, 24486 (2000 YR102),11.2,18.18241219269716,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24498, 24498 (2001 AC25),12.04,18.87856721522877,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24501, 24501 (2001 AN37),11.74,19.065523933484823,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24505, 24505 (2001 BZ),11.2,18.364307712145003,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24506, 24506 (2001 BS15),10.74,17.773366464724813,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24508, 24508 (2001 BL26),12.31,19.323363494947756,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24519, 24519 (2001 CH),11.66,18.52219866532268,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24528, 24528 (2001 CP11),11.75,19.03174867777644,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24530, 24530 (2001 CP18),11.78,19.22076697654798,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24531, 24531 (2001 CE21),11.74,18.728915443110743,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24534, 24534 (2001 CX27),11.37,18.384838686078908,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24536, 24536 (2001 CN33),11.55,18.65196183104428,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24537, 24537 (2001 CB35),11.18,18.352846975006464,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24539, 24539 (2001 DP5),12.14,18.99049387085012,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24587, 24587 Kapaneus (4613 T-2),11.52,18.58240311842349,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24603, 24603 Mekistheus (1973 SQ),12.4,19.451305171704032,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+24882, 24882 (1996 RK30),11.66,18.56909703588108,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+25344, 25344 (1999 RN72),11.74,19.080915664639203,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+25347, 25347 (1999 RQ116),11.7,18.70138598164811,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+25883, 25883 (2000 RD88),11.36,18.42832139054327,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+25895, 25895 (2000 XN9),11.23,18.035215505166665,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+25910, 25910 (2001 BM50),11.89,18.88809991994525,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+25911, 25911 (2001 BC76),11.73,18.77898707034523,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+25937, 25937 Malysz (2001 DY92),12.29,19.373101775466736,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+26057, 26057 Ankaios (4742 T-2),12.32,19.46194311512799,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+26486, 26486 (2000 AQ231),12.34,19.12032251540428,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+26601, 26601 (2000 FD1),11.4,18.69961211557664,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+26705, 26705 (2001 FL145),12.1,19.295967058081576,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+28958, 28958 Binns (2001 CQ42),12.24,19.49592958724554,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+29196, 29196 Dius (1990 YY),12.09,18.75754199352457,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+29314, 29314 Eurydamas (1994 CR18),11.58,19.01061490043874,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+29603, 29603 (1998 MO44),11.16,18.383295503915285,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+29976, 29976 (1999 NE9),11.03,18.154169822440124,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+29977, 29977 (1999 NH11),11.17,18.61468281596097,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+30020, 30020 (2000 DZ5),12.01,19.30390258106259,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+30102, 30102 (2000 FC1),10.85,17.954136777648948,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+30498, 30498 (2000 QK100),11.91,18.662847772319733,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+30499, 30499 (2000 QE169),12.28,18.92415158537461,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+30504, 30504 (2000 RS80),11.47,18.608767941703,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+30505, 30505 (2000 RW82),11.71,18.70255393473371,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+30506, 30506 (2000 RO85),11.05,18.099842478509235,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+30508, 30508 (2000 SZ130),12.15,19.21470725336421,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+30510, 30510 (2001 DM44),12.09,19.64386123598439,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+30698, 30698 Hippokoon (2299 T-3),12.18,19.09012098747427,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+30704, 30704 Phegeus (3250 T-3),11.36,18.595014459044584,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+30705, 30705 Idaios (3365 T-3),10.47,17.262563522824188,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+30708, 30708 Echepolos (4101 T-3),11.89,18.802968693529124,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+30791, 30791 (1988 RY11),12.21,19.14593583395872,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+30792, 30792 (1988 RP12),12.49,19.533235011203203,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+30793, 30793 (1988 SJ3),12.16,18.92082745952799,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+30807, 30807 (1989 UQ5),12.15,19.301812313265263,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+30942, 30942 Helicaon (1994 CX13),11.42,18.272467243463137,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+31037, 31037 Mydon (1996 HZ25),12.18,19.65016710414161,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+31342, 31342 (1998 MU31),10.46,17.72352017616654,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+31344, 31344 Agathon (1998 OM12),10.99,17.87991909810326,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+31806, 31806 (1999 NE11),11.6,18.965172882051057,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+31814, 31814 (1999 RW70),12.3,19.351113412700748,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+31819, 31819 (1999 RS150),11.45,18.590804636041064,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+31820, 31820 (1999 RT186),12.27,19.500994265188947,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+31821, 31821 (1999 RK225),12.17,19.266031239647077,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+31835, 31835 (2000 BK16),11.57,18.66499480914214,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+32339, 32339 (2000 QA88),11.77,18.38968432237047,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+32356, 32356 (2000 QM124),12.2,19.60296726978796,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+32370, 32370 (2000 QY151),12.46,19.497638595944665,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+32396, 32396 (2000 QY213),12.37,19.04687774377936,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+32397, 32397 (2000 QL214),11.63,18.556073502870166,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+32420, 32420 (2000 RS40),11.9,19.082122400027576,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+32430, 32430 (2000 RQ83),12.04,18.943403006242992,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+32434, 32434 (2000 RW96),11.94,18.771705583198,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+32435, 32435 (2000 RZ96),11.22,18.743004665751982,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+32437, 32437 (2000 RR97),11.32,18.569723030401025,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+32440, 32440 (2000 RC100),11.51,18.72998106937681,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+32451, 32451 (2000 SP25),11.81,18.721795702216752,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+32461, 32461 (2000 SP93),11.98,19.29639691744623,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+32464, 32464 (2000 SB132),11.69,18.64659232565176,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+32467, 32467 (2000 SL174),11.91,19.101501676825443,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+32471, 32471 (2000 SK205),12.28,19.38229064828438,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+32475, 32475 (2000 SD234),10.82,18.27778815240843,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+32478, 32478 (2000 SV289),12.02,19.68128883112785,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+32480, 32480 (2000 SG348),11.26,18.4085675560191,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+32482, 32482 (2000 ST354),11.08,18.041726730721045,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+32496, 32496 Deiopites (2000 WX182),10.27,17.42527623642067,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+32498, 32498 (2000 XX37),11.69,19.0015544169976,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+32499, 32499 (2000 YS11),10.64,17.697191785223264,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+32501, 32501 (2000 YV135),11.03,18.29701970802639,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+32513, 32513 (2001 OL31),11.61,18.391662928981077,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+32615, 32615 (2001 QU277),11.08,18.041745519174707,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+32720, 32720 Simoeisios (2131 T-3),12.11,18.94585059365681,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+32726, 32726 Chromios (4179 T-3),12.25,19.011737718855844,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+32811, 32811 Apisaon (1990 TP12),11.35,18.597924446585072,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+33822, 33822 (2000 AA231),12.04,18.923671977835344,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+34298, 34298 (2000 QH159),12.45,18.980346478044595,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+34521, 34521 (2000 SA191),11.6,18.77927170909996,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+34553, 34553 (2000 SV246),12.15,18.986538465256224,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+34642, 34642 (2000 WN2),10.84,18.005853380515802,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+34684, 34684 (2001 CJ28),11.92,19.58845672645697,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+34746, 34746 Thoon (2001 QE91),9.85,16.951166022760823,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+34785, 34785 (2001 RG87),11.72,18.82424304625073,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+34993, 34993 Euaimon (1973 SR1),12.42,19.277551746153616,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+35272, 35272 (1996 RH10),12.13,19.057573155920466,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+35276, 35276 (1996 RS25),11.77,18.93233736202641,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+35277, 35277 (1996 RV27),11.9,18.721913399775826,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+35363, 35363 (1997 TV28),11.93,19.04948804817639,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+35672, 35672 (1998 UZ14),12.51,19.363042162687265,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+35673, 35673 (1998 VQ15),11.65,18.5561414616297,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+36259, 36259 (1999 XM74),11.52,18.568575619999027,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+36265, 36265 (1999 XV156),12.16,18.93403832076873,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+36267, 36267 (1999 XB211),10.76,18.086423459068605,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+36268, 36268 (1999 XT213),12.2,19.263406381151416,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+36269, 36269 (1999 XB214),11.67,18.85275546113946,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+36270, 36270 (1999 XS248),11.96,18.63993387107903,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+36271, 36271 (2000 AV19),11.96,18.927291469400267,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+36279, 36279 (2000 BQ5),11.29,18.762001392697023,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+36425, 36425 (2000 PM5),12.43,18.915581290389905,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+36624, 36624 Ablerus (2000 QA157),11.63,18.84539365303968,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+36922, 36922 (2000 SN209),11.8,18.802311187315475,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+37281, 37281 (2000 YA61),12.24,19.29903107662044,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+37297, 37297 (2001 BQ77),11.64,18.52824795765266,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+37298, 37298 (2001 BU80),11.86,18.75604868969545,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+37299, 37299 (2001 CN21),11.59,19.032503983673447,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+37300, 37300 (2001 CW32),12.06,19.075713390498844,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+37301, 37301 (2001 CA39),11.89,18.791734035919333,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+37519, 37519 Amphios (3040 T-3),11.1,18.21412111937249,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+37572, 37572 (1989 UC5),13.36,19.672158785029172,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+37685, 37685 (1995 OU2),11.93,19.282664412176736,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+37710, 37710 (1996 RD12),12.53,19.574611812761987,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+37714, 37714 (1996 RK29),12.31,19.609236896078897,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+37715, 37715 (1996 RN31),12.25,19.10735024008448,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+37716, 37716 (1996 RP32),12.54,19.598218300780136,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+37732, 37732 (1996 TY68),11.96,18.789875475366006,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+38050, 38050 Bias (1998 VR38),9.87,17.1370097686823,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+38051, 38051 (1998 XJ5),12.01,19.35248778382949,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+38257, 38257 (1999 RC13),12.11,19.659412212427668,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+38574, 38574 (1999 WS4),11.87,18.823933246003,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+38585, 38585 (1999 XD67),12.4,19.37075379456086,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+38592, 38592 (1999 XH162),11.86,18.82665279878504,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+38594, 38594 (1999 XF193),12.22,19.2006291273328,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+38596, 38596 (1999 XP199),12.51,19.45919371803113,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+38597, 38597 (1999 XU200),12.13,19.172436374224223,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+38598, 38598 (1999 XQ208),12.52,19.35483435854872,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+38599, 38599 (1999 XC210),11.98,19.0362537323158,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+38600, 38600 (1999 XR213),11.83,18.73382146855485,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+38606, 38606 (1999 YC13),11.88,18.972170052974693,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+38607, 38607 (2000 AN6),11.78,18.881035427409387,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+38609, 38609 (2000 AB26),12.28,19.47763513655096,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+38610, 38610 (2000 AU45),11.56,18.551562067975613,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+38611, 38611 (2000 AS74),12.39,19.469115540164733,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+38614, 38614 (2000 AA113),12.1,19.24299369559697,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+38617, 38617 (2000 AY161),12.13,19.30246176281813,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+38619, 38619 (2000 AW183),11.75,19.35575154053005,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+38621, 38621 (2000 AG201),12.2,19.513805753030645,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+39229, 39229 (2000 YJ30),12.69,19.472938145254364,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+39264, 39264 (2000 YQ139),10.81,17.960696068838466,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+39270, 39270 (2001 AH11),12.27,19.11362295762871,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+39275, 39275 (2001 AV37),12.18,19.327140925153497,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+39278, 39278 (2001 BK9),12.02,19.089473330135807,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+39280, 39280 (2001 BE24),11.99,19.10455685708447,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+39284, 39284 (2001 BB62),12.12,18.90218963875941,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+39286, 39286 (2001 CX6),12.31,19.39343871681991,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+39287, 39287 (2001 CD14),12.7,19.57453348822002,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+39288, 39288 (2001 CD21),12.63,19.39357889577493,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+39289, 39289 (2001 CT28),12.37,19.168824685353723,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+39292, 39292 (2001 DS4),12.58,19.401304669232616,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+39293, 39293 (2001 DQ10),12.02,19.13272554611558,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+39362, 39362 (2002 BU1),12.07,19.047427246692557,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+39369, 39369 (2002 CE13),11.16,17.897577133171065,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+39474, 39474 (1978 VC7),11.72,18.8900305210005,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+39692, 39692 (1996 RB32),12.54,19.490114891781563,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+39693, 39693 (1996 ST1),12.51,19.35398506467737,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+39794, 39794 (1997 SU24),12.25,19.23794107922692,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+39797, 39797 (1997 TK18),12.35,18.85836160446102,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+39803, 39803 (1997 UY15),12.61,19.68124036873733,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+40237, 40237 (1998 VM6),12.07,19.58394022553983,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+41268, 41268 (1999 XO64),12.68,19.561232225623208,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+41340, 41340 (1999 YO14),11.23,18.276288290907036,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+41342, 41342 (1999 YC23),12.55,19.629459727426404,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+41350, 41350 (2000 AJ25),12.15,19.48063432558287,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+41353, 41353 (2000 AB33),12.09,19.397500290062656,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+41359, 41359 (2000 AG55),12.39,19.333667201637347,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+41379, 41379 (2000 AS105),11.44,18.7286912569627,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+41417, 41417 (2000 AL233),12.59,19.57378592477936,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+41427, 41427 (2000 DY4),12.49,19.68056419885773,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+42036, 42036 (2000 YP96),11.99,18.999990222582102,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+42114, 42114 (2001 BH4),12.55,19.339924628307323,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+42146, 42146 (2001 BN42),11.98,18.94857663778244,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+42168, 42168 Enispe (2001 CT13),11.71,18.708212406980184,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+42176, 42176 (2001 CK22),12.4,19.24776329785048,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+42179, 42179 (2001 CP25),12.35,19.533324191781137,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+42182, 42182 (2001 CP29),12.21,19.22400460232297,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+42187, 42187 (2001 CS32),11.45,18.186027441564928,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+42200, 42200 (2001 DJ26),12.09,19.184717820377617,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+42201, 42201 (2001 DH29),12.49,19.648522007681585,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+42230, 42230 (2001 DE108),12.61,19.630924666569936,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+42277, 42277 (2001 SQ51),12.16,18.96437111960517,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+42367, 42367 (2002 CQ134),11.05,18.14912613935753,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+42554, 42554 (1996 RJ28),11.81,18.68868629276645,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+43212, 43212 Katosawao (2000 AL113),12.38,19.220626350689884,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+43436, 43436 Ansschut (2000 YD42),12.22,19.07249476837925,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+45822, 45822 (2000 QQ116),12.37,18.985764590668992,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+46676, 46676 (1996 RF29),12.08,18.50946889268792,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+47955, 47955 (2000 QZ73),12.17,19.08376413241912,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+47956, 47956 (2000 QS103),12.09,19.233536042495395,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+47957, 47957 (2000 QN116),11.82,18.901569732519377,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+47959, 47959 (2000 QP168),12.43,19.42879788456451,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+47962, 47962 (2000 RU69),11.97,18.878271456756963,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+47963, 47963 (2000 SO56),11.96,19.077021528659387,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+47964, 47964 (2000 SG131),12.03,18.7755319183084,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+47967, 47967 (2000 SL298),12.02,19.37866705266635,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+47969, 47969 (2000 TG64),11.91,18.759604861859824,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+48249, 48249 (2001 SY345),12.15,18.901933539595017,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+48252, 48252 (2001 TL212),12.4,19.15587522659084,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+48269, 48269 (2002 AX166),12.21,18.977880121707248,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+48373, 48373 Gorgythion (2161 T-3),12.18,19.50966573160165,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+48438, 48438 (1989 WJ2),10.87,17.58311742190994,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+48604, 48604 (1995 CV),12.57,19.48369235040248,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+48764, 48764 (1997 JJ10),11.54,18.16785984812266,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+48767, 48767 Skamander (1997 JG15),12.07,18.867254090914308,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+51339, 51339 (2000 OA61),12.32,19.411512204675144,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+51340, 51340 (2000 QJ12),12.0,18.61575011733698,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+51344, 51344 (2000 QA127),12.22,19.024439693464725,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+51345, 51345 (2000 QH137),11.86,18.091188365637898,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+51346, 51346 (2000 QX158),12.2,18.98819193736864,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+51347, 51347 (2000 QZ165),12.07,18.76372994654877,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+51348, 51348 (2000 QR169),12.08,19.20417938817863,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+51350, 51350 (2000 QU176),11.65,18.6445784325552,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+51351, 51351 (2000 QO218),12.43,18.90781225964609,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+51354, 51354 (2000 RX25),11.52,18.502650966758427,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+51357, 51357 (2000 RM88),12.31,19.308964566750625,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+51359, 51359 (2000 SC17),11.92,19.17145403175483,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+51360, 51360 (2000 SZ25),12.29,19.190624052433428,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+51362, 51362 (2000 SY247),12.38,19.48809206882332,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+51364, 51364 (2000 SU333),11.6,18.024614769719573,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+51365, 51365 (2000 TA42),10.72,18.057663908866942,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+51378, 51378 (2001 AT33),11.6,18.990149377440524,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+51910, 51910 (2001 QQ60),11.71,19.04590947563167,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+51935, 51935 (2001 QK134),12.1,18.600768381963448,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+51958, 51958 (2001 QJ256),11.65,18.82025289200199,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+51962, 51962 (2001 QH267),11.56,18.875156128204807,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+51969, 51969 (2001 QZ292),12.21,19.417016544690625,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+51984, 51984 (2001 SS115),12.21,19.06619599925516,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+51994, 51994 (2001 TJ58),12.38,19.25049298336439,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+52273, 52273 (1988 RQ10),12.52,19.10962886221748,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+52275, 52275 (1988 RS12),12.72,19.22729866769084,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+52278, 52278 (1988 SG3),12.18,19.185292250900904,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+52511, 52511 (1996 GH12),12.17,19.437301907171403,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+52567, 52567 (1997 HN2),11.99,19.081226446489417,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+52645, 52645 (1997 XR13),12.61,19.609203955777787,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+52767, 52767 Ophelestes (1998 MW41),11.86,18.93288789162022,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+53418, 53418 (1999 PY3),11.76,19.28393448548088,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+53419, 53419 (1999 PJ4),12.23,19.67748125188996,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+53436, 53436 (1999 VB154),11.46,18.472599616153563,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+53449, 53449 (1999 XG132),12.0,18.961847884628803,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+53469, 53469 (2000 AX8),12.57,19.619699554028728,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+53477, 53477 (2000 AA54),11.9,19.098473138993505,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+54581, 54581 (2000 QW170),12.36,19.131177737055605,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+54582, 54582 (2000 QU179),12.66,19.546121442701164,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+54596, 54596 (2000 QD225),12.67,19.697191148593927,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+54625, 54625 (2000 SC49),12.55,19.411605109797843,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+54626, 54626 (2000 SJ49),12.39,19.33759119728602,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+54632, 54632 (2000 SD130),12.29,19.2062889264635,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+54638, 54638 (2000 SC144),12.43,19.376474545135107,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+54643, 54643 (2000 SP283),12.4,19.68575437823445,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+54645, 54645 (2000 SR284),12.36,19.67316783375301,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+54649, 54649 (2000 SE310),12.03,19.347209774782232,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+54652, 54652 (2000 SZ344),12.0,19.038036850211707,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+54653, 54653 (2000 SB350),12.37,19.2463914084376,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+54655, 54655 (2000 SQ362),12.21,19.233670209651525,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+54656, 54656 (2000 SX362),10.61,18.067863657153197,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+54672, 54672 (2000 WO180),11.71,18.355808977842937,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+54678, 54678 (2000 YW47),12.45,19.37925906192733,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+54680, 54680 (2001 AS9),12.1,18.909717777374293,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+54689, 54689 (2001 DH101),12.22,19.443121501777664,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+55060, 55060 (2001 QM73),11.12,18.22015424123748,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+55267, 55267 (2001 RP132),12.02,18.7895892910692,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+55419, 55419 Astynoos (2001 TF19),11.19,18.558436006300347,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+55441, 55441 (2001 TS87),12.58,19.445278812009978,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+55457, 55457 (2001 TH133),12.13,19.143980888473333,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+55460, 55460 (2001 TW148),12.27,19.3031487834703,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+55474, 55474 (2001 TY229),12.07,18.956222671368018,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+55496, 55496 (2001 UC73),11.87,18.952192020081853,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+55568, 55568 (2002 CU15),11.51,18.512586013362466,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+55571, 55571 (2002 CP82),12.16,19.250839205986853,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+55574, 55574 (2002 CF245),12.15,19.167356030373885,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+55578, 55578 (2002 GK105),11.49,18.409450518386773,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+55678, 55678 Lampos (3291 T-1),12.44,19.179558226454528,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+55702, 55702 Thymoitos (1302 T-3),12.34,18.988833888024985,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+56355, 56355 (2000 AX130),12.43,19.354428039682084,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+56951, 56951 (2000 SK2),11.97,18.834640866243383,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+56962, 56962 (2000 SW65),12.42,19.549679694048148,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+56968, 56968 (2000 SA92),11.77,18.53896288363524,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+56976, 56976 (2000 SS161),11.58,18.267954909654676,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+57013, 57013 (2000 TD39),11.98,19.084129627126053,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+57041, 57041 (2001 EN12),12.15,19.22158755248733,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+57626, 57626 (2001 TE165),12.37,19.52322562312126,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+57644, 57644 (2001 TV201),12.38,19.223540855003677,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+57714, 57714 (2001 UY124),11.74,18.659504606918475,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+57904, 57904 (2002 ER25),12.31,19.36840006695203,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+57910, 57910 (2002 ED61),12.43,19.26994481487984,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+57915, 57915 Mahuchikh (2002 EB110),12.55,19.40282990036509,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+57920, 57920 (2002 EL153),12.58,19.63507278885067,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+58008, 58008 (2002 TW240),11.69,18.449546062042177,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+58084, 58084 Hiketaon (1197 T-3),12.8,19.26967875390968,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+58473, 58473 (1996 RN7),13.04,19.663651059595956,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+58480, 58480 (1996 RJ33),12.51,19.42217140400413,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+58931, 58931 Palmys (1998 MK47),11.63,19.132473605773004,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+59049, 59049 (1998 TC31),11.69,18.80598249519881,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+59355, 59355 (1999 CL153),13.05,19.548834883656983,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+60322, 60322 (1999 XB257),12.22,19.14036864286085,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+60328, 60328 (2000 AH7),12.2,19.15889517457617,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+60383, 60383 (2000 AR184),11.15,18.37443263785754,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+60401, 60401 (2000 BQ21),11.88,19.0706739980185,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+60421, 60421 (2000 CZ31),12.43,19.537939114469506,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+61610, 61610 (2000 QK95),12.4,19.088174085010557,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+61896, 61896 (2000 QG227),12.78,19.503351598955653,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+62114, 62114 (2000 RV99),12.11,19.038215569757,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+62201, 62201 (2000 SW54),12.41,19.370924535134417,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+62426, 62426 (2000 SX186),11.88,19.21374589375617,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+62692, 62692 (2000 TE24),12.44,19.631425218965703,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+62714, 62714 (2000 TB43),12.11,18.79271140948737,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+63175, 63175 (2000 YS55),12.48,19.254241456540843,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+63176, 63176 (2000 YN59),12.58,19.29510093602156,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+63193, 63193 (2000 YY118),12.72,19.658602874482693,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+63195, 63195 (2000 YN120),11.68,18.68402077571032,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+63202, 63202 (2000 YR131),12.47,19.531735021231643,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+63205, 63205 (2000 YG139),12.67,19.42658071178959,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+63210, 63210 (2001 AH13),12.25,19.537712351530377,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+63231, 63231 (2001 BA15),12.58,19.391700169588027,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+63234, 63234 (2001 BB20),12.19,18.887033488249106,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+63239, 63239 (2001 BD25),12.08,18.950679206211184,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+63241, 63241 (2001 BJ26),12.07,19.139593931262947,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+63257, 63257 (2001 BJ79),12.45,19.6685613279454,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+63265, 63265 (2001 CP12),12.63,19.62889071802307,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+63269, 63269 (2001 CE24),12.47,19.664848188224187,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+63272, 63272 (2001 CC49),12.45,19.46647598805084,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+63273, 63273 (2001 DH4),11.65,18.114420222000867,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+63278, 63278 (2001 DJ29),12.79,19.57010666088112,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+63286, 63286 (2001 DZ68),12.2,19.60590693265865,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+63287, 63287 (2001 DT79),12.15,19.22921129142804,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+63290, 63290 (2001 DS87),12.44,19.11392039533847,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+63291, 63291 (2001 DU87),12.8,19.651693595702,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+63292, 63292 (2001 DQ89),12.21,19.481143396231342,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+63923, 63923 (2001 SV41),12.19,19.188791872435477,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+63955, 63955 (2001 SP65),12.08,19.58865759764983,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+64030, 64030 (2001 SQ168),12.56,19.57553268317535,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+65000, 65000 (2002 AV63),12.19,19.27027368681613,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+65097, 65097 (2002 CC4),12.0,19.26277731527327,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+65109, 65109 (2002 CV36),12.04,19.016204197375785,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+65111, 65111 (2002 CG40),12.08,19.047734190819863,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+65134, 65134 (2002 CH96),12.98,19.46634982690018,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+65150, 65150 (2002 CA126),12.59,19.234752194281164,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+65194, 65194 (2002 CV264),12.31,19.163647463333685,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+65205, 65205 (2002 DW12),12.59,19.2056766238525,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+65209, 65209 (2002 DB17),12.32,19.49475599924269,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+65210, 65210 Stichius (2002 EG),12.13,18.7337812652897,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+65216, 65216 (2002 EZ13),12.44,19.48914686343748,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+65217, 65217 (2002 EY16),12.78,19.636233179596932,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+65223, 65223 (2002 EU34),12.45,19.09989941133633,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+65224, 65224 (2002 EJ44),12.82,19.62154404919093,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+65225, 65225 (2002 EK44),12.51,19.668742099735137,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+65227, 65227 (2002 ES46),12.55,19.398018083561105,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+65232, 65232 (2002 EO87),12.3,19.25439078986046,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+65240, 65240 (2002 EU106),12.77,19.347635344182333,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+65245, 65245 (2002 EH130),12.16,19.11490387451159,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+65257, 65257 (2002 FU36),11.55,18.38407394264981,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+65281, 65281 (2002 GM121),12.27,19.318988366994404,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+65590, 65590 Archeptolemos (1305 T-3),12.1,19.13393303958835,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+65811, 65811 (1996 RW30),12.71,19.50430036183088,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+67065, 67065 (1999 XW261),11.96,18.801093928975284,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+67548, 67548 (2000 SL47),12.43,18.61506076479555,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+68444, 68444 (2001 RH142),11.59,18.97558638978072,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+68519, 68519 (2001 VW15),11.79,19.054826390990176,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+68725, 68725 (2002 ED3),12.4,18.94106748828197,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+68766, 68766 (2002 EN102),12.75,19.450474176569347,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+68788, 68788 (2002 FU13),12.82,19.636903312576983,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+69437, 69437 (1996 KW2),11.98,19.1734287325494,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+73641, 73641 (1977 UK3),12.67,19.69200894597446,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+73677, 73677 (1988 SA3),12.11,19.01623984419709,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+73795, 73795 (1995 FH8),12.21,19.34322102178904,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+76804, 76804 (2000 QE),12.14,19.030482558006376,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+76809, 76809 (2000 QQ46),12.53,19.17948628856908,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+76812, 76812 (2000 QQ84),12.19,18.77872136516496,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+76819, 76819 (2000 RQ91),12.02,19.266431357642965,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+76820, 76820 (2000 RW105),12.31,19.179698944572685,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+76824, 76824 (2000 SA89),12.93,19.52032553250019,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+76826, 76826 (2000 SW131),11.99,19.22547683888125,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+76830, 76830 (2000 SA182),11.95,18.667604313011715,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+76834, 76834 (2000 SA244),12.27,19.250153056983347,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+76836, 76836 (2000 SB310),12.25,19.520354278386115,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+76837, 76837 (2000 SL316),12.36,19.28879090760028,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+76838, 76838 (2000 ST347),12.67,19.503338390218023,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+76857, 76857 (2000 WE132),11.02,18.091724528140443,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+76867, 76867 (2000 YM5),10.46,17.47050953107532,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+77860, 77860 (2001 RQ133),12.89,19.65202199924662,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+77891, 77891 (2001 SM232),12.95,19.2676177514398,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+77894, 77894 (2001 SY263),12.5,19.26845239181476,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+77897, 77897 (2001 TE64),12.6,19.30842511608465,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+77902, 77902 (2001 TY141),12.62,19.31487044416433,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+77906, 77906 (2001 TU162),12.75,19.366212732514605,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+77914, 77914 (2001 UE188),11.89,18.867703160699573,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+79444, 79444 (1997 UM26),12.59,19.5697725256114,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+80119, 80119 (1999 RY138),11.54,19.180506177529413,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+80302, 80302 (1999 XC64),12.31,19.45835102312935,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+80638, 80638 (2000 AM217),12.35,19.59072845050705,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+82055, 82055 (2000 TY40),11.76,18.88815204466032,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+83975, 83975 (2002 AD184),12.71,19.55269778409772,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+83979, 83979 (2002 EW5),12.31,19.55388718677545,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+83980, 83980 (2002 EP9),12.16,19.51321565945461,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+83981, 83981 (2002 EJ22),12.65,19.63785467610016,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+83983, 83983 (2002 GE39),11.93,19.633693177993816,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+83984, 83984 (2002 GL77),12.35,19.505153096981555,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+84709, 84709 (2002 VW120),12.3,19.130835432244,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+85030, 85030 Admetos (2804 P-L),12.19,19.163411221851756,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+85798, 85798 (1998 VA50),11.87,19.215810357540555,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+85807, 85807 (1998 WR10),12.02,19.21001358400303,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+86377, 86377 (2000 AQ12),12.41,19.550870965568603,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+88225, 88225 (2001 BN27),12.17,19.6749890172993,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+88227, 88227 (2001 BU42),12.16,19.25979305289892,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+88229, 88229 (2001 BZ54),12.45,19.315437515207183,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+88241, 88241 (2001 CD23),12.55,19.31658805463925,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+89829, 89829 (2002 BQ29),12.15,19.094054774384755,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+89841, 89841 (2002 CM41),12.44,19.27199541055342,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+89844, 89844 (2002 CP64),12.73,19.23871003941587,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+89858, 89858 (2002 CK96),12.29,19.38991600477724,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+89871, 89871 (2002 CU143),12.78,19.61874218319581,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+89872, 89872 (2002 CZ144),12.43,19.126126373652845,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+89924, 89924 (2002 ED51),12.72,19.421908345590804,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+89934, 89934 (2002 EH95),12.4,19.50412257531228,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+89938, 89938 (2002 FR4),12.43,19.325880325114053,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+89940, 89940 (2002 FG8),12.45,19.20962630593048,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+90337, 90337 (2003 FQ97),11.71,18.88201255961093,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+90380, 90380 (2003 WX68),12.5,19.194700225804464,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+96337, 96337 (1997 LG2),12.72,19.59700927715236,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+97893, 97893 (2000 QV65),12.18,19.1706567826006,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+97973, 97973 (2000 QB165),12.82,19.574736622698303,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+98037, 98037 (2000 RE20),12.61,19.621904641959837,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+98116, 98116 (2000 RA103),12.05,19.567001040788327,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+98139, 98139 (2000 SG53),12.57,19.267790771949787,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+98143, 98143 (2000 SS60),12.45,19.380817540749806,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+98153, 98153 (2000 SY68),12.2,19.271507981833075,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+98362, 98362 (2000 SA363),12.51,19.382685387072957,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+99306, 99306 (2001 SC101),12.55,19.4488918604538,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+99308, 99308 (2001 SD233),12.45,19.575125807864097,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+99309, 99309 (2001 SH264),12.56,19.59728024584553,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+99311, 99311 (2001 SQ282),12.41,19.212579889275823,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+99323, 99323 (2001 TE205),12.74,19.425592982115504,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+99327, 99327 (2001 UP32),12.66,19.48874101156744,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+99328, 99328 (2001 UY123),12.43,19.192128309955407,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+99334, 99334 (2001 VC92),11.83,19.049869054351007,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+99368, 99368 (2001 XE221),12.57,19.56684510489004,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+99464, 99464 (2002 CC91),12.82,19.667733907115988,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+99943, 99943 (2005 AS2),11.68,19.13496798650357,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+100619,100619 (1997 TK14),12.64,19.328975476294623,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+101466,101466 (1998 WJ15),12.32,19.58327163859216,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+101492,101492 (1998 XT1),12.19,19.348200259789884,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+101612,101612 (1999 CS8),12.49,19.653728443945692,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+103989,103989 (2000 DC94),12.1,19.362633050894644,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+105654,105654 (2000 SX26),13.03,19.48346112949843,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+105685,105685 (2000 SC51),12.67,19.503351122454927,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+105694,105694 (2000 SV62),12.18,19.697964005607307,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+105720,105720 (2000 SR79),12.41,19.41160686330667,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+105803,105803 (2000 SH132),12.38,19.599380151053204,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+105808,105808 (2000 SZ135),11.84,19.13975560518003,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+105896,105896 (2000 SG187),12.35,19.522247767026396,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+105904,105904 (2000 SB197),12.81,19.66659579412947,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+106001,106001 (2000 SR283),12.62,19.53865273388515,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+106060,106060 (2000 SS316),12.54,19.36844485566003,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+106143,106143 (2000 TU44),12.29,19.446177898147816,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+106160,106160 (2000 TG61),12.48,19.556267708379497,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+107178,107178 (2001 BE25),12.0,19.424143425988795,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+107804,107804 (2001 FV58),12.29,19.42135214692601,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+109549,109549 (2001 QM257),12.35,19.268117528642644,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+110359,110359 (2001 SA318),13.03,19.649885112236724,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+110380,110380 (2001 SO343),12.25,18.993103692225567,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+110829,110829 (2001 UT54),12.91,19.68801668581565,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+114141,114141 (2002 VX60),12.15,19.195030974144743,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+114208,114208 (2002 VH107),12.3,19.450687366042384,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+114345,114345 (2002 XN72),12.02,19.17275119579381,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+114694,114694 (2003 FC99),11.89,19.39690622719913,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+114710,114710 (2003 GX7),12.42,19.608894321515013,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+116134,116134 (2003 WZ142),12.55,19.53698446674792,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+116901,116901 (2004 FX147),12.64,19.4650056781129,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+116930,116930 (2004 GE29),12.12,19.001598922873164,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+116969,116969 (2004 HZ11),12.17,19.58574717640417,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+117385,117385 Maughan (2004 YN20),12.1,19.10102003586237,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+117389,117389 (2004 YD23),12.42,19.641710026959476,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+117395,117395 (2004 YL35),12.79,19.616047266582505,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+117404,117404 (2005 AC9),12.19,18.98741564834543,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+117423,117423 (2005 AP18),12.24,19.65456133591912,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+117447,117447 (2005 AX46),11.76,19.09218616159496,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+117851,117851 (2005 JE151),12.69,19.689308365485065,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+118815,118815 (2000 SM108),12.3,19.64438257643073,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+119528,119528 (2001 US179),12.04,19.49722098007185,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+122391,122391 (2000 QZ75),12.69,19.381210901975532,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+122460,122460 (2000 QB146),12.11,19.55486654686824,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+122581,122581 (2000 RJ24),12.1,19.17084550692753,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+122592,122592 (2000 RE29),12.21,19.61057504993356,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+122733,122733 (2000 SK47),12.61,19.549551619368625,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+122860,122860 (2000 ST132),12.48,19.365194294533232,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+124695,124695 (2001 SR136),12.66,19.54379489854246,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+124696,124696 (2001 SC137),12.98,19.58323934212238,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+124729,124729 (2001 SB173),12.86,19.435284122209183,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+124985,124985 (2001 TK131),12.39,19.574684248368005,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+125045,125045 (2001 TK211),12.28,19.458509170720667,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+125048,125048 (2001 TW215),12.63,19.61218937841293,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+125059,125059 (2001 TB233),12.72,19.435211954684384,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+125159,125159 (2001 UV93),12.18,19.357694592279696,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+127534,127534 (2002 WR17),12.41,19.488478604451053,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+128299,128299 (2003 YL61),11.51,18.88405757471363,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+128301,128301 (2003 YZ139),12.19,19.23003460423037,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+129133,129133 (2004 YZ31),12.2,19.422741324526505,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+129134,129134 (2005 AC5),12.24,19.359640506518456,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+129135,129135 (2005 AD21),12.1,19.442192820679637,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+129144,129144 (2005 BP25),12.13,19.40046633689602,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+129602,129602 (1997 WA12),12.25,19.269447063313844,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+130190,130190 (2000 AG90),12.08,19.36361913287871,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+130592,130592 (2000 RT87),12.6,19.69897925123953,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+130687,130687 (2000 SZ131),12.41,19.30662351433166,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+131447,131447 (2001 QZ113),11.92,19.17576138550783,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+131460,131460 (2001 QE194),12.5,19.693239220838866,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+133566,133566 (2003 UZ27),12.23,19.371430255297632,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+133862,133862 (2004 BR38),12.46,19.401100016041397,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+134251,134251 (2006 AN34),12.22,19.617169450920155,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+134749,134749 (2000 BT24),11.98,19.48556893245599,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+134957,134957 (2001 DN18),12.07,19.077998428883912,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+135540,135540 (2002 CC245),12.68,19.63854360544149,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+135547,135547 (2002 EN14),12.33,19.585853079730548,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+137879,137879 (2000 AJ114),12.13,19.24561223339861,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+139009,139009 (2001 DH42),12.5,19.48278345086616,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+141584,141584 (2002 GU178),12.83,19.680101229948043,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+144840,144840 (2004 JX35),12.53,19.66610900761404,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+151883,151883 (2003 WQ25),13.07,19.668243039458197,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+151884,151884 (2003 WO40),12.68,19.453369674967146,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+153083,153083 (2000 RH28),12.23,19.24668332210744,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+153107,153107 (2000 SY55),12.7,19.584274646163337,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+153122,153122 (2000 SA97),12.34,19.55189192739671,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+153464,153464 (2001 RW6),12.56,19.38053472602433,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+154417,154417 (2003 BO25),11.98,19.14274547267886,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+154632,154632 (2003 WT151),12.53,19.438794064361243,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+155786,155786 (2000 SD358),12.11,19.22546623967953,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+159342,159342 (2006 JR),11.62,18.86499231514705,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+159633,159633 (2002 CY21),12.64,19.68264078351075,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+159658,159658 (2002 EV56),12.71,19.659143051050236,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+160135,160135 (2000 YB131),12.0,19.09188089534609,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+160533,160533 (1996 TT56),12.48,19.59613009382769,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+160679,160679 (2000 DB6),12.34,19.646054889516737,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+161003,161003 (2002 DA2),12.35,19.653000957731653,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+161018,161018 (2002 EU107),12.53,19.69875023478806,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+161024,161024 (2002 FM7),12.54,19.445297048433133,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+161044,161044 (2002 GG181),12.47,19.68407878697424,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+161484,161484 (2004 HU42),12.52,19.5027878265516,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+162047,162047 (1996 RJ32),12.68,19.578236345501224,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+162805,162805 (2001 AR),12.22,19.6562190973781,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+162851,162851 (2001 DF39),12.48,19.54432614847704,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+163135,163135 (2002 CT22),12.74,19.568519326823395,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+163155,163155 (2002 CL130),12.68,19.532469355415643,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+163238,163238 (2002 EQ151),12.42,19.660727394087395,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+163256,163256 (2002 GU35),12.49,19.626526040729463,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+163702,163702 (2003 FR72),12.28,19.308101899693305,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+167686,167686 (2004 JX23),12.18,18.91049887575668,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+171424,171424 Rudyfernandez (2007 NL2),12.22,19.281184917140404,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+172819,172819 (2004 JN42),12.28,19.504254441543463,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+173084,173084 (2007 PO1),12.34,19.435147517716004,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+175129,175129 (2005 BJ19),12.53,19.52970308245592,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+180274,180274 (2003 WC63),12.79,19.66351835291637,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+182627,182627 (2001 UC124),12.87,19.53327164677785,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+184276,184276 (2005 AU19),12.93,19.46853929791633,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+186125,186125 (2001 TM150),12.92,19.621868503189887,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+186128,186128 (2001 TP154),12.91,19.64057804467072,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+187476,187476 (2006 BB213),12.71,19.53700930530889,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+189493,189493 (1999 XL257),12.12,19.12070929836546,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+189772,189772 (2002 CQ78),12.82,19.671847824665,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+189859,189859 (2003 HB17),12.88,19.631332760390176,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+190229,190229 (2006 OO5),12.5,19.47382669803074,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+190352,190352 (1998 XC23),12.91,19.619842519327843,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+190669,190669 (2000 YJ117),12.34,19.538590521466155,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+191054,191054 (2002 CZ80),12.74,19.62077827206126,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+191060,191060 (2002 CT111),12.79,19.583438750224776,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+191102,191102 (2002 EW14),12.86,19.651030520475523,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+191114,191114 (2002 EB81),12.39,19.438002422939853,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+191303,191303 (2003 GU35),12.46,19.40152101360293,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+192218,192218 (2007 PX45),12.91,19.566525834961677,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+192222,192222 (2007 RZ281),12.0,19.341723952440336,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+192389,192389 (1996 RT29),12.5,19.263350041767307,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+193535,193535 (2000 YS109),12.87,19.661002014347403,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+193570,193570 (2001 AR36),12.29,19.292665958230472,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+193592,193592 (2001 BN46),12.9,19.693423841432008,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+193602,193602 (2001 BL70),12.63,19.68517573370056,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+195117,195117 (2002 CT143),13.16,19.69913347564288,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+195167,195167 (2002 CT235),12.58,19.68244578879486,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+195286,195286 (2002 EC79),12.93,19.635078890094725,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+195308,195308 (2002 EK106),12.69,19.62438172471927,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+195467,195467 (2002 GT114),12.34,19.54758222988124,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+196408,196408 (2003 GW47),12.55,19.564035622135385,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+196440,196440 (2003 HQ35),12.65,19.41885974265866,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+197563,197563 (2004 FH148),12.8,19.29245198265156,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+197586,197586 (2004 HQ11),12.74,19.592137562727736,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+197593,197593 (2004 HA43),12.34,19.446163790395985,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+197619,197619 (2004 JC37),12.41,19.104452053732885,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+197620,197620 (2004 JL39),12.59,19.61967989211996,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+197624,197624 (2004 JO43),12.95,19.38152500553334,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+197630,197630 (2004 KJ4),12.72,19.620631354363155,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+202752,202752 (2007 PX30),11.91,19.65208120516308,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+203210,203210 (2001 DR100),12.83,19.683176099971188,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+203891,203891 (2003 FR43),13.04,19.6069895776448,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+207749,207749 (2007 RC286),12.25,19.12902137290791,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+213491,213491 (2002 GO15),12.67,19.58349242525906,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+214093,214093 (2004 JQ43),12.63,19.43051222288014,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+214508,214508 (2006 AF84),12.77,19.67813294556965,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+215020,215020 (2009 BE14),13.08,19.65104403982811,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+215110,215110 (1997 NO5),12.79,19.616524701902996,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+215199,215199 (2000 SB130),12.34,19.2301873019184,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+215319,215319 (2001 TA119),12.47,19.44076438740782,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+215530,215530 (2002 VE103),12.58,18.9540312417882,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+217612,217612 (2008 TD126),12.69,19.61489609950743,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+219834,219834 (2002 CK80),12.92,19.617855522270048,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+219881,219881 (2002 ES32),12.8,19.61310166669085,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+219958,219958 (2002 JG16),12.97,19.446449570447182,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+220318,220318 (2003 EG63),12.87,19.651833893711892,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+220351,220351 (2003 HK22),12.91,19.664342693251683,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+222844,222844 (2002 EH82),12.81,19.613761333497155,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+223268,223268 (2003 GZ21),12.59,19.52045683254835,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+224020,224020 (2005 JL160),12.64,19.66335010524196,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+225210,225210 (2008 QB31),12.46,19.55015085720299,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+225224,225224 (2008 SH41),12.74,19.68678876299649,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+225984,225984 (2002 CJ228),12.69,19.59191549468168,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+226361,226361 (2003 HP13),12.8,19.68127751553657,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+228102,228102 (2008 SY172),12.48,19.38754941157866,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+228148,228148 (2009 SH19),12.35,19.351216306907464,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+237710,237710 (2001 UW184),12.68,19.696525131379342,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+241754,241754 (2001 CA1),12.77,19.575154203003105,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+243084,243084 (2007 NL7),12.41,19.62828950815212,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+243490,243490 (2009 UF19),12.57,19.64625395186299,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+246817,246817 (2009 KH1),12.87,19.67384638338775,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+247019,247019 (1999 XJ55),12.34,19.644109306684086,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+247102,247102 (2000 SA315),12.69,19.62111825467706,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+247341,247341 Shaulladany (2001 UV209),12.57,19.337293145893938,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+247421,247421 (2002 CD272),12.69,19.332177509771743,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+247437,247437 (2002 EJ11),12.61,19.45133370576297,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+252724,252724 (2002 CN228),12.72,19.49592037645141,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+253382,253382 (2003 JG8),12.57,19.511438062030425,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+257399,257399 (2009 SX253),13.03,19.67055286843164,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+257405,257405 (2009 SG330),12.15,19.15507924608483,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+258670,258670 (2002 ED120),13.43,19.351605713064213,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+258683,258683 (2002 EX154),12.86,19.65440622438582,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+259370,259370 (2003 HQ14),13.18,19.403647035730497,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+283513,283513 (2001 TN24),12.95,19.446752161765872,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+284044,284044 (2005 AA51),13.25,19.61930337304511,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+284887,284887 (2009 KE9),12.78,19.570559419757828,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+286114,286114 (2001 TV119),12.72,19.34356829547836,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+287454,287454 (2002 YX7),12.61,19.670343383725896,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+298254,298254 (2002 VG78),13.2,19.66963849953386,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+310397,310397 (1998 WF37),13.07,19.620825313164683,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+310872,310872 (2003 HF14),12.69,19.60011848626948,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+312632,312632 (2009 UY148),13.02,19.332484219422795,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+312707,312707 (2010 PV25),12.66,19.5897094145794,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+334221,334221 (2001 TU24),13.23,19.56113220650745,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+341928,341928 (2008 LZ5),13.06,19.518860764744765,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+343680,343680 (2010 UD2),13.41,19.67422563969953,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+347943,347943 (2003 GF57),13.11,19.602053704642493,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+353363,353363 (2010 XP50),12.86,19.21678518739513,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+356261,356261 (2009 VB3),12.55,19.63594824355129,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+381409,381409 (2008 HM47),13.06,19.61180924215979,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+427346,427346 (2014 WW364),12.75,19.5242247916309,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+557679,557679 (2014 WZ119),12.73,19.61557185936861,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+596079,596079 (2004 YF37),13.03,19.61851543314246,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+733818,733818 (2014 UA209),12.82,19.695507133108432,L5,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy
+2014 ET220,       (2014 ET220),13.11,19.66672096974802,L4,accepted_for_Horizons,JPL TJN; cloud is instantaneous longitude proxy

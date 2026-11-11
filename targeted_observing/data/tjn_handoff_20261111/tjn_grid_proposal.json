@@ -1,0 +1,74 @@
+{
+  "artifact_status": "PROPOSAL_NOT_FROZEN",
+  "planning_start": "2026-11-01",
+  "planning_stop_exclusive": "2027-11-01",
+  "branch": "codex/twilight-trojan",
+  "reviewed_head": "7747cc1650fdeb255e677e496f50a376a99cb57b",
+  "field_prefixes": {
+    "L4": "TJL4_",
+    "L5": "TJL5_"
+  },
+  "minimum_number_width": 3,
+  "center_frame": "ICRS",
+  "coordinate_unit": "deg",
+  "mother_grid": {
+    "version": "EQv0_proposal",
+    "ra_anchor_deg": 0.0,
+    "dec_anchor_deg": 0.0,
+    "nominal_east_west_pitch_deg": 2.67264,
+    "declination_pitch_deg": 2.67496,
+    "row_count_formula": "ceil(360*cos(dec_row)/2.67264)",
+    "row_ra_step_formula": "360/row_count",
+    "ra_center_formula": "column_index*row_ra_step",
+    "declination_center_formula": "row_index*2.67496"
+  },
+  "nominal_footprint": {
+    "projection": "TAN",
+    "pixel_shape_xy": [
+      9216,
+      9232
+    ],
+    "pixel_scale_arcsec": 1.15,
+    "pa_deg": 0.0,
+    "pa_convention": "local north-up; detector parity separately calibrated",
+    "real_wcs_used": false,
+    "detector_pixel_scale_is_measured": false,
+    "edge_mask": null,
+    "edge_mask_status": "requires real image science region and template common area"
+  },
+  "registration": {
+    "initial_sort": [
+      "planning_cloud",
+      "dec_deg",
+      "ra_deg"
+    ],
+    "after_freeze": "append only; never reassign or repoint an existing field_id",
+    "permanent_geometry_identity": [
+      "field_id",
+      "grid_cell_id",
+      "ra_deg",
+      "dec_deg",
+      "pa_deg"
+    ],
+    "template_identity": [
+      "instrument_id",
+      "geometry_version",
+      "field_id",
+      "physical_filter_id",
+      "template_version"
+    ]
+  },
+  "seed_scope": "legacy B nominal footprint envelopes, all annual candidate ephemerides still required",
+  "nominal_seed_counts": {
+    "L4": 241,
+    "L5": 281
+  },
+  "required_local_inputs": [
+    "targeted_observing/cache/annual/horizons_*_6h.json",
+    "targeted_observing/products/annual/ephemeris_index.json",
+    "measured science WCS headers and effective detector/template masks"
+  ],
+  "controller_filter_case": "lowercase",
+  "telescope_execution_enabled": false,
+  "modify_other_scheduler_modules": false
+}
