@@ -1,5 +1,11 @@
 # 晨昏搜寻 + 木星特洛伊监测（本地研发模式）
 
+## 当前整夜测试：固定TJN + YSO_ORI（2026-11-12）
+
+执行列表 `products/full_night_20261112/20261112.txt`，黄昏/清晨各一小时、固定TJN三场173张、YSO_ORI g/r各72张；[时间表与验收](docs/FULL_NIGHT_FIXED_20261112.md)。入口 `python3 -m targeted_observing.fixed_full_night --date 2026-11-12 --twilight targeted_observing/products/tonight_full_hour_20261112 --output targeted_observing/products/full_night_20261112`。
+
+今后固定TJN执行名用 `controller_fields.controller_name` 加 `MP_`，例如 `MP_TJL5_400`；canonical ID、中心、PA保持原库，模板通过映射回原身份。此入口继续仅在新目录开发，不改生产代码。
+
 ## TJN 长期固定场（候选发行版）
 
 固定场库为L4 466场、L5 768场；采用2.50°恒Dec行和逐行RA投影，目标按星历跨场，ID/中心/方向不随campaign重定心。见[完整报告与图件](docs/tjn_fixed_20261111/REPORT.md)、[长期项目备忘](docs/PROJECT_MEMORY.md)。场库已通过全年名义覆盖和本地TPV情景检查；真实科学遮罩、模板公共裁边与指向/PA重复性未验收，正式冻结尚未完成。

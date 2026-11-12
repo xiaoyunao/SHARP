@@ -1,6 +1,10 @@
 # SHARP 新 pipeline 持续备忘
 
-更新：2026-11-11（北京时间）。依据用户本次请求、GPT Pro“固定TJN观测天区 pipeline”及[原交接备忘](../data/tjn_handoff_20261111/SHARP_PROJECT_MEMORY_20261111.md)。本文件是仓库记忆，不代表改写ChatGPT内置Project memory。
+更新：2026-11-12（北京时间）。依据用户本次请求、GPT Pro“固定TJN观测天区 pipeline”及[原交接备忘](../data/tjn_handoff_20261111/SHARP_PROJECT_MEMORY_20261111.md)。本文件是仓库记忆，不代表改写ChatGPT内置Project memory。
+
+## 2026-11-12现场决定
+
+用户开始采用固定库实拍；控制文件的TJN目标名必须加MP_，例如MP_TJL5_400，原固定ID/坐标/PA不变。统一别名入口controller_fields.py，今晚field_mapping.json保存模板身份映射。用户明确继续YSO_ORI。新夜间列表416帧，其中固定606/400/436共173张，详细见FULL_NIGHT_FIXED_20261112.md。此实拍授权不等于真实mask/PA已经认证，RC1状态保留；11月11日的旧TJ_test列表作为历史不改。
 
 ## 用户长期方向
 

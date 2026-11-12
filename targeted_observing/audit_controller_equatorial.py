@@ -14,6 +14,8 @@ from .catalog import BASE, write_csv
 from .full_night_test import read_lines, replay
 from .geometry import coord, footprint, local_time, setup_iers
 from .offline_twilight import make_sky, load_grid
+from .controller_fields import is_fixed_name, canonical_name
+from .fixed_fields import FixedFields, REGISTRY_PATH
 
 
 def signed_ra_step(ra_from, ra_to):
@@ -60,7 +62,15 @@ def audit(source, start, output, ha_reference_hours=5):
         mask = np.isin(indices, ids)
         first = rows[ids[0]]
         m = sky.metrics(first['ra_deg'], first['dec_deg'], seconds[mask])
-        if name.startswith('MP_'):
+        if is_fixed_name(name):
+            registered=FixedFields.read(REGISTRY_PATH).by_id[canonical_name(name)]
+            if coord(first['ra_deg'],first['dec_deg']).separation(
+                    coord(registered['ra_deg'],registered['dec_deg'])).arcsec>.03:
+                raise ValueError('Fixed field centre changed: '+name)
+            fp=footprint(first['ra_deg'],first['dec_deg'])
+            radius=float(fp[-1].separation(fp).deg.max())
+            alt_limit,sun_limit=30,-18
+        elif name.startswith('MP_'):
             radius = mp[name.replace('MP_','MP')]['radius_deg']
             alt_limit, sun_limit = 25, -10
         else:
