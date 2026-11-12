@@ -2,6 +2,10 @@
 
 ## 2026-11-12
 
+- 整夜overhead只读核查：SSH读取/raw1/20261111/OBJ计划目标头；TOO/test/focus不分析，0080列表外重复及两次跨打断间隔排除。新增analyze_full_night_overhead.py和docs/OVERHEAD_FULL_NIGHT_20261111.md，快照/CSV/图保留products/overhead_full_20261111。
+- 原因与结果：近邻转场符合既有模型（EV−0.700秒/AM−1.094秒）；同场有效间隔约18秒，15秒假设偏低；换片及部分衔接含额外等待，不能当硬件耗时。354计划帧、351相邻对合计比模型多1316.551秒；YSO完整144张耗时3小时8分39秒。FILTER可靠，CHANNEL在非r图中仍为r。
+- 验证命令：python3 -m py_compile targeted_observing/analyze_full_night_overhead.py；python3 -m targeted_observing.analyze_full_night_overhead。计划匹配/头时间/三段首尾闭合/计数与图件通过。下一步如调整排程，应区分同场18秒与现有转场模型，并查控制日志解释换片等待。本轮未改今晚列表/模型、main及本地/远端生产代码。
+
 - 用户要求所有相同曝光合并：compress_dwells取消TJN阶段和5张合并上限，只合并连续且同阶段/天区/坐标/滤镜/曝光秒数的指令，不跨复访重排。今晚206→127行，430张及全部逐帧时标/坐标/滤镜/曝光完全一致；606为80×120秒一行+1×113秒。
 - 验证：py_compile、3项focused tests、真实整夜重生成、430行账本除command_index/repeat外逐项一致、重复列展开与无剩余可合并相邻行通过。说明/ZIP更新，源列表hash检查后生成；生产/main/服务器不动。
 
