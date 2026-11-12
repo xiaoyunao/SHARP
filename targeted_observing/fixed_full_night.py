@@ -32,11 +32,13 @@ def rows_for(commands,start):
     return replay(commands,start)
 
 
-def fill_to_handover(commands,start,fields,next_command,next_shutter,block):
+def fill_to_handover(commands,start,fields,next_command,next_shutter,block,dwell=1):
     """Keep cycling until the next fixed shutter time; integer tail, no WAIT token."""
+    if not isinstance(dwell,int) or isinstance(dwell,bool) or dwell<1:
+        raise ValueError('Dwell must be a positive integer')
     index=0
     while True:
-        trial=make_command(fields[index%len(fields)],'r',120,block)
+        trial=make_command(fields[(index//dwell)%len(fields)],'r',120,block)
         rr=rows_for(commands+[trial,next_command],start)
         if next(r['start_unix'] for r in rr if r['command_index']==len(commands)+2)>next_shutter:
             break
@@ -67,6 +69,19 @@ def fill_to_handover(commands,start,fields,next_command,next_shutter,block):
     first=next(r['start_unix'] for r in check if r['command_index']==len(commands)+1)
     if not 0<=next_shutter-first<1.01:
         raise ValueError('Handover drift')
+
+
+def compress_dwells(commands):
+    """Use the controller repeat column for consecutive identical TJN exposures."""
+    result=[]
+    keys=('block','field_id','ra_deg','dec_deg','filter','exposure_s')
+    for c in commands:
+        if (result and c['block'] in ('TJN_MAIN','TJN_LATE') and
+                all(c[k]==result[-1][k] for k in keys) and result[-1]['count']+c['count']<=5):
+            result[-1]['count']+=c['count']
+        else:
+            result.append(dict(c))
+    return result
 
 
 def plot(rows,sky,output,day):
@@ -138,16 +153,20 @@ def build(day,twilight_dir,output):
     yso_first=(local_day+timedelta(days=1,hours=1,minutes=40)).timestamp()
     main_next=make_command(fields[1],'r',120,'TJN_MAIN')
     fill_to_handover(commands,first,fields[:1],main_next,main_first,'TJN_EARLY')
-    fill_to_handover(commands,first,fields[1:],yg,yso_first,'TJN_MAIN')
+    fill_to_handover(commands,first,fields[1:],yg,yso_first,'TJN_MAIN',dwell=5)
     commands.extend([yg,yr])
     am_first=next(b for b in plan['blocks'] if b['side']=='AM')['rows'][0]['start_unix']
-    fill_to_handover(commands,first,fields[1:],am[0],am_first,'TJN_LATE')
+    fill_to_handover(commands,first,fields[1:],am[0],am_first,'TJN_LATE',dwell=5)
     commands.extend(am)
     rows=rows_for(commands,first)
-    text=''.join(command({k:c[k] for k in ('field_id','ra_deg','dec_deg')},c['filter'],c['count'],c['exposure_s']) for c in commands)
+    exported=compress_dwells(commands)
+    text=''.join(command({k:c[k] for k in ('field_id','ra_deg','dec_deg')},c['filter'],c['count'],c['exposure_s']) for c in exported)
     destination=output/(day.replace('-','')+'.txt');destination.write_text(text)
     check=rows_for(read_lines(text,'ALL'),first)
     assert len(check)==len(rows) and all(abs(a['start_unix']-b['start_unix'])<.001 for a,b in zip(rows,check))
+    for r,exported_row in zip(rows,check):
+        r['command_index']=exported_row['command_index']
+        r['repeat']=exported_row['repeat']
     for side in ('EV','AM'):
         actual=[r for r in rows if r['block']==side];ref=next(b for b in plan['blocks'] if b['side']==side)['rows']
         assert len(actual)==len(ref)
@@ -191,7 +210,8 @@ def build(day,twilight_dir,output):
             readout_end=local_time(rr[-1]['release_unix']),integration_s=sum(r['exposure_s'] for r in rr),
             exposure_counts={str(e):sum(r['exposure_s']==e for r in rr) for e in sorted({r['exposure_s'] for r in rr})}))
     summary=dict(date=day,start_local=local_time(first),end_local=local_time(rows[-1]['release_unix']),
-        controller_lines=len(commands),exposures=len(rows),blocks=blocks,fixed_fields=mapping,
+        controller_lines=len(exported),exposures=len(rows),blocks=blocks,fixed_fields=mapping,
+        trojan_exposures_per_dwell=5,
         core_targets=[{k:v for k,v in t.items() if k!='period_evidence'} for t in targets if t['V_max']<=18.5],
         registry_sha256=hashlib.sha256(REGISTRY_PATH.read_bytes()).hexdigest(),
         twilight_plan_sha256=hashlib.sha256((twilight_dir/'plan.json').read_bytes()).hexdigest(),
@@ -199,6 +219,7 @@ def build(day,twilight_dir,output):
         AM_shutter_shift_s=next(r['start_unix'] for r in rows if r['block']=='AM')-am_first,
         assumptions=['Static sequential list, no WAIT or automatic clock gates.',
           'Readout15s, filter10s, empirical slew; same position has no extra slew.',
+          'Main/late two-field loops take five consecutive r120 exposures per visit; final visit may be partial.',
           'Short r exposures at block ends align fixed handovers; main Trojan exposures120s.',
           'MP_ is an execution alias only; registry IDs/centres/PA are unchanged.',
           'Actual masks, halo contamination and physical mount path require observing feedback.'])
@@ -208,6 +229,7 @@ def build(day,twilight_dir,output):
     (output/'READ_ME.txt').write_text(f'SHARP {day}\nExecute {destination.name} once starting {summary["start_local"]} Beijing time.\n'
         'EV -> early fixed Trojan -> two fixed Trojan fields -> YSO_ORI g/r -> late Trojan -> AM.\n'
         'YSO: 72x60s each band; 15s readout; one extra10s filter change.\n'
+        'TJL5_400/436: five consecutive exposures per field before switching; final visits can be partial.\n'
         'Fixed Trojan execution names start MP_TJL5_; canonical IDs/centres stay unchanged.\n'
         'All filter tokens lowercase. No M31, no WAIT, no automatic deadline stop.\n'
         'Observe actual times; preset lists cannot compensate arbitrary delays.\n')

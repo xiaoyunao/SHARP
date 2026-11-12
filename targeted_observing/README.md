@@ -2,7 +2,7 @@
 
 ## 当前整夜测试：固定TJN + YSO_ORI（2026-11-12）
 
-执行列表 `products/full_night_20261112/20261112.txt`，黄昏/清晨各一小时、固定TJN三场173张、YSO_ORI g/r各72张；[时间表与验收](docs/FULL_NIGHT_FIXED_20261112.md)。入口 `python3 -m targeted_observing.fixed_full_night --date 2026-11-12 --twilight targeted_observing/products/tonight_full_hour_20261112 --output targeted_observing/products/full_night_20261112`。
+执行列表 `products/full_night_20261112/20261112.txt`，黄昏/清晨各一小时、固定TJN三场187张（400/436每场连续5张再换）、YSO_ORI g/r各72张；[时间表与验收](docs/FULL_NIGHT_FIXED_20261112.md)。入口 `python3 -m targeted_observing.fixed_full_night --date 2026-11-12 --twilight targeted_observing/products/tonight_full_hour_20261112 --output targeted_observing/products/full_night_20261112`。
 
 今后固定TJN执行名用 `controller_fields.controller_name` 加 `MP_`，例如 `MP_TJL5_400`；canonical ID、中心、PA保持原库，模板通过映射回原身份。此入口继续仅在新目录开发，不改生产代码。
 

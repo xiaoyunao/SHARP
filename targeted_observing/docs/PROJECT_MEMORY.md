@@ -4,7 +4,7 @@
 
 ## 2026-11-12现场决定
 
-用户开始采用固定库实拍；控制文件的TJN目标名必须加MP_，例如MP_TJL5_400，原固定ID/坐标/PA不变。统一别名入口controller_fields.py，今晚field_mapping.json保存模板身份映射。用户明确继续YSO_ORI。新夜间列表416帧，其中固定606/400/436共173张，详细见FULL_NIGHT_FIXED_20261112.md。此实拍授权不等于真实mask/PA已经认证，RC1状态保留；11月11日的旧TJ_test列表作为历史不改。
+用户开始采用固定库实拍；控制文件的TJN目标名必须加MP_，例如MP_TJL5_400，原固定ID/坐标/PA不变。统一别名入口controller_fields.py，今晚field_mapping.json保存模板身份映射。用户明确继续YSO_ORI。新夜间列表经用户同意改成每场连续5张再换；430帧，其中固定606/400/436共187张，详细见FULL_NIGHT_FIXED_20261112.md。此实拍授权不等于真实mask/PA已经认证，RC1状态保留；11月11日的旧TJ_test列表作为历史不改。
 
 ## 用户长期方向
 
