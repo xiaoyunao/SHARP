@@ -72,12 +72,11 @@ def fill_to_handover(commands,start,fields,next_command,next_shutter,block,dwell
 
 
 def compress_dwells(commands):
-    """Use the controller repeat column for consecutive identical TJN exposures."""
+    """Merge consecutive identical exposures into the controller repeat column."""
     result=[]
     keys=('block','field_id','ra_deg','dec_deg','filter','exposure_s')
     for c in commands:
-        if (result and c['block'] in ('TJN_MAIN','TJN_LATE') and
-                all(c[k]==result[-1][k] for k in keys) and result[-1]['count']+c['count']<=5):
+        if result and all(c[k]==result[-1][k] for k in keys):
             result[-1]['count']+=c['count']
         else:
             result.append(dict(c))
