@@ -127,7 +127,7 @@ def report(output=OUTPUT):
     lines += ['', '38615/228155原预筛因亮度或赤纬拒绝，本轮没有静默加入1063比较样本；其余未可见对象仍保留。Hektor等受本站高度条件限制；这不代表科学价值不足。', '',
         '## 有限接入验证','', '| 日期/案例 | 场数 | r120帧 | 独立目标 | 转场秒 | 验证 |','|---|---:|---:|---:|---:|---|']
     for r in nights.itertuples():lines.append(f'| {r.date} / {r.case} | {r.fields} | {r.exposures} | {r.unique_targets} | {r.slew_s:.1f} | 通过 |')
-    lines += ['', '仅新增 opt-in `fixed_trojan` 查询入口，原调度入口保持。采用既有2小时预算、r120、驻场两张、15秒读出、5分钟交接和原转场模型，逐曝光5秒几何审查；RA机械轴位移仍使用wrap后的RA差，未乘cos(Dec)。每夜4场40帧是这些代表夜的结果，不是全年承诺。','',
+    lines += ['', '仅新增 opt-in `fixed_trojan` 查询入口，原调度入口保持。采用既有2小时预算、r120、驻场两张、该次配置的读出时间、5分钟交接和原转场模型，逐曝光5秒几何审查；RA机械轴位移仍使用wrap后的RA差，未乘cos(Dec)。每夜4场40帧是这些代表夜的结果，不是全年承诺。','',
         '## 文件和复现','',
         '- `registry.csv` / `registry.fits` / `registry.json` 与 `TJL4.csv`、`TJL5.csv`：静态场库；编号在RC后续增补时也只追加，正式发行仍需现场几何验收。',
         '- `object_samples.csv.gz`、`object_field_intervals.csv.gz`、`object_days.csv.gz`、`objects.csv`：动态主场、留边和可见性；重叠全部成员可用查询API获得。',

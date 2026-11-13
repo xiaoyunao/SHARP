@@ -45,7 +45,7 @@ class GeometryReviewTests(unittest.TestCase):
 
     def test_single_field_fills_budget(self):
         camp=json.loads((BASE/'data/campaign_20261103.json').read_text());a=unix('2026-11-03T17:00:00Z')
-        for minutes,n in [(75,30),(89,36)]:
+        for minutes,n in [(75,29),(89,36)]:
             b=trojan(Sky(self.c),(a,a+minutes*60),camp['fields'],camp['tracks'])
             self.assertIsNotNone(b);self.assertEqual(len(b['rows']),n)
             self.assertLessEqual(unix(b['rows'][-1]['release_utc']),a+minutes*60-300)

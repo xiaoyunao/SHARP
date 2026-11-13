@@ -13,7 +13,7 @@ from astropy.time import Time
 from .catalog import BASE, interpolate, write_csv
 from .controller_fields import controller_name, canonical_name, is_fixed_name
 from .fixed_fields import FixedFields, REGISTRY_PATH, edge_distance
-from .full_night_test import read_lines, replay, command, movement, YSO_FIELDS
+from .full_night_test import read_lines, replay, command, movement, YSO_FIELDS, READOUT_S, YSO_FRAMES_PER_BAND
 from .geometry import setup_iers, local_time, coord
 from .offline_twilight import make_sky
 from .audit_controller_equatorial import audit
@@ -54,15 +54,15 @@ def fill_to_handover(commands,start,fields,next_command,next_shutter,block,dwell
         if slack<=0:
             break
         field={k:last[k] for k in ('field_id','ra_deg','dec_deg')}
-        if slack>=20:
-            commands.append(make_command(field,'r',min(120,slack-15),block))
+        if slack>=5+READOUT_S:
+            commands.append(make_command(field,'r',min(120,int(slack-READOUT_S)),block))
         else:
             # Split the previous exposure to spend a residual smaller than one
-            # 5s exposure + 15s readout, while keeping both exposures >=5s.
+            # 5s exposure + the configured readout, while keeping both exposures >=5s.
             previous=commands[-1]
-            if previous['count']!=1 or previous['exposure_s']-(20-slack)<5:
+            if previous['count']!=1 or previous['exposure_s']-(5+READOUT_S-slack)<5:
                 raise ValueError('Cannot fill integer handover without an invalid exposure')
-            previous=make_command(field,'r',previous['exposure_s']-(20-slack),block)
+            previous=make_command(field,'r',int(previous['exposure_s']-(5+READOUT_S-slack)),block)
             commands[-1]=previous
             commands.append(make_command(field,'r',5,block))
     check=rows_for(commands+[next_command],start)
@@ -137,6 +137,8 @@ def plot(rows,sky,output,day):
 def build(day,twilight_dir,output):
     output.mkdir(parents=True,exist_ok=True)
     plan=json.loads((twilight_dir/'plan.json').read_text());assert plan['date']==day
+    if plan['config']['readout_s'] != READOUT_S:
+        raise ValueError('Regenerate twilight with the current readout setting')
     setup_iers(BASE/'cache'/plan['config']['iers_file']);sky=make_sky()
     registry=FixedFields.read(REGISTRY_PATH)
     identities=['TJL5_606','TJL5_400','TJL5_436']
@@ -146,7 +148,7 @@ def build(day,twilight_dir,output):
     am=read_lines((twilight_dir/'AM.txt').read_text(),'AM')
     first=plan['blocks'][0]['window_unix'][0];commands=list(ev)
     # Three-hour YSO allocation includes readout; the sole g/r change adds 10s.
-    yg=make_command(yso,'g',60,'YSO_g',72);yr=make_command(yso,'r',60,'YSO_r',72)
+    yg=make_command(yso,'g',60,'YSO_g',YSO_FRAMES_PER_BAND);yr=make_command(yso,'r',60,'YSO_r',YSO_FRAMES_PER_BAND)
     local_day=datetime.fromisoformat(day).replace(tzinfo=TZ)
     main_first=(local_day+timedelta(hours=21,minutes=52)).timestamp()
     yso_first=(local_day+timedelta(days=1,hours=1,minutes=40)).timestamp()
@@ -210,14 +212,14 @@ def build(day,twilight_dir,output):
             exposure_counts={str(e):sum(r['exposure_s']==e for r in rr) for e in sorted({r['exposure_s'] for r in rr})}))
     summary=dict(date=day,start_local=local_time(first),end_local=local_time(rows[-1]['release_unix']),
         controller_lines=len(exported),exposures=len(rows),blocks=blocks,fixed_fields=mapping,
-        trojan_exposures_per_dwell=5,
+        trojan_exposures_per_dwell=5,readout_s=READOUT_S,yso_frames_per_band=YSO_FRAMES_PER_BAND,
         core_targets=[{k:v for k,v in t.items() if k!='period_evidence'} for t in targets if t['V_max']<=18.5],
         registry_sha256=hashlib.sha256(REGISTRY_PATH.read_bytes()).hexdigest(),
         twilight_plan_sha256=hashlib.sha256((twilight_dir/'plan.json').read_bytes()).hexdigest(),
         geometry_checks_passed=True,mechanical_safety_certified=False,formal_instrument_freeze=False,
         AM_shutter_shift_s=next(r['start_unix'] for r in rows if r['block']=='AM')-am_first,
         assumptions=['Static sequential list, no WAIT or automatic clock gates.',
-          'Readout15s, filter10s, empirical slew; same position has no extra slew.',
+          f'Readout{READOUT_S:g}s, filter10s, empirical slew; same position has no extra slew.',
           'Main/late two-field loops take five consecutive r120 exposures per visit; final visit may be partial.',
           'Short r exposures at block ends align fixed handovers; main Trojan exposures120s.',
           'MP_ is an execution alias only; registry IDs/centres/PA are unchanged.',
@@ -227,7 +229,7 @@ def build(day,twilight_dir,output):
     plot(rows,sky,output,day)
     (output/'READ_ME.txt').write_text(f'SHARP {day}\nExecute {destination.name} once starting {summary["start_local"]} Beijing time.\n'
         'EV -> early fixed Trojan -> two fixed Trojan fields -> YSO_ORI g/r -> late Trojan -> AM.\n'
-        'YSO: 72x60s each band; 15s readout; one extra10s filter change.\n'
+        f'YSO: {YSO_FRAMES_PER_BAND}x60s each band; {READOUT_S:g}s readout; one extra10s filter change.\n'
         'TJL5_400/436: five consecutive exposures per field before switching; final visits can be partial.\n'
         'Fixed Trojan execution names start MP_TJL5_; canonical IDs/centres stay unchanged.\n'
         'All filter tokens lowercase. No M31, no WAIT, no automatic deadline stop.\n'

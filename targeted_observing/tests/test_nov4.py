@@ -30,7 +30,7 @@ class ReviewRegressions(unittest.TestCase):
             rows=[r for r in b['rows'] if r['field_id']==f['field_id']]
             self.assertEqual(len(rows),20)
             self.assertEqual([r['visit'] for r in rows],list(range(1,21)))
-            self.assertEqual(set(np.diff([unix(r['mid_utc']) for r in rows])),{135.,525.})
+            self.assertEqual(set(np.diff([unix(r['mid_utc']) for r in rows])),{138.,534.})
         campaign={'start_date':'2026-11-03','stop_date':'2026-11-17','fields':fs,'tracks':{}}
         self.assertTrue(validate_plan({'config':self.c,'date':'2026-11-03','blocks':[b]},campaign)['passed'])
 

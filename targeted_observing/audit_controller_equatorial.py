@@ -11,7 +11,7 @@ from astropy.coordinates import HADec
 from astropy.time import Time
 
 from .catalog import BASE, write_csv
-from .full_night_test import read_lines, replay
+from .full_night_test import read_lines, replay, READOUT_S
 from .geometry import coord, footprint, local_time, setup_iers
 from .offline_twilight import make_sky, load_grid
 from .controller_fields import is_fixed_name, canonical_name
@@ -121,7 +121,7 @@ def audit(source, start, output, ha_reference_hours=5):
         limitations=['HA reference is customary, not a supplied encoder hard limit.',
             'Initial mount position, pier/pointing state, cable turns and actual slew branch are unknown.',
             'Slew HA envelope assumes monotonic shortest-way motion; no physical trajectory or collision model.',
-            'Nominal 15s readout, 10s filter change and empirical slew; no live timing/stop feedback.'],
+            f'Nominal {READOUT_S:g}s readout, 10s filter change and empirical slew; no live timing/stop feedback.'],
         fields=summaries,large_or_wrap_transitions=[x for x in transitions
             if abs(x['short_ra_step_deg'])>30 or x['crosses_ra_zero']])
     output.mkdir(parents=True,exist_ok=True)

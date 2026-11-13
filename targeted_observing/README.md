@@ -1,8 +1,15 @@
 # 晨昏搜寻 + 木星特洛伊监测（本地研发模式）
 
-## 当前整夜测试：固定TJN + YSO_ORI（2026-11-12）
+## 当前整夜测试：固定TJN + YSO_ORI（2026-11-13）
 
-执行列表 `products/full_night_20261112/20261112.txt`，黄昏/清晨各一小时、固定TJN三场187张（400/436每场连续5张再换）、YSO_ORI g/r各72张；[时间表与验收](docs/FULL_NIGHT_FIXED_20261112.md)。入口 `python3 -m targeted_observing.fixed_full_night --date 2026-11-12 --twilight targeted_observing/products/tonight_full_hour_20261112 --output targeted_observing/products/full_night_20261112`。
+新模式默认读出／基础开销固定为 **18秒**，换滤镜仍10秒，slew公式保持原样。`defaults.json`与`offline_defaults.json`均已更新；整夜重放、尾部填充和独立时角审查使用相同值。历史数据/报告保留当时15秒假设；旧15秒晨昏计划须重新生成后才能接入新整夜排程。
+
+执行列表 `products/full_night_20261113/20261113.txt`，17:45:29启动至次日06:02:49；418帧压缩为122行，黄昏47、固定TJN185、YSO_ORI g/r各69×60秒、清晨48。400/436每场连续5张再换。详见[时间表与验收](docs/FULL_NIGHT_FIXED_20261113.md)。
+
+```bash
+python3 -m targeted_observing.offline_twilight --date 2026-11-13 --output targeted_observing/products/tonight_full_hour_20261113
+python3 -m targeted_observing.fixed_full_night --date 2026-11-13 --twilight targeted_observing/products/tonight_full_hour_20261113 --output targeted_observing/products/full_night_20261113
+```
 
 今后固定TJN执行名用 `controller_fields.controller_name` 加 `MP_`，例如 `MP_TJL5_400`；canonical ID、中心、PA保持原库，模板通过映射回原身份。此入口继续仅在新目录开发，不改生产代码。
 
@@ -43,7 +50,7 @@ python3 -m targeted_observing.offline_night_report \
 
 输出EV.txt、AM.txt、START_TIMES.json、逐曝光CSV、plan.json、天区图/统计图及 `SHARP_2026-11-11_full_hour_review.zip`。晨间属于次日北京时间。**分别按START_TIMES里的固定边界启动**：不延后15分钟，不完成5轮就停。只使用原1855个MP场，不扩黄纬，足迹高度>25度、月距30/40度；按实测双轴转场模型连续轮巡到窗口末尾。
 
-一小时包含首转场90秒、首次换片10秒、逐张曝光、读出15秒和场间转场。每场目标至少5次（最低3次），5次不设上限，最后允许部分轮次；同场相邻曝光中点间隔限定5–12分钟、8分钟为次级偏好。连续列表填到距截止≤10秒，剩余不足一张的时间明确输出 `tail_unused_s`，不假装曝光或插入WAIT。不能排满则报错，不以短列表冒充完成。
+一小时包含首转场90秒、首次换片10秒、逐张曝光、读出18秒和场间转场。每场目标至少5次（最低3次），5次不设上限，最后允许部分轮次；同场相邻曝光中点间隔限定5–12分钟、8分钟为次级偏好。连续列表填到距截止≤10秒，剩余不足一张的时间明确输出 `tail_unused_s`，不假装曝光或插入WAIT。不能排满则报错，不以短列表冒充完成。
 
 曝光按照各帧太阳高度、天区高度、日距角/月光的理论背景计算，以5秒档取5–30秒；−18度以下正常30秒。黄昏覆盖−10度较亮阶段逐渐加长、清晨反向缩短；不以太阳高度线性映射替代既有背景先验。先验来自Patat近天顶R，气质量/方向/月光因子是明确假设，未标定兴隆r的ADU或饱和上限。试拍后离线修正下一晚，不需要实时反馈。
 
@@ -111,7 +118,7 @@ python3 -m targeted_observing.contamination
 
 - 晚晨分别60分钟，两个半小时槽；r30，4场×5访。太阳距角45–75°优先，75–90°扩展单独标记；无完整组释放时间。
 - Trojan预算可设为0以停用；启用时仅一个连续最多120分钟块，r120、两场；扣除晨昏、−18°太阳界限和外部预约，按可见性降到90分钟两场/60分钟主场，少于60分钟跳过。
-- 默认5分钟交接、每次15秒读出。转场取方案20/60秒与仓库实测正常分支模型加2秒余量的较大值；不是所有相邻场都强套20秒。
+- 默认5分钟交接、每次18秒读出。转场取方案20/60秒与仓库实测正常分支模型加2秒余量的较大值；不是所有相邻场都强套20秒。
 - 中心≥32.5°；采用完整足迹的球面包围角帽检验>30°，并保留时间采样间隔的保守余量。月距按30/40°工程初值；固定场逐曝光检查；目标逐访问记录在场状态，campaign几何留场门槛≥80%。
 - 晨昏闭合巡回（包括末场回首场）每跳≤3.5°，阈值为附件暂定分类，不是实测角速度定律。优先保留4个旧场，失败尝试3个锚点加1新场；最终保留数写manifest。目标恢复需新星历，重拍原场不能当恢复成功。
 - `plan.json`保存配置/EOP来源、时间和决策；`manifest.json`包含分块not-before/deadline、字段版本及UTC/北京时间未占用区间（扣整块及预约，含块内余量仍保留）；无外部预约时Trojan标记暂定分配；`EV_A.csv`等提供逐曝光时间；`fields.csv`汇总cadence；`validation.json`是独立5秒审计；`plan.png/pdf`展示时间轴与足迹。
