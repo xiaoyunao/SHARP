@@ -2,6 +2,11 @@
 
 ## 2026-11-14
 
+- 三晚特洛伊周期核查：阅读本项目四段相关对话，默认SSH stdin只读315张L2和known匹配；11/11非MP的TJ_test按冻结Horizons+实际中点补回17365/4722各33点。五重点目标443次检出，身份偏差<0.773″；只有17365连续三晚，后两晚共同四颗。
+- 新增targeted_observing的collect_trojan_photometry/audit_trojan_periods/plot_trojan_period_audit及docs/TROJAN_PERIOD_AUDIT_20261114.md。固定105–125颗参考星差分、光行时/距离校正、四种测光/谐波/夜零点/逐夜删除核查：17365保守78点，光度重复约6.32h，双峰自转候选约12.64h，不能声称唯一或正式精度；其余四颗不足定周期。
+- 验证：三文件py_compile、315/443/1772行与唯一键/中点/SHA闭合；合成12.670h回收12.6700006h，实测拟合和两图目视。用户要求仅参考RAA风格，最终保留原两图内容/相位范围/拟合，不使用误解后的重组图。完整产物在targeted_observing/products/trojan_period_20261114，不入git。
+- 未改服务器文件、生产/main或观测列表；下一步继续436/400场补旋转相位，精细污染/相机位置校正后再判断唯一周期。来源图为gotta_asteroid_1/revise1的25745面板，仅只读参考。
+
 - 用户指定换片24秒、读出保持18；统一defaults/offline_defaults与full_night_test重放、fixed_full_night衔接、equatorial审查；旧配置晨昏拼接检查加入换片参数，slew不改。
 - 生成11月14晨昏/整夜列表：products/full_night_20261114/20261114.txt，121行417帧，EV47/TJN185/YSO138/AM47；17:44:44启动，次日06:03:52读完。606/400/436为80/55/50，YSO各69×60秒、含换片2h59m48s。
 - 验证：py_compile、20重点测试；78项回归中77直接通过，89分钟单场36→35的预算预期更正后单独复验通过。417帧独立曝光/读出/换片/slew账本、合并展开、ZIP CRC/SHA、旧列表hash、几何/时角−4.797至+3.314h通过；时序图目视检查。
