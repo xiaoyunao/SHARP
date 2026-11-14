@@ -9,7 +9,7 @@
   "min_footprint_alt_deg": 25,
   "max_elongation_deg": 90,
   "readout_s": 18,
-  "filter_change_s": 10,
+  "filter_change_s": 24,
   "initial_slew_s": 90,
   "late_tolerance_s": 0,
   "early_per_frame_s": 2,

@@ -13,7 +13,7 @@ from astropy.time import Time
 from .catalog import BASE, interpolate, write_csv
 from .controller_fields import controller_name, canonical_name, is_fixed_name
 from .fixed_fields import FixedFields, REGISTRY_PATH, edge_distance
-from .full_night_test import read_lines, replay, command, movement, YSO_FIELDS, READOUT_S, YSO_FRAMES_PER_BAND
+from .full_night_test import read_lines, replay, command, movement, YSO_FIELDS, READOUT_S, FILTER_CHANGE_S, YSO_FRAMES_PER_BAND
 from .geometry import setup_iers, local_time, coord
 from .offline_twilight import make_sky
 from .audit_controller_equatorial import audit
@@ -49,7 +49,7 @@ def fill_to_handover(commands,start,fields,next_command,next_shutter,block,dwell
     # residual budget without inventing a controller wait or moving the field.
     while True:
         last=rows_for(commands,start)[-1]
-        overhead=movement(last,next_command)+(10 if last['filter']!=next_command['filter'] else 0)
+        overhead=movement(last,next_command)+(FILTER_CHANGE_S if last['filter']!=next_command['filter'] else 0)
         slack=int(np.floor(next_shutter-last['release_unix']-overhead))
         if slack<=0:
             break
@@ -137,8 +137,8 @@ def plot(rows,sky,output,day):
 def build(day,twilight_dir,output):
     output.mkdir(parents=True,exist_ok=True)
     plan=json.loads((twilight_dir/'plan.json').read_text());assert plan['date']==day
-    if plan['config']['readout_s'] != READOUT_S:
-        raise ValueError('Regenerate twilight with the current readout setting')
+    if (plan['config']['readout_s'], plan['config']['filter_change_s']) != (READOUT_S, FILTER_CHANGE_S):
+        raise ValueError('Regenerate twilight with the current readout/filter settings')
     setup_iers(BASE/'cache'/plan['config']['iers_file']);sky=make_sky()
     registry=FixedFields.read(REGISTRY_PATH)
     identities=['TJL5_606','TJL5_400','TJL5_436']
@@ -147,7 +147,7 @@ def build(day,twilight_dir,output):
     ev=read_lines((twilight_dir/'EV.txt').read_text(),'EV')
     am=read_lines((twilight_dir/'AM.txt').read_text(),'AM')
     first=plan['blocks'][0]['window_unix'][0];commands=list(ev)
-    # Three-hour YSO allocation includes readout; the sole g/r change adds 10s.
+    # Three-hour YSO allocation includes readout; the sole g/r change uses the configured budget.
     yg=make_command(yso,'g',60,'YSO_g',YSO_FRAMES_PER_BAND);yr=make_command(yso,'r',60,'YSO_r',YSO_FRAMES_PER_BAND)
     local_day=datetime.fromisoformat(day).replace(tzinfo=TZ)
     main_first=(local_day+timedelta(hours=21,minutes=52)).timestamp()
@@ -212,14 +212,14 @@ def build(day,twilight_dir,output):
             exposure_counts={str(e):sum(r['exposure_s']==e for r in rr) for e in sorted({r['exposure_s'] for r in rr})}))
     summary=dict(date=day,start_local=local_time(first),end_local=local_time(rows[-1]['release_unix']),
         controller_lines=len(exported),exposures=len(rows),blocks=blocks,fixed_fields=mapping,
-        trojan_exposures_per_dwell=5,readout_s=READOUT_S,yso_frames_per_band=YSO_FRAMES_PER_BAND,
+        trojan_exposures_per_dwell=5,readout_s=READOUT_S,filter_change_s=FILTER_CHANGE_S,yso_frames_per_band=YSO_FRAMES_PER_BAND,
         core_targets=[{k:v for k,v in t.items() if k!='period_evidence'} for t in targets if t['V_max']<=18.5],
         registry_sha256=hashlib.sha256(REGISTRY_PATH.read_bytes()).hexdigest(),
         twilight_plan_sha256=hashlib.sha256((twilight_dir/'plan.json').read_bytes()).hexdigest(),
         geometry_checks_passed=True,mechanical_safety_certified=False,formal_instrument_freeze=False,
         AM_shutter_shift_s=next(r['start_unix'] for r in rows if r['block']=='AM')-am_first,
         assumptions=['Static sequential list, no WAIT or automatic clock gates.',
-          f'Readout{READOUT_S:g}s, filter10s, empirical slew; same position has no extra slew.',
+          f'Readout{READOUT_S:g}s, filter{FILTER_CHANGE_S:g}s, empirical slew; same position has no extra slew.',
           'Main/late two-field loops take five consecutive r120 exposures per visit; final visit may be partial.',
           'Short r exposures at block ends align fixed handovers; main Trojan exposures120s.',
           'MP_ is an execution alias only; registry IDs/centres/PA are unchanged.',
@@ -229,7 +229,7 @@ def build(day,twilight_dir,output):
     plot(rows,sky,output,day)
     (output/'READ_ME.txt').write_text(f'SHARP {day}\nExecute {destination.name} once starting {summary["start_local"]} Beijing time.\n'
         'EV -> early fixed Trojan -> two fixed Trojan fields -> YSO_ORI g/r -> late Trojan -> AM.\n'
-        f'YSO: {YSO_FRAMES_PER_BAND}x60s each band; {READOUT_S:g}s readout; one extra10s filter change.\n'
+        f'YSO: {YSO_FRAMES_PER_BAND}x60s each band; {READOUT_S:g}s readout; one extra {FILTER_CHANGE_S:g}s filter change.\n'
         'TJL5_400/436: five consecutive exposures per field before switching; final visits can be partial.\n'
         'Fixed Trojan execution names start MP_TJL5_; canonical IDs/centres stay unchanged.\n'
         'All filter tokens lowercase. No M31, no WAIT, no automatic deadline stop.\n'

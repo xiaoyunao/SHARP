@@ -6,12 +6,14 @@ from targeted_observing.full_night_test import read_lines, replay, movement, low
 class FullNightContracts(unittest.TestCase):
     def test_default_readout_and_yso_budget(self):
         import json
-        from targeted_observing.full_night_test import READOUT_S, YSO_FRAMES_PER_BAND
+        from targeted_observing.full_night_test import READOUT_S, FILTER_CHANGE_S, YSO_FRAMES_PER_BAND
         self.assertEqual(READOUT_S, 18)
+        self.assertEqual(FILTER_CHANGE_S, 24)
+        self.assertEqual(json.loads((BASE/'defaults.json').read_text())['filter_change_s'], 24)
         self.assertEqual(json.loads((BASE/'defaults.json').read_text())['readout_s'], 18)
         self.assertEqual(YSO_FRAMES_PER_BAND, 69)
-        self.assertLessEqual(2*YSO_FRAMES_PER_BAND*78+10, 10800)
-        self.assertGreater(2*(YSO_FRAMES_PER_BAND+1)*78+10, 10800)
+        self.assertLessEqual(2*YSO_FRAMES_PER_BAND*78+24, 10800)
+        self.assertGreater(2*(YSO_FRAMES_PER_BAND+1)*78+24, 10800)
 
     def test_supplied_m31_counts_and_exposures(self):
         text=(BASE/'data/night_inputs/20261111_M31_GRIZ.txt').read_text()
@@ -25,9 +27,9 @@ class FullNightContracts(unittest.TestCase):
               'A_R 00:42:44.330 +41:16:07.50 0 R 1 60 0\n')
         rows=replay(read_lines(text,'TEST'),0)
         self.assertEqual(len(rows),4)
-        self.assertEqual(rows[-1]['release_unix'],257)
+        self.assertEqual(rows[-1]['release_unix'],285)
         self.assertEqual(rows[-1]['slew_s'],0)
-        self.assertEqual(rows[-1]['filter_change_s'],10)
+        self.assertEqual(rows[-1]['filter_change_s'],24)
 
     def test_field_names_and_filter_normalization_preserve_other_columns(self):
         self.assertEqual(TJ['field_id'],'TJN_17365')

@@ -2,6 +2,11 @@
 
 ## 2026-11-14
 
+- 用户指定换片24秒、读出保持18；统一defaults/offline_defaults与full_night_test重放、fixed_full_night衔接、equatorial审查；旧配置晨昏拼接检查加入换片参数，slew不改。
+- 生成11月14晨昏/整夜列表：products/full_night_20261114/20261114.txt，121行417帧，EV47/TJN185/YSO138/AM47；17:44:44启动，次日06:03:52读完。606/400/436为80/55/50，YSO各69×60秒、含换片2h59m48s。
+- 验证：py_compile、20重点测试；78项回归中77直接通过，89分钟单场36→35的预算预期更正后单独复验通过。417帧独立曝光/读出/换片/slew账本、合并展开、ZIP CRC/SHA、旧列表hash、几何/时角−4.797至+3.314h通过；时序图目视检查。
+- docs/FULL_NIGHT_FIXED_20261114、README/GOAL/PLAN更新。只动新目录，main/生产不变，无服务器或全年操作。下一步现场按实际开快门和换片耗时检查静态预算。
+
 - 按用户要求只重画两图：新增redraw_overhead_figures.py，沿用paper_analysis_20260803的Times论文样式；slew双对数+近邻线性放大，读出700点连续拼接三夜、分夜中值，3个超轴长间隔明示。PNG/PDF及验证清单在products/overhead_three_nights_20261114/paper_figures。
 - 验证：py_compile、真实绘图、290/700样本数和逐夜中值断言、PNG目视检查；原始数据/筛选/参数不变。仅本目录图件与说明修改，无服务器操作；后续等用户图件反馈。
 

@@ -16,7 +16,7 @@
   "adjacent_slew_s": 20.0,
   "adjacent_max_deg": 3.5,
   "far_slew_s": 60.0,
-  "filter_change_s": 10.0,
+  "filter_change_s": 24.0,
   "filter": "r",
   "controller_filter_tokens": {},
   "twilight": {

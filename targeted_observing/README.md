@@ -1,14 +1,14 @@
 # 晨昏搜寻 + 木星特洛伊监测（本地研发模式）
 
-## 当前整夜测试：固定TJN + YSO_ORI（2026-11-13）
+## 当前整夜测试：固定TJN + YSO_ORI（2026-11-14）
 
-新模式默认读出／基础开销固定为 **18秒**，换滤镜仍10秒，slew公式保持原样。`defaults.json`与`offline_defaults.json`均已更新；整夜重放、尾部填充和独立时角审查使用相同值。历史数据/报告保留当时15秒假设；旧15秒晨昏计划须重新生成后才能接入新整夜排程。
+新模式默认读出／基础开销 **18秒**，换滤镜 **24秒**，slew公式保持原样。`defaults.json`与`offline_defaults.json`统一；整夜重放、尾部填充和时角审查读取同一配置。历史数据/报告/列表保留当时参数，旧晨昏计划须按当前读出及换片配置重新生成后接入。
 
-执行列表 `products/full_night_20261113/20261113.txt`，17:45:29启动至次日06:02:49；418帧压缩为122行，黄昏47、固定TJN185、YSO_ORI g/r各69×60秒、清晨48。400/436每场连续5张再换。详见[时间表与验收](docs/FULL_NIGHT_FIXED_20261113.md)。
+执行列表 `products/full_night_20261114/20261114.txt`，17:44:44启动至次日06:03:52；417张压缩为121行，黄昏47、固定TJN185、YSO_ORI g/r各69×60秒、清晨47。400/436每场连续5张再换。详见[时间表与验收](docs/FULL_NIGHT_FIXED_20261114.md)。
 
 ```bash
-python3 -m targeted_observing.offline_twilight --date 2026-11-13 --output targeted_observing/products/tonight_full_hour_20261113
-python3 -m targeted_observing.fixed_full_night --date 2026-11-13 --twilight targeted_observing/products/tonight_full_hour_20261113 --output targeted_observing/products/full_night_20261113
+python3 -m targeted_observing.offline_twilight --date 2026-11-14 --output targeted_observing/products/tonight_full_hour_20261114
+python3 -m targeted_observing.fixed_full_night --date 2026-11-14 --twilight targeted_observing/products/tonight_full_hour_20261114 --output targeted_observing/products/full_night_20261114
 ```
 
 今后固定TJN执行名用 `controller_fields.controller_name` 加 `MP_`，例如 `MP_TJL5_400`；canonical ID、中心、PA保持原库，模板通过映射回原身份。此入口继续仅在新目录开发，不改生产代码。
@@ -50,7 +50,7 @@ python3 -m targeted_observing.offline_night_report \
 
 输出EV.txt、AM.txt、START_TIMES.json、逐曝光CSV、plan.json、天区图/统计图及 `SHARP_2026-11-11_full_hour_review.zip`。晨间属于次日北京时间。**分别按START_TIMES里的固定边界启动**：不延后15分钟，不完成5轮就停。只使用原1855个MP场，不扩黄纬，足迹高度>25度、月距30/40度；按实测双轴转场模型连续轮巡到窗口末尾。
 
-一小时包含首转场90秒、首次换片10秒、逐张曝光、读出18秒和场间转场。每场目标至少5次（最低3次），5次不设上限，最后允许部分轮次；同场相邻曝光中点间隔限定5–12分钟、8分钟为次级偏好。连续列表填到距截止≤10秒，剩余不足一张的时间明确输出 `tail_unused_s`，不假装曝光或插入WAIT。不能排满则报错，不以短列表冒充完成。
+一小时包含首转场90秒、首次换片24秒、逐张曝光、读出18秒和场间转场。每场目标至少5次（最低3次），5次不设上限，最后允许部分轮次；同场相邻曝光中点间隔限定5–12分钟、8分钟为次级偏好。连续列表填到距截止≤10秒，剩余不足一张的时间明确输出 `tail_unused_s`，不假装曝光或插入WAIT。不能排满则报错，不以短列表冒充完成。
 
 曝光按照各帧太阳高度、天区高度、日距角/月光的理论背景计算，以5秒档取5–30秒；−18度以下正常30秒。黄昏覆盖−10度较亮阶段逐渐加长、清晨反向缩短；不以太阳高度线性映射替代既有背景先验。先验来自Patat近天顶R，气质量/方向/月光因子是明确假设，未标定兴隆r的ADU或饱和上限。试拍后离线修正下一晚，不需要实时反馈。
 

@@ -23,7 +23,7 @@ class CoreTests(unittest.TestCase):
         rows=visits(fs,1800000000,1800006900,120,22,self.c,'TJ','trojan')
         self.assertEqual(len(rows)%2,0)
         self.assertLessEqual(unix(rows[-1]['release_utc']),1800006900)
-        self.assertEqual(rows[0]['filter_change_s'],10)
+        self.assertEqual(rows[0]['filter_change_s'],24)
         self.assertTrue(all(r['filter_change_s']==0 for r in rows[1:]))
         self.assertGreater(rows[1]['slew_s'],20)  # Calibrated floor replaces optimistic nominal timing.
 

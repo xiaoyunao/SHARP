@@ -21,7 +21,9 @@ TJ = {'field_id':'TJN_17365', 'ra_deg':79.002262, 'dec_deg':23.719287}
 YSO_FIELDS = json.loads((BASE/'data/fixed_yso_fields.json').read_text())
 YSO = {'field_id':'YSO_ORI', **YSO_FIELDS['YSO_ORI']}
 TZ = ZoneInfo('Asia/Shanghai')
-READOUT_S = float(json.loads((BASE/'offline_defaults.json').read_text())['readout_s'])
+TIMING = json.loads((BASE/'offline_defaults.json').read_text())
+READOUT_S = float(TIMING['readout_s'])
+FILTER_CHANGE_S = float(TIMING['filter_change_s'])
 YSO_FRAMES_PER_BAND = int(5400 // (60 + READOUT_S))
 
 
@@ -63,7 +65,7 @@ def replay(commands, start, previous=None, band=None):
     for line_index,c in enumerate(commands):
         for repeat in range(c['count']):
             turn=90. if previous is None else movement(previous,c)
-            change=10. if band is None or band!=c['filter'] else 0.
+            change=FILTER_CHANGE_S if band is None or band!=c['filter'] else 0.
             begin=t+turn+change;end=begin+c['exposure_s']
             rows.append({k:c[k] for k in ('block','field_id','ra_deg','dec_deg','filter','exposure_s') } |
                 {'command_index':line_index+1,'repeat':repeat+1,'overhead_start_unix':t,'slew_s':turn,
@@ -193,8 +195,8 @@ def build(twilight_dir,m31_file,output):
     ev=lowercase_filters((twilight_dir/'EV.txt').read_text())
     am=lowercase_filters((twilight_dir/'AM.txt').read_text())
     m31=lowercase_filters(m31_file.read_text())
-    if twilight['config']['readout_s'] != READOUT_S:
-        raise ValueError('Regenerate twilight with the current readout setting')
+    if (twilight['config']['readout_s'], twilight['config']['filter_change_s']) != (READOUT_S, FILTER_CHANGE_S):
+        raise ValueError('Regenerate twilight with the current readout/filter settings')
     first=twilight['blocks'][0]['window_unix'][0]
     initial=read_lines(ev,'EV')+read_lines(m31,'M31')
     prefix=replay(initial,first);last=prefix[-1]
@@ -205,9 +207,9 @@ def build(twilight_dir,m31_file,output):
     ref_am=next(b for b in twilight['blocks'] if b['side']=='AM')
     # Preserve the accepted AM shutter times; its real long handover starts earlier.
     desired_yso_end=ref_am['rows'][0]['start_unix']-movement(yr,am_commands[0])
-    yso_first=desired_yso_end-(2*YSO_FRAMES_PER_BAND*(60+READOUT_S)+10)
-    tj_end=yso_first-movement(tj,yg)-10
-    tj_first=last['release_unix']+movement(last,tj)+10
+    yso_first=desired_yso_end-(2*YSO_FRAMES_PER_BAND*(60+READOUT_S)+FILTER_CHANGE_S)
+    tj_end=yso_first-movement(tj,yg)-FILTER_CHANGE_S
+    tj_first=last['release_unix']+movement(last,tj)+FILTER_CHANGE_S
     duration=tj_end-tj_first;n=int(duration//(120+READOUT_S));remaining=duration-n*(120+READOUT_S)
     final_exposure=int(np.floor(remaining-READOUT_S))
     if n<1 or not 5<=final_exposure<=120:raise ValueError('No valid integer Trojan tail exposure')
@@ -233,7 +235,7 @@ def build(twilight_dir,m31_file,output):
     result={'date':'2026-11-11','start_local':local_time(first),'finish_local':local_time(rows[-1]['release_unix']),
         'controller_lines':len(check),'expanded_exposures':len(rows),'all_geometry_checks_passed':True,
         'blocks':summary,'yso':{'field':YSO,'G_frames':YSO_FRAMES_PER_BAND,'R_frames':YSO_FRAMES_PER_BAND,'each_exposure_s':60,
-        'each_band_exposure_plus_readout_s':YSO_FRAMES_PER_BAND*(60+READOUT_S),'between_band_filter_change_s':10,'order':'G then R near transit'},
+        'each_band_exposure_plus_readout_s':YSO_FRAMES_PER_BAND*(60+READOUT_S),'between_band_filter_change_s':FILTER_CHANGE_S,'order':'G then R near transit'},
         'trojan':{'field':TJ,'R120_frames':n,'final_R_exposure_s':final_exposure,'targets':selected['targets']},
         'YSO_candidate_comparison':comparison,
         'AM_first_exposure_shift_s':next(r['start_unix'] for r in rows if r['block']=='AM')-ref_am['rows'][0]['start_unix'],
@@ -241,7 +243,7 @@ def build(twilight_dir,m31_file,output):
         'yso_field_registry':YSO_FIELDS,'M31_preserved_except_filter_case':True,'M31_input_sha256':hashlib.sha256(m31_file.read_bytes()).hexdigest(),
         'twilight_plan_sha256':hashlib.sha256((twilight_dir/'plan.json').read_bytes()).hexdigest(),
         'assumptions':['Same fixed position: no extra slew between repeats or filter-only changes.',
-            f'Nominal readout={READOUT_S:g}s, filter change=10s, measured two-axis slew formula.',
+            f'Nominal readout={READOUT_S:g}s, filter change={FILTER_CHANGE_S:g}s, measured two-axis slew formula.',
             'No realtime clock gate or automatic cutoff in controller TXT.',
             'Start the combined list once at the stated evening boundary; do not execute the separate copies again.',
             'No server operation or annual rerun.']}
@@ -250,7 +252,7 @@ def build(twilight_dir,m31_file,output):
         "Sequence: EV -> M31 griz -> TJN_17365 -> YSO_ORI g then r -> AM. Filter tokens are lowercase.\n"
         "M31 coordinates/counts/exposures are unchanged; only filter tokens have been lowercased.\n"
         "The numbered files are reference copies, NOT additional jobs after the combined list.\n"
-        f"YSO: {YSO_FRAMES_PER_BAND}x60s per band, readout {READOUT_S:g}s; filter switch adds 10s.\n"
+        f"YSO: {YSO_FRAMES_PER_BAND}x60s per band, readout {READOUT_S:g}s; filter switch adds {FILTER_CHANGE_S:g}s.\n"
         f"Trojan: {n}x120s + one {final_exposure}s bridging exposure in R, same fixed field.\n"
         "AM long slew begins just before the original boundary to preserve accepted shutter times.\n"
         "All times are nominal; static TXT has no WAIT or automatic deadline enforcement.\n")
