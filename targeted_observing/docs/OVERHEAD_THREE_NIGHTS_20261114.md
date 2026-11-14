@@ -2,6 +2,8 @@
 
 评估日期2026-11-14，范围为11日晚至14日清晨。仅使用各晚交付脚本中的天区/滤镜/曝光组合；ToO及跨越它们的间隔排除。原计划目标1019帧，包括11月12日完整重跑的50张黄昏；1011个可分析曝光间隔。
 
+新版两图沿用既有SHARP论文样式，数据与以下分析不变：[slew理论—实测双对数图](../products/overhead_three_nights_20261114/paper_figures/slew_theory_measured.png)、[三晚连续读出图](../products/overhead_three_nights_20261114/paper_figures/ccd_readout_sequence.png)；同目录提供矢量PDF。三夜700点连续排列，分别统计中值；3个超过读出图纵轴范围的长间隔在顶部标出，仍参与中值。复现：`python3 -m targeted_observing.redraw_overhead_figures`。
+
 ## 可供采用的单值
 
 | 项目 | 单值 | 依据与适用含义 |
