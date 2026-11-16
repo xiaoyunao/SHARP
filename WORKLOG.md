@@ -1,5 +1,12 @@
 # WORKLOG
 
+## 2026-11-16
+
+- 全天 MP 天区。用默认 SSH 只读核对生产 FITS 的 SHA256，与本地历史快照一致。用 `../Code/ASAS/generate_footprints.py` 的黄纬 ±20°、2.9696° × 2.97218° 视场和 10% 线性重叠复现 1855 场。新脚本 `targeted_observing/extend_mp_allsky.py` 延伸黄道交错行、加两个黄极场并补名义角点间隙。新增 6830 场，续号 1856–8685。
+- 验证。Python 编译、真实 FITS 生成及回读、原表 1855 条二进制行一致、字段格式一致、生产读取函数、全天自适应覆盖及两极和赤经接缝的 300004 个附加探针通过。图件目视通过。全表 8685 场，产物在 `outputs/mp_allsky_20261116/`。
+- 旧表 `visible_day` 原值保留。按存档 `visible_days.py` 重算 2025 年兴隆可见天数，标量抽查与批量一致，但旧字段有 1402 项未复现，最大差 51 天，出现在高度门槛附近。新增字段使用重算值。离线交付，后续接入需按 ID 扩展历史，核查实际指向限制并统一可见天数口径。
+- 关键命令为 `python3 -m py_compile targeted_observing/extend_mp_allsky.py` 与 `python3 targeted_observing/extend_mp_allsky.py paper_analysis_20260803/snapshot/provenance/survey_fov_footprints_with_visibility.fits outputs/mp_allsky_20261116 --iers outputs/recovery_20261027/finals2000A_usno.all`。
+
 ## 2026-11-15
 
 - 11/14 兴隆夜检：北京时间 11:33 默认 SSH 只读检查，raw1/processed1 挂载可读，均无 20261114 夜目录，复核包也未生成。上游 main_daily 日志无当夜图像入队记录；09:00:52 cron 明确因缺处理目录跳过 known/unknown，双段退出 0，MPC hold 仍在。已核对 11/15 常规计划三处 SHA 一致。现场未开拍或数据未落盘的原因尚无记录，下一步从观测控制日志确认。证据：`outputs/nightly_check_20261114/server_evidence.txt`。
