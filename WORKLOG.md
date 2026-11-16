@@ -2,6 +2,8 @@
 
 ## 2026-11-16
 
+- 按用户要求暂去补缝场。用 Astropy Table 按原 FITS 的 `NOLD + NGRID` 截取前 5791 行，`NGAP` 设为 0，再调用 `plot_catalog` 重画。移除 5792–8685，保留原场 1855、延伸场含黄极 3936。FITS 行字节、编号与格式回读一致，图件目视通过。产物在 `outputs/mp_allsky_20261116/`，文件名含 `no_gap_fill`。
+
 - 全天图改用 FITS 的逐场四角边框。更新 `targeted_observing/extend_mp_allsky.py`，以橙色绘制 1855 个原场，蓝色绘制 6830 个新增场。直接调用 `plot_catalog(Table.read(...), ...)` 重绘。已核对 8685 个闭合边框、353 个 TAN 边框、273 处投影接缝和图件目视，FITS SHA256 一致。最终图为 `outputs/mp_allsky_20261116/mp_allsky_footprints.png`。
 
 - 全天 MP 天区。用默认 SSH 只读核对生产 FITS 的 SHA256，与本地历史快照一致。用 `../Code/ASAS/generate_footprints.py` 的黄纬 ±20°、2.9696° × 2.97218° 视场和 10% 线性重叠复现 1855 场。新脚本 `targeted_observing/extend_mp_allsky.py` 延伸黄道交错行、加两个黄极场并补名义角点间隙。新增 6830 场，续号 1856–8685。
