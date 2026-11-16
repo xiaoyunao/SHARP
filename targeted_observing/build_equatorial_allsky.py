@@ -15,9 +15,15 @@ WIDTH = 9216 * 1.16 / 3600
 HEIGHT = 9232 * 1.16 / 3600
 OVERLAP = 0.10
 ECLIPTIC_LIMIT = 20
+XINGLONG_LATITUDE = 40.393
+MIN_ALTITUDE = 18.0
 GEOMETRY_COLUMNS = ["center_ra", "center_dec"] + [
     f"corner_{axis}_{i}" for axis in ("ra", "dec") for i in range(1, 5)
 ]
+
+
+def field_ids(count):
+    return np.array([f"{i:04d}" for i in range(1, count + 1)], dtype="U4")
 
 
 def build_grid():
@@ -41,7 +47,7 @@ def build_grid():
             rows.append((band, index, ra, dec, left, right, right, left, bottom, bottom, top, top))
 
     table = Table(rows=rows, names=["dec_band", "ra_band", *GEOMETRY_COLUMNS])
-    table.add_column(np.arange(1, len(table) + 1, dtype=np.int32), index=0, name="field_id")
+    table.add_column(field_ids(len(table)), index=0, name="field_id")
     centers = SkyCoord(table["center_ra"], table["center_dec"], frame="icrs", unit="deg")
     table["ecliptic_lat_deg"] = centers.barycentrictrueecliptic.lat.deg
     table.meta["EDGEGEOM"] = "RADEC"
@@ -88,9 +94,6 @@ def compare_legacy(table, legacy):
         np.testing.assert_allclose(delta, 0, atol=1e-10, rtol=0)
         max_error[column] = float(np.max(np.abs(delta)))
 
-    legacy_id = np.full(len(table), "", dtype="U16")
-    legacy_id[in_band] = legacy["field_id"]
-    table["legacy_field_id"] = legacy_id
     table.meta["NOLD"] = int(in_band.sum())
     return in_band, max_error
 
@@ -113,10 +116,31 @@ def main():
         np.testing.assert_array_equal(result[column], table[column])
     check_coverage(result)
 
+    culmination = 90 - np.abs(result["center_dec"] - XINGLONG_LATITUDE)
+    observable = culmination >= MIN_ALTITUDE
+    retained = result[observable]
+    retained["field_id"] = field_ids(len(retained))
+    retained.meta["NOLD"] = int(np.count_nonzero(in_band & observable))
+    retained.meta["SITELAT"] = XINGLONG_LATITUDE
+    retained.meta["MINALT"] = MIN_ALTITUDE
+    retained.meta["NREMOVED"] = int(np.count_nonzero(~observable))
+    visible_path = args.output / "equatorial_footprints_xinglong18.fits"
+    retained.write(visible_path, overwrite=True)
+    readback = Table.read(visible_path)
+    for column in retained.colnames:
+        np.testing.assert_array_equal(readback[column], retained[column])
+
     report = {
         "legacy_file_sha256": hashlib.sha256(args.legacy.read_bytes()).hexdigest(),
         "catalog_sha256": hashlib.sha256(fits_path.read_bytes()).hexdigest(),
         "fields": len(result),
+        "xinglong_latitude_deg": XINGLONG_LATITUDE,
+        "minimum_culmination_altitude_deg": MIN_ALTITUDE,
+        "xinglong_fields": len(retained),
+        "excluded_fields": len(result) - len(retained),
+        "southern_culmination_declination_limit_deg": XINGLONG_LATITUDE - (90 - MIN_ALTITUDE),
+        "lowest_retained_center_dec_deg": float(retained["center_dec"].min()),
+        "xinglong_catalog_sha256": hashlib.sha256(visible_path.read_bytes()).hexdigest(),
         "dec_bands": len(np.unique(result["dec_band"])),
         "northern_polar_band_fields": int(np.count_nonzero(result["dec_band"] == result.meta["NBANDLEG"])),
         "legacy_fields_matched": int(in_band.sum()),

@@ -2,6 +2,9 @@
 
 ## 2026-11-16
 
+- TAN 缝隙检查。用 `python3 -m targeted_observing.audit_equatorial_tan <全天FITS> targeted_observing/data/tjn_wcs_evidence_20261111.json <输出目录>`，用 12 张实拍 TPV 的像素边界测得代表性 TAN 宽高 2.96083° × 2.95594°、方位角偏差 −0.312°。对原始 5808 场，用球面半空间和自适应单元求缝隙，最细 1/256°。两极均漏盖，最近赤道的缺口在 |Dec| 约 81.56°。总缺口约 3.96 平方度，北侧约 1.29 平方度。604 点与 Astropy TAN 逐点一致。图及审计 JSON 在 `outputs/equatorial_allsky_20261116/`。
+- 兴隆可观测性筛选。以站纬 +40.393° 和指向中心最高仰角 ≥18°，删除 1411 场，剩 4397 场，最南中心赤纬 −29.61246°。更新 `build_equatorial_allsky.py`，两份 FITS 的 `field_id` 均为 4A 文本，去掉 `legacy_field_id`。兴隆版编号 0001–4397，FITS 格式、逐行回读及保留行的几何一致性通过。两极缝隙诊断采用筛选前的指向，未调整任何指向。
+
 - 改排赤道平行全天网格。找到 `../2026v01/survey_v2/footprints.py` 和 `config.py`，确认本地旧表由 9216×9232、1.16″/px、10% 重叠的赤纬条带生成，仅保留黄纬 ±20°。新入口 `python3 -m targeted_observing.build_equatorial_allsky survey/footprints/equatorial_footprints.fits outputs/equatorial_allsky_20261116` 去掉黄纬筛选，最北加 1 带 4 场填补约 0.325° 的极冠。数字 ID 1–5808，按赤纬从南至北、带内按赤经递增。
 - 验证。旧代码取消筛选复算的 5804 个中心、角点和条带索引与新表前 5804 行完全一致。旧 1976 场全部命中且坐标差 0°，对应关系列为 `legacy_field_id`。FITS 回读、赤经接缝及两极赤道矩形覆盖、5808 个边框及图件目视通过。产物在 `outputs/equatorial_allsky_20261116/`。本次是几何表，未计算逐场可见天数。
 
