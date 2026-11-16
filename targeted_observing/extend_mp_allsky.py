@@ -180,31 +180,81 @@ def visible_days(centers, earth_orientation):
     return np.asarray(result, dtype=np.int64)
 
 
-def plot_catalog(table, original, grid_count, output):
+def footprint_outlines(table):
+    """Sample each of the four catalog edges in its original geometry."""
+    ra = np.column_stack([table[f"corner_ra_{i}"] for i in range(1, 5)])
+    dec = np.column_stack([table[f"corner_dec_{i}"] for i in range(1, 5)])
+    fraction = np.linspace(0, 1, 17)[:-1]
+    delta_ra = (np.roll(ra, -1, axis=1) - ra + 180) % 360 - 180
+    delta_dec = np.roll(dec, -1, axis=1) - dec
+    edge_ra = ra[..., None] + delta_ra[..., None] * fraction
+    edge_dec = dec[..., None] + delta_dec[..., None] * fraction
+
+    # Interpolate the polar TAN rectangle along great circles on the sphere.
+    polar = np.abs(table["center_dec"]) >= POLAR_DEC
+    corners = unit_vectors(ra[polar], dec[polar])
+    edge = corners[:, :, None, :] * (1 - fraction[:, None])
+    edge += np.roll(corners, -1, axis=1)[:, :, None, :] * fraction[:, None]
+    x, y, z = np.moveaxis(edge, -1, 0)
+    edge_ra[polar] = np.rad2deg(np.arctan2(y, x))
+    edge_dec[polar] = np.rad2deg(np.arctan2(z, np.hypot(x, y)))
+
+    lon = -((edge_ra.reshape(len(table), -1) + 180) % 360 - 180)
+    lat = edge_dec.reshape(len(table), -1)
+    for lon_row, lat_row in zip(lon, lat):
+        polygon = np.column_stack((lon_row, lat_row))
+        yield np.vstack((polygon, polygon[0]))
+
+
+def split_at_projection_seam(polygon):
+    lon, lat = polygon.T
+    jumps = np.diff(lon)
+    start = 0
+    prefix = []
+    for i in np.flatnonzero(np.abs(jumps) > 180):
+        boundary = -180 if jumps[i] > 0 else 180
+        continuous_lon = lon[i + 1] + 2 * boundary
+        seam_lat = lat[i] + (lat[i + 1] - lat[i]) * (boundary - lon[i]) / (continuous_lon - lon[i])
+        yield np.vstack([*prefix, polygon[start : i + 1], [boundary, seam_lat]])
+        prefix = [[-boundary, seam_lat]]
+        start = i + 1
+    yield np.vstack([*prefix, polygon[start:]])
+
+
+def plot_catalog(table, output):
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
+    from matplotlib.collections import LineCollection
+    from matplotlib.lines import Line2D
 
-    fig, ax = plt.subplots(figsize=(12, 6), subplot_kw={"projection": "mollweide"})
+    original = table.meta["NOLD"]
+    fig, ax = plt.subplots(figsize=(13, 7), subplot_kw={"projection": "mollweide"})
     groups = [
-        (slice(original, original + grid_count), "#078889", 3, "Extended grid"),
-        (slice(original + grid_count, None), "#e78124", 9, "Gap fills"),
-        (slice(0, original), "#354c9a", 3, "Original MP fields"),
+        (table[original:], "#36758b", 0.27, "New fields"),
+        (table[:original], "#bf501e", 0.38, "Original fields"),
     ]
-    for rows, color, size, label in groups:
-        ra = -((np.asarray(table["center_ra"][rows]) + 180) % 360 - 180)
-        dec = table["center_dec"][rows]
-        ax.scatter(np.deg2rad(ra), np.deg2rad(dec), color=color, s=size, linewidths=0, label=label)
-    ax.grid(alpha=0.3)
+    legend = []
+    for fields, color, width, label in groups:
+        outlines = [
+            np.deg2rad(path)
+            for polygon in footprint_outlines(fields)
+            for path in split_at_projection_seam(polygon)
+        ]
+        ax.add_collection(LineCollection(outlines, colors=color, linewidths=width))
+        legend.append(Line2D([], [], color=color, lw=1.5, label=f"{label} ({len(fields):,})"))
+    ax.grid(color="#abb5bd", alpha=0.35, linewidth=0.55)
     ticks = ax.get_xticks()
     ax.set_xticks(ticks, labels=[f"{round(-x) % 360}°" for x in np.rad2deg(ticks)])
-    ax.set_title("SHARP all-sky field centers (ICRS)", pad=18)
-    ax.set_xlabel("Right ascension (increases to the left)")
-    ax.set_ylabel("Declination")
-    handles, labels = ax.get_legend_handles_labels()
-    fig.legend(handles[::-1], labels[::-1], loc="lower center", ncol=3, frameon=False)
-    fig.subplots_adjust(bottom=0.15)
-    fig.savefig(output, dpi=190, bbox_inches="tight")
+    for label in ax.get_xticklabels():
+        label.set_bbox(dict(facecolor="white", edgecolor="none", alpha=0.88, pad=1.6))
+    ax.set_title("SHARP all-sky field footprints (ICRS)", fontsize=17, pad=20)
+    ax.set_xlabel("Right ascension (increases to the left)", labelpad=11)
+    ax.set_ylabel("Declination", labelpad=12)
+    fig.legend(handles=legend[::-1], loc="lower center", bbox_to_anchor=(0.5, 0.025),
+               ncol=2, frameon=False)
+    fig.subplots_adjust(left=0.075, right=0.985, bottom=0.14, top=0.92)
+    fig.savefig(output, dpi=300, bbox_inches="tight", pad_inches=0.22)
     plt.close(fig)
 
 
@@ -295,7 +345,7 @@ def main():
         "legacy_visibility_recalculation_max_difference_days": int(np.abs(visibility_diff).max()),
     }
     (args.output / "validation.json").write_text(json.dumps(report, indent=2) + "\n")
-    plot_catalog(result, original, len(grid_table), args.output / "mp_allsky.png")
+    plot_catalog(result, args.output / "mp_allsky_footprints.png")
     print(json.dumps(report, indent=2))
 
 
