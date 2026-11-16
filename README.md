@@ -16,6 +16,32 @@
   - `heliolincrr` 使用 `heliolinc` 环境
     - 当前为 `/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python`
 
+## 四类观测共用天区
+
+小行星巡天、YSO 监测、TJN（木星特洛伊）监测和超新星监测的后续计划共用
+[兴隆 18° 赤道平行天区表](outputs/equatorial_allsky_20261116/equatorial_footprints_xinglong18.fits)。
+该表含 **4,397 场**，以兴隆纬度 +40.393° 计算，保留指向中心最高仰角至少 18° 的场。
+四类任务按各自目标选择场子集，共用 `center_ra`、`center_dec`（ICRS，单位为度）和
+四字符 `field_id`（FITS `4A`，`0001`–`4397`，无前缀及旧编号列）。
+迁移既有场时，按目标坐标和所需覆盖范围重新匹配新表。原计划和历史观测中的编号由当时的天区表解释。
+
+若本地没有产物，从仓库根目录生成并核对 SHA256。
+
+```bash
+python3 -m targeted_observing.build_equatorial_allsky \
+  survey/footprints/equatorial_footprints.fits \
+  outputs/equatorial_allsky_20261116
+shasum -a 256 outputs/equatorial_allsky_20261116/equatorial_footprints_xinglong18.fits
+```
+
+本次基准文件 SHA256 为 `c6a8894c6981028529910c73b46a901cd5b0e2d980c844b3ef0b6a344d2eb213`。
+复现会同时导出 5,808 场的全天表，供几何对比和审计；`survey/footprints/equatorial_footprints.fits`
+是生成器用来比对的黄纬 ±20° 历史表。
+
+共享表中的角点沿用赤经–赤纬矩形模型。实拍 WCS 标定的约 2.961° × 2.956° TAN 视场在北极附近
+仍有约 1.29 平方度的窄缝，位置见 [TAN 缝隙图](outputs/equatorial_allsky_20261116/equatorial_tan_gaps.png)。
+各任务的实际观测时段仍由对应调度配置决定。
+
 ## 新观测模式（本地）
 
 [详细目标与验收](targeted_observing/docs/GOAL.md)、[运行说明](targeted_observing/README.md)、[本地验收结果](targeted_observing/docs/RESULTS.md)。

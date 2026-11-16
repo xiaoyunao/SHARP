@@ -2,6 +2,8 @@
 
 ## 2026-11-16
 
+- 用户确认今后小行星巡天、YSO 监测、TJN 监测和超新星监测采用兴隆 18° 版共用网格。更新项目 `AGENTS.md`、`README.md` 和 `PLAN.md`，登记 FITS 路径、四字符编号、目标坐标迁移原则和复现命令。用 `shasum -a 256` 及 FITS 回读核对 4397 场及字段格式。各任务的迁移由对应对话接续，当前为文档更新。
+
 - TAN 缝隙检查。用 `python3 -m targeted_observing.audit_equatorial_tan <全天FITS> targeted_observing/data/tjn_wcs_evidence_20261111.json <输出目录>`，用 12 张实拍 TPV 的像素边界测得代表性 TAN 宽高 2.96083° × 2.95594°、方位角偏差 −0.312°。对原始 5808 场，用球面半空间和自适应单元求缝隙，最细 1/256°。两极均漏盖，最近赤道的缺口在 |Dec| 约 81.56°。总缺口约 3.96 平方度，北侧约 1.29 平方度。604 点与 Astropy TAN 逐点一致。图及审计 JSON 在 `outputs/equatorial_allsky_20261116/`。
 - 兴隆可观测性筛选。以站纬 +40.393° 和指向中心最高仰角 ≥18°，删除 1411 场，剩 4397 场，最南中心赤纬 −29.61246°。更新 `build_equatorial_allsky.py`，两份 FITS 的 `field_id` 均为 4A 文本，去掉 `legacy_field_id`。兴隆版编号 0001–4397，FITS 格式、逐行回读及保留行的几何一致性通过。两极缝隙诊断采用筛选前的指向，未调整任何指向。
 
