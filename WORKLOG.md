@@ -2,6 +2,9 @@
 
 ## 2026-11-16
 
+- 改排赤道平行全天网格。找到 `../2026v01/survey_v2/footprints.py` 和 `config.py`，确认本地旧表由 9216×9232、1.16″/px、10% 重叠的赤纬条带生成，仅保留黄纬 ±20°。新入口 `python3 -m targeted_observing.build_equatorial_allsky survey/footprints/equatorial_footprints.fits outputs/equatorial_allsky_20261116` 去掉黄纬筛选，最北加 1 带 4 场填补约 0.325° 的极冠。数字 ID 1–5808，按赤纬从南至北、带内按赤经递增。
+- 验证。旧代码取消筛选复算的 5804 个中心、角点和条带索引与新表前 5804 行完全一致。旧 1976 场全部命中且坐标差 0°，对应关系列为 `legacy_field_id`。FITS 回读、赤经接缝及两极赤道矩形覆盖、5808 个边框及图件目视通过。产物在 `outputs/equatorial_allsky_20261116/`。本次是几何表，未计算逐场可见天数。
+
 - 按用户要求暂去补缝场。用 Astropy Table 按原 FITS 的 `NOLD + NGRID` 截取前 5791 行，`NGAP` 设为 0，再调用 `plot_catalog` 重画。移除 5792–8685，保留原场 1855、延伸场含黄极 3936。FITS 行字节、编号与格式回读一致，图件目视通过。产物在 `outputs/mp_allsky_20261116/`，文件名含 `no_gap_fill`。
 
 - 全天图改用 FITS 的逐场四角边框。更新 `targeted_observing/extend_mp_allsky.py`，以橙色绘制 1855 个原场，蓝色绘制 6830 个新增场。直接调用 `plot_catalog(Table.read(...), ...)` 重绘。已核对 8685 个闭合边框、353 个 TAN 边框、273 处投影接缝和图件目视，FITS SHA256 一致。最终图为 `outputs/mp_allsky_20261116/mp_allsky_footprints.png`。

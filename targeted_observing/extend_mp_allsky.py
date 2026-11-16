@@ -192,6 +192,8 @@ def footprint_outlines(table):
 
     # Interpolate the polar TAN rectangle along great circles on the sphere.
     polar = np.abs(table["center_dec"]) >= POLAR_DEC
+    if table.meta.get("EDGEGEOM") == "RADEC":
+        polar[:] = False
     corners = unit_vectors(ra[polar], dec[polar])
     edge = corners[:, :, None, :] * (1 - fraction[:, None])
     edge += np.roll(corners, -1, axis=1)[:, :, None, :] * fraction[:, None]
@@ -221,18 +223,19 @@ def split_at_projection_seam(polygon):
     yield np.vstack([*prefix, polygon[start:]])
 
 
-def plot_catalog(table, output):
+def plot_catalog(table, output, *, original_mask=None):
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
     from matplotlib.collections import LineCollection
     from matplotlib.lines import Line2D
 
-    original = table.meta["NOLD"]
+    if original_mask is None:
+        original_mask = np.arange(len(table)) < table.meta["NOLD"]
     fig, ax = plt.subplots(figsize=(13, 7), subplot_kw={"projection": "mollweide"})
     groups = [
-        (table[original:], "#36758b", 0.27, "New fields"),
-        (table[:original], "#bf501e", 0.38, "Original fields"),
+        (table[~original_mask], "#36758b", 0.27, "New fields"),
+        (table[original_mask], "#bf501e", 0.38, "Original fields"),
     ]
     legend = []
     for fields, color, width, label in groups:
