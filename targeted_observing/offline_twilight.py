@@ -375,7 +375,7 @@ def verify_window(sky, block, c):
             'scope':'nominal and configured timing envelope, supplied footprint enclosing cap'}
 
 
-def make_plan(day, c, grid=None):
+def make_plan(day, c, grid=None, allow_empty=False):
     """Plan with the legacy grid by default, or an explicit (fields, provenance)."""
     eop=setup_iers(BASE/'cache'/c['iers_file']);sky=make_sky()
     fields,provenance=load_grid() if grid is None else grid
@@ -383,6 +383,9 @@ def make_plan(day, c, grid=None):
     blocks=[plan_window(sky,fields,windows[side],side,c) for side in ('EV','AM')]
     for block in blocks:
         block['verification']=verify_window(sky,block,c)
+        if allow_empty and not block['rows'] and block['verification']['errors']==['no full-hour schedule']:
+            block['verification']={**block['verification'],'passed':True,'errors':[],
+                                   'skipped':True,'skip_reason':block.get('reason','No full-hour route found')}
         if not block['verification']['passed']:raise ValueError(block['verification'])
     return {'date':day,'config':c,'grid':provenance,'iers':eop,'blocks':blocks,
             'status':'OFFLINE_FIXED_LIST_LOCAL_TEST','dark_crossings':windows['dark_crossings'],

@@ -142,6 +142,46 @@ class V2Contracts(unittest.TestCase):
             self.assertEqual(list(history['exposure_count']),[2,0])
             self.assertEqual(history.meta['unmatched_exposures'],1)
 
+    def test_sync_script_retention_keeps_ten_evenings_current_and_unrelated_files(self):
+        from targeted_observing.script_retention import cleanup
+        with tempfile.TemporaryDirectory() as folder:
+            c=self.config(folder);root=Path(c['base'])/'script';root.mkdir(parents=True)
+            for day in range(18,30):
+                for suffix in ('plan.txt','plan.json','START_TIMES.json','segment01.txt'):
+                    (root/f'202611{day}_{suffix}').write_text('list')
+            for name in ('current_plan.txt','operator_notes.txt','20261001_unknown.txt'):
+                (root/name).write_text('keep')
+            cleanup(c,datetime(2026,11,28,12,tzinfo=TZ))
+            self.assertFalse((root/'20261118_plan.txt').exists())
+            self.assertTrue((root/'20261119_plan.txt').exists())
+            self.assertTrue((root/'20261128_plan.txt').exists())
+            self.assertTrue((root/'current_plan.txt').exists())
+            self.assertTrue((root/'operator_notes.txt').exists())
+            self.assertTrue((root/'20261001_unknown.txt').exists())
+
+    def test_initial_script_cleanup_starts_today_not_older_retention_window(self):
+        from targeted_observing.script_retention import cleanup
+        with tempfile.TemporaryDirectory() as folder:
+            c=self.config(folder);root=Path(c['base'])/'script';root.mkdir(parents=True)
+            for night in ('20261117','20261118'):(root/(night+'_plan.txt')).write_text('list')
+            cleanup(c,datetime(2026,11,18,14,tzinfo=TZ))
+            self.assertFalse((root/'20261117_plan.txt').exists())
+            self.assertTrue((root/'20261118_plan.txt').exists())
+
+    def test_unavailable_twilight_segment_is_explicitly_skipped_without_masking_errors(self):
+        from targeted_observing import offline_twilight as twilight
+        config=twilight.load_config()
+        empty=lambda sky,fields,bounds,side,c:dict(side=side,rows=[],fields=[],reason='No full-hour route found')
+        failed=lambda *a:dict(passed=False,errors=['no full-hour schedule'],samples=0)
+        with patch.object(twilight,'setup_iers',return_value={}),patch.object(twilight,'make_sky'),\
+             patch.object(twilight,'night_windows',return_value={'EV':[0,3600],'AM':[10000,13600],'dark_crossings':[3600,10000]}),\
+             patch.object(twilight,'plan_window',side_effect=empty),patch.object(twilight,'verify_window',side_effect=failed) as check:
+            value=twilight.make_plan('2026-11-02',config,grid=([],{}),allow_empty=True)
+            self.assertTrue(all(b['verification']['skipped'] for b in value['blocks']))
+            with self.assertRaises(ValueError):twilight.make_plan('2026-11-02',config,grid=([],{}))
+            check.side_effect=lambda *a:dict(passed=False,errors=['footprint altitude'],samples=1)
+            with self.assertRaises(ValueError):twilight.make_plan('2026-11-02',config,grid=([],{}),allow_empty=True)
+
     def test_science_inputs_include_yso_and_follow_but_reject_stale_and_focus(self):
         with tempfile.TemporaryDirectory() as folder:
             c=self.config(folder);root=Path(c['processed_root']);l2=root/'20261118/L2'

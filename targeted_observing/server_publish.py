@@ -170,4 +170,6 @@ def publish(plan,config,reason):
                   verification=plan['verification'],version=config['version'])
     write_json(runtime(config)/'published'/f'{night}.json',metadata)
     for row in plan['followups']:write_json(runtime(config)/'followup_status'/night/(row['candidate_id']+'.json'),{**row,'revision':str(revision)})
+    from .script_retention import cleanup
+    cleanup(config)
     return metadata

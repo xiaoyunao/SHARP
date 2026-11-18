@@ -211,7 +211,7 @@ def final_validation(rows,sky,catalog,config,tracks):
 def build(day,config,requests,now=None,previous_plan=None):
     catalog=SharedFields();c=twilight_config()
     setup_iers(BASE/'cache'/config['iers_file']);sky=make_sky()
-    twilight=make_plan(day,c,grid=catalog.twilight_grid())
+    twilight=make_plan(day,c,grid=catalog.twilight_grid(),allow_empty=True)
     begin=twilight['blocks'][0]['window_unix'][0];end=twilight['blocks'][1]['window_unix'][1]
     ev_end=begin+3600;am_start=end-3600
     tracks=load_tracks();clouds=cloud_labels()

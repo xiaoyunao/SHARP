@@ -129,6 +129,8 @@ def tick(config):
     try:
         with lock(runtime(config)/'locks/tick.lock',blocking=False):
             now=datetime.now(TZ);night=now.strftime('%Y%m%d')
+            from .script_retention import cleanup
+            cleanup(config,now,once_per_day=True)
             if (now.hour>=12 and now<followup_cutoff(config,night)
                     and not (runtime(config)/'published'/f'{night}.json').exists()):
                 daily(config,night)

@@ -28,6 +28,8 @@
   "filter_change_s": 24,
   "followup_start_tolerance_s": 300,
   "followup_cutoff_local": "17:00",
+  "script_retention_nights": 10,
+  "script_retention_start": "20261118",
   "late_replan_lead_s": 300,
   "followup_min_alt_deg": 25,
   "poll_s": 10,
