@@ -2,6 +2,10 @@
 
 ## 2026-11-18
 
+- 旧图入库时间追查：SSH stat/findmnt及collect_file_times.py核对343文件（342科学+start）。mtime全与11/13同名文件一致，为11/13 18:01–11/14 06:01；ctime集中11/18 05:48:01–05:58:51，全部inode不同。NFSv3不提供birth；结合两份完整FITS SHA相同，推断为保留mtime的旧图批量复制。目录ctime为11/17 23:54:50。
+- 列表验算：本地13/14号交付TXT与逐帧表均通过manifest SHA核对。黄昏47/47、清晨前30/30与13号顺序/曝光一致；对14号分别0/47与5/30相同，400/436场55/50张及边界曝光也只与13号完全一致。证据在outputs/nightly_check_20261117/{file_times.json,file_times.csv,plan_comparison.csv,file_times_and_plan_summary.json}。
+- 原因边界：raw1挂载NAS 192.168.160.92:/volume1/raw1，文件属UID1026；L1于今日06:23–09:00、L2于06:25–09:01新生成，上游按当天目录名读取旧图。检查可读入口、cron与相关复制脚本/历史，未找到具体传输命令；当前账号不能读auth/syslog，NAS传输审计未接入。已验证Python编译、343份元数据闭合和计划逐段比较；下一步核对NAS/观测电脑05:48–05:59的复制或同步记录，实际昨晚新图仍待定位。
+
 - 11/17 夜检：用户确认昨晚执行 14 号列表。默认 SSH 只读核查 /raw1/20261117/OBJ 的342张和全部L2，曝光时间均归属11/13夜，342份raw头与/raw1/20261113同名文件一致；两个完整FITS SHA256相同，另对400场0070四处分离像素块复核一致。14号列表首场MP_1711/1840/1841，服务器该批首场仍为13号的1837/1836/1835；11月归档未找到14号首场的新曝光。真实昨晚数据位置待确认。
 - 流程：204份MP L2全部因wrong_night被known清单剔除，空清单仍被标known_complete，unknown读取该批产生739初选（647 pass/27 reject/65 review），712超过200门槛后跳过复核打包；不能据此判定11/17的新候选。MPC hold在。文件：outputs/nightly_check_20261117/{collect_remote.py,server_evidence.json}及本日志/PLAN；命令：git状态/fetch/历史、SSH FITS头/星表/日志、SHA256和像素块核对，Python编译。待确认观测电脑原图及传输路径，再按实际夜次处理。
 
