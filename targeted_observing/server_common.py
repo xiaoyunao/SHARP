@@ -42,9 +42,8 @@ def observation_start(config, night):
         return None
     metadata = json.loads(path.read_text())
     plan = json.loads((Path(metadata['revision'])/'plan.json').read_text())
-    values = [datetime.fromisoformat(plan[key]).astimezone(TZ)
-              for key in ('start_local', 'window_start_local') if plan.get(key)]
-    return min(values) if values else None
+    value = plan.get('start_local') or plan.get('window_start_local')
+    return datetime.fromisoformat(value).astimezone(TZ) if value else None
 
 
 def followup_cutoff(config, night):

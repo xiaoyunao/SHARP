@@ -26,7 +26,17 @@ def plan(night,config,reason,finalize=False):
         with lock(runtime(config)/'queue.lock'):
             requests,errors=queue_snapshot(config,night)
         day=datetime.strptime(night,'%Y%m%d').date().isoformat()
-        value=build(day,config,requests)
+        options={}
+        if start is not None and now<start:
+            metadata=json.loads((runtime(config)/'published'/f'{night}.json').read_text())
+            previous=json.loads((Path(metadata['revision'])/'plan.json').read_text())
+            window=previous.get('window_start_local')
+            if window and now>datetime.fromisoformat(window):
+                # A shorter EV can start after its reserved window begins. The
+                # telescope is still idle: rebuild only future commands, with
+                # generation/transfer lead time, and no execution prefix.
+                options['now']=(now+timedelta(seconds=config['late_replan_lead_s'])).timestamp()
+        value=build(day,config,requests,**options)
         if datetime.now(TZ) >= datetime.fromisoformat(value['start_local']):
             raise ValueError('Execution start reached while planning; publication blocked')
         value['queue_errors']=errors

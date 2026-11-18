@@ -159,6 +159,16 @@ def select_fields(catalog,tracks,clouds,geometry,begin,end,history,evidence,plan
     return chosen
 
 
+def cadence_visits(times,minimum=300,maximum=720):
+    """Longest valid visit sequence; extra burst frames do not erase a tracklet."""
+    times=np.sort(np.asarray(times,dtype=float));length=np.ones(len(times),dtype=int)
+    for j in range(1,len(times)):
+        gap=times[j]-times[:j]
+        eligible=(gap>=minimum-.005)&(gap<=maximum+.005)
+        if eligible.any():length[j]=1+int(length[:j][eligible].max())
+    return int(length.max()) if len(length) else 0
+
+
 def final_validation(rows,sky,catalog,config,tracks):
     errors=[];retention=[];unique={r['field_id']:r for r in rows}
     fields=list(unique.values());indices={f['field_id']:i for i,f in enumerate(fields)}
@@ -200,10 +210,12 @@ def final_validation(rows,sky,catalog,config,tracks):
         for fid in sorted({r['field_id'] for r in rows if r['mode']==side}):
             ts=[r['mid_unix'] for r in rows if r['mode']==side and r['field_id']==fid]
             gaps=np.diff(ts)
+            usable=cadence_visits(ts)
             mp_sampling.append(dict(side=side,field=fid,frames=len(ts),
                 min_gap_s=float(gaps.min()) if len(gaps) else None,
                 max_gap_s=float(gaps.max()) if len(gaps) else None,
-                sampling_ok=bool(len(ts)>=3 and np.all((gaps>=300)&(gaps<=720)))))
+                cadence_usable_visits=usable,sampling_ok=bool(usable>=3),
+                all_adjacent_gaps_ok=bool(len(ts)>=3 and np.all((gaps>=300-.005)&(gaps<=720+.005)))))
     return dict(passed=not errors,errors=sorted(set(errors)),target_retention=retention,mp_sampling=mp_sampling,
                 mechanical_safety_certified=False,sampling_is_not_period_solution=True)
 

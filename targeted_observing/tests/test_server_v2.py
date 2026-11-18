@@ -77,6 +77,24 @@ class V2Contracts(unittest.TestCase):
             value=submit(self.request(),c,datetime(2026,11,18,16,30,tzinfo=TZ))
             self.assertEqual(value['night'],'20261119')
 
+    def test_shorter_ev_reservation_does_not_close_before_actual_execution(self):
+        from targeted_observing import server_service as service
+        class PrestartClock(datetime):
+            @classmethod
+            def now(cls,tz=None):return datetime(2026,11,18,16,45,tzinfo=TZ)
+        with tempfile.TemporaryDirectory() as folder:
+            c=self.config(folder);revision=runtime(c)/'plans/probe'
+            write_json(revision/'plan.json',dict(start_local='2026-11-18T17:30:00+08:00',window_start_local='2026-11-18T16:30:00+08:00'))
+            write_json(runtime(c)/'published/20261118.json',dict(revision=str(revision)))
+            self.assertEqual(followup_cutoff(c,'20261118'),datetime(2026,11,18,17,tzinfo=TZ))
+            self.assertFalse(submit(self.request(),c,PrestartClock.now())['deferred'])
+            with patch.object(service,'datetime',PrestartClock),\
+                 patch('targeted_observing.server_scheduler.build',return_value=dict(start_local='2026-11-18T16:55:00+08:00')) as build_mock,\
+                 patch('targeted_observing.server_publish.publish',return_value={'revision':'test'}):
+                service.plan('20261118',c,'prestart_test')
+            self.assertGreater(build_mock.call_args.kwargs['now'],PrestartClock.now().timestamp())
+            self.assertNotIn('previous_plan',build_mock.call_args.kwargs)
+
     def test_frozen_plan_never_invokes_scheduler_and_tick_defers_pending(self):
         from targeted_observing import server_service as service
         class FrozenClock(datetime):
@@ -209,6 +227,12 @@ class V2Contracts(unittest.TestCase):
                  moon_alt=np.full(3,-30.),moon_fraction=np.zeros(3),sun_alt=np.full(3,-20.))
         g.ha=np.full(shape,4.8);self.assertTrue(g.valid(0,0,3600))
         g.ha=np.full(shape,5.1);self.assertFalse(g.valid(0,0,3600))
+
+    def test_extra_short_cadence_frames_preserve_an_existing_valid_sequence(self):
+        from targeted_observing.server_scheduler import cadence_visits
+        self.assertEqual(cadence_visits([0,600,1200,1248,1288.5]),3)
+        self.assertEqual(cadence_visits([0,48,96,144]),1)
+        self.assertEqual(cadence_visits([0,720.0000001,1440]),3)
 
     def test_science_inputs_include_yso_and_follow_but_reject_stale_and_focus(self):
         with tempfile.TemporaryDirectory() as folder:

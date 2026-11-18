@@ -5,6 +5,7 @@ import hashlib
 import json
 from pathlib import Path
 import shutil
+from collections import defaultdict
 
 import numpy as np
 from astropy.table import Table
@@ -27,7 +28,7 @@ def summarize(root,output):
     provenance=json.loads((root/'provenance.json').read_text())
     assert len(summaries)==33 and len({r['case'] for r in summaries})==33
     assert {r['model_hash'] for r in summaries}=={provenance['model_hash']}
-    period_by={r['case']:r['counts'] for r in periods};rows=[];checks=[]
+    period_by={r['case']:r['counts'] for r in periods};rows=[];checks=[];field_totals=defaultdict(list)
     for s in summaries:
         case=root/'cases'/s['case'];data=dict(np.load(case/'field_counts.npz'));nightly=read_csv(case/'nightly.csv')
         assert len(nightly)==365 and s['nights']==365
@@ -40,6 +41,7 @@ def summarize(root,output):
         assert np.all(data['actual']>=0) and np.all(data['actual']<=data['planned'])
         assert int(data['actual'].sum()+data['yso_actual'].sum())==s['usable_frames']
         assert int(data['planned'].sum()+data['yso_planned'].sum())==s['planned_frames']
+        field_totals[s['scenario']].append(np.r_[data['actual'].sum(axis=0),data['yso_actual'].sum(axis=0)])
         record={**{k:s[k] for k in ('case','scenario','realization','detected_objects','detected_r_objects','tjn_measurements','tjn_r_measurements',
                                      'sampling_ready_objects','planned_frames','usable_frames','shared_fields_visited')},
                 'mp_sampling_failures':sum(int(r['mp_sampling_failures']) for r in nightly)}
@@ -69,6 +71,12 @@ def summarize(root,output):
         for filename in ('field_counts.npz','nightly.csv','objects.csv','period_recovery.csv','period_summary.json','period_assumptions.json'):
             p=root/'cases'/name/filename
             if p.exists():shutil.copy2(p,target/filename)
+    for case in (s['case'] for s in summaries):
+        target=output/'audit/cases'/case;target.mkdir(parents=True,exist_ok=True)
+        for filename in ('field_counts.npz','nightly.csv','objects.csv','summary.json','curves.npz',
+                         'sampling_certificates.json','period_recovery.csv','period_summary.json','period_assumptions.json'):
+            source=root/'cases'/case/filename
+            if source.exists():shutil.copy2(source,target/filename)
     cat=SharedFields();cases={name:dict(np.load(root/'cases'/name/'field_counts.npz')) for name in ('clear_baseline','baseline_r00')}
     fields=[]
     for i,fid in enumerate(cat.ids):
@@ -79,6 +87,11 @@ def summarize(root,output):
         row=dict(field_id=name,**values)
         for case,arrays in cases.items():row[case+'_exposures']=int(arrays['yso_actual'][:,i].sum())
         fields.append(row)
+    baseline=np.asarray(field_totals['baseline'])
+    percentiles=np.percentile(baseline,[10,50,90],axis=0)
+    for i,row in enumerate(fields):
+        for j,label in enumerate(('P10','P50','P90')):row['baseline_'+label]=float(percentiles[j,i])
+        row['baseline_fraction_visited']=float(np.mean(baseline[:,i]>0))
     write_csv(output/'field_exposure_counts.csv',fields)
     return summary
 
@@ -176,7 +189,8 @@ def main():
     p=argparse.ArgumentParser();p.add_argument('root',type=Path);p.add_argument('output',type=Path);p.add_argument('--no-render',action='store_true');args=p.parse_args()
     summary=summarize(args.root,args.output)
     if not args.no_render:print(render(args.output))
-    manifest={str(p.relative_to(args.output)):hashlib.sha256(p.read_bytes()).hexdigest() for p in args.output.rglob('*') if p.is_file()}
+    manifest={str(p.relative_to(args.output)):hashlib.sha256(p.read_bytes()).hexdigest() for p in args.output.rglob('*')
+              if p.is_file() and p.name!='SHA256SUMS.json'}
     write_json(args.output/'SHA256SUMS.json',manifest)
     print(json.dumps(summary,indent=2))
 
