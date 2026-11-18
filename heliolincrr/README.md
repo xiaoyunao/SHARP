@@ -1,3 +1,7 @@
+# 2026-11-18 服务器 v2 入口更新
+
+当前统一入口为`targeted_observing.server_service`及`server_pipeline`，known/unknown共用已校验科学L2清单、实际曝光中点，速度3–750″/h，仅单夜。旧自动后随、15夜和unknown提交入口已退役；网站投递后随由新调度器安排，未知上报由网站处理，MPC hold保留。原始图/结果目录不变。详见[服务器v2说明](../targeted_observing/docs/SERVER_V2_20261118.md)。以下历史命令仅用于归档复现。
+
 # heliolincrr
 
 本目录保存服务器当前 `heliolincrr` 代码，并作为仓库中的唯一正式版本。
@@ -41,6 +45,11 @@ Unknown candidate 生成并分配 trkSub 后，主流程调用 `unknown_morpholo
 - `<night>_unknown_links_screened.json`：两关通过集；自动 follow-up 关联仍只读取此集。
 - `<night>_unknown_links_quarantine.json`：保留 reject/review 数值审计；文件名沿用，但 review 不再隔离出人工队列。
 - `<night>_unknown_morphology.json`：逐帧指标、模板验证、完整判定、输入签名和规则版本。
+
+数量上限在形态/PSF 筛选之后检查，统计实际进入人工复核的 `pass + review`，
+不计入 `reject`。沿用 `MAX_UNKNOWN_LINKS_AFTER_KNOWN`（默认 200，<=0 关闭数量限制）
+以兼容现有配置；单夜入口和已有包续跑共用 `check_unknown_review_count.py`。
+筛选后仍超限时返回 20、跳过后续步骤，同时保留原始候选、筛选审计和历史上报证据。
 
 未知源 CLI 导出、正式上报前均核对筛选版本、原始 catalog hash 与 L1/L2 签名，
 即使旧人工 CSV 标为 1，也不能绕过 reject。签名过期须重跑。

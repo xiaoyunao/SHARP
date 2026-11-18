@@ -1,1 +1,2 @@
-0 9 * * * cd /pipeline/xiaoyunao && /bin/bash /pipeline/xiaoyunao/known_asteroid/run_daily.sh >> /pipeline/xiaoyunao/known_asteroid/runtime/logs/cron.log 2>&1
+# v2 known/unknown processing is submitted by the unified noon daily/tick service.
+# Do not schedule the old independent v1 known cron.

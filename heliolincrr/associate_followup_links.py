@@ -41,4 +41,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit("Retired server action in v2; use the website. Existing library exports remain available for local review packages.")

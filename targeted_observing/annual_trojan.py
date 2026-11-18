@@ -31,6 +31,8 @@ def load_tracks(limit=None):
         paths=map(__import__('pathlib').Path,manifest['paths'].values())
     tracks={}
     for path in paths:
+        if not path.exists():
+            path=BASE/'cache/annual'/path.name
         t=json.loads(path.read_text());tracks[t['pdes']]=t
     if not tracks:raise ValueError('No annual ephemerides')
     return tracks

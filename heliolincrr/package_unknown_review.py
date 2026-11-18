@@ -11,6 +11,9 @@ from typing import Any
 
 import numpy as np
 from astropy.table import Table
+from astropy.io import fits
+from targeted_observing.catalog_names import catalog_name, image_name, catalog_path
+from targeted_observing.unknown_pipeline.exposure_timing import header_mid_mjd
 
 from export_unknown_ades import build_obs_rows, build_argparser as export_parser, write_psv
 from digest2_pipeline import score_snapshot
@@ -107,12 +110,11 @@ def int_value(value: Any, default: int = -1) -> int:
 
 
 def catalog_name_for_image(image_name: str) -> str:
-    return Path(image_name).name.replace(".fits.gz", "_cat.fits.gz")
+    return catalog_name(image_name)
 
 
 def image_name_for_catalog(value: Any) -> str:
-    name = Path(str(value)).name
-    return name.replace("_cat.fits.gz", ".fits.gz")
+    return image_name(value)
 
 
 def table_from_detail_rows(rows: list[dict[str, Any]]) -> Table:
@@ -151,7 +153,7 @@ def load_tracklet_detection_index(night: str, root_out: Path) -> dict[tuple[str,
 
 
 def load_l2_detection(processed_root: Path, night: str, image_name: str, obj_id: int) -> dict[str, Any]:
-    path = processed_root / night / "L2" / catalog_name_for_image(image_name)
+    path = catalog_path(processed_root,night,image_name)
     if not path.exists():
         return {}
     table = Table.read(path)
@@ -161,7 +163,12 @@ def load_l2_detection(processed_root: Path, night: str, image_name: str, obj_id:
     if len(matches) == 0:
         return {}
     row = matches[0]
-    return {col: row[col] for col in table.colnames}
+    result={col: row[col] for col in table.colnames}
+    with fits.open(path,memmap=False) as hdus:
+        header=hdus[0].header.copy();header.extend(hdus[1].header,update=True)
+    mid=header_mid_mjd(header)
+    if mid is not None:result['MJD']=mid
+    return result
 
 
 def write_review_detail_fits(

@@ -386,7 +386,7 @@ def export_psv(args: argparse.Namespace) -> int:
                 args.astcat,
                 f"{mag[i]:.3f}",
                 rms_mag_text[i],
-                args.band,
+                (safe_str(table["physical_filter"][i]) if "physical_filter" in table.colnames and safe_str(table["physical_filter"][i]) in ("g","r","i","z") else args.band),
                 args.photcat,
             ]
         )

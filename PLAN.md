@@ -1,5 +1,16 @@
 # PLAN
 
+## 当前：服务器v1归档、首版v2上线（2026-11-18）
+
+- 用户已授权服务器操作及生产镜像更新，覆盖下方“仅本地”的首阶段限制；main不变。v1完整归档`/pipeline/xiaoyunao/v1/20261118_124436`（23767项/19.95GB，SHA见运行说明），原09:00及两个reboot入口停用；原始测光/dashboard/EP保留。
+- v2主入口`targeted_observing.server_service`，12:00 daily、每分钟事件/recovery tick及reboot恢复已装；实际分钟cron已自然触发。配置`/pipeline/xiaoyunao/v2/config.json`，公开script/runtime/plans/plots与L4/复核包路径不变。详见`targeted_observing/docs/SERVER_V2_20261118.md`。
+- 网站后随接口已实现：每candidate一个带night/field_id/start_time/frames/exposure_s/filter的JSON，FOLLOW四位共用场；前12点合并、12点至17点每事件重排全队列，冲突尽量顺延并明确偏差/失败。17点或更早计划启动时刻截止，之后新请求保留当地时分转下一夜；截止前待办仅能在启动前收尾，开拍后不重排。静态控制器按START_TIMES分段执行。
+- TJN静态中心来自4397表，按真实曝光/检出历史、点数/夜数/连续跨度/间隔/跨夜基线与文献周期相位覆盖选场、去重及动态驻场。首批历史3029曝光、35年度TJN有检出、260有效r点；采样就绪不等于标定光变/唯一周期。
+- 首份正式11/18计划405张：EV47/TJN173/YSO g/r各69/AM47，17:42:00启动至次日06:08:05读完；geometry/留场/MP复访通过，单段，三处TXT哈希一致。尾部补时曾造成同场短复访，已改为固定复用独立验过的晨昏序列，正式版本全部MP cadence通过。
+- pipeline仅单夜：全部合格科学L2共用manifest，实际中点及物理滤镜、known零匹配与无有效输入区分、重处理历史替换；移除服务器自动后随/跨夜/unknown提交启动。MPC hold保留，known自动报和联系人未启用，unknown仅网站。
+- 验证：39项新模式/历史/清单回归及14项known质量测试通过（提交传输mock）；服务器两次真实9帧MP/TJN/YSO端到端与原路径known图件/GIF通过，unknown=0，不能据此宣称快速目标正检出效率。11/17旧L2已按错夜写no_valid、known/unknown_complete=false；新原图/上游测光恢复由另一任务继续，未清理其数据。
+- 下一步：网站接入投递命令和状态/分段标志；观察11/19首次12点自然执行及后续真实候选结果，按真实测光改进质量门槛/相位策略；上报联系人待用户后续确认，继续hold。未重跑全年科学产额，星历/IERS覆盖结束前需刷新。
+
 ## 当前目标：v2 共用场与每日生成链路（2026-11-18）
 
 - 最新约定：MP+TJN共用兴隆4397场，名称MP/TJNL4/TJNL5加同一四位后缀；YSO独立ORI/CYG。覆盖下方11/16将YSO纳入共用场的旧要求。MPC暂停，未来known服务器报/unknown网站报；后随和跨夜关联迁网站。

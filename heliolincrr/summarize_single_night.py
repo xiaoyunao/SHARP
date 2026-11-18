@@ -11,6 +11,7 @@ from pathlib import Path
 
 import numpy as np
 from astropy.table import Table
+from targeted_observing.catalog_names import image_name as catalog_image_name
 
 
 TRK_SUB_RE = re.compile(r"^[-A-Za-z0-9_]{1,7}$")
@@ -198,7 +199,7 @@ def load_mask_stats(mask_dir: Path) -> tuple[set[str], int]:
     total_rows = 0
     if not mask_dir.exists():
         return keys, total_rows
-    for fn in sorted(mask_dir.glob("OBJ_MP_*_cat.fits.gz")):
+    for fn in sorted(p for p in mask_dir.iterdir() if p.name.endswith(('.fits','.fits.gz'))):
         try:
             t = Table.read(fn)
         except Exception:
@@ -349,7 +350,7 @@ def build_unknown_catalog_rows(
                 if key in det_keys_seen:
                     continue
                 det_keys_seen.add(key)
-                det_files.append(file_name.replace("_cat.fits.gz", ".fits.gz"))
+                det_files.append(catalog_image_name(file_name))
                 det_objids.append(obj_id)
                 det_mjds.append(tr[f"mjd{endpoint}"])
                 det_ras.append(tr[f"ra{endpoint}"])

@@ -14,7 +14,7 @@ class SharedGridContracts(unittest.TestCase):
         cls.catalog = SharedFields()
 
     def test_programs_share_geometry_and_text_suffix(self):
-        fields = [self.catalog.resolve(prefix+'_0010') for prefix in ('MP', 'TJNL4', 'TJNL5')]
+        fields = [self.catalog.resolve(prefix+'_0010') for prefix in ('MP', 'TJNL4', 'TJNL5', 'FOLLOW')]
         self.assertEqual({f['field_id'] for f in fields}, {'0010'})
         self.assertEqual(len({(f['ra_deg'], f['dec_deg']) for f in fields}), 1)
         for bad in ('MP_10', 'MP_0000', 'MP_4398', 'MP_TJL5_400', 'YSO_ORI', 'TJNL5_0010_extra'):

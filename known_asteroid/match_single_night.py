@@ -148,29 +148,14 @@ def parse_epoch(
     exptime_key: str | None,
     exptime_default: float,
 ) -> tuple[Time | None, float | None]:
-    t0 = None
-    for key in (obs_date_key, "DATE-OBS", "DATEOBS"):
-        if not key or key not in header:
-            continue
-        try:
-            t0 = Time(header[key], format="isot", scale="utc")
-            break
-        except Exception:
-            continue
-    if t0 is None:
-        return None, None
-
-    exptime = None
-    if exptime_key:
-        try:
-            exptime = float(header[exptime_key])
-        except Exception:
-            exptime = None
-    if exptime is None:
-        exptime = float(exptime_default)
-
-    epoch = t0 + (exptime / 86400.0) / 2.0
-    return epoch, float(epoch.mjd)
+    from targeted_observing.unknown_pipeline.exposure_timing import header_mid_mjd
+    merged = header.copy()
+    if 'DATE-OBS' not in merged and obs_date_key in merged:
+        merged['DATE-OBS'] = merged[obs_date_key]
+    if exptime_key and exptime_key in merged:
+        merged['EXPTIME'] = merged[exptime_key]
+    mid = header_mid_mjd(merged)
+    return (Time(mid, format='mjd', scale='utc'), mid) if mid is not None else (None, None)
 
 
 def build_argparser() -> argparse.ArgumentParser:
@@ -280,6 +265,7 @@ def run_match(args: argparse.Namespace) -> tuple[str | None, str | None]:
 
     sep_limit = args.sep_arcsec * u.arcsec
     mask_sep_limit = args.mask_sep_arcsec * u.arcsec if args.mask_sep_arcsec is not None else None
+    failures = []
     all_asteroids: list[Table] = []
     all_matches: list[Table] = []
     all_mask_matches: list[Table] = []
@@ -293,7 +279,8 @@ def run_match(args: argparse.Namespace) -> tuple[str | None, str | None]:
 
         try:
             with fits.open(fpath, memmap=False) as hdul:
-                header = hdul[args.hdu].header
+                header = hdul[0].header.copy()
+                header.extend(hdul[args.hdu].header, update=True)
                 cat = Table(hdul[args.hdu].data)
                 w = WCS(header)
 
@@ -320,9 +307,11 @@ def run_match(args: argparse.Namespace) -> tuple[str | None, str | None]:
                     args.exptime_sec,
                 )
                 if epoch is None:
+                    failures.append(fname)
                     log(f"[WARN] failed to parse {args.obs_date_key} for {fname}; skip", args.log)
                     continue
         except Exception as exc:
+            failures.append(fname)
             log(f"[ERROR] failed to read {fname}: {exc}", args.log)
             if args.verbose:
                 traceback.print_exc()
@@ -350,6 +339,7 @@ def run_match(args: argparse.Namespace) -> tuple[str | None, str | None]:
             ephs = ephs[inside]
             ephs["source_file"] = np.array([fname] * len(ephs), dtype="U128")
             ephs["epoch"] = np.array([mjd] * len(ephs), dtype="f8")
+            ephs["physical_filter"] = np.array([str(header.get("FILTER", header.get("CHANNEL", ""))).strip().lower()] * len(ephs), dtype="U16")
             all_asteroids.append(ephs)
 
             asteroid_coords = SkyCoord(ephs["ra"] * u.deg, ephs["dec"] * u.deg)
@@ -380,15 +370,23 @@ def run_match(args: argparse.Namespace) -> tuple[str | None, str | None]:
 
             if np.any(matched):
                 combined = hstack([ephs[matched], cat[idx[matched]]], join_type="exact")
+                if 'MJD' in combined.colnames:combined['source_catalog_MJD']=combined['MJD'].copy()
+                combined['MJD']=np.full(len(combined),mjd)
                 all_matches.append(combined)
             if mask_matched is not None and np.any(mask_matched):
                 combined = hstack([ephs[mask_matched], cat[idx[mask_matched]]], join_type="exact")
+                if 'MJD' in combined.colnames:combined['source_catalog_MJD']=combined['MJD'].copy()
+                combined['MJD']=np.full(len(combined),mjd)
                 all_mask_matches.append(combined)
         except Exception as exc:
+            failures.append(fname)
             log(f"[ERROR] query/match failed on {fname}: {exc}", args.log)
             if args.verbose:
                 traceback.print_exc()
             continue
+
+    if failures:
+        raise RuntimeError("Known matching failed for: " + ", ".join(failures))
 
     if args.file and args.parts_dir:
         os.makedirs(args.parts_dir, exist_ok=True)

@@ -1,0 +1,206 @@
+from datetime import datetime, timedelta
+import json
+from pathlib import Path
+import tempfile
+import unittest
+from unittest.mock import patch
+
+import numpy as np
+from astropy.io import fits
+from astropy.table import Table
+from astropy.time import Time
+
+from targeted_observing.server_common import load_config, TZ, runtime, write_json, followup_cutoff
+from targeted_observing.server_followup import validate, submit, queue_snapshot
+from targeted_observing.server_history import sampling, ingest, states
+from targeted_observing.science_manifest import build, load
+
+
+def catalog(path,start='2026-11-18T11:00:00',seconds=120):
+    primary=fits.PrimaryHDU();primary.header['EXPSTA']=start;primary.header['EXPTIME']=seconds
+    primary.header['FILTER']='r'
+    table=Table(dict(objID=[1],RA_Win=[80.],DEC_Win=[20.],MagErr_PSF=[.02],Flag=[0]))
+    ext=fits.BinTableHDU(table)
+    for key,value in dict(CTYPE1='RA---TAN',CTYPE2='DEC--TAN',CRVAL1=80.,CRVAL2=20.,
+                          CRPIX1=4608.,CRPIX2=4616.,CD1_1=-.00032,CD2_2=.00032).items():ext.header[key]=value
+    path.parent.mkdir(parents=True,exist_ok=True)
+    fits.HDUList([primary,ext]).writeto(path,overwrite=True)
+
+
+class V2Contracts(unittest.TestCase):
+    def config(self,folder):
+        value=load_config();value['base']=str(Path(folder)/'base');value['processed_root']=str(Path(folder)/'processed')
+        return value
+
+    def request(self,key='candidateA',night='20261118'):
+        return dict(candidate_id=key,night=night,field_id='2630',start_time='2026-11-18T23:30:00+08:00',frames=5,exposure_s=30,filter='r')
+
+    def test_request_contract_requires_timezone_and_four_text_digits(self):
+        self.assertEqual(validate(self.request())['execution_name'],'FOLLOW_2630')
+        for updates in ({'field_id':2630},{'start_time':'2026-11-18T23:00:00'},
+                        {'frames':True},{'filter':'W'},{'night':'20261117'},{'candidate_id':'../escape'}):
+            with self.assertRaises((ValueError,TypeError)):validate({**self.request(),**updates})
+
+    def test_every_candidate_creates_event_and_whole_night_queue_is_preserved(self):
+        with tempfile.TemporaryDirectory() as folder:
+            c=self.config(folder)
+            for hour,key in ((11,'A'),(13,'B'),(14,'C')):
+                result=submit(self.request(key),c,datetime(2026,11,18,hour,tzinfo=TZ))
+                self.assertEqual(result['scheduling'],'noon run' if hour==11 else 'replan queued')
+            queue,errors=queue_snapshot(c,'20261118')
+            self.assertEqual({r['candidate_id'] for r in queue},{'A','B','C'});self.assertFalse(errors)
+            self.assertEqual(len(list((runtime(c)/'events/20261118').glob('*.json'))),3)
+            self.assertEqual(queue_snapshot(c,'20261119'),([],[]))
+            with self.assertRaises(ValueError):submit(self.request('expired'),c,datetime(2026,11,19,13,tzinfo=TZ))
+
+    def test_cutoff_routes_late_commands_to_next_night_preserving_clock_time(self):
+        with tempfile.TemporaryDirectory() as folder:
+            c=self.config(folder)
+            ontime=submit(self.request('early'),c,datetime(2026,11,18,16,59,59,tzinfo=TZ))
+            self.assertEqual(ontime['night'],'20261118');self.assertFalse(ontime['deferred'])
+            for key,hour in (('boundary',17),('late',23)):
+                result=submit(self.request(key),c,datetime(2026,11,18,hour,tzinfo=TZ))
+                self.assertEqual(result['night'],'20261119');self.assertTrue(result['deferred'])
+                self.assertEqual(result['start_time'],'2026-11-19T23:30:00+08:00')
+                self.assertEqual(result['scheduling'],'noon run')
+            overnight=submit(self.request('overnight'),c,datetime(2026,11,19,1,tzinfo=TZ))
+            self.assertEqual(overnight['night'],'20261119')
+            self.assertEqual({r['candidate_id'] for r in queue_snapshot(c,'20261118')[0]},{'early'})
+
+    def test_earlier_execution_start_closes_acceptance_early(self):
+        with tempfile.TemporaryDirectory() as folder:
+            c=self.config(folder);revision=runtime(c)/'plans/probe'
+            write_json(revision/'plan.json',dict(start_local='2026-11-18T16:30:00+08:00',window_start_local='2026-11-18T16:30:00+08:00'))
+            write_json(runtime(c)/'published/20261118.json',dict(revision=str(revision)))
+            self.assertEqual(followup_cutoff(c,'20261118'),datetime(2026,11,18,16,30,tzinfo=TZ))
+            value=submit(self.request(),c,datetime(2026,11,18,16,30,tzinfo=TZ))
+            self.assertEqual(value['night'],'20261119')
+
+    def test_frozen_plan_never_invokes_scheduler_and_tick_defers_pending(self):
+        from targeted_observing import server_service as service
+        class FrozenClock(datetime):
+            @classmethod
+            def now(cls,tz=None):return datetime(2026,11,18,19,tzinfo=TZ)
+        with tempfile.TemporaryDirectory() as folder:
+            c=self.config(folder);revision=runtime(c)/'plans/probe'
+            write_json(revision/'plan.json',dict(start_local='2026-11-18T17:42:00+08:00'))
+            write_json(runtime(c)/'published/20261118.json',dict(revision=str(revision),followups=[]))
+            submit(self.request(),c,datetime(2026,11,18,16,59,59,tzinfo=TZ))
+            with patch.object(service,'datetime',FrozenClock),patch('targeted_observing.server_scheduler.build') as build_mock:
+                for finalize in (False,True):
+                    with self.assertRaisesRegex(ValueError,'frozen'):service.plan('20261118',c,'test',finalize=finalize)
+                with patch.object(service,'enqueue_processing'):
+                    service.tick(c)
+                build_mock.assert_not_called()
+            self.assertEqual(queue_snapshot(c,'20261119')[0][0]['candidate_id'],'candidateA')
+            results=list((runtime(c)/'events/20261118').glob('*.result.json'))
+            self.assertEqual(len(results),1)
+            self.assertEqual(json.loads(results[0].read_text())['status'],'deferred_before_execution_freeze')
+
+    def test_direct_sftp_late_request_is_moved_to_tomorrow_queue(self):
+        from targeted_observing import server_service as service
+        class ArrivalClock(datetime):
+            @classmethod
+            def now(cls,tz=None):return datetime(2026,11,18,17,1,tzinfo=TZ)
+            @classmethod
+            def fromtimestamp(cls,value,tz=None):return cls.now(tz)
+        with tempfile.TemporaryDirectory() as folder:
+            c=self.config(folder)
+            source=runtime(c)/'followups/20261118/candidateA.json'
+            write_json(source,self.request())
+            with patch.object(service,'datetime',ArrivalClock):
+                self.assertEqual(service.discover_events('20261118',c),[])
+            self.assertFalse(source.exists())
+            self.assertEqual(queue_snapshot(c,'20261119')[0][0]['start_time'],'2026-11-19T23:30:00+08:00')
+            self.assertTrue((runtime(c)/'deferred_followups/20261118/candidateA.json').exists())
+
+    def test_slow_render_cannot_replace_public_list_after_start(self):
+        from targeted_observing import server_publish as publisher
+        class FinishedTooLate(datetime):
+            @classmethod
+            def now(cls,tz=None):return datetime(2026,11,18,17,42,tzinfo=TZ)
+        with tempfile.TemporaryDirectory() as folder:
+            c=self.config(folder);public=Path(c['base'])/'script/current_plan.txt'
+            public.parent.mkdir(parents=True);public.write_text('original final list')
+            value=dict(night='20261118',start_local='2026-11-18T17:42:00+08:00',rows=[])
+            with patch.object(publisher,'plots',return_value={}),patch.object(publisher,'datetime',FinishedTooLate):
+                with self.assertRaisesRegex(ValueError,'rendering'):publisher.publish(value,c,'late_render_test')
+            self.assertEqual(public.read_text(),'original final list')
+            self.assertFalse((runtime(c)/'published/20261118.json').exists())
+
+    def test_science_inputs_include_yso_and_follow_but_reject_stale_and_focus(self):
+        with tempfile.TemporaryDirectory() as folder:
+            c=self.config(folder);root=Path(c['processed_root']);l2=root/'20261118/L2'
+            for i,name in enumerate(('OBJ_YSO_ORI_0001_cat.fits','OBJ_FOLLOW_2630_0002_cat.fits','OBJ_EP_0003_cat.fits','OtherProgram_0004_cat.fits')):
+                catalog(l2/name,start=f'2026-11-18T11:{i:02d}:00')
+            catalog(l2/'OBJ_MP_2630_0004_cat.fits',start='2026-11-17T11:00:00')
+            catalog(l2/'OBJ_focus-5.88_0005_cat.fits')
+            out=Path(folder)/'manifest.json';value=build('20261118',root,out)
+            self.assertEqual(len(value['accepted']),4);self.assertEqual(len(value['rejected']),2)
+            self.assertAlmostEqual(value['accepted'][0]['mid_unix'],Time('2026-11-18T11:03:00').unix,places=4)
+            path=Path(value['accepted'][0]['path']);path.touch()
+            with self.assertRaises(RuntimeError):load(out)
+
+    def test_burst_counts_do_not_replace_night_span_and_baseline(self):
+        c=load_config();rows=[];epoch=datetime(2026,11,1,tzinfo=TZ).timestamp()
+        for i in range(200):rows.append(dict(mid=epoch+i,night='20261101',band='r',error=.02,good=True))
+        self.assertEqual(sampling(rows,c)['good_nights'],0)
+        self.assertFalse(sampling(rows,c)['sampling_ready'])
+        rows=[]
+        for day in range(0,30,3):
+            for i in range(12):rows.append(dict(mid=epoch+day*86400+i*300,night=(datetime(2026,11,1)+timedelta(days=day)).strftime('%Y%m%d'),band='r',error=.02,good=True))
+        self.assertTrue(sampling(rows,c)['sampling_ready'])
+        for r in rows:r['band']='g'
+        self.assertEqual(sampling(rows,c)['good_points'],0)
+
+    def test_history_is_actual_deduplicated_and_replaces_reprocessed_measurements(self):
+        with tempfile.TemporaryDirectory() as folder:
+            c=self.config(folder);root=Path(c['processed_root']);file='OBJ_TJNL5_2630_0001_cat.fits'
+            catalog(root/'20261118/L2'/file)
+            l4=root/'20261118/L4';l4.mkdir()
+            path=l4/'20261118_matched_asteroids.fits'
+            Table(dict(source_file=[file],number=[4722],MagErr_PSF=[.02],Flag=[0])).write(path)
+            ingest(c,['20261118']);ingest(c,['20261118'])
+            self.assertEqual(states(c)['4722']['good_points'],1)
+            Table(dict(source_file=[file],number=[4722],MagErr_PSF=[.2],Flag=[0])).write(path,overwrite=True)
+            ingest(c,['20261118'])
+            self.assertEqual(states(c)['4722']['good_points'],0)
+
+    def test_unknown_export_uses_actual_midpoint_and_physical_filter(self):
+        from heliolincrr.export_unknown_ades import load_detection_row
+        with tempfile.TemporaryDirectory() as folder:
+            root=Path(folder);path=root/'20261118/L2/OBJ_YSO_ORI_0001_cat.fits'
+            catalog(path)
+            with fits.open(path,mode='update') as hdus:
+                table=Table(hdus[1].data)
+                for key,value in dict(MJD=1.,RAErr_Win=.00001,DECErr_Win=.00001,Mag_Aper4=18.,MagErr_Aper4=.02).items():
+                    table[key]=[value]
+                h=hdus[1].header.copy();hdus[1]=fits.BinTableHDU(table,header=h)
+                hdus[0].header['FILTER']='g'
+            row=load_detection_row(root,'20261118','OBJ_YSO_ORI_0001.fits',1)
+            self.assertAlmostEqual(row['MJD'],Time('2026-11-18T11:01:00').mjd,places=9)
+            self.assertEqual(row['physical_filter'],'g')
+
+    def test_known_history_reprocessing_replaces_same_count_rows(self):
+        from known_asteroid.update_all_matched_history import append_one
+        with tempfile.TemporaryDirectory() as folder:
+            root=Path(folder);combined=root/'all.fits';state=root/'state.json';source=root/'source.fits'
+            Table(dict(epoch=[1.],number=[4722])).write(source)
+            value={};append_one(combined,state,'20261118',source,value)
+            Table(dict(epoch=[2.],number=[4722])).write(source,overwrite=True)
+            append_one(combined,state,'20261118',source,value)
+            table=Table.read(combined);self.assertEqual(len(table),1);self.assertEqual(table['epoch'][0],2.)
+
+    def test_invalid_night_is_not_empty_known_complete_and_keeps_old_evidence(self):
+        from targeted_observing.server_pipeline import process
+        with tempfile.TemporaryDirectory() as folder:
+            c=self.config(folder);l4=Path(c['processed_root'])/'20261118/L4';l4.mkdir(parents=True)
+            (l4/'20261118_known_asteroid_status.json').write_text('{"known_complete":true}')
+            raw=l4/'20261118_unknown_links.json';raw.write_text('[{"old_evidence":true}]')
+            value=process('20261118',c)
+            self.assertFalse(value['known_complete']);self.assertFalse(value['unknown_complete'])
+            self.assertFalse(json.loads((l4/'20261118_known_asteroid_status.json').read_text())['known_complete'])
+            self.assertEqual(json.loads(raw.read_text()),[{'old_evidence':True}])
+
+
+if __name__=='__main__':unittest.main()

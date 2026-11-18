@@ -335,13 +335,18 @@ def main():
     ap.add_argument("--nproc", type=int, default=6, help="parallel processes")
     ap.add_argument("--log", default=None, help="write a summary log file")
 
+    ap.add_argument("--science-manifest", required=True, help="Validated common night input JSON")
     args = ap.parse_args()
 
     if not _HAS_HEALPY:
         raise SystemExit("ERROR: healpy is not installed, but is required for Gaia healpix cone selection.")
 
     in_l2 = os.path.join(args.root, args.night, "L2")
-    files = sorted(glob.glob(os.path.join(in_l2, "OBJ_MP_*_cat.fits.gz")))
+    from targeted_observing.science_manifest import load
+    manifest = load(args.science_manifest)
+    if manifest["night"] != args.night:
+        raise ValueError("Manifest night mismatch")
+    files = [row["path"] for row in manifest["accepted"]]
 
     out_l2 = os.path.join(args.out_root, args.night, "mask_gaia")
     os.makedirs(out_l2, exist_ok=True)
@@ -379,6 +384,9 @@ def main():
 
     # Sort by filename for stable logs
     results.sort(key=lambda r: r["file"])
+    failures = [r for r in results if r['status'] not in ('ok', 'empty_after_prefilter', 'rejected_high_residual')]
+    if failures:
+        raise RuntimeError('Gaia masking incomplete: ' + str(failures))
 
     n_ok = sum(r["status"] == "ok" for r in results)
     n_empty = sum(r["status"] == "empty_after_prefilter" for r in results)

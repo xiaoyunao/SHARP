@@ -33,7 +33,7 @@ plt.rcParams["font.family"] = "DejaVu Serif"
 plt.rcParams["font.size"] = 13
 warnings.filterwarnings("ignore", category=FITSFixedWarning)
 
-FIELD_RE = re.compile(r"OBJ_MP_(\d{4})_\d+\.fits\.gz$")
+FIELD_RE = re.compile(r"(?:OBJ_)?(.+?)(?:_[grizGRIZW])?_\d+(?:_cat)?\.fits(?:\.gz)?$")
 
 
 def parse_args() -> argparse.Namespace:
@@ -44,6 +44,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--survey-history", default="/pipeline/xiaoyunao/survey/runtime/history/exposure_history.fits")
     parser.add_argument("--survey-footprints", default="/pipeline/xiaoyunao/survey/footprints/survey_fov_footprints_with_visibility.fits")
     parser.add_argument("--survey-plan", default=None)
+    parser.add_argument('--science-manifest',default=None)
     parser.add_argument("--all-matched-path", default="/pipeline/xiaoyunao/known_asteroid/runtime/history/all_matched_asteroids.fits")
     parser.add_argument("--top-gif-count", type=int, default=5)
     parser.add_argument("--gif-size", type=int, default=280)
@@ -120,7 +121,7 @@ def matched_paths(processed_root: Path, night: str) -> tuple[Path, Path, Path]:
 
 def build_observed_fields(l1_dir: Path) -> set[str]:
     observed: set[str] = set()
-    for path in sorted(l1_dir.glob("OBJ_MP_*.fits.gz")):
+    for path in sorted(l1_dir.glob("OBJ_*.fits*")):
         match = FIELD_RE.fullmatch(path.name)
         if match:
             observed.add(match.group(1))
@@ -437,7 +438,7 @@ def plot_field_yield_map(footprints: pd.DataFrame, nightly: Table, out_path: Pat
     df = nightly.to_pandas()
     if "source_file" in df.columns:
         df["source_file"] = df["source_file"].map(clean_text)
-    df["field_id"] = df["source_file"].str.extract(r"OBJ_MP_(\d{4})_")
+    df["field_id"] = df["source_file"].map(lambda name: FIELD_RE.fullmatch(name).group(1) if FIELD_RE.fullmatch(name) else None)
     yield_map = df.dropna(subset=["field_id"]).groupby("field_id").size()
 
     fig = plt.figure(figsize=(15, 8.5))
@@ -477,7 +478,7 @@ def plot_field_yield_map(footprints: pd.DataFrame, nightly: Table, out_path: Pat
 
 def load_slew_series(header_dir: Path, readout_seconds: float) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     rows: list[tuple[pd.Timestamp, float, float, float]] = []
-    for path in sorted(header_dir.glob("OBJ_MP_*.fits.gz")):
+    for path in sorted(header_dir.glob("OBJ_*.fits*")):
         try:
             hdr = fits.getheader(path, ext=1)
             start = clean_text(hdr.get("DATE-OBS") or hdr.get("OBS_DATE") or hdr.get("DATE"))
@@ -579,7 +580,8 @@ def build_gifs(tbl: Table, l1_dir: Path, out_dir: Path, night: str, top_n: int, 
     grouped: dict[str, list[dict[str, object]]] = defaultdict(list)
     for row in tbl:
         name = clean_text(row["name"])
-        fits_name = clean_text(row["source_file"]).replace("_cat.fits.gz", ".fits.gz")
+        from targeted_observing.catalog_names import image_name
+        fits_name = image_name(clean_text(row['source_file']))
         grouped[name].append(
             {
                 "mjd": float(row["MJD"]),
@@ -674,8 +676,27 @@ def main() -> None:
     all_tbl = Table.read(all_path)
 
     plan_path = Path(args.survey_plan) if args.survey_plan else Path(f"/pipeline/xiaoyunao/survey/runtime/plans/{night}_plan.json")
-    footprints = Table.read(Path(args.survey_footprints)).to_pandas()
-    history = Table.read(Path(args.survey_history)).to_pandas()
+    if args.science_manifest:
+        from targeted_observing.science_manifest import load
+        from targeted_observing.fixed_fields import from_tan
+        manifest=load(args.science_manifest)
+        grouped={}
+        for r in manifest['accepted']:
+            match=FIELD_RE.fullmatch(r['file'])
+            if match:grouped.setdefault(match.group(1),[]).append(r)
+        cells=[]
+        for name,rows in grouped.items():
+            ra=float(np.rad2deg(np.angle(np.mean(np.exp(1j*np.deg2rad([r['ra_deg'] for r in rows])))))%360)
+            dec=float(np.median([r['dec_deg'] for r in rows]))
+            x,y=from_tan(ra,dec,[-1.48,1.48,1.48,-1.48],[-1.48,-1.48,1.48,1.48])
+            cell=dict(field_id=name,center_ra=ra,center_dec=dec)
+            for i in range(4):cell.update({f'corner_ra_{i+1}':x[i],f'corner_dec_{i+1}':y[i]})
+            cells.append(cell)
+        footprints=Table(rows=cells).to_pandas()
+        history=Table({'field_id':list(grouped),'exposure_count':np.zeros(len(grouped),dtype=int)}).to_pandas()
+    else:
+        footprints = Table.read(Path(args.survey_footprints)).to_pandas()
+        history = Table.read(Path(args.survey_history)).to_pandas()
     footprints["field_id"] = footprints["field_id"].astype(str).str.zfill(4)
     history["field_id"] = history["field_id"].astype(str).str.zfill(4)
     planned_fields = load_planned_fields(plan_path)

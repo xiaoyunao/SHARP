@@ -14,7 +14,7 @@ from .catalog import interpolate
 from .fixed_fields import tan_xy, from_tan, unit_vectors
 
 ROOT = Path(__file__).resolve().parent / 'data/shared_fields_20261116'
-NAME = re.compile(r'(MP|TJNL4|TJNL5)_([0-9]{4})')
+NAME = re.compile(r'(MP|TJNL4|TJNL5|FOLLOW)_([0-9]{4})')
 
 
 class SharedFields:
@@ -36,7 +36,7 @@ class SharedFields:
         self.tree = cKDTree(unit_vectors(self.table['center_ra'], self.table['center_dec']))
 
     def name(self, prefix, field_id):
-        if prefix not in ('MP', 'TJNL4', 'TJNL5') or field_id not in self.by_id:
+        if prefix not in ('MP', 'TJNL4', 'TJNL5', 'FOLLOW') or field_id not in self.by_id:
             raise ValueError('Expected a program prefix and a four-character shared ID')
         return prefix + '_' + field_id
 

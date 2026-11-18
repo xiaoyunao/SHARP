@@ -11,6 +11,9 @@ from pathlib import Path
 
 import numpy as np
 from astropy.table import Table
+from astropy.io import fits
+from targeted_observing.catalog_names import catalog_path
+from targeted_observing.unknown_pipeline.exposure_timing import header_mid_mjd
 
 
 TRK_SUB_RE = re.compile(r"^[-A-Za-z0-9_]{1,7}$")
@@ -286,8 +289,7 @@ def write_filtered_fits(path: str, source_fits: str, kept_rows: list[dict[str, o
 
 
 def load_detection_row(processed_root: Path, night: str, image_name: str, obj_id: int) -> dict[str, float] | None:
-    cat_name = image_name.replace(".fits.gz", "_cat.fits.gz")
-    path = processed_root / night / "L2" / cat_name
+    path = catalog_path(processed_root,night,image_name)
     if not path.exists():
         return None
     table = Table.read(path)
@@ -297,10 +299,16 @@ def load_detection_row(processed_root: Path, night: str, image_name: str, obj_id
     if len(match) == 0:
         return None
     row = match[0]
-    required = ["MJD", "RA_Win", "DEC_Win", "RAErr_Win", "DECErr_Win", "Mag_Aper4", "MagErr_Aper4"]
+    required = ["RA_Win", "DEC_Win", "RAErr_Win", "DECErr_Win", "Mag_Aper4", "MagErr_Aper4"]
     if any(col not in table.colnames for col in required):
         return None
     out = {col: float(row[col]) for col in required}
+    with fits.open(path,memmap=False) as hdus:
+        header=hdus[0].header.copy();header.extend(hdus[1].header,update=True)
+    mid=header_mid_mjd(header)
+    if mid is None:return None
+    out['MJD']=mid
+    out['physical_filter']=str(header.get('FILTER',header.get('CHANNEL',''))).strip().lower()
     for optional in ("Flux_Aper4", "FluxErr_Aper4"):
         if optional in table.colnames:
             out[optional] = float(row[optional])
@@ -390,7 +398,7 @@ def build_obs_rows(
                     "astCat": args.astcat,
                     "mag": f"{mag:.3f}",
                     "rmsMag": f"{rms_mag:.3f}",
-                    "band": args.band,
+                    "band": det['physical_filter'] if det.get('physical_filter') in ('g','r','i','z') else args.band,
                     "photCat": args.photcat,
                     "logSNR": compute_logsnr(det.get("Flux_Aper4"), det.get("FluxErr_Aper4")),
                 }
@@ -554,4 +562,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit("Retired server action in v2; use the website. Existing library exports remain available for local review packages.")

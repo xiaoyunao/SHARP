@@ -1,1 +1,2 @@
-0 9 * * * cd /pipeline/xiaoyunao && /bin/bash /pipeline/xiaoyunao/survey/run_daily.sh
+0 12 * * * cd /pipeline/xiaoyunao && /home/smtpipeline/Softwares/miniconda3/bin/python -u -m targeted_observing.server_service daily
+* * * * * cd /pipeline/xiaoyunao && /home/smtpipeline/Softwares/miniconda3/bin/python -u -m targeted_observing.server_service tick

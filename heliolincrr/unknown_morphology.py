@@ -22,6 +22,7 @@ import tempfile
 import numpy as np
 from astropy.io import fits
 from astropy.table import Table
+from targeted_observing.catalog_names import catalog_path
 from scipy.ndimage import map_coordinates, shift
 from scipy.optimize import least_squares
 from scipy.spatial import cKDTree
@@ -97,7 +98,7 @@ def detection_keys(row: dict) -> list[tuple[str, int]]:
         raise ValueError('Inconsistent or fewer than three observations')
     if len(set(names)) != n or len(set(times)) != n or not np.isfinite(times).all():
         raise ValueError('Duplicate exposure/epoch or nonfinite epoch')
-    if any(Path(name).name != name or not name.endswith('.fits.gz') for name in names):
+    if any(Path(name).name != name or not name.endswith(('.fits','.fits.gz')) for name in names):
         raise ValueError('Invalid image name')
     return list(zip(names, ids))
 
@@ -129,7 +130,7 @@ def numeric(table: Table, name: str) -> np.ndarray:
 
 def catalog_frame(task) -> dict:
     root, night, image_name, objids = task
-    path = Path(root) / night / 'L2' / image_name.replace('.fits.gz', '_cat.fits.gz')
+    path = catalog_path(root,night,image_name)
     output = {str(oid): {'image_name': image_name, 'objID': oid,
                         'catalog_status': 'unavailable', 'catalog_bad': None} for oid in objids}
     before = signature(path)
@@ -232,7 +233,7 @@ def fit_stamp(stamp, x_offset, y_offset, gain, template):
 def psf_frame(task) -> dict:
     root, night, image_name, objids = task
     l1 = Path(root) / night / 'L1' / image_name
-    l2 = Path(root) / night / 'L2' / image_name.replace('.fits.gz', '_cat.fits.gz')
+    l2 = catalog_path(root,night,image_name)
     inputs = [signature(p) for p in (l1, l2)]
     output = {str(oid): {'psf_status': 'unavailable', 'psf_bad': None} for oid in objids}
     try:

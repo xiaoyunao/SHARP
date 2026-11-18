@@ -25,7 +25,15 @@ def load_state(path: Path) -> dict[str, int]:
 
 def save_state(path: Path, state: dict[str, int]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(state, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    temporary=path.with_suffix('.tmp.json')
+    temporary.write_text(json.dumps(state, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    temporary.replace(path)
+
+
+def write_table(table,path):
+    temporary=path.with_suffix('.tmp.fits')
+    table.write(temporary,overwrite=True)
+    temporary.replace(path)
 
 
 def iter_matched_files(processed_root: Path) -> list[tuple[str, Path]]:
@@ -59,7 +67,7 @@ def rebuild_all(all_path: Path, state_path: Path, matched_files: list[tuple[str,
     if tables:
         combined = vstack(tables, metadata_conflicts="silent")
         all_path.parent.mkdir(parents=True, exist_ok=True)
-        combined.write(all_path, overwrite=True)
+        write_table(combined,all_path)
     save_state(state_path, state)
 
 
@@ -67,11 +75,12 @@ def append_one(all_path: Path, state_path: Path, night: str, matched_path: Path,
     new_table = read_with_night(matched_path, night)
     if all_path.exists():
         old = Table.read(all_path, memmap=True)
+        old=old[np.asarray(old['source_night']).astype(str)!=night]
         combined = vstack([old, new_table], metadata_conflicts="silent")
     else:
         combined = new_table
     all_path.parent.mkdir(parents=True, exist_ok=True)
-    combined.write(all_path, overwrite=True)
+    write_table(combined,all_path)
     state[night] = len(new_table)
     save_state(state_path, state)
 
@@ -107,6 +116,13 @@ def main() -> None:
     if need_rebuild:
         rebuild_all(all_path, state_path, matched_files)
         return
+
+    # Reprocessing can change timing/matches without changing the number of rows.
+    if args.night and args.night in state:
+        for night,path in matched_files:
+            if night==args.night:
+                append_one(all_path,state_path,night,path,state)
+                break
 
     changed = False
     for night, path in matched_files:

@@ -2,6 +2,15 @@
 
 ## 2026-11-18
 
+- 后随截止补充：按用户最新要求，17:00（若已发布计划更早启动则提前）停止接收当夜新请求；之后保留当地时分转下一夜，午夜新命令也不改已开拍夜。server_common/followup/service/publish/defaults与运行说明、PLAN同步，启动时刻硬阻断发布，截止前待办仅允许开拍前收尾。补5项边界/早开拍/凌晨/SFTP/冻结/慢渲染测试，画图后再检查并预留30秒发布预算；当前overhead核实读出18秒、切片24秒、初始slew90秒、原两轴sqrt/max公式不变。三候选服务器隔离冲突测试通过，两源准点、一源+391秒，MP cadence通过；本地39项/服务器13项通过，线上tick正常；未投真实队列。
+
+- 服务器v2上线（用户后续授权）：默认SSH盘点cron、进程、公开路径并取源码快照，与本地有7项差异先同步。v1三目录完整tar归档`/pipeline/xiaoyunao/v1/20261118_124436`，23767项/19953715200字节，SHA256 `6a673a03ee1b6c42c496e76f7acb6e992a137411b8541785e5d1b71fffb303b5`；保存原cron/停止版、发布列表及外部提交账本。检查`/pipeline`软链接后按逻辑/解析两种路径核实旧09:00及两条reboot停用；不动原始测光、dashboard、EP。
+- 改动：新增targeted_observing/server_{common,followup,history,scheduler,publish,pipeline,service}、science_manifest/catalog_names、部署/归档/cron脚本与配置、冻结1063对象科学/周期先验；原三目录入口转v2，unknown submit/15夜/自主后随入口退役，修正实际中点/滤镜/宽源名与known历史同样行数重处理替换。文档SERVER_V2_20261118.md、AGENTS/README/PLAN/GOAL/PROJECT_MEMORY说明最新授权；main不变。
+- 排程/网站：4397共用场，FOLLOW_dddd，JSON按观测夜隔离、逐次持久事件及全队列重排；无请求不自动生后随。保护已开始前缀/后随块和YSO剩余配额；动态TJN依据实拍3029曝光、35候选/260有效r点及cadence/基线/相位，不以计划计数。正式11/18 405帧（EV47/TJN173/YSO138/AM47），17:42–次日06:08:05，geometry/留场/MP复访通过，单段且script两处/runtime一处TXT SHA一致，图件原路径可读。
+- 发现/修复：旧TJN写死场与时钟；旧glob漏非MP；长曝光固定+15秒；wrong_night空已知却跑unknown；旧FITS编号masked值中断历史；同样行数重处理未刷新全量known；尾部同场填充破坏晨昏cadence。现使用同manifest/实际中点/真实历史，空错误夜明确false，晨昏保留独立验证序列；无安全填充则明确分段等待，不杜撰WAIT。开拍后追加3候选测试旧后随不重拍、新源偏8秒、YSO138不重复。
+- 命令/验证：git状态/fetch/历史、SSH cron/ps/squeue/源码SHA、archive_v1、install_server_v2与activate_server_v2；本地39项针对性+14项known导出质量回归通过，后者传输为mock无真实MPC请求；py_compile/bash -n/diff --check通过。Slurm265321/265325隔离真实9帧（MP/TJN/YSO各3）known→unknown→review通过，unknown=0；265323验证五张known图/五GIF；历史seed265324完成。MPC hold在；11/17现存旧L2被v2写no_valid/known_complete=false，不称新夜已处理。
+- 自动化/后续：12:00 daily、每分钟tick、reboot恢复安装；Asia/Shanghai系统时区及分钟cron自然触发已核实。网站提交命令`/pipeline/xiaoyunao/v2/submit_followup.sh`、状态/分段协议见运行说明；第一份当夜新列表已发布。下一步观察首次12点自然触发/真实新数据与网站接入，联系人后续确认；不自动恢复MPC、不重跑全年。本轮证据在outputs/v2_rollout_20261118，不入git；保留其他对话未提交的原始图恢复记录。
+
 - v2首阶段：读11/03持续晨昏/整夜会话、11/11固定场及11/16网格对话，GitHub连接器读专用分支README/RC1说明。最新用户要求YSO独立；MP/TJN同后缀同中心，未来服务器仅全科学数据单夜known/unknown，后随/跨夜/unknown上报迁网站，MPC仍暂停；未来允许服务器v1归档，本轮不实施。
 - 改动：targeted_observing/data/shared_fields_20261116冻结4397场FITS与TAN manifest（SHA c6a8894c…2eb213，同原交付）；新增shared_fields/shared_night及6项测试，offline_twilight.make_plan增加可选网格参数、默认旧行为保留。更新AGENTS/README/GOAL/PROJECT_MEMORY/PLAN及V2_FIELDS_AND_DAILY_LISTS_20261118.md，不改main/生产三目录，无SSH。
 - 发现：旧整夜入口写死TJN606/400/436与21:52/01:40，只是试验拼接；正式日调度须接活动场/YSO预约/预算及最终重放。新网格MP保留中心黄纬±20°共1848候选。2357名义覆盖内但0.16°质量留边不足，不能直接继承旧科学结论。pipeline筛选需同一夜级科学manifest，不能只改MP glob；known/unknown夜次必须一致。

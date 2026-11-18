@@ -1,3 +1,7 @@
+# 2026-11-18 v2 更新
+
+当前由`targeted_observing.server_pipeline`处理同一夜级科学L2清单，覆盖MP/TJN/YSO/FOLLOW/其他科学任务，真实曝光中点进入epoch及MJD；MPC继续暂停。known未来的自动上报需联系人确认，unknown仅网站报。原L4和plots路径保持，统一日任务12点启动。详见[服务器v2运行说明](../targeted_observing/docs/SERVER_V2_20261118.md)；下方旧独立cron与MP-only命令不再是当前自动入口。
+
 # Known Asteroid Pipeline v2
 
 This directory contains the server-oriented known-object pipeline for

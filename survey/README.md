@@ -1,3 +1,7 @@
+# 2026-11-18 v2 更新
+
+旧整晚黄道StripScheduler已退出自动调度，`run_daily.sh`兼容入口转到`targeted_observing.server_service plan`。新模式为共享4397场的晨昏MP/TJN及独立YSO，每日12点生成，网站`FOLLOW_dddd`请求触发全队列重排；原script/runtime/plans/plots路径保持。v1已归档并停用自动入口，main不变。详见[服务器v2说明](../targeted_observing/docs/SERVER_V2_20261118.md)。以下为历史生产说明。
+
 # survey
 
 服务器部署版每日调度程序。

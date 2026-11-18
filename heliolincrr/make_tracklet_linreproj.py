@@ -160,28 +160,11 @@ def filter_edge_shell_artifacts(tab, edge_shell_min=300.0, edge_shell_max=500.0)
 # ============================================================
 
 def _header_mid_mjd(hdr):
-    expsta = hdr.get("EXPSTA")
-    if expsta:
-        try:
-            return float((Time(str(expsta), format="isot", scale="utc").mjd) + 15.0 / 86400.0)
-        except Exception:
-            pass
-
-    date_obs = hdr.get("DATE-OBS")
-    if date_obs:
-        try:
-            return float((Time(str(date_obs), format="isot", scale="utc").mjd) + 15.0 / 86400.0)
-        except Exception:
-            pass
-
-    mjd = hdr.get("MJD")
-    if mjd is not None:
-        try:
-            return float(mjd) + 15.0 / 86400.0
-        except Exception:
-            pass
-
-    return None
+    try:
+        from targeted_observing.unknown_pipeline.exposure_timing import header_mid_mjd
+    except ImportError:  # Direct script entry point inside this isolated prototype.
+        from targeted_observing.unknown_pipeline.exposure_timing import header_mid_mjd
+    return header_mid_mjd(hdr)
 
 
 def image_center_and_radius(fn):
@@ -199,7 +182,12 @@ def image_center_and_radius(fn):
 
             ra0 = hdr.get("CEN_RA", hdr.get("CRVAL1"))
             dec0 = hdr.get("CEN_DEC", hdr.get("CRVAL2"))
-            mid_mjd = _header_mid_mjd(hdr)
+            # Timing often lives in the primary HDU while the WCS is in HDU 1.
+            timing_header = hdul[0].header.copy()
+            timing_header.update(hdr)
+            mid_mjd = _header_mid_mjd(timing_header)
+            if mid_mjd is None:
+                raise ValueError(f"Missing or invalid exposure timing: {fn}")
 
             # pixel scale (deg/pix)
             if w.wcs.cd is not None:
@@ -308,7 +296,7 @@ def common_mask_from_group_reproject(files, hdu_index=1, erode_pix=0):
     else:
         # No scipy: do nothing (still works)
         pass
-    
+
     return ref_wcs, common
 
 
@@ -750,10 +738,10 @@ def main():
 
     ap = argparse.ArgumentParser()
     ap.add_argument("night", help="e.g. 20251206")
-    ap.add_argument("--root", default="/pipeline/xiaoyunao/data/heliolincrr")
+    ap.add_argument("--root", required=True, help="Explicit local test data root")
     ap.add_argument("--input-subdir", default="mask_gaia",
                     help="input subdirectory under <root>/<night>/ that contains Gaia-masked L2 catalogs")
-    ap.add_argument("--outdir", default=None)
+    ap.add_argument("--outdir", required=True, help="Explicit local test output directory")
     ap.add_argument("--mag-max", type=float, default=None)
 
     ap.add_argument("--vmin", type=float, default=3.0)
@@ -783,10 +771,16 @@ def main():
     ap.add_argument("--max-tracklets-per-group", type=int, default=100000,
                     help="skip one exposure group if it would produce more than this many tracklets; <=0 disables")
 
+    ap.add_argument("--science-manifest", required=True, help="Validated common night input JSON")
     args = ap.parse_args()
 
     l2 = os.path.join(args.root, args.night, args.input_subdir)
-    files = sorted(glob.glob(os.path.join(l2, "OBJ_MP_*_cat.fits.gz")))
+    from targeted_observing.science_manifest import load
+    manifest = load(args.science_manifest)
+    if manifest["night"] != args.night:
+        raise ValueError("Manifest night mismatch")
+    files = [os.path.join(l2, row["file"]) for row in manifest["accepted"]
+             if os.path.isfile(os.path.join(l2, row["file"]))]
 
     if args.outdir is None:
         outdir = os.path.join(args.root, args.night, "tracklets_linreproj")
