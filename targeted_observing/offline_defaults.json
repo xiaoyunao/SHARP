@@ -8,6 +8,7 @@
   "window_s": 3600,
   "min_footprint_alt_deg": 25,
   "max_elongation_deg": 90,
+  "max_tracking_hour_angle_h": 4.95,
   "readout_s": 18,
   "filter_change_s": 24,
   "initial_slew_s": 90,

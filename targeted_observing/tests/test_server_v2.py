@@ -182,6 +182,34 @@ class V2Contracts(unittest.TestCase):
             check.side_effect=lambda *a:dict(passed=False,errors=['footprint altitude'],samples=1)
             with self.assertRaises(ValueError):twilight.make_plan('2026-11-02',config,grid=([],{}),allow_empty=True)
 
+    def test_shorter_twilight_fallback_keeps_cadence_and_minimum_visits(self):
+        from targeted_observing import offline_twilight as twilight
+        config=twilight.load_config();checked=[]
+        def plan_window(sky,fields,bounds,side,c):
+            return dict(side=side,rows=[] if c['fill_window'] else [{'visit':i} for i in range(3)],fields=[],
+                        reason='test shorter route',window_unix=bounds,reserved_window_unix=bounds)
+        def check(sky,block,c):
+            checked.append(c)
+            return dict(passed=True,errors=[],samples=3)
+        with patch.object(twilight,'setup_iers',return_value={}),patch.object(twilight,'make_sky'),\
+             patch.object(twilight,'night_windows',return_value={'EV':[0,3600],'AM':[10000,13600],'dark_crossings':[3600,10000]}),\
+             patch.object(twilight,'plan_window',side_effect=plan_window),patch.object(twilight,'verify_window',side_effect=check):
+            value=twilight.make_plan('2026-11-02',config,grid=([],{}),allow_empty=True,shorter_fallback=True)
+        self.assertTrue(all(b['shorter_fallback'] for b in value['blocks']))
+        for c in checked:
+            self.assertFalse(c['fill_window']);self.assertEqual(c['minimum_visits'],3)
+            self.assertEqual(c['cadence_min_s'],config['cadence_min_s'])
+            self.assertEqual(c['min_footprint_alt_deg'],config['min_footprint_alt_deg'])
+
+    def test_twilight_selection_rejects_hour_angle_before_final_validation(self):
+        from targeted_observing.offline_twilight import WindowGeometry,load_config
+        g=WindowGeometry.__new__(WindowGeometry);g.bounds=[0,3600];g.times=np.array([0,1800,3600])
+        g.fields=[dict(radius_deg=2.1)];g.c=load_config();shape=(1,3)
+        g.m=dict(alt=np.full(shape,50.),moon_sep=np.full(shape,120.),elong=np.full(shape,50.),
+                 moon_alt=np.full(3,-30.),moon_fraction=np.zeros(3),sun_alt=np.full(3,-20.))
+        g.ha=np.full(shape,4.8);self.assertTrue(g.valid(0,0,3600))
+        g.ha=np.full(shape,5.1);self.assertFalse(g.valid(0,0,3600))
+
     def test_science_inputs_include_yso_and_follow_but_reject_stale_and_focus(self):
         with tempfile.TemporaryDirectory() as folder:
             c=self.config(folder);root=Path(c['processed_root']);l2=root/'20261118/L2'

@@ -8,6 +8,10 @@
 
 生产入口、JSON格式、固定公开路径、历史账本与验证记录见 [服务器v2运行与网站交接](docs/SERVER_V2_20261118.md)。下方纯本地入口和11月早期试观测说明保留供复现，不再代表服务器当前主入口。
 
+## v2 全年回放（2026-11-18）
+
+`annual_v2.py`在临时Slurm工作区复用生产调度，逐情景因果反馈、检测和周期注入恢复；`annual_v2_delivery.py`核对全年并制作固定log曝光色标动图。模拟专用Numba加速与依赖不进入生产链路。方法、输入、产额口径与清理见[全年说明](docs/V2_ANNUAL_20261118.md)。
+
 ## v2 共用天区接入（2026-11-18）
 
 当前新要求以 [天区冻结与每日列表说明](docs/V2_FIELDS_AND_DAILY_LISTS_20261118.md) 为准：MP/TJN 共用 4397 场及四位后缀，执行名为 `MP_dddd` / `TJNL4_dddd` / `TJNL5_dddd`，YSO 继续独立。`shared_fields.py` 提供身份查询、实测代表性 TAN 成员匹配和晨昏候选适配；冻结 FITS 在 `data/shared_fields_20261116/`。

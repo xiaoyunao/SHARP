@@ -126,6 +126,8 @@ class WindowGeometry:
         self.fields=fields;self.bounds=bounds;self.c=c
         self.times=np.arange(bounds[0],bounds[1]+c['late_tolerance_s']+61,60.)
         self.m=sky.metrics([f['ra_deg'] for f in fields],[f['dec_deg'] for f in fields],self.times)
+        lst=Time(self.times,format='unix').sidereal_time('apparent',longitude=sky.location.lon).deg
+        self.ha=((lst[None,:]-np.asarray([f['ra_deg'] for f in fields])[:,None]+180)%360-180)/15
 
     def at(self, i, t):
         if t < self.times[0]-.001 or t > self.times[-1]+.001:
@@ -146,10 +148,12 @@ class WindowGeometry:
         phase=np.interp(times,self.times,s['moon_fraction'])
         elong=np.interp(times,self.times,s['elong'][i])
         sun=np.interp(times,self.times,s['sun_alt'])
+        hour_angle=np.interp(times,self.times,self.ha[i])
         # 0.15deg also guards interpolation and between-sample rotation.
         return bool(np.all(alt-rad>.15+self.c['min_footprint_alt_deg']) and
                     np.all((moon_alt<-.15)|(moon-rad>np.where(phase>=.75,40,30)+.15)) and
                     np.all(elong<=self.c['max_elongation_deg']) and
+                    np.all(abs(hour_angle)<self.c.get('max_tracking_hour_angle_h',4.95)) and
                     np.all(sun<=self.c['sun_start_deg']+.003))
 
 
@@ -189,6 +193,7 @@ def candidate_routes(g, c):
     moon_ok=(g.m['moon_alt'][0]<-.15)|(g.m['moon_sep'][:,0]-radius>
               (40 if g.m['moon_fraction'][0]>=.75 else 30)+.15)
     available=np.flatnonzero((alt[:,0]-radius>c['min_footprint_alt_deg']+.15)&moon_ok&
+                             (abs(g.ha[:,0])<c.get('max_tracking_hour_angle_h',4.95))&
                              (elong.min(axis=1)<c['max_elongation_deg']))
     available=sorted(available,key=lambda i:float(elong[i].mean()))[:180]
     if not available:return []
@@ -277,6 +282,7 @@ def plan_window(sky, fields, bounds, side, c):
         g.fields=fields;g.c=c;g.bounds=[bounds[0]+delay,bounds[1]]
         keep=full.times>=g.bounds[0]
         g.times=full.times[keep];g.m={k:v[...,keep] for k,v in full.m.items()}
+        g.ha=full.ha[...,keep]
         alternatives.append((g,candidate_routes(g,c)))
     for cycles in range(c['visits'],c['minimum_visits']-1,-1):
         feasible=[]
@@ -375,14 +381,21 @@ def verify_window(sky, block, c):
             'scope':'nominal and configured timing envelope, supplied footprint enclosing cap'}
 
 
-def make_plan(day, c, grid=None, allow_empty=False):
+def make_plan(day, c, grid=None, allow_empty=False, shorter_fallback=False):
     """Plan with the legacy grid by default, or an explicit (fields, provenance)."""
     eop=setup_iers(BASE/'cache'/c['iers_file']);sky=make_sky()
     fields,provenance=load_grid() if grid is None else grid
     windows=night_windows(sky,day,c)
     blocks=[plan_window(sky,fields,windows[side],side,c) for side in ('EV','AM')]
     for block in blocks:
-        block['verification']=verify_window(sky,block,c)
+        verification_config=c
+        if shorter_fallback and not block['rows']:
+            shorter={**c,'fill_window':False,'start_offsets_s':c.get('shorter_start_offsets_s',[0,300,600,900,1200,1500,1800])}
+            fallback=plan_window(sky,fields,windows[block['side']],block['side'],shorter)
+            if fallback['rows']:
+                block.update(fallback,full_hour=False,shorter_fallback=True)
+                verification_config=shorter
+        block['verification']=verify_window(sky,block,verification_config)
         if allow_empty and not block['rows'] and block['verification']['errors']==['no full-hour schedule']:
             block['verification']={**block['verification'],'passed':True,'errors':[],
                                    'skipped':True,'skip_reason':block.get('reason','No full-hour route found')}

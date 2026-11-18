@@ -211,9 +211,10 @@ def final_validation(rows,sky,catalog,config,tracks):
 def build(day,config,requests,now=None,previous_plan=None):
     catalog=SharedFields();c=twilight_config()
     setup_iers(BASE/'cache'/config['iers_file']);sky=make_sky()
-    twilight=make_plan(day,c,grid=catalog.twilight_grid(),allow_empty=True)
-    begin=twilight['blocks'][0]['window_unix'][0];end=twilight['blocks'][1]['window_unix'][1]
+    twilight=make_plan(day,c,grid=catalog.twilight_grid(),allow_empty=True,shorter_fallback=True)
+    begin=twilight['blocks'][0]['reserved_window_unix'][0];end=twilight['blocks'][1]['reserved_window_unix'][1]
     ev_end=begin+3600;am_start=end-3600
+    tjn_end=min(end,twilight['dark_crossings'][1])
     tracks=load_tracks();clouds=cloud_labels()
     evidence=json.loads((BASE/'data/tjn_queue_evidence_20261118.json').read_text())['objects']
     history=states(config,{k:v['periods_h'] for k,v in evidence.items()})
@@ -304,6 +305,8 @@ def build(day,config,requests,now=None,previous_plan=None):
         timeline.wait_to(now,'replan begins after current time; past time is not rescheduled')
     ev_fixed=False
     if not prefix and timeline.time==begin and not any(e['mode']=='FOLLOW' and e['setup']<ev_end for e in events):
+        if twilight['blocks'][0]['rows']:
+            timeline.wait_to(twilight['blocks'][0]['rows'][0]['overhead_start_unix'],'shorter EV starts later')
         for r in twilight['blocks'][0]['rows']:
             timeline.append({**r,'field_id':'MP_'+r['field_id'][2:]},'r',r['exposure_s'],'EV')
         ev_fixed=bool(twilight['blocks'][0]['rows'])
@@ -326,8 +329,8 @@ def build(day,config,requests,now=None,previous_plan=None):
             t=timeline.time
             mode='EV' if t<ev_end else 'AM' if t>=am_start else 'TJN'
             if mode=='EV' and ev_fixed:mode='TJN'
-            if mode=='AM' and am_fixed:
-                break  # The fixed AM event owns the whole verified sequence.
+            if mode=='AM' and (am_fixed or not twilight_routes['AM']):mode='TJN'
+            if mode=='EV' and not twilight_routes['EV']:mode='TJN'
             if mode in ('EV','AM'):
                 available=twilight_routes[mode]
                 if not available:
@@ -339,9 +342,9 @@ def build(day,config,requests,now=None,previous_plan=None):
                 seconds=exposure(m['sun_alt'][0],m['alt'][0,0],m['elong'][0,0],m['moon_fraction'][0],m['moon_sep'][0,0],m['moon_alt'][0],c)
             else:
                 if not current or t>=campaign_end:
-                    horizon=min(deadline,am_start,t+config['tjn_campaign_s'])
+                    horizon=min(deadline,tjn_end,t+config['tjn_campaign_s'])
                     if horizon-t<300:
-                        horizon=min(deadline,am_start)
+                        horizon=min(deadline,tjn_end)
                     current=select_fields(catalog,tracks,clouds,geometry,t+224,horizon,
                                           history,evidence,planned,config,stars) if horizon>t+224 else []
                     campaign_end=horizon;dwell=0;route_index=0
@@ -353,12 +356,12 @@ def build(day,config,requests,now=None,previous_plan=None):
                                         fields=[f['field_id'] for f in current],dwell_frames=campaign_dwell,
                                         modeled_largest_gap_s=(len(current)-1)*campaign_dwell*cycle_frame+route_s+cycle_frame))
                 if not current:
-                    next_time=min(deadline,am_start,t+300)
+                    next_time=min(deadline,t+300)
                     if not wait_until(next_time,'no unfinished safe TJN field for this interval'):break
                     campaign_end=0;continue
                 f=current[(dwell//campaign_dwell)%len(current)];dwell+=1;targets=f['targets']
                 seconds=config['tjn_exposure_s']
-            turn,change=timeline.overhead(f,'r');limit=min(deadline,ev_end if mode=='EV' else am_start if mode=='TJN' else end)
+            turn,change=timeline.overhead(f,'r');limit=min(deadline,ev_end if mode=='EV' else tjn_end if mode=='TJN' else end)
             if next_event is not None:
                 # Stop filling when the next event can start at its requested shutter time.
                 nturn=movement(f,next_event['field']);nchange=config['filter_change_s'] if next_event['band']!='r' else 0
@@ -429,5 +432,7 @@ def build(day,config,requests,now=None,previous_plan=None):
                 twilight_preemptions=any(e['mode']=='FOLLOW' and (e['setup']<ev_end or e['end']>am_start) for e in events),
                 execution_update_required=bool(now is not None and now>begin and previous_plan),
                 protected_prefix_frames=len(prefix),
+                twilight_blocks=[dict(side=b['side'],frames=len(b['rows']),shorter_fallback=b.get('shorter_fallback',False),
+                                      skipped=not bool(b['rows']),reason=b['reason']) for b in twilight['blocks']],
                 requires_timed_segments=any(g['end_unix']-g['start_unix']>1 for g in timeline.gaps),
                 execution_note='Static eight-column TXT has no WAIT or live cutoff. Segment start times must be honoured; revision does not restart telescope execution.')
