@@ -14,9 +14,18 @@
 - 仓库中的 `survey/`、`known_asteroid/`、`heliolincrr/` 默认分别对应上述服务器目录。
 - 后续调试、重构和参数调整，都应优先保持与服务器行为一致。
 
-## 四类观测共用天区（2026-11-16 用户确认）
+## v2 方向与首阶段范围（2026-11-18 用户更新）
 
-- 今后小行星巡天、YSO 监测、TJN（木星特洛伊）监测和超新星监测共用兴隆 18° 筛选后的赤道平行网格。基准表为 `outputs/equatorial_allsky_20261116/equatorial_footprints_xinglong18.fits`，共 4397 场。
+- 新策略为晨昏近太阳 MP + TJN + YSO。**YSO 例外，继续独立固定场**；此要求覆盖 11/16 的 YSO 共用网格约定。MP、TJN 及后续其他共用场任务采用下述 4397 场。
+- 共用场名为 `MP_dddd`、`TJNL4_dddd`、`TJNL5_dddd`；同一四位后缀必须对应相同 ICRS 中心。不得继续给 TJN 加 `MP_` 兼容前缀，不得直接沿用旧场后缀解释新位置。
+- 冻结输入已纳入 `targeted_observing/data/shared_fields_20261116/`，与 11/16 用户选定 FITS 字节一致。YSO 保留 `YSO_ORI` / `YSO_CYG`。
+- 未来服务器 v2 只做单夜已知提取和未知搜寻，输入覆盖全部合格科学数据（含 YSO/其他任务），不靠 `MP` 或四位数字通配符决定处理范围。服务器后随、跨夜关联和 unknown 自动上报迁到网站；单夜内轨迹关联保留。MPC 仍暂停；未来 known 服务器自动报，unknown 网站报，联系人待用户确认。
+- 用户允许以后将服务器当前整套流程归档为 `/pipeline/xiaoyunao/` 下的 v1，新流程称 v2；这是对下方禁止平行版本目录的特定归档例外，不要求本地复制生产目录。
+- **本轮只做本地天区冻结、生成链路核查与接入验证，不连接服务器、不归档/部署，不修改 main 或三个生产镜像目录。** 每日整夜调度接入进度和下一步见 `targeted_observing/docs/V2_FIELDS_AND_DAILY_LISTS_20261118.md`。
+
+## 共用天区（2026-11-16 确认，11-18 更新 YSO 例外）
+
+- 今后小行星巡天、TJN（木星特洛伊）监测和超新星监测共用兴隆 18° 筛选后的赤道平行网格；YSO 除外。基准表为 `targeted_observing/data/shared_fields_20261116/equatorial_footprints_xinglong18.fits`（原交付在 `outputs/equatorial_allsky_20261116/`），共 4397 场。
 - 场身份由该表的 `field_id` 与 ICRS `center_ra`、`center_dec` 共同确定。`field_id` 是四字符文本 `0001`–`4397`（FITS `4A`，无前缀）。迁移旧任务时用目标坐标或所需覆盖范围重新匹配，历史编号需连同原天区表解释。
 - 各任务可以选择各自的场子集和观测节奏，选中的场使用共享表的编号和中心。文件校验、复现命令和 TAN 审计见 [README 的共用天区说明](README.md#四类观测共用天区)。
 - 这次确认适用于后续各任务更新。现有任务配置、已生成计划和服务器生产部署仍以各自更新记录为准。

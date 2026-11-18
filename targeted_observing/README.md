@@ -1,5 +1,16 @@
 # 晨昏搜寻 + 木星特洛伊监测（本地研发模式）
 
+## v2 共用天区接入（2026-11-18）
+
+当前新要求以 [天区冻结与每日列表说明](docs/V2_FIELDS_AND_DAILY_LISTS_20261118.md) 为准：MP/TJN 共用 4397 场及四位后缀，执行名为 `MP_dddd` / `TJNL4_dddd` / `TJNL5_dddd`，YSO 继续独立。`shared_fields.py` 提供身份查询、实测代表性 TAN 成员匹配和晨昏候选适配；冻结 FITS 在 `data/shared_fields_20261116/`。
+
+```bash
+python3 -m targeted_observing.shared_night --date 2026-11-18 \
+  --output targeted_observing/products/shared_grid_probe_20261118
+```
+
+此入口生成新网格晨昏列表与 TJN 候选成员表，**尚非 v2 整夜执行列表**。下方 11/14 及更早段落为历史复现：其旧 MP 网格、`MP_TJL5_...`、独立 TJN RC1 注册表及写死的试验交接时刻不适用于新网格。旧入口保留供复现，不应直接拿来生成 v2 计划。
+
 ## 当前整夜测试：固定TJN + YSO_ORI（2026-11-14）
 
 新模式默认读出／基础开销 **18秒**，换滤镜 **24秒**，slew公式保持原样。`defaults.json`与`offline_defaults.json`统一；整夜重放、尾部填充和时角审查读取同一配置。历史数据/报告/列表保留当时参数，旧晨昏计划须按当前读出及换片配置重新生成后接入。

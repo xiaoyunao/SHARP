@@ -18,12 +18,16 @@
 
 ## 四类观测共用天区
 
-小行星巡天、YSO 监测、TJN（木星特洛伊）监测和超新星监测的后续计划共用
-[兴隆 18° 赤道平行天区表](outputs/equatorial_allsky_20261116/equatorial_footprints_xinglong18.fits)。
+小行星巡天、TJN（木星特洛伊）监测和超新星监测的后续计划共用
+[兴隆 18° 赤道平行天区表](targeted_observing/data/shared_fields_20261116/equatorial_footprints_xinglong18.fits)。
+2026-11-18 更新：**YSO 除外**，保留 `YSO_ORI` / `YSO_CYG` 独立固定场。
 该表含 **4,397 场**，以兴隆纬度 +40.393° 计算，保留指向中心最高仰角至少 18° 的场。
-四类任务按各自目标选择场子集，共用 `center_ra`、`center_dec`（ICRS，单位为度）和
+共用场任务按各自目标选择场子集，共用 `center_ra`、`center_dec`（ICRS，单位为度）和
 四字符 `field_id`（FITS `4A`，`0001`–`4397`，无前缀及旧编号列）。
 迁移既有场时，按目标坐标和所需覆盖范围重新匹配新表。原计划和历史观测中的编号由当时的天区表解释。
+
+执行名使用 `MP_0010`、`TJNL4_0010`、`TJNL5_0010` 等：相同四位后缀对应相同中心；模板场身份使用网格版本和后缀，不使用任务前缀。上述 FITS 已作为冻结科学输入纳入 Git；原 `outputs/` 副本和校验值保持不变。
+首阶段实现、每日列表生成链路及服务器 v2 后续边界见 [v2 天区与日调度说明](targeted_observing/docs/V2_FIELDS_AND_DAILY_LISTS_20261118.md)。
 
 若本地没有产物，从仓库根目录生成并核对 SHA256。
 
@@ -45,7 +49,8 @@ shasum -a 256 outputs/equatorial_allsky_20261116/equatorial_footprints_xinglong1
 ## 新观测模式（本地）
 
 [详细目标与验收](targeted_observing/docs/GOAL.md)、[运行说明](targeted_observing/README.md)、[本地验收结果](targeted_observing/docs/RESULTS.md)。
-新模式提供分块调度、14天固定Trojan场、逐曝光几何验收及三夜反馈模板。默认不导出可执行TXT，不接生产发布与MPC上报。
+新模式提供离线晨昏列表、TJN固定场查询、整夜试观测重放和逐曝光几何验收。
+v2共用网格的晨昏接入已验证，通用整夜调度尚待接入；不接生产发布与MPC上报。
 
 ## 目录结构
 

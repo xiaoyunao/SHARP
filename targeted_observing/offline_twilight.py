@@ -372,11 +372,13 @@ def verify_window(sky, block, c):
             if abs(block['window_unix'][1]-block['window_unix'][0]-3600)>.001:errors.append('hour duration')
             if block['window_unix'][1]-rows[-1]['release_unix']>c['max_tail_gap_s']:errors.append('early stop')
     return {'passed':not errors,'errors':sorted(set(errors)),'samples':len(samples),
-            'scope':'nominal and configured timing envelope, original footprint enclosing cap'}
+            'scope':'nominal and configured timing envelope, supplied footprint enclosing cap'}
 
 
-def make_plan(day, c):
-    eop=setup_iers(BASE/'cache'/c['iers_file']);sky=make_sky();fields,provenance=load_grid()
+def make_plan(day, c, grid=None):
+    """Plan with the legacy grid by default, or an explicit (fields, provenance)."""
+    eop=setup_iers(BASE/'cache'/c['iers_file']);sky=make_sky()
+    fields,provenance=load_grid() if grid is None else grid
     windows=night_windows(sky,day,c)
     blocks=[plan_window(sky,fields,windows[side],side,c) for side in ('EV','AM')]
     for block in blocks:

@@ -2,6 +2,12 @@
 
 ## 2026-11-18
 
+- v2首阶段：读11/03持续晨昏/整夜会话、11/11固定场及11/16网格对话，GitHub连接器读专用分支README/RC1说明。最新用户要求YSO独立；MP/TJN同后缀同中心，未来服务器仅全科学数据单夜known/unknown，后随/跨夜/unknown上报迁网站，MPC仍暂停；未来允许服务器v1归档，本轮不实施。
+- 改动：targeted_observing/data/shared_fields_20261116冻结4397场FITS与TAN manifest（SHA c6a8894c…2eb213，同原交付）；新增shared_fields/shared_night及6项测试，offline_twilight.make_plan增加可选网格参数、默认旧行为保留。更新AGENTS/README/GOAL/PROJECT_MEMORY/PLAN及V2_FIELDS_AND_DAILY_LISTS_20261118.md，不改main/生产三目录，无SSH。
+- 发现：旧整夜入口写死TJN606/400/436与21:52/01:40，只是试验拼接；正式日调度须接活动场/YSO预约/预算及最终重放。新网格MP保留中心黄纬±20°共1848候选。2357名义覆盖内但0.16°质量留边不足，不能直接继承旧科学结论。pipeline筛选需同一夜级科学manifest，不能只改MP glob；known/unknown夜次必须一致。
+- 命令/验证：git status/branch/fetch/log；fetch因GitHub SSL失败，本地起点49859273领先缓存origin10提交，未宣称同步。python3 -m py_compile三模块；unittest shared_fields/offline/full_night/fixed_full_night共26项通过；shared_night --date 2026-11-18真实生成，EV7场47张、AM6场47张逐曝光几何通过，94帧TXT解析与冻结中心回查通过，TAN模型对照与4397中心自包含通过；git diff --check通过。
+- 产物：products/shared_grid_probe_20261118（不入git），TJN全暗夜成员筛选353对象/277场，未筛可见性，不是整夜执行表。剩余/下一步：完成配置化TJN预算、YSO预约和整夜重放；再做全数据单夜pipeline、网站交付与提交拆分；归档部署及联系人后续确认。本轮里程碑仅提交本地输入/代码/文档，不发布列表或上报。
+
 - 旧图入库时间追查：SSH stat/findmnt及collect_file_times.py核对343文件（342科学+start）。mtime全与11/13同名文件一致，为11/13 18:01–11/14 06:01；ctime集中11/18 05:48:01–05:58:51，全部inode不同。NFSv3不提供birth；结合两份完整FITS SHA相同，推断为保留mtime的旧图批量复制。目录ctime为11/17 23:54:50。
 - 列表验算：本地13/14号交付TXT与逐帧表均通过manifest SHA核对。黄昏47/47、清晨前30/30与13号顺序/曝光一致；对14号分别0/47与5/30相同，400/436场55/50张及边界曝光也只与13号完全一致。证据在outputs/nightly_check_20261117/{file_times.json,file_times.csv,plan_comparison.csv,file_times_and_plan_summary.json}。
 - 原因边界：raw1挂载NAS 192.168.160.92:/volume1/raw1，文件属UID1026；L1于今日06:23–09:00、L2于06:25–09:01新生成，上游按当天目录名读取旧图。检查可读入口、cron与相关复制脚本/历史，未找到具体传输命令；当前账号不能读auth/syslog，NAS传输审计未接入。已验证Python编译、343份元数据闭合和计划逐段比较；下一步核对NAS/观测电脑05:48–05:59的复制或同步记录，实际昨晚新图仍待定位。

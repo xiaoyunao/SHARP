@@ -1,5 +1,12 @@
 # SHARP 新 pipeline 持续备忘
 
+## 2026-11-18 v2 更新（优先于下文历史备忘）
+
+- MP/TJN切换11/16兴隆4397共用场，同后缀同中心，执行名前缀MP/TJNL4/TJNL5；YSO例外，继续ORI/CYG独立场。冻结FITS已在data/shared_fields_20261116纳入Git。
+- 服务器未来只做全科学数据的单夜known/unknown，后随/跨夜关联和unknown提交转网站；known未来服务器自动报，当前MPC继续暂停，联系人待用户确认。
+- 本轮无SSH、归档、部署；main/三生产目录不动。shared_night已验证11/18新网格晨昏，TJN仅成员查询，整夜通用拼接待下一步。旧固定三场/21:52及01:40写死的试验入口不是正式日调度。
+- 天区迁移不能复制旧效率：2357在名义视场内但当前0.16°质量留边不足。详见[V2说明](V2_FIELDS_AND_DAILY_LISTS_20261118.md)。下文后随升级和MP兼容前缀属于历史约定。
+
 更新：2026-11-12（北京时间）。依据用户本次请求、GPT Pro“固定TJN观测天区 pipeline”及[原交接备忘](../data/tjn_handoff_20261111/SHARP_PROJECT_MEMORY_20261111.md)。本文件是仓库记忆，不代表改写ChatGPT内置Project memory。
 
 ## 2026-11-12现场决定

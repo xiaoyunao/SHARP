@@ -1,0 +1,14 @@
+{
+  "release": "EQ-Xinglong18-20261116",
+  "catalog": "equatorial_footprints_xinglong18.fits",
+  "catalog_sha256": "c6a8894c6981028529910c73b46a901cd5b0e2d980c844b3ef0b6a344d2eb213",
+  "fields": 4397,
+  "frame": "ICRS",
+  "tan_width_east_deg": 2.9608333171434174,
+  "tan_height_north_deg": 2.9559350481017366,
+  "clockwise_roll_deg": -0.31222842389938177,
+  "wcs_evidence_sha256": "dc99a2d7eb31755b6cad18f1e834beb0b490207cf0ca94ff536f30fb08e0869b",
+  "quality_margin_deg": 0.15,
+  "quality_guard_deg": 0.01,
+  "geometry_note": "Representative TAN model from 12 measured TPV images; not a certified detector or template mask. FITS corner columns remain the historical RA-Dec rectangle model."
+}
