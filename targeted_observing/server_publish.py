@@ -1,15 +1,19 @@
 """Versioned, locked publication at the existing list and plot paths."""
 import csv
+from contextlib import closing
 from datetime import datetime, timedelta
 import hashlib
 import io
 import json
 from pathlib import Path
 import shutil
+import sqlite3
 import tempfile
 
 import numpy as np
 from astropy.table import Table, vstack
+from astropy.coordinates import SkyCoord
+import astropy.units as u
 
 from .catalog import BASE
 from .fixed_fields import from_tan
@@ -43,6 +47,29 @@ def legacy_rows(rows):
     return result
 
 
+def plot_history(config, footprints):
+    """Count real exposures at matching centers, without reusing legacy IDs."""
+    counts=np.zeros(len(footprints),dtype=int)
+    path=runtime(config)/'history.sqlite'
+    source=[]
+    if path.exists():
+        with closing(sqlite3.connect('file:'+str(path)+'?mode=ro',uri=True)) as db:
+            source=db.execute('SELECT ra,dec FROM exposures').fetchall()
+    if source:
+        coords=np.asarray(source,dtype=float)
+        real=SkyCoord(coords[:,0]*u.deg,coords[:,1]*u.deg)
+        centers=SkyCoord(np.asarray(footprints['center_ra'])*u.deg,np.asarray(footprints['center_dec'])*u.deg)
+        indices,separation,_=real.match_to_catalog_sky(centers)
+        good=separation.arcsec<=360
+        np.add.at(counts,indices[good],1)
+    history=Table({'field_id':np.asarray(footprints['field_id']),'exposure_count':counts})
+    history.meta=dict(source='actual deduplicated exposure ledger',center_tolerance_arcsec=360,
+                      actual_exposures=len(source),matched_exposures=int(counts.sum()),
+                      unmatched_exposures=len(source)-int(counts.sum()),
+                      note='Different legacy centers are not assigned to new field IDs by suffix or overlap.')
+    return history
+
+
 def plots(plan,output):
     # Keep the established summary/cycle/GIF filenames and manifest schema used
     # by the dashboard. Add YSO's independent footprints for this plot only.
@@ -56,7 +83,8 @@ def plots(plan,output):
         ra,dec=from_tan(r['ra_deg'],r['dec_deg'],[-1.48,1.48,1.48,-1.48],[-1.48,-1.48,1.48,1.48])
         for i in range(4):extra[f'corner_ra_{i+1}']=[ra[i]];extra[f'corner_dec_{i+1}']=[dec[i]]
         table=vstack([table,extra])
-    history=Table({'field_id':np.asarray(table['field_id']),'exposure_count':np.zeros(len(table),dtype=int)})
+    history=plot_history(plan['config'],table)
+    write_json(Path(output)/'history_mapping.json',history.meta)
     result=generate_plan_visualizations(legacy_rows(plan['rows']),history,table,Path(output),plan['night'])
     return result
 

@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from contextlib import closing
 import json
 from pathlib import Path
 import tempfile
@@ -127,6 +128,19 @@ class V2Contracts(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError,'rendering'):publisher.publish(value,c,'late_render_test')
             self.assertEqual(public.read_text(),'original final list')
             self.assertFalse((runtime(c)/'published/20261118.json').exists())
+
+    def test_plot_history_matches_real_centers_across_ra_zero_not_old_names(self):
+        from targeted_observing.server_history import connect
+        from targeted_observing.server_publish import plot_history
+        with tempfile.TemporaryDirectory() as folder:
+            c=self.config(folder)
+            with closing(connect(c)) as db, db:
+                for uid,ra,name in [('one',359.999,'MP_legacy_0010'),('two',0.04,'OtherProgram'),('far',90.,'MP_2630')]:
+                    db.execute('INSERT INTO exposures VALUES (?,?,?,?,?,?,?,?,?)',(uid,'20261117',uid,1.,'r',30.,ra,20.,name))
+            fields=Table(dict(field_id=['2630','YSO_ORI'],center_ra=[.001,80.],center_dec=[20.,20.]))
+            history=plot_history(c,fields)
+            self.assertEqual(list(history['exposure_count']),[2,0])
+            self.assertEqual(history.meta['unmatched_exposures'],1)
 
     def test_science_inputs_include_yso_and_follow_but_reject_stale_and_focus(self):
         with tempfile.TemporaryDirectory() as folder:
