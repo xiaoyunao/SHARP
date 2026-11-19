@@ -5,7 +5,7 @@
 
 2026-11-18更新：新模式已进入用户授权的服务器v2部署，主入口为`targeted_observing.server_service`，scheduler每日12点运行，网站后随JSON触发重排；2026-11-19起，小行星单夜处理由每分钟L2监测独立触发，不再等12点。v1归档/停止、保留的原路径、网站协议、TJN实拍历史与单夜处理见 [服务器v2运行说明](targeted_observing/docs/SERVER_V2_20261118.md)。下文未更新的历史运行片段以该说明为准；MPC继续暂停。
 
-2026-11-19补充：同步目录仅留7日普通/带时间说明TXT和current；异常夜以`ASTEROID_DATA_INVALID.json`排除处理与统计。ASTORB/IERS每月更新并校验后切换，服务器失败可本地下载中转；入口和恢复方法见上述运行说明。
+2026-11-19补充：同步目录仅留7日普通/带时间说明TXT和current；异常夜以`ASTEROID_DATA_INVALID.json`排除处理与统计。ASTORB/IERS每周更新并校验后切换，服务器失败可本地下载中转；入口和恢复方法见上述运行说明。
 
 ## 当前约定
 

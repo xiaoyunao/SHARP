@@ -105,6 +105,7 @@ class OperationsTests(unittest.TestCase):
                 activation.activate(base)
             cron=install.call_args.kwargs['input']
             self.assertIn('0 12 * * *',cron)
+            self.assertIn('20 10 * * 1',cron)
             self.assertIn('independent-ep',cron)
             self.assertEqual(cron.count('reference_update --enqueue'),1)
             self.assertNotIn('old-reference-entry',cron)

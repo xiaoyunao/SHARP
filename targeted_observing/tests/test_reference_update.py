@@ -22,7 +22,7 @@ class ReferenceUpdateTests(unittest.TestCase):
         path.write_bytes(gzip.compress(b'new orbit data') if path.name.endswith('.gz') else b'new IERS')
         return dict(url=urls[0],sha256=reference.sha(path))
 
-    def test_validated_update_is_monthly_and_keeps_one_previous_version(self):
+    def test_validated_update_is_weekly_and_keeps_one_previous_version(self):
         with tempfile.TemporaryDirectory() as folder:
             c,package,orb=self.config(folder)
             with patch.object(reference,'__file__',str(package/'reference_update.py')),\
@@ -32,13 +32,13 @@ class ReferenceUpdateTests(unittest.TestCase):
                  patch.object(reference.subprocess,'check_output',return_value=''),\
                  patch('astropy.utils.data.import_file_to_cache'):
                 self.assertEqual(reference.update(c)['status'],'complete')
-                self.assertEqual(reference.update(c)['status'],'already_updated_this_month')
+                self.assertEqual(reference.update(c)['status'],'already_updated_this_week')
             self.assertEqual(orb.read_bytes(),b'new orbit data')
             self.assertEqual((runtime(c)/'reference_updates/previous/astorb.dat').read_bytes(),b'old orbit data')
             self.assertEqual(json.loads((Path(c['base'])/'v2/config.json').read_text())['iers_file'],'iers_current.all')
             self.assertFalse(list((runtime(c)/'reference_updates').glob('.staging_*')))
 
-    def test_validation_failure_preserves_production_and_does_not_mark_month_done(self):
+    def test_validation_failure_preserves_production_and_does_not_mark_week_done(self):
         with tempfile.TemporaryDirectory() as folder:
             c,package,orb=self.config(folder)
             with patch.object(reference,'download',side_effect=self.download),\
@@ -47,6 +47,16 @@ class ReferenceUpdateTests(unittest.TestCase):
             self.assertEqual(orb.read_bytes(),b'old orbit data')
             self.assertTrue(reference.due(c))
             self.assertEqual(json.loads((runtime(c)/'reference_updates/status.json').read_text())['status'],'retry_required')
+
+    def test_week_boundary_and_monthly_receipt_migration(self):
+        with tempfile.TemporaryDirectory() as folder:
+            c,package,orb=self.config(folder)
+            status=runtime(c)/'reference_updates/status.json'
+            write_json(status,dict(completed_month='202611',completed_at='2026-11-19T11:41:38+08:00'))
+            self.assertFalse(reference.due(c,'2026-W47'))
+            self.assertTrue(reference.due(c,'2026-W48'))
+            self.assertEqual(reference.week_key(datetime(2027,1,1,tzinfo=TZ)),'2026-W53')
+            self.assertEqual(reference.week_key(datetime(2027,1,4,tzinfo=TZ)),'2027-W01')
 
     def test_queue_depends_on_active_processing_and_deduplicates_itself(self):
         with tempfile.TemporaryDirectory() as folder:

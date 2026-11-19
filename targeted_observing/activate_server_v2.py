@@ -31,12 +31,12 @@ def activate(base):
     reference_log=v2/'runtime/reference_updates/cron.log';reference_log.parent.mkdir(parents=True,exist_ok=True)
     ref_args=['/home/smtpipeline/Softwares/miniconda3/bin/python','-u','-m',
               'targeted_observing.reference_update','--enqueue']
-    lines+=['','# BEGIN SHARP_REFERENCE_UPDATE','20 10 * * * cd '+shlex.quote(str(base))+' && '+
+    lines+=['','# BEGIN SHARP_REFERENCE_UPDATE','20 10 * * 1 cd '+shlex.quote(str(base))+' && '+
             shlex.join(ref_args)+' >> '+shlex.quote(str(reference_log))+' 2>&1','# END SHARP_REFERENCE_UPDATE']
     value='\n'.join(lines)+'\n';subprocess.run(['crontab','-'],input=value,text=True,check=True)
     (v2/'crontab.active').write_text(value)
     path=v2/'deployment.json';metadata=json.loads(path.read_text())
-    metadata.update(automatic_schedule='12:00 Asia/Shanghai scheduler; per-minute L2/event/recovery tick; 10:20 monthly reference due/retry check; reboot recovery',
+    metadata.update(automatic_schedule='12:00 Asia/Shanghai scheduler; per-minute L2/event/recovery tick; Monday 10:20 weekly reference update; reboot recovery',
                     activated_at=now.isoformat())
     path.write_text(json.dumps(metadata,indent=2)+'\n')
     print(value)

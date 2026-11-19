@@ -1,4 +1,4 @@
-"""Validate and atomically refresh Lowell ASTORB and IERS once per month."""
+"""Validate and atomically refresh Lowell ASTORB and IERS once per ISO week."""
 import argparse
 from datetime import datetime, timedelta
 import gzip
@@ -24,11 +24,21 @@ def sha(path):
     return value.hexdigest()
 
 
-def due(config, month=None):
-    month=month or datetime.now(TZ).strftime('%Y%m')
+def week_key(when=None):
+    when=when or datetime.now(TZ)
+    year,week,_=when.astimezone(TZ).isocalendar()
+    return f'{year}-W{week:02d}'
+
+
+def due(config, week=None):
+    week=week or week_key()
     path=runtime(config)/'reference_updates/status.json'
     previous=json.loads(path.read_text()) if path.exists() else {}
-    return previous.get('completed_month') != month
+    completed=previous.get('completed_week')
+    if not completed and previous.get('completed_at'):
+        # Migrate a successful monthly receipt without downloading again.
+        completed=week_key(datetime.fromisoformat(previous['completed_at']))
+    return completed != week
 
 
 def download(urls, path):
@@ -82,18 +92,19 @@ def prepare_bundle(folder):
 
 def update(config, bundle=None, force=False):
     root=runtime(config)/'reference_updates';root.mkdir(parents=True,exist_ok=True)
-    month=datetime.now(TZ).strftime('%Y%m');state=root/'status.json'
-    prepared=root/('bundle_'+month)
+    week=week_key();state=root/'status.json'
+    prepared=root/('bundle_'+week)
     if bundle is None and (prepared/'download.json').exists():bundle=prepared
-    if not force and not due(config,month):return dict(status='already_updated_this_month',month=month)
+    if not force and not due(config,week):return dict(status='already_updated_this_week',week=week)
     with lock(runtime(config)/'locks/reference_update.lock',blocking=False):
-        if not force and not due(config,month):return dict(status='already_updated_this_month',month=month)
+        if not force and not due(config,week):return dict(status='already_updated_this_week',week=week)
         previous=json.loads(state.read_text()) if state.exists() else {}
-        result=dict(previous,status='updating',attempt_month=month,started_at=utc_now())
+        result=dict(previous,status='updating',attempt_week=week,started_at=utc_now())
+        result.pop('attempt_month',None);result.pop('completed_month',None)
         write_json(state,result)
         try:
             # All downloads and parsing precede activation. A failure leaves the
-            # production files and last successful month untouched.
+            # production files and last successful week untouched.
             with tempfile.TemporaryDirectory(prefix='.staging_',dir=root) as folder:
                 stage=Path(folder)
                 if bundle:
@@ -134,10 +145,10 @@ def update(config, bundle=None, force=False):
                             else:target.unlink(missing_ok=True)
                         raise
                     result.pop('error',None);result.pop('local_relay_available',None)
-                    result.update(status='complete',completed_month=month,completed_at=utc_now(),
+                    result.update(status='complete',completed_week=week,completed_at=utc_now(),
                                   downloads=receipt,validation=validation,
                                   installed={str(p):sha(p) for p in destinations})
-                    write_json(root/(month+'_receipt.json'),result);write_json(state,result)
+                    write_json(root/(week+'_receipt.json'),result);write_json(state,result)
             if bundle==prepared:
                 shutil.rmtree(prepared)
             return result
@@ -175,7 +186,7 @@ def relay(config, remote='smtpipeline@www.xinglong-naoc.cn', port=20093):
 
 def enqueue(config):
     import shlex
-    if not due(config):return dict(status='already_updated_this_month')
+    if not due(config):return dict(status='already_updated_this_week')
     jobs=subprocess.check_output(['squeue','-h','-u','smtpipeline','-o','%A|%j'],text=True).splitlines()
     dependencies=[]
     for row in jobs:

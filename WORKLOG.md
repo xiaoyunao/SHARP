@@ -2,6 +2,8 @@
 
 ## 2026-11-19
 
+- 星历周更/独立对话：用户要求覆盖此前月更和本聊天heartbeat。用automation_update原id automation改为cron，绑定smt_asteroid项目（local-a779a9925e04b89fb94429c495528126），每周一北京时间11:10独立新对话；配置回读kind=cron、target=project且不再含target_thread_id。服务器reference_update改ISO周due/凭证，月凭证由completed_at迁移；实际cron仅参考更新行改周一10:20，scheduler等其他行逐字核对保持。11/19成功记录迁2026-W47，enqueue探针返回already_updated_this_week无新下载/作业，下一周11/23。改reference_update/activate及周边界、跨年、迁移/重装cron测试与运行说明/AGENTS/README；本地10、服务器10项通过，py_compile/diff检查通过。下一步按周自动维护，本任务无需再运行科学处理。
+
 - 运维验收完成（11:43）：1118经265830仅收尾恢复，于11:41:22写complete，403份输入未变；6516次known匹配/845对象，102初选→69待复核（212观测，69 GIF无缺失），known五PNG/五GIF齐全，dense_groups_excluded为空。G-only digest2故障已修，MPC持续hold；此夜known提取使用更新前ASTORB，其SHA已记录final_audit，不宣称重算为新轨道表结果。
 - 月更首次闭环：265831在1118作业结束后，于11:41:38完成本地中转包的原生验证和原子安装。Lowell源11/18版1,582,254轨道，安装ASTORB SHA0539346f…70e7；IERS SHA51cb9676…dd6、末MJD61728、预报龄6.15天；v2配置切到iers_current.all，11/04冻结表不覆盖。下载gz本地解压SHA与服务器安装字节一致，清本地107MB下载包及两端stage/relay/bundle，留一份previous和凭证。服务器10:20月凭证日检/失败重试及本地月1日11:10兜底已生效。
 - 最终核查：1117 L4不存在，异常marker在L4外，SQLite及known全量history均无1117；script恰为plan.txt、plan_with_times.txt、current三份，七日规则生效，原current SHA1376a8d2…8050未变。11/19 scheduler尚未运行、cron仍12点，未手动daily/plan；仅原daily265326/dashboard263236作业留下。43本地/37服务器+28隔离digest2离线测试、20部署文件SHA、py_compile/diff检查通过。证据outputs/operations_20261119/{final_audit.json,reference_download_receipt.json,download_cleanup.json,deployed_source_audit.json,20261118_plan_with_times.txt}，科学源数据/main不改；当前请求完成，未来恢复1117必须另行核验并获用户指示。
