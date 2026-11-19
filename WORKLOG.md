@@ -2,6 +2,10 @@
 
 ## 2026-11-19
 
+- 运维验收完成（11:43）：1118经265830仅收尾恢复，于11:41:22写complete，403份输入未变；6516次known匹配/845对象，102初选→69待复核（212观测，69 GIF无缺失），known五PNG/五GIF齐全，dense_groups_excluded为空。G-only digest2故障已修，MPC持续hold；此夜known提取使用更新前ASTORB，其SHA已记录final_audit，不宣称重算为新轨道表结果。
+- 月更首次闭环：265831在1118作业结束后，于11:41:38完成本地中转包的原生验证和原子安装。Lowell源11/18版1,582,254轨道，安装ASTORB SHA0539346f…70e7；IERS SHA51cb9676…dd6、末MJD61728、预报龄6.15天；v2配置切到iers_current.all，11/04冻结表不覆盖。下载gz本地解压SHA与服务器安装字节一致，清本地107MB下载包及两端stage/relay/bundle，留一份previous和凭证。服务器10:20月凭证日检/失败重试及本地月1日11:10兜底已生效。
+- 最终核查：1117 L4不存在，异常marker在L4外，SQLite及known全量history均无1117；script恰为plan.txt、plan_with_times.txt、current三份，七日规则生效，原current SHA1376a8d2…8050未变。11/19 scheduler尚未运行、cron仍12点，未手动daily/plan；仅原daily265326/dashboard263236作业留下。43本地/37服务器+28隔离digest2离线测试、20部署文件SHA、py_compile/diff检查通过。证据outputs/operations_20261119/{final_audit.json,reference_download_receipt.json,download_cleanup.json,deployed_source_audit.json,20261118_plan_with_times.txt}，科学源数据/main不改；当前请求完成，未来恢复1117必须另行核验并获用户指示。
+
 - 运维收口（进行中）：按用户11/19后续要求，tick在plan end_local前不进入L2扫描；同步script仅7日plan.txt/plan_with_times.txt+current，JSON/分段继续存服务器archive。11:14核对不可变revision SHA后移除3份sync辅助文件；1117 L4逐文件SHA校验tar归档后从原路径删除，ASTEROID_DATA_INVALID.json置于夜目录，清单/处理入口/SQLite曝光与检出/known累计统计统一跳过并清旧行，raw/L1/L2保留。
 - 1118实运行排障：265827完成403份known（6516条匹配）、102未知初选/69复核对象，在11:17打包失败，根因为digest2旧G-only门槛拒绝真实r。score_unknown_digest2改接受griz+历史G，保留官方波段转V，隔离环境28离线测试通过；旧提交路径测试因真实hold阻断，不解除也不据此称通过。增加manifest验证后resume-review及search_complete收尾检查点；265830只恢复打包/known图，不重算整夜，69候选/212观测复核包已生成，known GIF仍在收尾。已核验403输入不变并迁移mtime/ctime队列签名，避免升级引发无意义重跑。
 - 月更：reference_update对Lowell ASTORB/IERS先下载校验（同一原生Lowell解析器、行数/历元、IERS覆盖/新鲜度/SHA）、再受科学作业/参考锁保护原子激活；一份previous回退，冻结11/04 IERS独立保留，新IERS_current供v2。每天10:20检查本月成功凭证、失败次日重试；Codex本地兜底已建每月1日11:10。265828服务器IERS两个官方源网络失败，旧表保持；本地11:19下载成功ASTORB.gz SHA4d5897b0…b9b、IERS SHA51cb9676…dd6并SCP传入，冗余下载265829取消清部分文件；265831等待265830后使用同包验证激活。当前本地43/服务器37及digest2离线28通过；全部未发MPC请求，scheduler未手动运行。下一步核验1118 complete和月更安装、清临时包、保存凭证/文档/提交。
