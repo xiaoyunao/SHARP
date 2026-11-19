@@ -1,4 +1,4 @@
-"""Noon daily entry and durable per-candidate replan events, with recovery ticks."""
+"""Noon scheduling, durable follow-up events and independent L2 processing ticks."""
 import argparse
 from datetime import datetime, timedelta
 import hashlib
@@ -46,16 +46,23 @@ def plan(night,config,reason,finalize=False):
 
 
 def enqueue_processing(night,config):
+    with lock(runtime(config)/'locks'/f'enqueue_{night}.lock'):
+        return _enqueue_processing(night,config)
+
+
+def _enqueue_processing(night,config):
+    from .server_l2_watch import readiness
+    ready=readiness(night,config)
+    write_json(runtime(config)/'l2_watch'/f'{night}.json',dict(**ready,checked_at=utc_now()))
+    if not ready['ready']:return ready
     l2=Path(config['processed_root'])/night/'L2'
     if not l2.is_dir():return dict(status='no_l2',night=night)
     files=[p for p in l2.iterdir() if p.is_file() and p.name.endswith(('.fits','.fits.gz'))]
     if not files:return dict(status='no_science_files',night=night)
-    latest=max(p.stat().st_mtime for p in files)
     now=datetime.now(TZ).timestamp()
-    if now-latest<120:return dict(status='waiting_for_stable_input',night=night)
     qpath=runtime(config)/'processing_queue'/f'{night}.json'
     previous=json.loads(qpath.read_text()) if qpath.exists() else {}
-    signature=hashlib.sha256(str([(p.name,p.stat().st_size,p.stat().st_mtime_ns) for p in sorted(files)]).encode()).hexdigest()
+    signature=hashlib.sha256(str([(p.name,p.stat().st_size,p.stat().st_mtime_ns,p.stat().st_ctime_ns) for p in sorted(files)]).encode()).hexdigest()
     process_path=runtime(config)/'processing'/f'{night}.json'
     process_state=json.loads(process_path.read_text()) if process_path.exists() else {}
     if previous.get('signature')==signature:
@@ -121,8 +128,7 @@ def daily_run(config,night=None):
         included={r.get('request_sha256') for r in result['followups']}
         if json.loads(event.read_text())['request_sha256'] in included:
             write_json(event.with_suffix('.result.json'),dict(status='included_in_noon_run',revision=result['revision']))
-    previous=(datetime.strptime(night,'%Y%m%d')-timedelta(days=1)).strftime('%Y%m%d')
-    return dict(plan=result,processing=enqueue_processing(previous,config))
+    return dict(plan=result)
 
 
 def daily(config,night=None):
@@ -130,8 +136,7 @@ def daily(config,night=None):
     with lock(runtime(config)/'locks'/f'daily_{night}.lock'):
         published=runtime(config)/'published'/f'{night}.json'
         if published.exists():
-            yesterday=(datetime.strptime(night,'%Y%m%d')-timedelta(days=1)).strftime('%Y%m%d')
-            return dict(plan=json.loads(published.read_text()),processing=enqueue_processing(yesterday,config))
+            return dict(plan=json.loads(published.read_text()))
         return daily_run(config,night)
 
 
@@ -139,6 +144,15 @@ def tick(config):
     try:
         with lock(runtime(config)/'locks/tick.lock',blocking=False):
             now=datetime.now(TZ);night=now.strftime('%Y%m%d')
+            from .server_l2_watch import recent_nights
+            # Processing is independent of noon scheduling and its failures.
+            for finished in recent_nights(config,now):
+                try:
+                    enqueue_processing(finished,config)
+                except Exception as exc:
+                    write_json(runtime(config)/'l2_watch_errors'/f'{finished}.json',
+                               dict(error=str(exc),last_attempt=utc_now()))
+                    traceback.print_exc()
             from .script_retention import cleanup
             cleanup(config,now,once_per_day=True)
             if (now.hour>=12 and now<followup_cutoff(config,night)
@@ -174,10 +188,6 @@ def tick(config):
                     traceback.print_exc()
                     # Leave the event pending for automatic retry; never drop it.
                     break
-            # If a data transfer finished after noon, processing is still recovered.
-            if now.hour>=12:
-                yesterday=(now-timedelta(days=1)).strftime('%Y%m%d')
-                enqueue_processing(yesterday,config)
     except BlockingIOError:
         return dict(status='another_tick_running')
     return dict(status='tick_complete')

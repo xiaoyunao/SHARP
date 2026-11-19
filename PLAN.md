@@ -3,7 +3,7 @@
 ## 11/18 观测与处理验收（2026-11-19）
 
 - 403/405实拍均有正确夜次L1/L2，EV47/TJN173/YSO g69 r67/AM47；与正式发布列表核对，仅YSO r少2帧。首晚v2实拍清单和星像统计在outputs/nightly_check_20261118。
-- 10:17小行星处理尚未触发，按12:00新入口自然提交；后续验收known/unknown完整性和候选，继续MPC hold。少2张YSO r的现场原因尚未确认，本次只读核查。
+- 11/19用户澄清12点仅用于scheduler：已部署每分钟L2独立触发，科学raw/L2完整对应、晚到/替换与120秒稳定检查，34本地/28服务器验证通过，自然tick确认。10:25手动提交11/18单夜作业265827（403输入），跟踪known/unknown及复核结果；scheduler不手动跑，保持12点自然触发，MPC hold。YSO r少2张的现场原因另查。
 
 ## 当前：v2同步保留与全年交付完成（2026-11-18）
 
@@ -16,7 +16,7 @@
 ## 当前：服务器v1归档、首版v2上线（2026-11-18）
 
 - 用户已授权服务器操作及生产镜像更新，覆盖下方“仅本地”的首阶段限制；main不变。v1完整归档`/pipeline/xiaoyunao/v1/20261118_124436`（23767项/19.95GB，SHA见运行说明），原09:00及两个reboot入口停用；原始测光/dashboard/EP保留。
-- v2主入口`targeted_observing.server_service`，12:00 daily、每分钟事件/recovery tick及reboot恢复已装；实际分钟cron已自然触发。配置`/pipeline/xiaoyunao/v2/config.json`，公开script/runtime/plans/plots与L4/复核包路径不变。详见`targeted_observing/docs/SERVER_V2_20261118.md`。
+- v2主入口`targeted_observing.server_service`，12:00仅scheduler daily、每分钟独立L2处理/后随事件/recovery tick及reboot恢复已装；实际分钟cron已自然触发。配置`/pipeline/xiaoyunao/v2/config.json`，公开script/runtime/plans/plots与L4/复核包路径不变。详见`targeted_observing/docs/SERVER_V2_20261118.md`。
 - 网站后随接口已实现：每candidate一个带night/field_id/start_time/frames/exposure_s/filter的JSON，FOLLOW四位共用场；前12点合并、12点至17点每事件重排全队列，冲突尽量顺延并明确偏差/失败。17点或更早计划启动时刻截止，之后新请求保留当地时分转下一夜；截止前待办仅能在启动前收尾，开拍后不重排。静态控制器按START_TIMES分段执行。
 - TJN静态中心来自4397表，按真实曝光/检出历史、点数/夜数/连续跨度/间隔/跨夜基线与文献周期相位覆盖选场、去重及动态驻场。首批历史3029曝光、35年度TJN有检出、260有效r点；采样就绪不等于标定光变/唯一周期。
 - 首份正式11/18计划405张：EV47/TJN173/YSO g/r各69/AM47，17:42:00启动至次日06:08:05读完；geometry/留场/MP复访通过，单段，三处TXT哈希一致。尾部补时曾造成同场短复访，已改为固定复用独立验过的晨昏序列，正式版本全部MP cadence通过。

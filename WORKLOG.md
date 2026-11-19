@@ -2,6 +2,8 @@
 
 ## 2026-11-19
 
+- L2触发改造（进行中）：用户明确12点仅指scheduler，改为每分钟独立监测已结束观测夜的raw/L2对应及120秒mtime/ctime稳定；最近3晚、从20261118起，缺L2/替换raw仍旧L2明确等待，无计划时晨间太阳≥−6°保守闭夜。新增server_l2_watch/tests，server_service去掉noon处理耦合并加同夜入队锁，defaults/运行说明/README/CHANGELOG同步；cron及原始测光未改。SSH核查正常L2最后写入多在05:16–06:05，11/18最后06:04:26，403对403；10:25单独手动提交265827，403科学清单接受，known运行中，未手动daily/plan。34本地/28服务器回归、编译和无计划太阳兜底实测通过；10:30自然tick已写ready且未重复提交。证据outputs/l2_trigger_20261119。下一步跟完known→unknown/复核包、更新结果与部署SHA并提交，MPC hold保持。
+
 - 11/18 首晚v2观测核查：默认SSH读raw/L1/L2、实际发布revision、cron与队列。实拍403/405，11/18 17:44:21至11/19 06:00:08；EV47、TJN173（13场）、YSO g69/r67、AM47，仅YSO r少2张。403 raw与403 L1/L2文件集合闭合，所有曝光/星表均归属11/18；逐帧场名/滤镜/曝光与已发布SHA1376a8d2…8050序列比对通过。
 - 质量/运行：逐帧未标记14<Mag_PSF<18恒星FWHM中位，再汇总整夜4.54″（帧中位P10–P90为4.18–5.26″）；晨昏同场复访6.0–8.7分钟。10:17尚无L4及processing_queue/20261118，新版按12:00先排当夜再提交前夜known/unknown，分钟tick正常，MPC hold在。YSO r两处额外约65秒帧间空档，少帧原因未归因。
 - 文件/验证：outputs/nightly_check_20261118/{collect_observations.py,server_evidence.json,observing_summary.csv,summary.json,pipeline_status.txt}及本日志/PLAN。命令：git status/fetch/log、SSH日志/cron/squeue、Python编译及stdin采集、发布SHA/403份文件和夜次/序列独立校验。下一步核查中午自然任务的全科学known/unknown与候选；本次只读核查。

@@ -3,7 +3,7 @@
 本仓库的 `survey/`、`known_asteroid/`、`heliolincrr/` 保持服务器实际运行版本。
 另有用户于2026-11-03授权的独立本地研发模式 `targeted_observing/`，用于晨昏搜寻与木星特洛伊监测；服务器v2见下方更新。
 
-2026-11-18更新：新模式已进入用户授权的服务器v2部署，主入口为`targeted_observing.server_service`，每日12点运行，网站后随JSON触发重排。v1归档/停止、保留的原路径、网站协议、TJN实拍历史与单夜处理见 [服务器v2运行说明](targeted_observing/docs/SERVER_V2_20261118.md)。下文未更新的历史运行片段以该说明为准；MPC继续暂停。
+2026-11-18更新：新模式已进入用户授权的服务器v2部署，主入口为`targeted_observing.server_service`，scheduler每日12点运行，网站后随JSON触发重排；2026-11-19起，小行星单夜处理由每分钟L2监测独立触发，不再等12点。v1归档/停止、保留的原路径、网站协议、TJN实拍历史与单夜处理见 [服务器v2运行说明](targeted_observing/docs/SERVER_V2_20261118.md)。下文未更新的历史运行片段以该说明为准；MPC继续暂停。
 
 ## 当前约定
 
