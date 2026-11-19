@@ -29,6 +29,8 @@ def connect(config):
         PRIMARY KEY(uid,object_id));
       CREATE TABLE IF NOT EXISTS ingested (night TEXT PRIMARY KEY, signature TEXT);
     ''')
+    from .server_quality import purge_ledger
+    purge_ledger(db,config['processed_root'])
     return db
 
 
@@ -40,6 +42,10 @@ def ingest(config, nights=None):
                   and len(p.name)==8 and p.name >= config['history_start']]
     db = connect(config); updated = []
     for night in sorted(nights):
+        from .server_quality import exclusion
+        if exclusion(root,night):
+            updated.append(dict(night=night,status='excluded_invalid_night'))
+            continue
         l2 = root/night/'L2'
         if not l2.is_dir(): continue
         files = sorted(p for p in l2.iterdir() if p.name.endswith(('.fits','.fits.gz')))

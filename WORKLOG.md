@@ -2,6 +2,10 @@
 
 ## 2026-11-19
 
+- 运维收口（进行中）：按用户11/19后续要求，tick在plan end_local前不进入L2扫描；同步script仅7日plan.txt/plan_with_times.txt+current，JSON/分段继续存服务器archive。11:14核对不可变revision SHA后移除3份sync辅助文件；1117 L4逐文件SHA校验tar归档后从原路径删除，ASTEROID_DATA_INVALID.json置于夜目录，清单/处理入口/SQLite曝光与检出/known累计统计统一跳过并清旧行，raw/L1/L2保留。
+- 1118实运行排障：265827完成403份known（6516条匹配）、102未知初选/69复核对象，在11:17打包失败，根因为digest2旧G-only门槛拒绝真实r。score_unknown_digest2改接受griz+历史G，保留官方波段转V，隔离环境28离线测试通过；旧提交路径测试因真实hold阻断，不解除也不据此称通过。增加manifest验证后resume-review及search_complete收尾检查点；265830只恢复打包/known图，不重算整夜，69候选/212观测复核包已生成，known GIF仍在收尾。已核验403输入不变并迁移mtime/ctime队列签名，避免升级引发无意义重跑。
+- 月更：reference_update对Lowell ASTORB/IERS先下载校验（同一原生Lowell解析器、行数/历元、IERS覆盖/新鲜度/SHA）、再受科学作业/参考锁保护原子激活；一份previous回退，冻结11/04 IERS独立保留，新IERS_current供v2。每天10:20检查本月成功凭证、失败次日重试；Codex本地兜底已建每月1日11:10。265828服务器IERS两个官方源网络失败，旧表保持；本地11:19下载成功ASTORB.gz SHA4d5897b0…b9b、IERS SHA51cb9676…dd6并SCP传入，冗余下载265829取消清部分文件；265831等待265830后使用同包验证激活。当前本地43/服务器37及digest2离线28通过；全部未发MPC请求，scheduler未手动运行。下一步核验1118 complete和月更安装、清临时包、保存凭证/文档/提交。
+
 - L2触发改造（进行中）：用户明确12点仅指scheduler，改为每分钟独立监测已结束观测夜的raw/L2对应及120秒mtime/ctime稳定；最近3晚、从20261118起，缺L2/替换raw仍旧L2明确等待，无计划时晨间太阳≥−6°保守闭夜。新增server_l2_watch/tests，server_service去掉noon处理耦合并加同夜入队锁，defaults/运行说明/README/CHANGELOG同步；cron及原始测光未改。SSH核查正常L2最后写入多在05:16–06:05，11/18最后06:04:26，403对403；10:25单独手动提交265827，403科学清单接受，known运行中，未手动daily/plan。34本地/28服务器回归、编译和无计划太阳兜底实测通过；10:30自然tick已写ready且未重复提交。证据outputs/l2_trigger_20261119。下一步跟完known→unknown/复核包、更新结果与部署SHA并提交，MPC hold保持。
 
 - 11/18 首晚v2观测核查：默认SSH读raw/L1/L2、实际发布revision、cron与队列。实拍403/405，11/18 17:44:21至11/19 06:00:08；EV47、TJN173（13场）、YSO g69/r67、AM47，仅YSO r少2张。403 raw与403 L1/L2文件集合闭合，所有曝光/星表均归属11/18；逐帧场名/滤镜/曝光与已发布SHA1376a8d2…8050序列比对通过。

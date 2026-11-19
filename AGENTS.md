@@ -22,6 +22,14 @@
 - TJN按真实曝光/检出、跨夜基线、采样间隔和文献周期相位覆盖选场；计划曝光不得算入实拍历史。采样就绪不等于光变标定或唯一自转周期完成。
 - MPC hold不解除，known恢复自动报需联系人确认及独立开关；unknown服务器自动报已退役，仅网站报。原始图测光、dashboard及无关EP任务保持。
 
+## v2 运维更新（2026-11-19）
+
+- scheduler维持北京时间12点自然运行；小行星处理独立于中午，在已发布列表end_local之后才监测L2，科学raw/L2对应及120秒稳定后入队。夜间不得把暂时无新文件当作观测结束。
+- Windows同步script仅保留最近7个自然日的`YYYYMMDD_plan.txt`、`YYYYMMDD_plan_with_times.txt`及current_plan.txt；JSON/START_TIMES/分段等只放服务器存档，保持图件路径。
+- 20261117已按用户要求标为异常夜，标记`/processed1/20261117/ASTEROID_DATA_INVALID.json`；L4删除、校验归档仅供审计，后续提取/历史/科学统计排除，raw/L1/L2保留。未经用户新指示不得自动解除。
+- ASTORB/IERS月更使用reference_update：验证后原子切换、只留一份上一版，科学作业中不切换。服务器网络失败可本地下载校验中转。JPL固定内核和冻结年度TJN轨迹的版本语义不混同ASTORB动态轨道表。
+- digest2使用真实g/r/i/z，兼容历史G，保留官方解析器的波段换算；MPC hold不解除。仅收尾失败时允许原manifest验证后的resume-review，不重新提取整夜或重画已完成候选图。
+
 ## v2 方向与首阶段范围（2026-11-18 用户更新）
 
 - 新策略为晨昏近太阳 MP + TJN + YSO。**YSO 例外，继续独立固定场**；此要求覆盖 11/16 的 YSO 共用网格约定。MP、TJN 及后续其他共用场任务采用下述 4397 场。

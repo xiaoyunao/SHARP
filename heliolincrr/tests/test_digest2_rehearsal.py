@@ -151,6 +151,17 @@ class RehearsalTests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     scoring.check_rows(rows, 3, {"327"})
 
+    def test_physical_griz_bands_are_scored_without_relabelling_as_gaia(self):
+        original=self.psv.read_text()
+        for band in 'griz':
+            with self.subTest(band=band):
+                self.psv.write_text(original.replace('|G\n',f'|{band}\n'))
+                self.args.out_dir=self.root/('output_'+band)
+                report=self.prepare()
+                self.assertTrue(all(s['status']=='ok' for s in report['scores'].values()))
+                frozen=(self.args.out_dir/'inputs/observations.psv').read_text()
+                self.assertIn(f'|{band}\n',frozen)
+
     def test_duplicate_epoch_and_long_arc_rejected(self):
         _, _, groups = scoring.read_psv(self.psv.read_text())
         rows = groups["T0"]

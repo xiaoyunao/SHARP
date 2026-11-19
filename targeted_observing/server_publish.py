@@ -54,7 +54,10 @@ def plot_history(config, footprints):
     source=[]
     if path.exists():
         with closing(sqlite3.connect('file:'+str(path)+'?mode=ro',uri=True)) as db:
-            source=db.execute('SELECT ra,dec FROM exposures').fetchall()
+            from .server_quality import exclusion
+            exposures=db.execute('SELECT ra,dec,night FROM exposures').fetchall()
+            excluded={night for night in {r[2] for r in exposures} if exclusion(config['processed_root'],night)}
+            source=[(ra,dec) for ra,dec,night in exposures if night not in excluded]
     if source:
         coords=np.asarray(source,dtype=float)
         real=SkyCoord(coords[:,0]*u.deg,coords[:,1]*u.deg)
@@ -124,6 +127,8 @@ def publish(plan,config,reason):
             raise ValueError('Static controller timeline differs by more than 10 seconds')
     write_json(revision/'START_TIMES.json',dict(segments=starts,requires_timed_segments=len(segments)>1,
         note='The controller TXT contains no WAIT. Start each segment at its stated time; do not append a new revision to an executing old plan.'))
+    timed=observing_times_text(plan)
+    atomic_write(revision/(night+'_plan_with_times.txt'),timed)
     pending=plan['rows'][plan.get('protected_prefix_frames',0):]
     if plan.get('execution_update_required'):
         atomic_write(revision/(night+'_remaining.txt'),controller_text(pending))
@@ -156,6 +161,9 @@ def publish(plan,config,reason):
             path.replace(saved/path.name)
     for directory in (root/'survey/runtime/plans',root/'script'):
         atomic_write(directory/(night+'_plan.txt'),text)
+        atomic_write(directory/(night+'_plan_with_times.txt'),timed)
+        if directory==root/'script':
+            continue
         write_json(directory/(night+'_plan.json'),rows)
         shutil.copy2(revision/'START_TIMES.json',directory/(night+'_START_TIMES.json'))
         for item in starts:atomic_write(directory/item['list'],(revision/item['list']).read_bytes())
@@ -173,3 +181,28 @@ def publish(plan,config,reason):
     from .script_retention import cleanup
     cleanup(config)
     return metadata
+
+
+def observing_times_text(plan):
+    """Human-readable instructions; the plain plan remains the controller input."""
+    lines=[f"# {plan['night']} 观测时间说明（北京时间 UTC+08:00）",
+           '# 本文件供人工阅读；控制器请导入同日 _plan.txt。',
+           '# 每段按标注时间开始；普通列表没有 WAIT，存在空档时不能提前连续执行。',
+           f"# 列表启动：{plan['start_local']}；预计结束：{plan['end_local']}"]
+    groups=[]
+    for row in plan['rows']:
+        if groups and all(row[k]==groups[-1][-1][k] for k in ('field_id','filter','exposure_s','mode','candidate_id')) \
+                and row['overhead_start_unix']-groups[-1][-1]['release_unix']<=1:
+            groups[-1].append(row)
+        else:
+            groups.append([row])
+    previous=None
+    for group in groups:
+        first,last=group[0],group[-1]
+        if previous is None or first['overhead_start_unix']-previous>1:
+            lines.append(f"\n# 开始本段：{local_time(first['overhead_start_unix'])}")
+        lines.append(f"# {local_time(first['overhead_start_unix'])} 至 {local_time(last['release_unix'])}；"
+                     f"首曝 {local_time(first['start_unix'])}；{first['mode']}；{len(group)} 帧")
+        lines.append(command(first,first['filter'],len(group),first['exposure_s']).rstrip())
+        previous=last['release_unix']
+    return '\n'.join(lines)+'\n'

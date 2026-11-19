@@ -45,6 +45,10 @@ def night_finished(night, config, now):
 
 
 def readiness(night, config, now=None):
+    from .server_quality import exclusion
+    invalid = exclusion(config['processed_root'], night)
+    if invalid:
+        return dict(night=night, ready=False, status='excluded_invalid_night', reason=invalid['reason'])
     now = now or datetime.now(TZ)
     result = dict(night=night, ready=False)
     if not night_finished(night, config, now):

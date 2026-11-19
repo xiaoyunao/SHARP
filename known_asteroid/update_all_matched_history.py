@@ -40,9 +40,24 @@ def iter_matched_files(processed_root: Path) -> list[tuple[str, Path]]:
     rows: list[tuple[str, Path]] = []
     for path in sorted(processed_root.glob("20*/L4/*_matched_asteroids.fits")):
         night = path.name.split("_", 1)[0]
-        if len(night) == 8 and night.isdigit():
+        if len(night) == 8 and night.isdigit() and not (processed_root/night/'ASTEROID_DATA_INVALID.json').exists():
             rows.append((night, path))
     return rows
+
+
+def purge_excluded(processed_root: Path, all_path: Path, state_path: Path) -> None:
+    excluded = {p.parent.name for p in processed_root.glob('20*/ASTEROID_DATA_INVALID.json')}
+    if not excluded:
+        return
+    if all_path.exists():
+        old = Table.read(all_path, memmap=True)
+        if 'source_night' in old.colnames:
+            keep = ~np.isin(np.asarray(old['source_night']).astype(str), list(excluded))
+            if not keep.all():
+                write_table(old[keep], all_path)
+    if state_path.exists():
+        state = load_state(state_path)
+        save_state(state_path, {k:v for k,v in state.items() if k not in excluded})
 
 
 def read_with_night(path: Path, night: str) -> Table:
@@ -92,6 +107,7 @@ def main() -> None:
     history_dir.mkdir(parents=True, exist_ok=True)
     all_path = history_dir / "all_matched_asteroids.fits"
     state_path = history_dir / "all_matched_ingest_state.json"
+    purge_excluded(processed_root, all_path, state_path)
 
     matched_files = iter_matched_files(processed_root)
     if not matched_files:

@@ -141,7 +141,7 @@ class V2Contracts(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             c=self.config(folder);public=Path(c['base'])/'script/current_plan.txt'
             public.parent.mkdir(parents=True);public.write_text('original final list')
-            value=dict(night='20261118',start_local='2026-11-18T17:42:00+08:00',rows=[])
+            value=dict(night='20261118',start_local='2026-11-18T17:42:00+08:00',end_local='2026-11-19T06:08:00+08:00',rows=[])
             with patch.object(publisher,'plots',return_value={}),patch.object(publisher,'datetime',FinishedTooLate):
                 with self.assertRaisesRegex(ValueError,'rendering'):publisher.publish(value,c,'late_render_test')
             self.assertEqual(public.read_text(),'original final list')
@@ -160,18 +160,22 @@ class V2Contracts(unittest.TestCase):
             self.assertEqual(list(history['exposure_count']),[2,0])
             self.assertEqual(history.meta['unmatched_exposures'],1)
 
-    def test_sync_script_retention_keeps_ten_evenings_current_and_unrelated_files(self):
+    def test_sync_script_retention_keeps_seven_evenings_and_two_text_products(self):
         from targeted_observing.script_retention import cleanup
         with tempfile.TemporaryDirectory() as folder:
             c=self.config(folder);root=Path(c['base'])/'script';root.mkdir(parents=True)
             for day in range(18,30):
-                for suffix in ('plan.txt','plan.json','START_TIMES.json','segment01.txt'):
+                for suffix in ('plan.txt','plan_with_times.txt','plan.json','START_TIMES.json','segment01.txt'):
                     (root/f'202611{day}_{suffix}').write_text('list')
             for name in ('current_plan.txt','operator_notes.txt','20261001_unknown.txt'):
                 (root/name).write_text('keep')
             cleanup(c,datetime(2026,11,28,12,tzinfo=TZ))
             self.assertFalse((root/'20261118_plan.txt').exists())
-            self.assertTrue((root/'20261119_plan.txt').exists())
+            self.assertFalse((root/'20261121_plan.txt').exists())
+            self.assertTrue((root/'20261122_plan.txt').exists())
+            self.assertTrue((root/'20261122_plan_with_times.txt').exists())
+            self.assertFalse((root/'20261128_plan.json').exists())
+            self.assertFalse((root/'20261128_segment01.txt').exists())
             self.assertTrue((root/'20261128_plan.txt').exists())
             self.assertTrue((root/'current_plan.txt').exists())
             self.assertTrue((root/'operator_notes.txt').exists())

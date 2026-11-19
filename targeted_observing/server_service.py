@@ -15,7 +15,7 @@ from .server_followup import queue_snapshot, route, submit
 def plan(night,config,reason,finalize=False):
     from .server_scheduler import build
     from .server_publish import publish
-    with lock(runtime(config)/'locks'/f'plan_{night}.lock'):
+    with lock(runtime(config)/'locks/references.lock',shared=True),lock(runtime(config)/'locks'/f'plan_{night}.lock'):
         now=datetime.now(TZ)
         start=observation_start(config,night)
         if now >= followup_cutoff(config,night):
@@ -78,6 +78,8 @@ def _enqueue_processing(night,config):
     command=['sbatch','--parsable','--job-name',name,'--cpus-per-task',str(config['workers']),
              '--mem','32G','--output',str(logs/(night+'_process_%j.log')),
              str(Path(config['base'])/'targeted_observing/server_process_job.sh'),night]
+    if previous.get('signature')==signature and process_state.get('search_complete') and process_state.get('known_complete'):
+        command.append('--resume-review')
     job=subprocess.check_output(command,text=True).strip().split(';')[0]
     result=dict(status='queued',night=night,job_id=job,signature=signature,queued_at=utc_now(),
                 attempts=previous.get('attempts',0)+1 if previous.get('signature')==signature else 1)
@@ -144,10 +146,12 @@ def tick(config):
     try:
         with lock(runtime(config)/'locks/tick.lock',blocking=False):
             now=datetime.now(TZ);night=now.strftime('%Y%m%d')
-            from .server_l2_watch import recent_nights
+            from .server_l2_watch import recent_nights, night_finished
             # Processing is independent of noon scheduling and its failures.
             for finished in recent_nights(config,now):
                 try:
+                    if not night_finished(finished,config,now):
+                        continue
                     enqueue_processing(finished,config)
                 except Exception as exc:
                     write_json(runtime(config)/'l2_watch_errors'/f'{finished}.json',

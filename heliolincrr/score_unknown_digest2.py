@@ -82,8 +82,8 @@ def check_rows(rows: list[dict[str, str]], expected: int, sites: set[str]) -> No
             raise ValueError("Only ground-based CCD observations are supported")
         if row["stn"] not in sites:
             raise ValueError(f"Unknown/invalid observatory {row['stn']}")
-        if row["band"] != "G":
-            raise ValueError("This pipeline rehearsal expects its documented G photometric band")
+        if row["band"] not in {"G", "g", "r", "i", "z"}:
+            raise ValueError("Expected a physical g/r/i/z band or historical Gaia G")
         epoch = utc_time(row["obsTime"])
         epochs.append(epoch)
         numbers = {k: float(row[k]) for k in ("ra", "dec", "rmsRA", "rmsDec", "mag")}
@@ -216,8 +216,8 @@ def prepare(args: argparse.Namespace) -> dict:
                        "no_threshold": False, "input_psv_sha256": sha256(psv_bytes),
                        "catalog_sha256": sha256(catalog_bytes),
                        "review_sha256": sha256(review_bytes) if review_bytes is not None else None})
-    # The official parser applies the G -> V magnitude correction. Constructing
-    # Observation(mag=G) directly would bypass it and change the resulting scores.
+    # The official parser applies each physical band's V magnitude correction.
+    # Constructing Observation(mag=...) directly would bypass it and change scores.
     parsed = parse_ades_psv(str(inputs / "observations.psv"))
     scored = {}
     with Digest2(model_path=str(args.out_dir / provenance["model"]["snapshot"]),

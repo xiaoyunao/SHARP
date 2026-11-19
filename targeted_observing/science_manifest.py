@@ -70,6 +70,13 @@ def inspect(path, night):
 
 
 def build(night, processed_root, output):
+    from .server_quality import exclusion
+    invalid = exclusion(processed_root, night)
+    if invalid:
+        result = dict(night=night, generated_at=utc_now(), accepted=[], rejected=[],
+                      status='excluded_invalid_night', reason=invalid['reason'])
+        write_json(output, result);atomic_write(Path(output).with_suffix('.txt'), '')
+        return result
     folder = Path(processed_root)/night/'L2'
     accepted, rejected, seen = [], [], set()
     for path in sorted(folder.iterdir()) if folder.is_dir() else []:

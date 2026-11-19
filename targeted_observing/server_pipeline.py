@@ -56,6 +56,18 @@ def snapshot_previous(night,config,l4,work):
 
 
 def process(night,config):
+    with lock(runtime(config)/'locks/references.lock',shared=True):
+        return _process(night,config)
+
+
+def _process(night,config):
+    from .server_quality import exclusion
+    invalid=exclusion(config['processed_root'],night)
+    if invalid:
+        result=dict(night=night,status='excluded_invalid_night',known_complete=False,
+                    unknown_complete=False,reason=invalid['reason'],updated_at=utc_now())
+        write_json(runtime(config)/'processing'/f'{night}.json',result)
+        return result
     base=Path(config['base']);l4=Path(config['processed_root'])/night/'L4'
     work=base/'data/heliolincrr'/night
     state=runtime(config)/'processing'/f'{night}.json'
@@ -164,32 +176,73 @@ def process(night,config):
             if not limited:
                 run([py,unknown/'plot_unknown_links.py',night,'--processed-root',config['processed_root'],
                      '--root-out',base/'data/heliolincrr','--plot-root',unknown/'plots'],config,cwd=unknown)
-                run([py,unknown/'package_unknown_review.py',night,'--processed-root',config['processed_root'],
-                     '--root-out',base/'data/heliolincrr','--plot-root',unknown/'plots',
-                     '--out-root',unknown/'review_packages','--make-tar'],config,cwd=unknown)
-            load_manifest(manifest_path)
-            if matched.exists() and len(Table.read(matched)):
-                with lock(runtime(config)/'locks/known_history.lock'):
-                    run([config['python'],base/'known_asteroid/update_all_matched_history.py',
-                         '--processed-root',config['processed_root'],'--night',night,
-                         '--history-dir',base/'known_asteroid/runtime/history'],config)
-                run([config['python'],base/'known_asteroid/plot_known_asteroids.py',night,
-                     '--processed-root',config['processed_root'],'--plot-root',base/'known_asteroid/plots',
-                     '--science-manifest',manifest_path,
-                     '--all-matched-path',base/'known_asteroid/runtime/history/all_matched_asteroids.fits'],config)
-            trk_log=work/'tracklets_linreproj/make_tracklet.log'
-            gate_lines=[line for line in trk_log.read_text().splitlines() if 'exceeds max_tracklets_per_group=' in line] if trk_log.exists() else []
-            result.update(status='complete',unknown_complete=True,review_package_complete=not limited,
-                          dense_groups_excluded=gate_lines,
-                          review_limited=limited,unknown_submission='website_only',completed_at=utc_now())
-            write_json(l4/f'{night}_v2_pipeline_status.json',result);write_json(state,result)
-            return result
+            result.update(search_complete=True,review_limited=limited);write_json(state,result)
+            return finish_outputs(night,config,result,limited)
         except Exception as exc:
             result.update(status='failed',error=str(exc),updated_at=utc_now())
             write_json(state,result)
             raise
 
 
+def finish_outputs(night,config,result,limited=False):
+    base=Path(config['base']);unknown=base/'heliolincrr';py=config['unknown_python']
+    l4=Path(config['processed_root'])/night/'L4';work=base/'data/heliolincrr'/night
+    manifest_path=runtime(config)/'manifests'/f'{night}_science.json'
+    load_manifest(manifest_path)
+    if not limited:
+        run([py,unknown/'package_unknown_review.py',night,'--processed-root',config['processed_root'],
+             '--root-out',base/'data/heliolincrr','--plot-root',unknown/'plots',
+             '--out-root',unknown/'review_packages','--make-tar'],config,cwd=unknown)
+    matched=l4/f'{night}_matched_asteroids.fits'
+    if matched.exists() and len(Table.read(matched)):
+        with lock(runtime(config)/'locks/known_history.lock'):
+            run([config['python'],base/'known_asteroid/update_all_matched_history.py',
+                 '--processed-root',config['processed_root'],'--night',night,
+                 '--history-dir',base/'known_asteroid/runtime/history'],config)
+        run([config['python'],base/'known_asteroid/plot_known_asteroids.py',night,
+             '--processed-root',config['processed_root'],'--plot-root',base/'known_asteroid/plots',
+             '--science-manifest',manifest_path,
+             '--all-matched-path',base/'known_asteroid/runtime/history/all_matched_asteroids.fits'],config)
+    load_manifest(manifest_path)
+    trk_log=work/'tracklets_linreproj/make_tracklet.log'
+    gate_lines=[line for line in trk_log.read_text().splitlines() if 'exceeds max_tracklets_per_group=' in line] if trk_log.exists() else []
+    result.pop('error',None)
+    result.update(status='complete',unknown_complete=True,review_package_complete=not limited,
+                  dense_groups_excluded=gate_lines,review_limited=limited,
+                  unknown_submission='website_only',completed_at=utc_now())
+    write_json(l4/f'{night}_v2_pipeline_status.json',result)
+    write_json(runtime(config)/'processing'/f'{night}.json',result)
+    with lock(runtime(config)/'locks'/f'enqueue_{night}.lock'):
+        queue=runtime(config)/'processing_queue'/f'{night}.json'
+        if queue.exists():
+            value=json.loads(queue.read_text());value.update(status='complete',repair_in_progress=False,
+                                                           completed_at=result['completed_at'])
+            write_json(queue,value)
+    return result
+
+
+def resume_review(night,config):
+    from .server_quality import exclusion
+    if exclusion(config['processed_root'],night):raise ValueError('Excluded night cannot resume')
+    with lock(runtime(config)/'locks/references.lock',shared=True),\
+         lock(runtime(config)/'locks'/f'processing_{night}.lock'):
+        state=runtime(config)/'processing'/f'{night}.json';result=json.loads(state.read_text())
+        if not result.get('known_complete') or not (result.get('search_complete') or
+                'package_unknown_review.py' in result.get('error','')):
+            raise ValueError('Resume requires a known-complete night that failed specifically at review packaging')
+        manifest=load_manifest(runtime(config)/'manifests'/f'{night}_science.json')
+        if not manifest['accepted']:raise ValueError('No accepted science inputs to resume')
+        if result['input_signature']!=manifest['input_signature']:raise ValueError('Science input signature changed')
+        write_json(runtime(config)/'repair_audit'/night/'before_review_resume.json',result)
+        result.update(status='resuming_review',search_complete=True,review_resume_started_at=utc_now())
+        write_json(state,result)
+        try:return finish_outputs(night,config,result,bool(result.get('review_limited',False)))
+        except Exception as exc:
+            result.update(status='failed',error=str(exc),updated_at=utc_now());write_json(state,result)
+            raise
+
+
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--night',required=True);p.add_argument('--config')
-    a=p.parse_args();print(json.dumps(process(a.night,load_config(a.config)),indent=2))
+    p.add_argument('--resume-review',action='store_true')
+    a=p.parse_args();print(json.dumps((resume_review if a.resume_review else process)(a.night,load_config(a.config)),indent=2))
