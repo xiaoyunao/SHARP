@@ -56,7 +56,11 @@ def main():
     ]
     for src, name in copies:
         dest = INPUT / name
-        if name in {"raw_manifest.csv", "l2_manifest.csv", "nightly_products.csv", "fig04_unique_object_orbits.csv"}:
+        if name == "nightly_products.csv":
+            dest = dest.with_suffix(".csv.gz")
+            cols = ["night", "known_match1_exists", "known_mask15_exists", "unknown_links_exists", "unknown_links_rows"]
+            pd.read_csv(src, usecols=cols, dtype={"night": str})[cols].to_csv(dest, index=False)
+        elif name in {"raw_manifest.csv", "l2_manifest.csv", "fig04_unique_object_orbits.csv"}:
             import gzip
             dest = dest.with_suffix(".csv.gz")
             with src.open("rb") as file, gzip.open(dest, "wb", compresslevel=5) as output:

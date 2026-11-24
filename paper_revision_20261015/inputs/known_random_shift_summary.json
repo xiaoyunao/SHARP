@@ -1,0 +1,13 @@
+{
+  "baseline_match_n": 1635,
+  "baseline_prediction_n": 44023,
+  "created_utc": "2026-08-09T11:30:22.016888+00:00",
+  "errors": 0,
+  "method": "deterministic exposure-stratified 30/60 arcsec random-direction position shifts; finite Mag_Kron schema gate; nearest neighbor; strict <1 arcsec",
+  "random_shift_chance_fraction": 0.0007297321854485156,
+  "random_shift_matches_lt_1arcsec": 257,
+  "random_shift_prediction_trials": 352184,
+  "random_shift_trials": 1048,
+  "sampled_exposures": 131,
+  "sampled_nights": 131
+}

@@ -1,0 +1,77 @@
+{
+  "analysis": "unknown ADES exposure-start to exposure-midpoint correction",
+  "correction_direction": "add half the matched L2 exposure duration to production ADES MJD",
+  "equivalent_along_track_shift_arcsec": {
+    "at_3_arcsec_per_hour": {
+      "max": 0.0125025,
+      "p50": 0.01250125,
+      "p90": 0.01250125
+    },
+    "at_63_arcsec_per_hour": {
+      "max": 0.2625525,
+      "p50": 0.26252625,
+      "p90": 0.26252625
+    },
+    "at_each_link_linear_speed": {
+      "max": 0.2556272175794889,
+      "p50": 0.06166972693727868,
+      "p90": 0.12265749419092276
+    }
+  },
+  "exact_join": {
+    "duplicate_strict_manifest_keys": 0,
+    "left_keys": [
+      "night",
+      "catalog_name"
+    ],
+    "right_keys": [
+      "night",
+      "file_name"
+    ],
+    "unmatched_detection_rows": 0,
+    "unmatched_unique_files": []
+  },
+  "expected_row_count": 179,
+  "fallback_exposure": {
+    "enabled": false,
+    "policy": "disabled unless explicitly supplied on CLI",
+    "requested_value_s": null,
+    "used_row_count": 0
+  },
+  "generated_utc": "2026-08-09T12:32:32.836907+00:00",
+  "input_hashes": {
+    "l2_manifest.csv": "a5a561c212745bee53a1870a27f83779a2558f3973d88378b8ef5d1cdad6b485",
+    "unknown_high_confidence_detections.csv": "089a4afa81a0fe22805ee3252b8351f90f431da704dce1cfd43cb312c9ac98a8"
+  },
+  "input_profile": {
+    "detection_columns": 158,
+    "detection_rows": 179,
+    "l2_manifest_rows": 40399,
+    "retained_status_required": "retained_after_posthoc_audit",
+    "strict_l2_manifest_rows": 40399
+  },
+  "midpoint_correction_s": {
+    "max": 15.003,
+    "p50": 15.0015,
+    "p90": 15.0015
+  },
+  "production_speed_bounds_arcsec_per_hour": {
+    "maximum": 63.0,
+    "minimum": 3.0,
+    "rows_outside_bounds": 0
+  },
+  "row_count": 179,
+  "safety": {
+    "mpc_or_ades_file_generated": false,
+    "network_access_performed": false,
+    "production_files_modified": false
+  },
+  "start_mjd_disagreement_abs_s": {
+    "max": 0.0,
+    "p50": 0.0,
+    "p90": 0.0
+  },
+  "unique_detection_count": 179,
+  "unique_l2_file_count": 164,
+  "unique_single_night_linkage_count": 58
+}

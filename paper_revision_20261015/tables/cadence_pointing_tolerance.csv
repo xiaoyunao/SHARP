@@ -1,0 +1,4 @@
+max_center_separation_deg,groups,ge3_groups,split_label_groups
+0.25,14415,9710,343
+0.3,14400,9710,343
+0.5,14348,9716,337

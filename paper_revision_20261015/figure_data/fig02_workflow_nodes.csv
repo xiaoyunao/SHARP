@@ -1,0 +1,14 @@
+node,x,y,width,height,label,branch
+plan,0.5,0.92,0.39,0.07,Ecliptic field library and nightly plan,plan
+observe,0.5,0.8,0.39,0.07,Repeat imaging at Xinglong,plan
+l2,0.5,0.68,0.44,0.08,L1 image calibration and L2 source catalogs,common
+known,0.24,0.52,0.39,0.1,"Known-object association
+Aleph predictions and 1″ matching",known
+gaia,0.76,0.52,0.4,0.1,"Independent moving-source search
+Gaia and stationary-source rejection",unknown
+ades,0.24,0.36,0.39,0.08,Known measurements and ADES,known
+orbit,0.76,0.36,0.4,0.1,"Tracklets, links, and
+short-arc orbit consistency",unknown
+mask,0.76,0.22,0.4,0.08,Remove links with 1.5″ known matches,unknown
+review,0.76,0.09,0.4,0.1,"Single-night candidates
+Image review and selected ADES",unknown

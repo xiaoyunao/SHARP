@@ -1,0 +1,3 @@
+nside,cohort,exposures,geometric_once_deg2,geometric_ge3_same_night_deg2
+512,qualified_with_verified_frozen_WCS,39590,10928.2327308833,10469.506297922571
+1024,qualified_with_verified_frozen_WCS,39590,10928.09175577883,10470.594756868704

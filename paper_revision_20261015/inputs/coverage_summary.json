@@ -1,0 +1,21 @@
+{
+  "generated_utc": "2026-08-09T11:30:44.341099+00:00",
+  "healpix_frame": "ICRS",
+  "healpix_nside": 512,
+  "healpix_ordering": "RING",
+  "input_hashes": {
+    "footprints": "13f394877ce26e50e5cee5053a4ad845f412be4520421e46931b3e157d9e0225",
+    "raw_manifest": "5d3a53d05a2a70f73335c9b70871bd7dd280f6795d7b6fb831f031d0a90895b9"
+  },
+  "observed_field_n": 1430,
+  "observed_pixel_n": 792089,
+  "open_shutter_hours": 342.28333333333336,
+  "output_hashes": {
+    "healpix_coverage.fits": "6ddb6c5cffa3c8dcf4766e892749ec73727a27e4a46b4313b73a59689f3cc355"
+  },
+  "query_polygon_fact": 4,
+  "query_polygon_inclusive": true,
+  "raw_exposure_n": 41074,
+  "raw_night_n": 134,
+  "unique_area_deg2": 10387.42600221356
+}

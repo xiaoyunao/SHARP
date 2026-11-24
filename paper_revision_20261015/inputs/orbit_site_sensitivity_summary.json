@@ -1,0 +1,188 @@
+{
+  "all_orbit_links": {
+    "fit_ok_alternate_n": 87462,
+    "fit_ok_baseline_n": 87462,
+    "fit_ok_flip_n": 0,
+    "is_good_alternate_n": 87351,
+    "is_good_baseline_n": 87351,
+    "is_good_flip_n": 0,
+    "matched_both_products_n": 87850,
+    "missing_in_alternate_n": 0,
+    "n": 87850,
+    "new_in_alternate_n": 0
+  },
+  "alternate": {
+    "nights": 123,
+    "root": "/Users/yunaoxiao/Desktop/smt_asteroid/paper_analysis_20260803/snapshot/orbit_site960",
+    "rows": 87850
+  },
+  "alternate_run_summary": {
+    "candidate_nights": 128,
+    "completed_nights": 128,
+    "cores": 8,
+    "created_utc": "2026-08-09T12:28:21.215234+00:00",
+    "elapsed_s": 2976.1237843446434,
+    "error_nights": 0,
+    "observer": {
+      "height_m": 960.0,
+      "latitude_deg_north": 40.393,
+      "longitude_deg_east": 117.575
+    },
+    "source_module": "/home/admin/pipeline/xiaoyunao/heliolincrr/orbit_confirm_links.py",
+    "source_module_sha256": "993186b4125370c8a38d35614715322ebb098769e42782c0a607ccea89793c2f"
+  },
+  "baseline": {
+    "observer": {
+      "height_m": 868.221,
+      "latitude_deg_north": 40.394239,
+      "longitude_deg_east": 117.575
+    },
+    "path": "/Users/yunaoxiao/Desktop/smt_asteroid/paper_analysis_20260803/snapshot/frozen_products/orbit_links.parquet",
+    "rows": 87850,
+    "sha256": "bb8a63052409472cc7ba09d24b29891dc70538a401987fa25cdccaa82da7834f"
+  },
+  "comparison_key": [
+    "night",
+    "linkage_id"
+  ],
+  "created_utc": "2026-08-09T12:28:47.617097+00:00",
+  "formal_unknown_catalog": {
+    "fit_ok_alternate_n": 4762,
+    "fit_ok_baseline_n": 4762,
+    "fit_ok_flip_n": 0,
+    "is_good_alternate_n": 4762,
+    "is_good_baseline_n": 4762,
+    "is_good_flip_n": 0,
+    "matched_both_products_n": 4762,
+    "missing_in_alternate_n": 0,
+    "n": 4762,
+    "new_in_alternate_n": 0
+  },
+  "high_confidence_58": {
+    "fit_ok_alternate_n": 58,
+    "fit_ok_baseline_n": 58,
+    "fit_ok_flip_n": 0,
+    "is_good_alternate_n": 58,
+    "is_good_baseline_n": 58,
+    "is_good_flip_n": 0,
+    "matched_both_products_n": 58,
+    "missing_in_alternate_n": 0,
+    "n": 58,
+    "new_in_alternate_n": 0
+  },
+  "interpretation_guardrail": "This is a deterministic observer-location sensitivity comparison, not a new MPC submission. Canonical surveyed MPC 327 coordinates still require author/observatory confirmation.",
+  "numeric_deltas_alternate_minus_baseline": {
+    "a_au": {
+      "max_abs": 4427.2886451338745,
+      "median": 1.5413110784345818e-06,
+      "n": 87462,
+      "p16": 8.936392782743496e-07,
+      "p84": 4.076613267187667e-06,
+      "p95_abs": 5.777629150172078e-05
+    },
+    "argp_deg": {
+      "max_abs": 359.7021056327824,
+      "median": -2.9312843707884895e-08,
+      "n": 87462,
+      "p16": -1.767371467394696e-05,
+      "p84": 1.6863002350291363e-05,
+      "p95_abs": 4.563897923048897e-05
+    },
+    "best_v1_kms": {
+      "max_abs": 22.728618937516007,
+      "median": 1.0271667640004978e-05,
+      "n": 87462,
+      "p16": 8.01202678530899e-06,
+      "p84": 1.1673306864992126e-05,
+      "p95_abs": 1.3949779859245837e-05
+    },
+    "ecc": {
+      "max_abs": 3.5086774317796405,
+      "median": 5.608224651603572e-07,
+      "n": 87462,
+      "p16": -9.821547000399277e-07,
+      "p84": 1.116885658654087e-06,
+      "p95_abs": 2.409576980966221e-06
+    },
+    "final_max_v_kms": {
+      "max_abs": 0.0,
+      "median": 0.0,
+      "n": 87850,
+      "p16": 0.0,
+      "p84": 0.0,
+      "p95_abs": 0.0
+    },
+    "inc_deg": {
+      "max_abs": 42.19913083224768,
+      "median": -5.91750365686039e-06,
+      "n": 87462,
+      "p16": -2.0223485552861575e-05,
+      "p84": -3.0826237519931995e-07,
+      "p95_abs": 4.5862999976797875e-05
+    },
+    "lin_rms_arcsec": {
+      "max_abs": 0.0,
+      "median": 0.0,
+      "n": 87850,
+      "p16": 0.0,
+      "p84": 0.0,
+      "p95_abs": 0.0
+    },
+    "max_arcsec": {
+      "max_abs": 0.011839598949901553,
+      "median": 0.0,
+      "n": 87462,
+      "p16": -2.1563799936057393e-05,
+      "p84": 2.0058772202469164e-05,
+      "p95_abs": 0.00012965156864829658
+    },
+    "med_arcsec": {
+      "max_abs": 0.018838645904499324,
+      "median": 0.0,
+      "n": 87462,
+      "p16": 0.0,
+      "p84": 0.0,
+      "p95_abs": 0.003073585126505738
+    },
+    "nu_deg": {
+      "max_abs": 180.0192751124704,
+      "median": 3.887060265675424e-09,
+      "n": 87462,
+      "p16": 1.6560958756781097e-09,
+      "p84": 7.939802347256552e-09,
+      "p95_abs": 1.159778736509447e-08
+    },
+    "pred_dec_deg": {
+      "max_abs": 0.0070737179731779065,
+      "median": 3.1385147813978165e-09,
+      "n": 87462,
+      "p16": -3.564554106105788e-08,
+      "p84": 5.191971229834278e-08,
+      "p95_abs": 2.8028053229434135e-07
+    },
+    "pred_ra_deg": {
+      "max_abs": 0.03716288483228425,
+      "median": 2.4692761968481136e-07,
+      "n": 87462,
+      "p16": 1.0412244932922476e-07,
+      "p84": 1.0602941392789943e-06,
+      "p95_abs": 1.2335077194336462e-06
+    },
+    "raan_deg": {
+      "max_abs": 359.5147928103122,
+      "median": 6.600643009946339e-08,
+      "n": 87462,
+      "p16": -1.9365646373330492e-05,
+      "p84": 2.0108589133656093e-05,
+      "p95_abs": 5.17871100924161e-05
+    },
+    "rms_arcsec": {
+      "max_abs": 0.0035490704003306355,
+      "median": 0.0,
+      "n": 87462,
+      "p16": -1.3442677026867522e-05,
+      "p84": 1.2865356682134054e-05,
+      "p95_abs": 8.00022665944991e-05
+    }
+  }
+}

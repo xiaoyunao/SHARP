@@ -1,0 +1,18 @@
+quantity,value,unit,definition
+strict_raw_inventory,41074.0,files,August frozen file count
+qualified_exposures,39590.0,exposures,"unique exposure keys, valid clocks and L2 WCS"
+qualified_nights,129.0,observing nights,local noon boundary
+qualified_open_shutter,329.9453536111111,hours,sum of exposure durations
+qualified_once,10928.09175577883,deg2,geometric exposure WCS sky union
+qualified_same_night_ge3,10470.594756868704,deg2,sky union of same-night>=3 exposure coverage
+recorded_field_label_plus_wcs_pointing_groups,14400.0,field-night pointings,0.30 degree complete linkage
+field_night_pointings_ge3,9710.0,field-night pointings,at least three qualified midpoints
+adjacent_revisit_median,37.65495416666667,min,successive qualified exposures for same pointing
+first_to_last_median,78.23327916666668,min,qualified groups with at least three visits
+median_depth_model_5sigma,20.25,mag,catalog header MLIM
+median_1arcsec_selected_radial_oc,0.2631757864510474,arcsec,quality sample O-C conditional on 1 arcsec cut
+qualified_known_associations,531612.0,associations,1 arcsec matched detections
+qualified_unique_identities,58281.0,identities,unique known catalog identities
+conditional_link_retention,0.7415850000488534,fraction,frozen 1.5 arcsec detected eligible object-nights
+automatic_single_night_candidates,4762.0,linkages,frozen candidate catalog
+post_review_retained_linkages,58.0,linkages,human review and frozen posthoc audit

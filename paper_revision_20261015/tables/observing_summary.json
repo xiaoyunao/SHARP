@@ -1,0 +1,62 @@
+{
+  "baseline_raw_file_inventory": 41074,
+  "baseline_raw_directory_nights": 134,
+  "baseline_raw_nominal_shutter_hours": 342.28333333333336,
+  "baseline_raw_fields": 1430,
+  "baseline_nominal_coverage_deg2": 10387.42600221356,
+  "frozen_l2_catalogs": 40399,
+  "frozen_l2_directory_nights": 131,
+  "quality_exposures": 39590,
+  "quality_noon_nights": 129,
+  "quality_first_night": "20251116",
+  "quality_last_night": "20260715",
+  "quality_fields": 1430,
+  "quality_shutter_hours": 329.9453536111111,
+  "qualified_with_verified_wcs": 39590,
+  "frozen_legacy_exposures_without_parseable_current_raw_time": 10,
+  "relocated_sole_l2_copy": 105,
+  "duplicate_key_file_rows": 546,
+  "duplicate_physical_keys": 273,
+  "exclusion_counts": {
+    "qualified": 39590,
+    "missing_frozen_l2": 675,
+    "20260111_astrometric_WCS_offset": 347,
+    "field_below_horizon_at_header_time": 263,
+    "noncanonical_duplicate": 166,
+    "header_night_disagrees_with_directory": 28,
+    "abnormal_WCS_detector_perimeter": 5
+  },
+  "raw_wcs_scale_arcsec_median": 1.1552690402227934,
+  "field_nights": 14400,
+  "field_nights_visits": {
+    "3": 9710,
+    "1": 2651,
+    "2": 2039
+  },
+  "adjacent_pairs": 25190,
+  "adjacent_min_p16_p50_p84": [
+    28.371980999999998,
+    37.65495416666667,
+    41.92048033333332
+  ],
+  "ge3_span_n": 9710,
+  "ge3_span_min_p16_p50_p84": [
+    61.93109766666667,
+    78.23327916666668,
+    91.50407266666667
+  ],
+  "extension_strict_name": 8149,
+  "extension_strict_nights": 26,
+  "extension_strict_with_l2_now": 8140,
+  "extension_strict_filters": {
+    "W": 8034,
+    "R": 37,
+    "G": 30,
+    "I": 26,
+    "Z": 22
+  },
+  "extension_boundary_counts": {
+    "before_cutoff": 235,
+    "after_cutoff": 168
+  }
+}

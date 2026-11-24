@@ -1,7 +1,9 @@
-/inputs/
-/tables/
-/figure_data/
-/figures/
+/inputs/de432s.bsp
+/inputs/aperture_configuration_evidence.txt
+/inputs/coordinate_and_calibration_source_evidence.txt
+/inputs/instrument_and_examples.txt
+/inputs/photometry_source_evidence.txt
+/inputs/server_code_evidence.txt
 /.venv/
 /replayed_recovery/
 __pycache__/

@@ -50,7 +50,19 @@ def main():
     pd.DataFrame(results, columns=["quantity", "value", "unit", "definition"]).to_csv(
         TABLES / "main_results.csv", index=False)
     original_sources = read_json(INPUT / "original_hashes.json")
+    original_sources["nightly_products.csv.gz"]["selected_columns"] = [
+        "night", "known_match1_exists", "known_mask15_exists", "unknown_links_exists", "unknown_links_rows",
+    ]
+    local_input_names = {
+        "de432s.bsp", "aperture_configuration_evidence.txt", "coordinate_and_calibration_source_evidence.txt",
+        "instrument_and_examples.txt", "photometry_source_evidence.txt", "server_code_evidence.txt",
+    }
     dependencies = {
+        "DE432s": {
+            "download_url": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de432s.bsp",
+            "sha256": "363f32e14f5255359ac32c4d38080cf28ab55564a5e16696a75f63394b666e9b",
+            "local_path": "inputs/de432s.bsp",
+        },
         "frozen_ASTORB": {
             "historic_path": "/pipeline/xiaoyunao/known_asteroid/astorb.dat",
             "historic_sha256": "ea22c7062e7349d9add34fb64835916d66705ad60a717cc7c86a0c47f5aa3040",
@@ -87,6 +99,7 @@ def main():
         "files_sha256": {str(path.relative_to(ROOT)): digest(path) for path in sorted(ROOT.rglob("*"))
                          if path.is_file() and "__pycache__" not in path.parts
                          and path.name not in {"freeze_manifest.json", ".gitignore"}
+                         and not (path.parent == INPUT and path.name in local_input_names)
                          and not any(p.startswith(".") for p in path.relative_to(ROOT).parts)},
     }
     (ROOT / "freeze_manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")

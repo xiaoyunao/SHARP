@@ -1,0 +1,8 @@
+bright_bin,slow_bin,edge_lt500,eligible_n,retained_n
+False,False,False,96144,72731
+False,False,True,4165,2344
+False,True,False,1324,544
+False,True,True,71,18
+True,False,False,607,251
+True,False,True,31,7
+True,True,False,5,4

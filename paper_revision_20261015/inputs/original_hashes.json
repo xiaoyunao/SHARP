@@ -1,0 +1,187 @@
+{
+  "snapshot_config.json": {
+    "original": "snapshot.json",
+    "original_sha256": "4f9d1c7a6688a46cdb6c38023b8c10249b215ef3551a697a54cfcecb7492a7ce"
+  },
+  "raw_manifest.csv.gz": {
+    "original": "raw_manifest.csv",
+    "original_sha256": "5d3a53d05a2a70f73335c9b70871bd7dd280f6795d7b6fb831f031d0a90895b9"
+  },
+  "l2_manifest.csv.gz": {
+    "original": "l2_manifest.csv",
+    "original_sha256": "a5a561c212745bee53a1870a27f83779a2558f3973d88378b8ef5d1cdad6b485"
+  },
+  "quality_mask.csv": {
+    "original": "quality_mask.csv",
+    "original_sha256": "a172d740d7ad46dd9e08987ca3eb1d24bb4c417c22ad3f46238b712bacbefce5"
+  },
+  "night_status.csv": {
+    "original": "night_status.csv",
+    "original_sha256": "fb4ce8be7ef326bde678ed8a8ffd1111a8401733cff21af36629fd242e24f052"
+  },
+  "coverage_summary.json": {
+    "original": "coverage_summary.json",
+    "original_sha256": "68b8b1b2477d62b9cbc8eb57a949e3bb283e91b2e21996f5e6f1f59252381647"
+  },
+  "nightly_products.csv.gz": {
+    "original": "nightly_products.csv",
+    "original_sha256": "e91dc04839ae047288a68c478a1dda5cdd2fa1bb3b83aa2b109d21ae53d4e5f7"
+  },
+  "survey_fov_footprints_with_visibility.fits": {
+    "original": "survey_fov_footprints_with_visibility.fits",
+    "original_sha256": "13f394877ce26e50e5cee5053a4ad845f412be4520421e46931b3e157d9e0225"
+  },
+  "production_file_hashes.csv": {
+    "original": "production_file_hashes.csv",
+    "original_sha256": "8b00c5b3c853fb2dc679e36a9e69ccecb8a677b86a5ce1d8671f666f1aef1e53"
+  },
+  "scheduler_mode_summary.json": {
+    "original": "scheduler_mode_summary.json",
+    "original_sha256": "fccdd4709f9f0fb3a638384c39a0ca34c8318ef026d9ad6daee59e8013566f8e"
+  },
+  "scheduler_plan_realization_by_night.csv": {
+    "original": "scheduler_plan_realization_by_night.csv",
+    "original_sha256": "01dfe80fba7e0ea3dd5f3d0810ca18091d214a469e3add4e002c73144f657bde"
+  },
+  "blinded_known_recovery_binned.csv": {
+    "original": "blinded_known_recovery_binned.csv",
+    "original_sha256": "c73c9bf590160ca1b917f938de1df8bee0af7bdf217be9c7f820e88812328abf"
+  },
+  "blinded_known_summary.json": {
+    "original": "blinded_known_summary.json",
+    "original_sha256": "d234d4f38bd6e45e0dcb4125ac4b8798e13f6e5ef0fa8e28350b8b5f6e09a2d1"
+  },
+  "jpl_second_pass_confirmations.csv": {
+    "original": "jpl_second_pass_confirmations.csv",
+    "original_sha256": "588272ae36e9ad045d47e1bb50207f1c3aa46be7ce7fbba71c4d321795fd9e6e"
+  },
+  "review_and_mpc_status.csv": {
+    "original": "review_and_mpc_status.csv",
+    "original_sha256": "c426e2e8cdaf0d246772594cc8ea8148863f0f9556810e1c26070a719c059e24"
+  },
+  "unknown_ades_midpoint_correction_179.csv": {
+    "original": "unknown_ades_midpoint_correction_179.csv",
+    "original_sha256": "f5f9f7710cdb54d5a80411c95cc20586fd85566fae4efb5c6116e91ee4dd381c"
+  },
+  "unknown_ades_midpoint_correction_summary.json": {
+    "original": "unknown_ades_midpoint_correction_summary.json",
+    "original_sha256": "6a59b6b03efe78af40b36239980c327ec5adf2ca6691b6890c2400b6c07c58e7"
+  },
+  "orbit_site_sensitivity_summary.json": {
+    "original": "orbit_site_sensitivity_summary.json",
+    "original_sha256": "57c102c1fb58fa6789bfe32ba550e2fa6a654e3535ffc98c6e98f24d7dde6a6d"
+  },
+  "known_random_shift_summary.json": {
+    "original": "known_random_shift_summary.json",
+    "original_sha256": "af53321682c33ebc76e29d3b0ad4dab31d2693e52990b8b6e0dfa3e85311478b"
+  },
+  "fig04_unique_object_orbits.csv.gz": {
+    "original": "fig04_unique_object_orbits.csv",
+    "original_sha256": "868f881dd0581c764757e5d2b78c79018353a6169b32b032b071285758ac4ed1"
+  },
+  "fig01_sources.csv": {
+    "original": "fig01_sources.csv",
+    "original_sha256": "2014aee2633465fe37f63c637636db8fade5e6f44c7e3b2468046b9ed2331b04"
+  },
+  "fig06_astrometry.csv": {
+    "original": "fig06_astrometry.csv",
+    "original_sha256": "03eafc8b41afb51fd86dbfd7df6e571d0963da8585b8228db21707ac93703fb8"
+  },
+  "image_source_manifest.csv": {
+    "original": "image_source_manifest.csv",
+    "original_sha256": "bd27840aed71afe80c90534e84c601e2535e792b1d62888a19f9611fa469d4e4"
+  },
+  "de432s.bsp": {
+    "original": "de432s.bsp",
+    "original_sha256": "363f32e14f5255359ac32c4d38080cf28ab55564a5e16696a75f63394b666e9b"
+  },
+  "known_matched.parquet": {
+    "original": "known_matched.parquet",
+    "original_sha256": "029989b675a3a4fbdecc672ea6e58aa293569de6189dbc84074cd7c7f81b6d1e",
+    "selected_columns": [
+      "night",
+      "source_file",
+      "asteroid_name",
+      "asteroid_number",
+      "epoch_mjd",
+      "pred_ra_deg",
+      "pred_dec_deg",
+      "pred_v_mag",
+      "obs_ra_win_deg",
+      "obs_dec_win_deg",
+      "x_win_px",
+      "y_win_px",
+      "obj_id",
+      "mag_aper4",
+      "magerr_aper4",
+      "flux_aper4",
+      "fluxerr_aper4",
+      "flag",
+      "pred_geocentric_distance_au"
+    ]
+  },
+  "known_mask15.parquet": {
+    "original": "known_mask15.parquet",
+    "original_sha256": "f5398587d8d06f038c29487836660b7c69cd1499abbca8de2ae810d61843573a",
+    "selected_columns": [
+      "night",
+      "source_file",
+      "obj_id",
+      "asteroid_number",
+      "asteroid_name",
+      "epoch_mjd",
+      "pred_ra_deg",
+      "pred_dec_deg",
+      "obs_ra_win_deg",
+      "obs_dec_win_deg",
+      "mag_aper4",
+      "pred_v_mag",
+      "x_win_px",
+      "y_win_px",
+      "flag"
+    ]
+  },
+  "orbit_links.parquet": {
+    "original": "orbit_links.parquet",
+    "original_sha256": "bb8a63052409472cc7ba09d24b29891dc70538a401987fa25cdccaa82da7834f",
+    "selected_columns": [
+      "night",
+      "linkage_id",
+      "fit_ok",
+      "is_good"
+    ]
+  },
+  "orbit_obs_residuals.parquet": {
+    "original": "orbit_obs_residuals.parquet",
+    "original_sha256": "aa4544204c7168fc716b6480709774142e0c2f978f9bd168d28dab3cc836ce69",
+    "selected_columns": [
+      "night",
+      "linkage_id",
+      "obs_key",
+      "used"
+    ]
+  },
+  "unknown_catalog.parquet": {
+    "original": "unknown_catalog.parquet",
+    "original_sha256": "7ea13969bd226de2df8048dc53b5eec8d8895e6389a14ff9451002c8239b0756",
+    "selected_columns": [
+      "night",
+      "trk_sub",
+      "linkage_id",
+      "n_obs",
+      "fit_ok",
+      "is_good",
+      "image_names",
+      "objids",
+      "mjds",
+      "rms_arcsec",
+      "max_arcsec",
+      "lin_rms_arcsec",
+      "lin_speed_arcsec_per_day"
+    ]
+  },
+  "blinded_known_recovery_by_object.parquet": {
+    "original": "blinded_known_recovery_by_object.csv",
+    "original_sha256": "75858ee18b9a9d67b9cbc8f2704936bdcab7f5a5e9acf9ef6ebbeaec1c081b56"
+  }
+}

@@ -1,0 +1,10 @@
+source,target,linestyle
+plan,observe,solid
+observe,l2,solid
+l2,known,solid
+l2,gaia,solid
+known,ades,solid
+gaia,orbit,solid
+orbit,mask,solid
+mask,review,solid
+known,mask,dashed

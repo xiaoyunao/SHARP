@@ -1,5 +1,5 @@
 {
-  "analysis_generated_utc": "2026-11-24T03:55:02.304243+00:00",
+  "analysis_generated_utc": "2026-11-24T04:02:08.052153+00:00",
   "history_repository": "https://github.com/xiaoyunao/SHARP",
   "history_archive_ref": "2dffff5e65081eeabd0dab0df2d1ac6ed2d2f757",
   "history_commit_utc": "2026-09-04T02:24:23Z",
@@ -14,6 +14,11 @@
   "geometric_footprints": "40399 frozen L2 archive entries matched on file name and original size and modification time; qualified science subset used",
   "kept_summary_definitions": "Original ledger, selected WCS/sample quality, historical candidate status, historical conditional recovery",
   "dependencies": {
+    "DE432s": {
+      "download_url": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de432s.bsp",
+      "sha256": "363f32e14f5255359ac32c4d38080cf28ab55564a5e16696a75f63394b666e9b",
+      "local_path": "inputs/de432s.bsp"
+    },
     "frozen_ASTORB": {
       "historic_path": "/pipeline/xiaoyunao/known_asteroid/astorb.dat",
       "historic_sha256": "ea22c7062e7349d9add34fb64835916d66705ad60a717cc7c86a0c47f5aa3040",
@@ -70,7 +75,14 @@
     },
     "nightly_products.csv.gz": {
       "original": "nightly_products.csv",
-      "original_sha256": "e91dc04839ae047288a68c478a1dda5cdd2fa1bb3b83aa2b109d21ae53d4e5f7"
+      "original_sha256": "e91dc04839ae047288a68c478a1dda5cdd2fa1bb3b83aa2b109d21ae53d4e5f7",
+      "selected_columns": [
+        "night",
+        "known_match1_exists",
+        "known_mask15_exists",
+        "unknown_links_exists",
+        "unknown_links_rows"
+      ]
     },
     "survey_fov_footprints_with_visibility.fits": {
       "original": "survey_fov_footprints_with_visibility.fits",
@@ -233,8 +245,8 @@
   "files_sha256": {
     "AUTHOR_TODO.md": "f21d31d02fd5ddfb1823f3bb3bd21b4e180dca07657e4a1141f9c4ebd0baec83",
     "FIGURE_CHANGELOG.md": "7e0768f95461aaff8415c2f61e86765885e71e083ae31061367ada2eb991b777",
-    "MANUSCRIPT_FACTS.md": "86ce524488df97ace08bc0d0612562f24d07145d02fddaf07d38e26443c03a66",
-    "README.md": "7393a9a58989f7611444b5d1238496392b6da5fc832321480a65199ea126e1a3",
+    "MANUSCRIPT_FACTS.md": "cabdcc9308333265e0037a2de8c1cceb46f271f55d076ab21828150bff92b0c3",
+    "README.md": "1a28da21ec15540349fa9b970b4c9dbef66ec2375eea9daee1f0069818b7c6da",
     "figure_data/fig01_sources.csv": "2014aee2633465fe37f63c637636db8fade5e6f44c7e3b2468046b9ed2331b04",
     "figure_data/fig02_workflow_edges.csv": "3332c50fff3681aa9689466ef78e4f13e5a8d135262bdcc190e8dfb9482aaf27",
     "figure_data/fig02_workflow_nodes.csv": "c7418429a6ee663d4c4bc50e2db7a9e4651e95b1680c5d3105a9c91e88acc760",
@@ -278,19 +290,16 @@
     "figures/figA2_candidate_short_arc_diagnostic.pdf": "893689c44125dc7269a0e0d55620d52e41d9c83c7b5bd656273c26eb903979bd",
     "figures/figA2_candidate_short_arc_diagnostic.png": "4f9823de26205a847ed139da97749383843ef0a45c7f44897e47d4f899acacf0",
     "inputs/20260210_00000P2_link0035.gif": "66c6275e59092cb4be29f36ca33772c1250e139412677bd97b91717b07392b02",
-    "inputs/aperture_configuration_evidence.txt": "753a0c471074ee2a722962747cdb7dc7fad3d65748f0c774aaef28a5e8d5ef92",
     "inputs/blinded_known_recovery_binned.csv": "c73c9bf590160ca1b917f938de1df8bee0af7bdf217be9c7f820e88812328abf",
     "inputs/blinded_known_recovery_by_object.parquet": "3706a3456f5f562e9ccd503d50d689f316e20a21f1d837d28009bcd7be2cbbb5",
     "inputs/blinded_known_summary.json": "d234d4f38bd6e45e0dcb4125ac4b8798e13f6e5ef0fa8e28350b8b5f6e09a2d1",
-    "inputs/coordinate_and_calibration_source_evidence.txt": "0354f932dc2e5c66efb194261a229c336c9cb41c2acc2e3a752e84f1df02d956",
+    "inputs/calibration_provenance.md": "aba19aba524122bca918041100974e2c2a34df9c600db242df0d5087089019f9",
     "inputs/coverage_summary.json": "68b8b1b2477d62b9cbc8eb57a949e3bb283e91b2e21996f5e6f1f59252381647",
-    "inputs/de432s.bsp": "363f32e14f5255359ac32c4d38080cf28ab55564a5e16696a75f63394b666e9b",
     "inputs/duplicate_signature.json": "3eb039c4da1387ee9fd61d41b4ff86f3992211f4fbfa2cb94aaa36ae870262b1",
     "inputs/fig01_sources.csv": "2014aee2633465fe37f63c637636db8fade5e6f44c7e3b2468046b9ed2331b04",
     "inputs/fig04_unique_object_orbits.csv.gz": "cdb4365bb0fd939ab7224a5363bfbed487169f3a6acf36a005e36418745d65e6",
     "inputs/fig06_astrometry.csv": "03eafc8b41afb51fd86dbfd7df6e571d0963da8585b8228db21707ac93703fb8",
     "inputs/image_source_manifest.csv": "bd27840aed71afe80c90534e84c601e2535e792b1d62888a19f9611fa469d4e4",
-    "inputs/instrument_and_examples.txt": "c25d3e0256e6299b3d5cbaac1d7813016e9578849b946cc851e8c3ec6fd24e63",
     "inputs/jpl_best_match_by_link.csv": "87dd958f829fa60add340d84901c5b7df304b8d9b7dafbd4b86354265b1e191c",
     "inputs/jpl_second_pass_confirmations.csv": "588272ae36e9ad045d47e1bb50207f1c3aa46be7ce7fbba71c4d321795fd9e6e",
     "inputs/known_l4_frames.csv.gz": "877ae33cd0a6a6a819beedebcb4fd28c6f3b533c9bba63272428e16326f6b300",
@@ -300,20 +309,18 @@
     "inputs/l2_manifest.csv.gz": "9cfb22ae9e4d6441a910895a6bffad3debfd2b118702850244daece4c8a1699c",
     "inputs/mpc_reconciliation.csv": "a4cfa1bb5e770ef5691b25095c3189e8541d71abfb892bf0fa1768ba63c56251",
     "inputs/night_status.csv": "fb4ce8be7ef326bde678ed8a8ffd1111a8401733cff21af36629fd242e24f052",
-    "inputs/nightly_products.csv.gz": "5aff83441e9b855c8c7f3220ea466a700cee0a02831d825c2a9dba3f7c7f716a",
+    "inputs/nightly_products.csv.gz": "dd08d7cfc3213750375bb680159b643a0550edaaa9a9d0fad1c4c05de0b052c6",
     "inputs/orbit_links.parquet": "9c59025e62e571b58b49fac986b8fb00d9436323688e2e674487f8afb0ef9fa2",
     "inputs/orbit_obs_residuals.parquet": "06648867b53e294f9cca09396d81a04483f5b9e05d7d3e0ed793467bd0343c38",
     "inputs/orbit_site_sensitivity_summary.json": "57c102c1fb58fa6789bfe32ba550e2fa6a654e3535ffc98c6e98f24d7dde6a6d",
     "inputs/original_hashes.json": "d0314e12dd2ef9d1b6657097eb33197208e2047707c2b0c1371026d538fcc24c",
     "inputs/paper_iers.all": "cc80680ec05c91b65e7d02c6068fe0d44dd0998dc880551975092d2d14aa8e18",
-    "inputs/photometry_source_evidence.txt": "5314a7dba3a8fa79b7dfaa04587640dccd772fc37832ea76bda1e938317d6ddc",
     "inputs/production_file_hashes.csv": "8b00c5b3c853fb2dc679e36a9e69ccecb8a677b86a5ce1d8671f666f1aef1e53",
     "inputs/quality_mask.csv": "a172d740d7ad46dd9e08987ca3eb1d24bb4c417c22ad3f46238b712bacbefce5",
     "inputs/raw_manifest.csv.gz": "179dc56d4843277e4229c5cca91d3b37286330c930cc6f1f464eb022399480f7",
     "inputs/review_and_mpc_status.csv": "c426e2e8cdaf0d246772594cc8ea8148863f0f9556810e1c26070a719c059e24",
     "inputs/scheduler_mode_summary.json": "fccdd4709f9f0fb3a638384c39a0ca34c8318ef026d9ad6daee59e8013566f8e",
     "inputs/scheduler_plan_realization_by_night.csv": "01dfe80fba7e0ea3dd5f3d0810ca18091d214a469e3add4e002c73144f657bde",
-    "inputs/server_code_evidence.txt": "ab8be1057f36ff184663aa1dd80dbfe6e48cd4b79861b36d199e43ad46262ba0",
     "inputs/server_headers.csv.gz": "7c3e6459e5611abb47ec8f3a4281c34d72e81a16dea88bbd4cf5e05c0f228d47",
     "inputs/snapshot_config.json": "4f9d1c7a6688a46cdb6c38023b8c10249b215ef3551a697a54cfcecb7492a7ce",
     "inputs/stellar_sample.csv.gz": "3767403878b8ffb4fa20252f1745cebd297598cdda484357a853841fdadb82ee",
@@ -327,11 +334,11 @@
     "scripts/collect_stellar_sample.py": "4791af670f62b84de4e5290e0477e696af9b9b60c393198fa158947c842e89c0",
     "scripts/combine_headers.py": "562a30bc0dbd1b2c0ff7c913840c1001d5067480271174f5f0230b0d906a9c28",
     "scripts/exposures.py": "ef8bbd286a4ee3e18978184656987e9b01afba483ca8ccfa21b4a9d9575e2f4a",
-    "scripts/freeze_delivery.py": "9f45b683c405c4b7942521e15463c20173161cf588f647c6a7f1b8a773e7c530",
+    "scripts/freeze_delivery.py": "a99f21327c26ce5c0f26a7c03f38f37406c2cfabc47937aa21ab822feb804234",
     "scripts/known_performance.py": "fefa858686e2ab62aceda1aab6c5d2d7b4c7b5afe3e91b5c61bd354dd460381a",
     "scripts/make_figures.py": "9b60e1ee1f9a34768dcbb57e6f6067b65411653cab21c49ccc4e48ab79b41832",
     "scripts/replay_frozen_recovery.py": "38d2ba33ebd749bee549cec79970f8eca4321c74c0f318b86a4d65c8bd38ebfe",
-    "scripts/stage_inputs.py": "cd3f941794c7f9003100a88e8acc6bdfb5d4dabd43ba898ed3916614d34532f4",
+    "scripts/stage_inputs.py": "53a1fa0d663aed7054cd6de71254e98b37238fa400c8b7a9f02cf70f400aba66",
     "scripts/stellar_repeatability.py": "78530181e24288066d6628b1ab17b5c84cc8c81e1c9c599663a3457133b759dc",
     "scripts/verify_bundle.py": "9f28a1f6de0345757e6e68ea1069094fd8d6105fb6b6c4d4b934da09c967374f",
     "tables/adjacent_visit_intervals.csv.gz": "39075128a9e93434dc9216d6e9f04136f9ca75d8f11edf32b9cdfb5606e40642",
@@ -366,6 +373,6 @@
     "tables/sample_photometric_header_and_depth_check.csv": "b69206285a860269796b2d1da1bd9decae9e67cc0653958ed61396bf0b0db020",
     "tables/stellar_repeatability_vs_magnitude.csv": "120aa494dca19573bda3a860dca09aa6717eea7d844527b71c5f905939c5c6a6",
     "tables/stellar_repeated_measurement_pairs.csv.gz": "ce5ea26ed221631f8cedffcac35e0c29268c188d6e35271e2b9e075ba5a69393",
-    "tables/validation.json": "eb136cd8333535ff2b190f241b61f103bee7374bc07b203ecc2f0a87fa3eec36"
+    "tables/validation.json": "e3f76e1a2520ddde0e48bdfdccf8a6b42dccece74e2e8003b11b2dd2ba4fa382"
   }
 }

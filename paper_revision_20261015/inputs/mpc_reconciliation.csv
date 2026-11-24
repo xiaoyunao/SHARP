@@ -1,0 +1,59 @@
+night,trk_sub,linkage_id,final_paper_status,jpl_object_name,jpl_ra,jpl_dec,jpl_visual_magnitude,jpl_ra_rate_arcsec_per_hour,jpl_dec_rate_arcsec_per_hour,jpl_speed_arcsec_per_hour,jpl_direction_deg,jpl_query_state
+20251121,000004r,598,retained_after_posthoc_audit,,,,,,,,,no_candidate_within_search_radius
+20251124,000006v,0,retained_after_posthoc_audit,,,,,,,,,no_candidate_within_search_radius
+20251125,000006K,21,retained_after_posthoc_audit,124941 (2001 TR79),22:42:09,"-13 13'12""",20.2,53.82,25.7,59.64128100569269,25.52529892338911,candidate_rows_within_search_radius
+20251125,000006S,132,retained_after_posthoc_audit,,,,,,,,,no_candidate_within_search_radius
+20251203,000008u,343,retained_after_posthoc_audit,,,,,,,,,no_candidate_within_search_radius
+20251204,0000098,274,retained_after_posthoc_audit,(2018 UL40),07:39:41,"+21 28'11""",22.4,-19.74,10.63,22.420180641555945,151.69751340054967,candidate_rows_within_search_radius
+20251204,000009h,306,retained_after_posthoc_audit,74110 (1998 QU37),07:50:15,"+20 56'23""",19.2,-16.92,1.291,16.969180327876774,175.63677254472054,candidate_rows_within_search_radius
+20251204,000009l,317,retained_after_posthoc_audit,,,,,,,,,no_candidate_within_search_radius
+20251207,00000aG,298,retained_after_posthoc_audit,5599 (1991 SG1),02:19:58,"+19 49'20""",16.2,-13.79,-16.7,21.6576568446358,230.45186017828104,candidate_rows_within_search_radius
+20251207,00000bh,896,retained_after_posthoc_audit,,,,,,,,,no_candidate_within_search_radius
+20251208,00000cs,449,retained_after_posthoc_audit,5599 (1991 SG1),02:19:37,"+19 42'30""",16.3,-12.68,-16.39,20.722318885684587,232.27294180641871,candidate_rows_within_search_radius
+20251208,00000cR,1115,retained_after_posthoc_audit,,,,,,,,,no_candidate_within_search_radius
+20251208,00000cT,1141,retained_after_posthoc_audit,,,,,,,,,no_candidate_within_search_radius
+20251209,00000e2,1083,retained_after_posthoc_audit,,,,,,,,,no_candidate_within_search_radius
+20251214,00000gA,260,retained_after_posthoc_audit,,,,,,,,,no_candidate_within_search_radius
+20251215,00000hz,246,retained_after_posthoc_audit,,,,,,,,,no_candidate_within_search_radius
+20251216,00000jr,232,retained_after_posthoc_audit,570002 (2006 BL119),03:32:38,"+27 11'27""",20.7,-20.23,-16.34,26.004778407054346,218.92820283178705,candidate_rows_within_search_radius
+20251217,00000lw,1025,retained_after_posthoc_audit,,,,,,,,,no_candidate_within_search_radius
+20251217,00000lA,1134,retained_after_posthoc_audit,,,,,,,,,no_candidate_within_search_radius
+20251217,00000lG,1187,retained_after_posthoc_audit,(2016 CB302),07:41:01,"+21 05'13""",22.2,-23.09,2.57,23.232584875557865,173.64891448494424,candidate_rows_within_search_radius
+20260103,00000wD,40,retained_after_posthoc_audit,32866 (1993 FW16),23:50:47,"-03 29'35""",20.3,40.41,20.52,45.32150151969813,26.921237047367768,candidate_rows_within_search_radius
+20260112,00000C3,119,retained_after_posthoc_audit,,,,,,,,,no_candidate_within_search_radius
+20260205,00000LG,51,retained_after_posthoc_audit,,,,,,,,,no_candidate_within_search_radius
+20260205,00000LJ,67,retained_after_posthoc_audit,,,,,,,,,no_candidate_within_search_radius
+20260206,00000LX,102,retained_after_posthoc_audit,478725 (2012 UF59),07:12:41,"+23 06'16""",22.0,-25.19,0.8476,25.20425610407893,178.07282306322583,candidate_rows_within_search_radius
+20260207,00000Ma,120,retained_after_posthoc_audit,,,,,,,,,no_candidate_within_search_radius
+20260207,00000Md,159,retained_after_posthoc_audit,191350 (2003 QF48),07:05:55,"+24 00'25""",20.4,-23.34,-4.412,23.75334384881421,190.7044114078421,candidate_rows_within_search_radius
+20260207,00000Mf,168,retained_after_posthoc_audit,187225 (2005 SG141),07:09:31,"+22 32'47""",20.7,-20.96,4.84,21.511559683109915,166.9973977336386,candidate_rows_within_search_radius
+20260207,00000Mg,174,retained_after_posthoc_audit,204833 (2007 PY34),07:10:40,"+23 20'07""",21.5,-26.37,2.682,26.506037500916655,174.19261700337026,candidate_rows_within_search_radius
+20260207,00000Mh,177,retained_after_posthoc_audit,,,,,,,,,no_candidate_within_search_radius
+20260207,00000Mi,178,retained_after_posthoc_audit,,,,,,,,,no_candidate_within_search_radius
+20260208,00000NM,232,retained_after_posthoc_audit,843259 (2016 EL11),07:19:26,"+22 29'43""",21.5,-21.35,13.65,25.340580103857135,147.40741852740075,candidate_rows_within_search_radius
+20260208,00000Ot,421,retained_after_posthoc_audit,890231 (2013 RR121),07:05:32,"+24 01'46""",22.5,-20.54,-0.1798,20.540786938187154,180.50153447122864,candidate_rows_within_search_radius
+20260208,00000Ow,435,retained_after_posthoc_audit,,,,,,,,,no_candidate_within_search_radius
+20260210,00000P2,35,retained_after_posthoc_audit,(2024 QB43),07:59:02,"+14 16'10""",22.3,-27.84,10.12,29.622288905484663,160.0235035126246,candidate_rows_within_search_radius
+20260213,00000RM,350,retained_after_posthoc_audit,,,,,,,,,no_candidate_within_search_radius
+20260216,00000UH,90,retained_after_posthoc_audit,165705 (2001 PP61),08:19:52,"+21 13'12""",20.5,-23.97,4.821,24.450009018403243,168.62802481186796,candidate_rows_within_search_radius
+20260216,00000UI,208,retained_after_posthoc_audit,165705 (2001 PP61),08:19:52,"+21 13'12""",20.5,-23.98,4.814,24.458434046357095,168.64871996868052,candidate_rows_within_search_radius
+20260309,000011l,35,retained_after_posthoc_audit,C/2025 Y1 (ATLAS),13:08:56,"+00 35'06""",18.6,-11.69,9.271,14.92003823721642,141.58308591649697,candidate_rows_within_search_radius
+20260310,000012m,730,retained_after_posthoc_audit,,,,,,,,,no_candidate_within_search_radius
+20260310,000012H,1026,retained_after_posthoc_audit,C/2025 Y1 (ATLAS),13:08:37,"+00 39'03""",18.5,-12.0,9.361,15.219340360212724,142.04280067464416,candidate_rows_within_search_radius
+20260311,000013V,1139,retained_after_posthoc_audit,C/2025 Y1 (ATLAS),13:08:18,"+00 42'44""",18.5,-12.29,9.44,15.497022294621637,142.47198411543906,candidate_rows_within_search_radius
+20260407,0000188,1081,retained_after_posthoc_audit,,,,,,,,,no_candidate_within_search_radius
+20260407,000018c,1098,retained_after_posthoc_audit,,,,,,,,,no_candidate_within_search_radius
+20260410,000018w,159,retained_after_posthoc_audit,,,,,,,,,no_candidate_within_search_radius
+20260410,000018E,394,retained_after_posthoc_audit,,,,,,,,,no_candidate_within_search_radius
+20260410,000018H,420,retained_after_posthoc_audit,,,,,,,,,no_candidate_within_search_radius
+20260420,000019o,807,retained_after_posthoc_audit,,,,,,,,,no_candidate_within_search_radius
+20260422,00001aJ,102,retained_after_posthoc_audit,,,,,,,,,no_candidate_within_search_radius
+20260503,00001d1,389,retained_after_posthoc_audit,,,,,,,,,no_candidate_within_search_radius
+20260508,00001eC,186,retained_after_posthoc_audit,,,,,,,,,no_candidate_within_search_radius
+20260509,00001fm,221,retained_after_posthoc_audit,,,,,,,,,no_candidate_within_search_radius
+20260509,00001fs,311,retained_after_posthoc_audit,,,,,,,,,no_candidate_within_search_radius
+20260512,00001fU,105,retained_after_posthoc_audit,(2015 HR206),12:14:05,"+07 52'41""",21.9,0.3343,-10.31,10.31541838657066,271.85715525560624,candidate_rows_within_search_radius
+20260530,00001gL,73,retained_after_posthoc_audit,C/2025 Y1 (ATLAS),12:40:20,"+04 40'04""",18.4,-4.758,1.276,4.926128297151831,164.98766721559628,candidate_rows_within_search_radius
+20260530,00001gM,75,retained_after_posthoc_audit,C/2025 Y1 (ATLAS),12:40:19,"+04 40'05""",18.4,-4.679,1.26,4.845682717636391,164.9284378912443,candidate_rows_within_search_radius
+20260601,00001h1,9,retained_after_posthoc_audit,160142 (2001 DG101),12:08:25,"+07 46'12""",20.7,3.162,-14.53,14.87007545374266,282.27721509696255,candidate_rows_within_search_radius
+20260601,00001h8,82,retained_after_posthoc_audit,C/2025 Y1 (ATLAS),12:40:07,"+04 40'55""",18.4,-3.973,0.8689,4.066904991513817,167.66357927598898,candidate_rows_within_search_radius

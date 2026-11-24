@@ -8,6 +8,8 @@
 
 ## 给正文的文件
 
+- [figures/](figures/) 提供可直接使用的正文图和附图，每幅含 PDF 和 300 dpi PNG。[figure_data/](figure_data/) 提供绘图数据。
+- [tables/main_results.csv](tables/main_results.csv) 为正文主结果表。
 - [MANUSCRIPT_FACTS.md](MANUSCRIPT_FACTS.md) 提供可引用的数字、方法事实、图注要点和来源。
 - [FIGURE_CHANGELOG.md](FIGURE_CHANGELOG.md) 对应旧稿十二图与新版八幅主图、两幅附图。
 - [AUTHOR_TODO.md](AUTHOR_TODO.md) 列出影响论文结论的待补证事项。
@@ -18,9 +20,13 @@
 
 ## 本地复现
 
-在 ZIP 解压出的 `paper_revision_20261015` 目录中，用 Python 3.12 运行以下命令。绘图数据、观测归档、已筛选的星表列、冻结星历和地球定向表均在包内。图 1 和图 8 为附带的已验收原版成品。图 1 的原全幅 L1 约 278 MB，位置与校验值在源清单中。
+从 GitHub 检出论文分支后，在 `paper_revision_20261015` 目录中用 Python 3.12 运行以下命令。绘图数据、观测归档、已筛选的星表列和地球定向表在仓库中。DE432s 星历由 JPL 发布，下载后核对 SHA-256。[JPL NAIF 星历目录](https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/)图 1 和图 8 为附带的已验收原版成品。图 1 的原全幅 L1 约 278 MB，位置与校验值在源清单中。
 
 ```bash
+curl --fail --location --output inputs/de432s.bsp https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de432s.bsp
+shasum -a 256 -c <<'EOF'
+363f32e14f5255359ac32c4d38080cf28ab55564a5e16696a75f63394b666e9b  inputs/de432s.bsp
+EOF
 python -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements.txt

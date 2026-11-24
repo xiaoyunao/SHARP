@@ -1,0 +1,15 @@
+cohort,class,unique_objects,detections
+baseline,Distant (a ≥ 5.4 au),17,119
+baseline,Inner belt / Hungaria,598,3735
+baseline,Jupiter Trojan region,634,5942
+baseline,Main belt,55985,512468
+baseline,Mars-crosser,507,4510
+baseline,NEO (q < 1.3 AU),173,1098
+baseline,Outer belt / Hilda,568,6908
+quality,Distant (a ≥ 5.4 au),17,119
+quality,Inner belt / Hungaria,595,3704
+quality,Jupiter Trojan region,634,5942
+quality,Main belt,55791,509394
+quality,Mars-crosser,506,4490
+quality,NEO (q < 1.3 AU),173,1095
+quality,Outer belt / Hilda,565,6868

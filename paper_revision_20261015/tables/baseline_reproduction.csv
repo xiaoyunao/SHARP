@@ -1,0 +1,19 @@
+metric,expected,recomputed,definition,pass
+standard_raw_files,41074.0,41074.0,frozen raw inventory rows,True
+raw_directory_nights,134.0,134.0,distinct frozen raw directory labels,True
+nominal_shutter_hours,342.28333333333336,342.28333333333336,nominal 30 s per raw inventory record,True
+observed_fields,1430.0,1430.0,unique field IDs in frozen raw inventory,True
+nominal_geometry_deg2,10387.42600221356,10387.42600221356,"frozen field polygons, NSIDE 512 inclusive",True
+strict_l2,40399.0,40399.0,frozen strict L2 rows,True
+strict_l2_directory_nights,131.0,131.0,frozen strict L2 directory labels,True
+known_1arcsec,534780.0,534780.0,1 arcsec frozen matched rows,True
+known_identities,58482.0,58482.0,distinct canonical identity keys,True
+candidates,4762.0,4762.0,formal frozen candidate catalog rows,True
+reviewed_real,68.0,68.0,frozen review-true counts,True
+selected_for_submission,67.0,67.0,frozen selection rows,True
+retained,58.0,58.0,post-review retained linkages,True
+retained_measurements,179.0,179.0,corrected midpoint measurements,True
+retained_nights,34.0,34.0,retained linkage nights,True
+C2025_Y1_matches,6.0,6.0,frozen two-pass numerical ephemeris comparisons,True
+retention_numerator,75899.0,75899.0,frozen eligible object-nights covered by pure link,True
+retention_denominator,102347.0,102347.0,frozen >=3 detections; first-last speed 3–63 arcsec/h,True

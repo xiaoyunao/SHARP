@@ -41,7 +41,7 @@
 | 零点和颜色 | 上游源代码把 Gaia G 加 0.1136777774，再对 $x=(BP-RP)-0.340674898$ 加上 W 颜色多项式 $-0.03971196x^3+0.19464851x^2-0.11042587x-0.03542586$。参考孔径是直径 18 像素。最终输出应用逐帧光度校准及孔径修正。 |
 | 深度 | `MLIM=ZP-2.5 log10(F5_ADU)`，其中 `F5_ADU=5 sqrt[(sky_ADU × gain + RON²) π(FWHM_px/2)²]/gain`，gain 为 e⁻/ADU，RON 为 e⁻。18 份冻结 L2 样本的重算值与头值差小于 0.006 mag。 |
 
-W 是实拍通带标记和上游颜色变换选择，实际系统响应曲线待仪器方提供。已知目标的星历 V、Gaia 源目录 G 和 ADES 的 Gaia3E/G 输出约定各有定义。原 FITS 的 GMG 站址字段使用了外站模板，几何计算采用冻结 known matcher 的观测站坐标。使用旧调度器 15 s 读出参数时写明它是排程开销。参考星目录发行版待确认。[上游源证据](inputs/coordinate_and_calibration_source_evidence.txt) · [孔径配置和真实头](inputs/aperture_configuration_evidence.txt) · [MLIM 复算表](tables/sample_photometric_header_and_depth_check.csv) · [SExtractor 固定孔径定义](https://sextractor.readthedocs.io/en/stable/Photom.html#fixed-aperture-flux-flux-aper)
+W 是实拍通带标记和上游颜色变换选择，实际系统响应曲线待仪器方提供。已知目标的星历 V、Gaia 源目录 G 和 ADES 的 Gaia3E/G 输出约定各有定义。原 FITS 的 GMG 站址字段使用了外站模板，几何计算采用冻结 known matcher 的观测站坐标。使用旧调度器 15 s 读出参数时写明它是排程开销。参考星目录发行版待确认。[上游定标及 Aleph 来源](inputs/calibration_provenance.md) · [MLIM 复算表](tables/sample_photometric_header_and_depth_check.csv) · [SExtractor 固定孔径定义](https://sextractor.readthedocs.io/en/stable/Photom.html#fixed-aperture-flux-flux-aper)
 
 ## 观测设计与移动源处理
 

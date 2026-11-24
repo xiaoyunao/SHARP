@@ -1,0 +1,101 @@
+{
+  "schema_version": "1.0",
+  "snapshot_label": "2026-08-03",
+  "observation_start": "2025-11-15",
+  "observation_end": "2026-07-15",
+  "timezone": "Asia/Shanghai",
+  "production_algorithm_commit": "d2f0057bd4cdd4c7a3c6c2431f6449a72c327284",
+  "repository_commit_reviewed": "cfee217611bca4e71b40ea3687a0906a39849997",
+  "server": {
+    "ssh_host": "www.xinglong-naoc.cn",
+    "ssh_port": 20093,
+    "ssh_user": "smtpipeline",
+    "raw_root": "/raw1",
+    "processed_root": "/processed1",
+    "pipeline_root": "/pipeline/xiaoyunao"
+  },
+  "quality_rules": {
+    "status": "provisional_pending_author_signoff",
+    "exclude_from_primary_science": {
+      "20260111": "upstream_wcs_failure_8_to_11_arcsec"
+    },
+    "quarantine_unknown": {
+      "20251226": "high_candidate_count_366",
+      "20260528": "high_candidate_count_926",
+      "20260611": "high_candidate_count_653"
+    },
+    "raw_without_l2": {
+      "20260209": "missing_l2",
+      "20260312": "missing_l2",
+      "20260413": "missing_l2"
+    }
+  },
+  "site_configuration_as_executed": {
+    "scheduler": {
+      "longitude_deg_east": 117.575,
+      "latitude_deg_north": 40.393,
+      "height_m": 960.0
+    },
+    "known_matcher": {
+      "longitude_deg_east": 117.575,
+      "latitude_deg_north": 40.393,
+      "height_m": 960.0
+    },
+    "single_night_orbit_confirm": {
+      "longitude_deg_east": 117.575,
+      "latitude_deg_north": 40.394239,
+      "height_m": 868.221
+    },
+    "multi_night_orbit_confirm": {
+      "longitude_deg_east": 117.575,
+      "latitude_deg_north": 40.394239,
+      "height_m": 868.221
+    },
+    "legacy_twilight_analysis_not_final": {
+      "longitude_deg_east": 117.5775,
+      "latitude_deg_north": 40.395833,
+      "height_m": 960.0
+    },
+    "final_canonical_site_status": "requires_author_or_observatory_confirmation"
+  },
+  "upstream_header_site_metadata": {
+    "status": "known_template_contamination_do_not_use_as_observer_location",
+    "observatory": "GMG",
+    "longitude_deg_east": 100.0313,
+    "latitude_deg_north": 26.6974,
+    "height_m": 3227.0,
+    "verified_example_nights": [
+      "20260111",
+      "20260529",
+      "20260715"
+    ]
+  },
+  "known": {
+    "predicted_v_limit_mag": 22.5,
+    "official_match_radius_arcsec": 1.0,
+    "unknown_mask_radius_arcsec": 1.5
+  },
+  "unknown": {
+    "production_skip_common_area": true,
+    "gaia_match_radius_arcsec": 1.5,
+    "minimum_speed_arcsec_per_hour": 3.0,
+    "maximum_speed_arcsec_per_hour": 63.0,
+    "maximum_magnitude_difference": 1.0,
+    "maximum_speed_difference_arcsec_per_hour": 5.0,
+    "maximum_direction_difference_deg": 10.0,
+    "quarantine_threshold_links": 200,
+    "single_night_catalog_selector_as_executed": "fit_ok_and_all_non_asteroid",
+    "single_night_is_good_requires": {
+      "rms_arcsec_lte": 5.0,
+      "max_residual_arcsec_lte": 8.0,
+      "minimum_used_observations": 3,
+      "minimum_tracklets": 2,
+      "linear_rms_arcsec_lte": 10.0,
+      "minimum_used_fraction": null
+    },
+    "unknown_ades_time_as_executed": "exposure_start",
+    "orbit_and_tracklet_time_reference": "exposure_midpoint",
+    "standard_exposure_midpoint_offset_s": 15.0
+  },
+  "style_reference": "/Users/yunaoxiao/Desktop/gotta_asteroid_1"
+}
