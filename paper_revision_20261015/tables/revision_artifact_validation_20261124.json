@@ -1,0 +1,141 @@
+{
+  "checked_utc": "2026-11-24T09:31:02.371749+00:00",
+  "baseline_check_count": 18,
+  "physical_exposure_identity_unique_in_quality_sample": true,
+  "duplicate_pairs_checked_by_same_timestamp_and_four_segments": 273,
+  "extension_boundary_partition_checked": true,
+  "wcs_maps_and_area_consistent": true,
+  "quality_known_sky_counts_close": true,
+  "figure_pairs": [
+    {
+      "stem": "fig01_exposure",
+      "png_size": [
+        4423,
+        2184
+      ],
+      "png_dpi": [
+        300,
+        300
+      ],
+      "pdf_sha256": "671a13218a1d9986b238c1ac8345d127e46b5d95eb44045702d539c459cfca77",
+      "png_sha256": "b8f0efb3b4c17295e212b9dc0e5b01a2ecf03ab5a4933cded2ccd6ba3d019c53"
+    },
+    {
+      "stem": "fig02_workflow",
+      "png_size": [
+        1710,
+        1237
+      ],
+      "png_dpi": [
+        300,
+        300
+      ],
+      "pdf_sha256": "c2c19855340c5084dbd0ebb1ec8645b50fb54e37064f3594a4850943ca167641",
+      "png_sha256": "8053b5272fb1bf3778a8711b80f815389e37a88f159363ad8eccb92a2d47fa68"
+    },
+    {
+      "stem": "fig03_coverage_and_known_sky",
+      "png_size": [
+        3022,
+        1074
+      ],
+      "png_dpi": [
+        300,
+        300
+      ],
+      "pdf_sha256": "5eec45670dac180e15193b16597a672a2ad1be66b90cc30ee50e4a0f1f65ea49",
+      "png_sha256": "8a4f72d3fe1bebf3e8b434075d2ffc2f74ff3c12fec904a03586673081a7873c"
+    },
+    {
+      "stem": "fig04_activity_and_cadence",
+      "png_size": [
+        2512,
+        1852
+      ],
+      "png_dpi": [
+        300,
+        300
+      ],
+      "pdf_sha256": "0c7b99f2b530612b27b88e3d4fe33cca276a0766d4fd39a8ad5fa7bbd1c11c29",
+      "png_sha256": "8e0b210753e8470176780b3369f695b5016715cd9f8fa97dc8b41a748deb16be"
+    },
+    {
+      "stem": "fig05_measurement_quality",
+      "png_size": [
+        2512,
+        1792
+      ],
+      "png_dpi": [
+        300,
+        300
+      ],
+      "pdf_sha256": "85ede1ff698d3e88c1b58de699f0b6210a62c893939ab1b56d2acd36fd25611f",
+      "png_sha256": "999eb3b458a93cd720daec09a01aa1ffcdde05312ac2dfdf74766660c22535a9"
+    },
+    {
+      "stem": "fig06_conditional_retention",
+      "png_size": [
+        2512,
+        1027
+      ],
+      "png_dpi": [
+        300,
+        300
+      ],
+      "pdf_sha256": "3f38833c0165e9c06612e1d9d3b99c5d2266d197d8cb6a21e3aa5f0d1b55c3ec",
+      "png_sha256": "cb232bb86265d809fb7bc76c1986dabe1a2019ddd78add0a38a950f844450dad"
+    },
+    {
+      "stem": "fig07_orbits_and_revisits",
+      "png_size": [
+        2542,
+        1882
+      ],
+      "png_dpi": [
+        300,
+        300
+      ],
+      "pdf_sha256": "14a8732dbdead71d3c8b1ab615cc91c7849ee9ff9ff8d17966ffca741d85178a",
+      "png_sha256": "fdb183baef9b398e9dbb94b704398efbe77e3174ba5029099e55e1b6cdf68458"
+    },
+    {
+      "stem": "fig08_candidate",
+      "png_size": [
+        4365,
+        1452
+      ],
+      "png_dpi": [
+        300,
+        300
+      ],
+      "pdf_sha256": "d0834c90624c06da0e67f3750292fcc64ca26ed2ea76803b4d737e0816886d93",
+      "png_sha256": "adb27aa9a80670b69ead4de8872ac8d0f0ac3061f532227c7a6fe1defe17cc52"
+    },
+    {
+      "stem": "figA1_motion_and_solar_elongation",
+      "png_size": [
+        2512,
+        997
+      ],
+      "png_dpi": [
+        300,
+        300
+      ],
+      "pdf_sha256": "6024e2c35b1ce9858d7512802d15d562547ca50ffd12abef21cba5e7651af84f",
+      "png_sha256": "81e30629ab6f17d36c0986c8ee14ba63928f710b3f4cb8593f7ef80cd8663fd9"
+    },
+    {
+      "stem": "figA2_candidate_short_arc_diagnostic",
+      "png_size": [
+        1642,
+        1057
+      ],
+      "png_dpi": [
+        300,
+        300
+      ],
+      "pdf_sha256": "893689c44125dc7269a0e0d55620d52e41d9c83c7b5bd656273c26eb903979bd",
+      "png_sha256": "4f9823de26205a847ed139da97749383843ef0a45c7f44897e47d4f899acacf0"
+    }
+  ]
+}

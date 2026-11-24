@@ -1,0 +1,18 @@
+orbit_key,identity,a_au,historical_associations,matched_images,moving_supported_associations,stationary_coincidences,mixed_evidence,insufficient,key_unmapped,brightness_flags,maximum_abs_pred_V_minus_g_aper,identity_evidence
+N:136199,Eris,67.96943724,13,13,6,0,0,7,0,0,0.47817420959472656,moving_source_supported
+N:145627,2006 RY102,6.23115267,19,19,16,0,0,3,0,0,0.7813053131103516,moving_source_supported
+N:15504,1999 RG33,9.38612367,3,3,2,0,0,1,0,0,0.6930637359619141,moving_source_supported
+N:2060,Chiron,13.68848366,17,17,8,0,0,9,0,0,0.8959503173828125,moving_source_supported
+N:306173,2010 NK83,5.91994468,26,26,23,0,0,3,0,0,0.8874454498291016,moving_source_supported
+N:341520,Mors-Somnus,39.53653808,1,1,0,1,0,0,0,1,3.632396697998047,stationary_coincidence
+N:468861,2013 LU28,179.66111443,16,16,14,0,0,2,0,0,0.9777069091796875,moving_source_supported
+N:523629,2008 SP266,41.1870627,2,2,0,2,0,0,0,2,3.6941413879394567,stationary_coincidence
+N:523716,2014 KW101,40.60021237,1,1,0,0,0,1,0,1,3.9641494750976562,insufficient
+N:523769,2014 WS510,55.74019491,2,2,0,2,0,0,0,2,4.879400253295898,stationary_coincidence
+N:54598,Bienor,16.60227154,13,13,10,0,0,3,0,0,0.6248111724853516,moving_source_supported
+N:562274,2015 XW379,28.03332246,1,1,0,0,0,1,0,0,0.5188941955566406,insufficient
+N:84922,2003 VS2,39.70753197,1,1,0,0,0,1,0,0,1.5717601776123082,insufficient
+S:2012yg12,2012 YG12,39.72851775,1,1,0,1,0,0,0,1,8.574148178100586,stationary_coincidence
+S:2023xm5,2023 XM5,6.41464671,1,1,0,1,0,0,0,1,5.501327514648434,stationary_coincidence
+S:2025wz20,2025 WZ20,19.33296312,1,1,0,1,0,0,0,1,3.550210952758789,stationary_coincidence
+S:2025xt9,2025 XT9,36.46256301,1,1,0,1,0,0,0,1,4.081418991088867,stationary_coincidence

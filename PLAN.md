@@ -4,6 +4,7 @@
 
 - 目标是用启动期实拍覆盖、重访、测量质量和条件关联结果支撑 PASP 主线。分析交付已完成，主样本仍按 2025-11-15 至 2026-07-15 的 20260803 冻结范围。
 - GitHub 交付目录位于 `codex/sharp-paper-revision-20261015` 分支。
+- 第二轮局部核验及数字来源表完成，见 `paper_revision_20261015/REVISION_CHECK_SUMMARY_20261124.md`，新增结果供 GPT Pro 整合。
 - 正文阶段使用 `paper_revision_20261015/MANUSCRIPT_FACTS.md`、主表及 8 幅主图。各比例沿用交付中注明的分母。补充区间单列，日距角采用本轮重算值。
 - 验收记录为 `paper_revision_20261015/tables/validation.json`。下一步交 GPT Pro 按事实表改稿，作者补正式仪器／参考光度出处。剩余候选身份与选做时域例证按事实来源更新。
 

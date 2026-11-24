@@ -58,6 +58,13 @@ def main():
         "instrument_and_examples.txt", "photometry_source_evidence.txt", "server_code_evidence.txt",
     }
     dependencies = {
+        "distant_frozen_predictions": {
+            "parent_product": "20260803 frozen_products/known_all.parquet",
+            "parent_sha256": "378b29126ae85e977c4494d571f4a4903a427c5cc84beacf8411576ea776644a",
+            "selected_records": 663,
+            "selected_catalog_identities": 17,
+            "selection_script": "scripts/select_rare_predictions.py",
+        },
         "DE432s": {
             "download_url": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de432s.bsp",
             "sha256": "363f32e14f5255359ac32c4d38080cf28ab55564a5e16696a75f63394b666e9b",

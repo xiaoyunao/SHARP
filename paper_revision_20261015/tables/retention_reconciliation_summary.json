@@ -1,0 +1,82 @@
+{
+  "historical": {
+    "denominator": 102347,
+    "numerator": 75899,
+    "ambiguous_detection_keys": 13,
+    "pre_subtraction_pure_links": 79621,
+    "auxiliary_member_reasons": {
+      "20260111_astrometric_WCS_offset": 3,
+      "noncanonical_duplicate": 2381,
+      "qualified": 361726
+    },
+    "object_nights": {
+      "all_retained": 101576,
+      "partially_retained": 417,
+      "all_excluded": 354
+    },
+    "linked_object_nights_aux_members": {
+      "all_retained": 75328,
+      "partially_retained": 296,
+      "all_excluded": 275
+    },
+    "linked_object_nights_link_members": {
+      "all_retained": 75354,
+      "all_excluded": 320,
+      "partially_retained": 225
+    }
+  },
+  "physical_quality_cohorts": [
+    {
+      "cohort": "historical_stage_policy_all_archival_states",
+      "numerator": 75467,
+      "denominator": 101784,
+      "fraction": 0.7414426628939715,
+      "wilson95": [
+        0.7387437517458157,
+        0.7441233500178475
+      ],
+      "physical_nights": 126,
+      "stage_counts": {
+        "stage_products_present": 99426,
+        "historical_quarantine": 2299,
+        "not_run_no_stage_summary": 59
+      },
+      "status_counts": {
+        "supported_by_preserved_pure_link": 75467,
+        "recorded_stage_without_qualified_pure_link": 25639,
+        "historical_quarantine": 619,
+        "not_run_no_stage_summary": 59
+      }
+    },
+    {
+      "cohort": "recorded_nonquarantined_stage_only",
+      "numerator": 73787,
+      "denominator": 99426,
+      "fraction": 0.7421298251966286,
+      "wilson95": [
+        0.7394013229094926,
+        0.7448396181759934
+      ],
+      "physical_nights": 122,
+      "stage_counts": {
+        "stage_products_present": 99426
+      },
+      "status_counts": {
+        "supported_by_preserved_pure_link": 73787,
+        "recorded_stage_without_qualified_pure_link": 25639
+      }
+    }
+  ],
+  "reassigned_eligible_archive_object_nights": 59,
+  "reviewed_linkages": {
+    "retained_measurements": 179,
+    "retains_single_night_minimum": 58,
+    "outcomes": {
+      "all_retained": 58
+    },
+    "member_states": {
+      "qualified": 179
+    },
+    "max_midpoint_delta_s": 1.257285475730896e-06
+  }
+}

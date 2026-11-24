@@ -6,6 +6,20 @@
 
 重建了 **39,590 张合格曝光和 129 夜**。实拍 WCS 覆盖约 **10,928 deg²**，曾达到同夜三访的面积约 **10,471 deg²**。实拍相邻重访中位 37.65 分钟，目录模型深度中位 20.25 mag，原冻结条件关联保留率 74.16%。
 
+## 2026-11-24 二次核验
+
+[核验摘要](REVISION_CHECK_SUMMARY_20261124.md) 包含合格曝光条件连接率、58 条候选的逐成员对照、模型深度及远距目标复核。[稿件数字来源](tables/manuscript_number_source_map.csv) 记录正文与图注的样本定义。[L1 局部切片](audit_figures/distant_l1_local_evidence.pdf) 为远距目标核验材料。
+
+可重跑新增统计及切片图。L2 的局部搜寻结果、L1 像素切片和冻结产品状态均附在仓库中。
+
+```bash
+python scripts/reconcile_historical_cohorts.py
+python scripts/review_distant_associations.py
+python scripts/render_distant_stamps.py
+```
+
+将 GPT Pro 的英文稿源工程解压后，可在论文目录中运行 `python scripts/build_manuscript_source_map.py <源工程根路径>` 和 `python scripts/verify_revision_geometry.py <源工程根路径>`。两项校验使用源工程中的 LaTeX、PDF 和图指纹。
+
 ## 给正文的文件
 
 - [figures/](figures/) 提供可直接使用的正文图和附图，每幅含 PDF 和 300 dpi PNG。[figure_data/](figure_data/) 提供绘图数据。

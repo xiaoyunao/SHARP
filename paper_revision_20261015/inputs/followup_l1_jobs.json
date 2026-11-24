@@ -1,0 +1,209 @@
+[
+  {
+    "path": "/processed1/20251216/L1/OBJ_MP_0560_0366.fits.gz",
+    "image": true,
+    "targets": [
+      {
+        "label": "2012 YG12 20251216 0366",
+        "ra": 99.85917710193924,
+        "dec": 13.905967385574003,
+        "markers": [
+          {
+            "label": "matched sky position",
+            "ra": 99.85917710193924,
+            "dec": 13.905967385574003
+          },
+          {
+            "label": "epoch prediction",
+            "ra": 99.86036288409218,
+            "dec": 13.905850941446102
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/processed1/20251216/L1/OBJ_MP_0560_0384.fits.gz",
+    "image": true,
+    "targets": [
+      {
+        "label": "2012 YG12 20251216 0384",
+        "ra": 99.85917710193924,
+        "dec": 13.905967385574003,
+        "markers": [
+          {
+            "label": "matched sky position",
+            "ra": 99.85917710193924,
+            "dec": 13.905967385574003
+          },
+          {
+            "label": "epoch prediction",
+            "ra": 99.85976411133564,
+            "dec": 13.905926042154288
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/processed1/20251216/L1/OBJ_MP_0560_0402.fits.gz",
+    "image": true,
+    "targets": [
+      {
+        "label": "2012 YG12 20251216 0402",
+        "ra": 99.85917710193924,
+        "dec": 13.905967385574003,
+        "markers": [
+          {
+            "label": "matched sky position",
+            "ra": 99.85917710193924,
+            "dec": 13.905967385574003
+          },
+          {
+            "label": "epoch prediction",
+            "ra": 99.85912457288656,
+            "dec": 13.90600610130992
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/processed1/20260205/L1/OBJ_MP_0828_0161.fits.gz",
+    "image": true,
+    "targets": [
+      {
+        "label": "2023 XM5 20260205 0161",
+        "ra": 98.98617957253975,
+        "dec": 21.547158227827012,
+        "markers": [
+          {
+            "label": "matched sky position",
+            "ra": 98.98617957253975,
+            "dec": 21.547158227827012
+          },
+          {
+            "label": "epoch prediction",
+            "ra": 98.98626563759312,
+            "dec": 21.5472739613282
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/processed1/20260205/L1/OBJ_MP_0828_0189.fits.gz",
+    "image": true,
+    "targets": [
+      {
+        "label": "2023 XM5 20260205 0189",
+        "ra": 98.98617957253975,
+        "dec": 21.547158227827012,
+        "markers": [
+          {
+            "label": "matched sky position",
+            "ra": 98.98617957253975,
+            "dec": 21.547158227827012
+          },
+          {
+            "label": "epoch prediction",
+            "ra": 98.9835933349987,
+            "dec": 21.549258880723603
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/processed1/20260310/L1/OBJ_MP_0845_0283.fits.gz",
+    "image": true,
+    "targets": [
+      {
+        "label": "2014 WS510 20260310 0283",
+        "ra": 147.2929454402243,
+        "dec": 10.59630747274108,
+        "markers": [
+          {
+            "label": "matched sky position",
+            "ra": 147.2929454402243,
+            "dec": 10.59630747274108
+          },
+          {
+            "label": "epoch prediction",
+            "ra": 147.29353853387846,
+            "dec": 10.59601881476686
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/processed1/20260310/L1/OBJ_MP_0845_0306.fits.gz",
+    "image": true,
+    "targets": [
+      {
+        "label": "2014 WS510 20260310 0306",
+        "ra": 147.2929454402243,
+        "dec": 10.59630747274108,
+        "markers": [
+          {
+            "label": "matched sky position",
+            "ra": 147.2929454402243,
+            "dec": 10.59630747274108
+          },
+          {
+            "label": "epoch prediction",
+            "ra": 147.29316843152822,
+            "dec": 10.596167519714196
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/processed1/20251122/L1/OBJ_MP_1842_0057.fits.gz",
+    "image": true,
+    "targets": [
+      {
+        "label": "2014 KW101 20251122 0057",
+        "ra": 318.30960934367727,
+        "dec": 1.158274746532525,
+        "markers": [
+          {
+            "label": "matched sky position",
+            "ra": 318.30960934367727,
+            "dec": 1.158274746532525
+          },
+          {
+            "label": "epoch prediction",
+            "ra": 318.30918417139867,
+            "dec": 1.1585268115385596
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/processed1/20251122/L1/OBJ_MP_1842_0119.fits.gz",
+    "image": true,
+    "targets": [
+      {
+        "label": "2014 KW101 20251122 0119",
+        "ra": 318.30960934367727,
+        "dec": 1.158274746532525,
+        "markers": [
+          {
+            "label": "matched sky position",
+            "ra": 318.30960934367727,
+            "dec": 1.158274746532525
+          },
+          {
+            "label": "epoch prediction",
+            "ra": 318.309773062812,
+            "dec": 1.158241391270876
+          }
+        ]
+      }
+    ]
+  }
+]
