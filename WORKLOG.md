@@ -1,5 +1,10 @@
 # WORKLOG
 
+## 2026-11-24
+
+- 发布 SHARP 一周年交付到独立 GitHub 分支。合格主样本为176夜、55,605张、490.524小时、11,198.8平方度，已知81,909颗、826,722次测量。图1为实拍覆盖和月度曝光，图2为已知小行星的三帧，图3按作者参考图分七类画a–e和a–i散点，保留1.3 au近日点界线。
+- 校验：轨道图每面板81,909点，分组与年度统计一致。图1和图2的SHA保持一致。PDF渲染及文字检查、PNG分辨率、ZIP回读通过。图件、统计表、图注、绘图脚本及小型重绘输入见 `outputs/news_release_20261124/`，完整原始快照留原工作区。
+
 ## 2026-11-19
 
 - 星历周更/独立对话：用户要求覆盖此前月更和本聊天heartbeat。用automation_update原id automation改为cron，绑定smt_asteroid项目（local-a779a9925e04b89fb94429c495528126），每周一北京时间11:10独立新对话；配置回读kind=cron、target=project且不再含target_thread_id。服务器reference_update改ISO周due/凭证，月凭证由completed_at迁移；实际cron仅参考更新行改周一10:20，scheduler等其他行逐字核对保持。11/19成功记录迁2026-W47，enqueue探针返回already_updated_this_week无新下载/作业，下一周11/23。改reference_update/activate及周边界、跨年、迁移/重装cron测试与运行说明/AGENTS/README；本地10、服务器10项通过，py_compile/diff检查通过。下一步按周自动维护，本任务无需再运行科学处理。

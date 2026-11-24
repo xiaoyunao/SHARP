@@ -1,0 +1,167 @@
+{
+  "data_through_observing_night": "20261123",
+  "qualification_start": "2025-11-16T18:05:13.602+08:00",
+  "qualification_last_end": "2026-11-24T06:16:08.296+08:00",
+  "main_raw_last_end": "2026-11-24T06:16:08.296+08:00",
+  "main_raw_last_mid": "2026-11-24T06:15:53.295+08:00",
+  "last_qualified_mid": "2026-11-24T06:15:53.295+08:00",
+  "any_science_last_end": "2026-11-24T06:16:08.296+08:00",
+  "collected_at_beijing": "2026-11-24T17:59:02+08:00",
+  "raw_exposures": 56876,
+  "raw_nights": 181,
+  "raw_timed_exposures": 56865,
+  "raw_shutter_hours_timed": 500.99028472222216,
+  "quality_exposures": 55605,
+  "quality_nights": 176,
+  "quality_shutter_hours": 490.52379972222224,
+  "known_input_exposures": 55572,
+  "unknown_manifest_exposures": 54097,
+  "analysis_exposures": 55572,
+  "area_once_deg2": 11198.770513341035,
+  "area_3_same_night_deg2": 10751.449949879096,
+  "asteroids": 81909,
+  "asteroid_measurements": 826722,
+  "asteroid_multinight": 46665,
+  "archive_asteroids": 82148,
+  "archive_asteroid_measurements": 839991,
+  "known_comets": 0,
+  "known_comet_measurements": 0,
+  "asteroid_catalog_neo": 228,
+  "asteroid_catalog_trojan": 706,
+  "asteroid_classes": {
+    "Distant (a ≥ 5.4 au)": {
+      "objects": 29,
+      "measurements": 318
+    },
+    "Inner belt / Hungaria": {
+      "objects": 908,
+      "measurements": 6154
+    },
+    "Jupiter Trojan region": {
+      "objects": 706,
+      "measurements": 7893
+    },
+    "Main belt": {
+      "objects": 78489,
+      "measurements": 793403
+    },
+    "Mars-crosser": {
+      "objects": 778,
+      "measurements": 7363
+    },
+    "NEO (q < 1.3 au)": {
+      "objects": 228,
+      "measurements": 1603
+    },
+    "Outer belt / Hilda": {
+      "objects": 771,
+      "measurements": 9988
+    }
+  },
+  "other_quality_exposures": 6335,
+  "supplementary_known_measurements": 664,
+  "supplementary_known_identities": 28,
+  "supplementary_known_unshared_identities": 17,
+  "duplicate_nov17_rows": 315,
+  "unique_invalid_nov17_rows": 172,
+  "raw_archive_first_directory": "20251115",
+  "raw_inventory_including_invalid": 56976,
+  "raw_invalid_nov17_main": 100,
+  "raw_first_timed_noon_night": "20251114",
+  "raw_archive_nights": 181,
+  "raw_noon_labels": 181,
+  "raw_verified_same_night_count": 179,
+  "ext_exclusions": {
+    "qualified": 16015,
+    "marked_invalid_directory": 100,
+    "missing_L2": 50,
+    "missing_or_abnormal_WCS": 9,
+    "missing_or_conflicting_shutter_time": 1
+  },
+  "qualified_filter_counts": {
+    "W": 53760,
+    "R": 1763,
+    "G": 32,
+    "I": 28,
+    "Z": 22
+  },
+  "ext_filter_counts": {
+    "W": 14170,
+    "R": 1763,
+    "G": 32,
+    "I": 28,
+    "Z": 22
+  },
+  "analyzed_last_end": "2026-11-24T06:16:08.296+08:00",
+  "recent_night_counts": {
+    "20261118": {
+      "raw_exposures": 267,
+      "raw_nights": 1,
+      "raw_timed_exposures": 267,
+      "raw_shutter_hours_timed": 6.43051861111111,
+      "quality_exposures": 267,
+      "quality_nights": 1,
+      "quality_shutter_hours": 6.43051861111111,
+      "known_input_exposures": 267,
+      "unknown_manifest_exposures": 267,
+      "analysis_exposures": 267
+    },
+    "20261120": {
+      "raw_exposures": 267,
+      "raw_nights": 1,
+      "raw_timed_exposures": 267,
+      "raw_shutter_hours_timed": 6.459136666666666,
+      "quality_exposures": 267,
+      "quality_nights": 1,
+      "quality_shutter_hours": 6.459136666666666,
+      "known_input_exposures": 267,
+      "unknown_manifest_exposures": 267,
+      "analysis_exposures": 267
+    },
+    "20261121": {
+      "raw_exposures": 262,
+      "raw_nights": 1,
+      "raw_timed_exposures": 262,
+      "raw_shutter_hours_timed": 6.521913611111112,
+      "quality_exposures": 262,
+      "quality_nights": 1,
+      "quality_shutter_hours": 6.521913611111112,
+      "known_input_exposures": 262,
+      "unknown_manifest_exposures": 262,
+      "analysis_exposures": 262
+    },
+    "20261122": {
+      "raw_exposures": 163,
+      "raw_nights": 1,
+      "raw_timed_exposures": 163,
+      "raw_shutter_hours_timed": 4.7123252777777775,
+      "quality_exposures": 161,
+      "quality_nights": 1,
+      "quality_shutter_hours": 4.706769166666667,
+      "known_input_exposures": 161,
+      "unknown_manifest_exposures": 161,
+      "analysis_exposures": 161
+    },
+    "20261123": {
+      "raw_exposures": 198,
+      "raw_nights": 1,
+      "raw_timed_exposures": 198,
+      "raw_shutter_hours_timed": 4.956511944444444,
+      "quality_exposures": 197,
+      "quality_nights": 1,
+      "quality_shutter_hours": 4.955956111111112,
+      "known_input_exposures": 197,
+      "unknown_manifest_exposures": 197,
+      "analysis_exposures": 197
+    }
+  },
+  "nov18_tjn_fields": 13,
+  "nov18_tjn_exposures": 173,
+  "nov18_twilight_exposures": 94,
+  "nov23_pipeline_completion": "2026-11-24T07:46:08+08:00",
+  "known_audit": {
+    "server_rows": 309060,
+    "server_matched_input": 309060,
+    "panel_rows_rejected_epoch": 13269
+  }
+}

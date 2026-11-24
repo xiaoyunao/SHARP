@@ -1,0 +1,68 @@
+{
+  "stats_csv_monthly_ledger_totals": "passed",
+  "frozen_exposure_checkpoint": 39590,
+  "candidate_status_partition": "passed",
+  "english_pdf_text_and_minimum_png_dimensions": {
+    "fig01_annual_coverage": {
+      "number": 1,
+      "png_pixels": [
+        3600,
+        2340
+      ],
+      "pdf_pages": 1,
+      "pdf_text": "45°90°135°180°225°270°315° -30° +30° +60° Ecliptic 1 3 10 30 100 300 Coverage count (log) Nov ’25 Dec Jan ’26 Feb Mar Apr May Jun Jul Aug Sep Oct Nov 0 3000 6000 9000 Exposures 2025 Nov 16 – 2026 Nov 23 176 nights   ·   55,605 exposures   ·   490.5 h   ·   11,199 deg² R.A. (ICRS) (a) (b)"
+    },
+    "fig02_asteroid_motion": {
+      "number": 2,
+      "png_pixels": [
+        3600,
+        1395
+      ],
+      "pdf_pages": 1,
+      "pdf_text": "16:14:02.102 UTC 30″ N E 16:44:42.572 UTC  17:15:18.395 UTC (282917) 2007 LA33 2026 Sep 1"
+    },
+    "fig03_orbital_distribution": {
+      "number": 3,
+      "png_pixels": [
+        3720,
+        1335
+      ],
+      "pdf_pages": 1,
+      "pdf_text": "100 101 102 Semimajor axis [au] 0.0 0.2 0.4 0.6 0.8 1.0Eccentricity (a) Semimajor axis and eccentricity q = 1.3 au 100 101 102 Semimajor axis [au] 10−1 100 101 102 Inclination [deg] (b) Semimajor axis and inclination Main belt Outer belt / Hilda Jupiter Trojan region Inner belt / Hungaria Mars-crosser NEO (q < 1.3 au) Distant (a ≥ 5.4 au)"
+    }
+  },
+  "gif_frames": 3,
+  "gif_loop": "continuous",
+  "orbits": {
+    "objects": 81909,
+    "objects_per_panel": [
+      81909,
+      81909
+    ],
+    "classification": "Lowell ASTORB orbital-element groups",
+    "objects_by_class": {
+      "Main belt": 78489,
+      "Outer belt / Hilda": 771,
+      "Jupiter Trojan region": 706,
+      "Inner belt / Hungaria": 908,
+      "Mars-crosser": 778,
+      "NEO (q < 1.3 au)": 228,
+      "Distant (a ≥ 5.4 au)": 29
+    },
+    "semimajor_axis_scale": "log",
+    "inclination_scale": "log",
+    "perihelion_boundary_au": 1.3,
+    "semimajor_axis_range_au": [
+      0.72839565,
+      178.07713197
+    ]
+  },
+  "gif_path": "fig02_asteroid_motion.gif",
+  "figures_1_and_2_verified_sha256": {
+    "fig01_annual_coverage.pdf": "3b5cd31adaf199fad9052ba9468d8a967d0437cab2cd4cc96e22126d7d7de588",
+    "fig01_annual_coverage.png": "f6e092e304792222dc315cf64e56ea3503c6bd97e842604c2c9efb6117caba5b",
+    "fig02_asteroid_motion.pdf": "776d46884b57fad5a8cd27a91b42ecc1fa016fd66b86b0107c2bdd05bf327e79",
+    "fig02_asteroid_motion.png": "8069d83786efeea6354eec5608a9b82cebcdd94b21065f9d9ebbb397b28103bb",
+    "fig02_asteroid_motion.gif": "8a1beac3265f322cbe90dca35ad7634ac194868dad992559d8b3fc40cf1e386f"
+  }
+}

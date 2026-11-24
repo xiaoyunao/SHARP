@@ -1,0 +1,24 @@
+{
+  "objects": 81909,
+  "objects_per_panel": [
+    81909,
+    81909
+  ],
+  "classification": "Lowell ASTORB orbital-element groups",
+  "objects_by_class": {
+    "Main belt": 78489,
+    "Outer belt / Hilda": 771,
+    "Jupiter Trojan region": 706,
+    "Inner belt / Hungaria": 908,
+    "Mars-crosser": 778,
+    "NEO (q < 1.3 au)": 228,
+    "Distant (a ≥ 5.4 au)": 29
+  },
+  "semimajor_axis_scale": "log",
+  "inclination_scale": "log",
+  "perihelion_boundary_au": 1.3,
+  "semimajor_axis_range_au": [
+    0.72839565,
+    178.07713197
+  ]
+}

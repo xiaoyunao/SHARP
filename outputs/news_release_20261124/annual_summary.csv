@@ -1,0 +1,87 @@
+metric,value,unit,scope,start_night,end_night,source
+raw_exposures,56876,frames,all_main,20251115,20261123,physical exposure ledger
+raw_nights,181,nights,all_main,20251115,20261123,physical exposure ledger
+raw_timed_exposures,56865,frames,all_main,20251115,20261123,physical exposure ledger
+raw_shutter_hours_timed,500.99028472222216,hours,all_main,20251115,20261123,physical exposure ledger
+quality_exposures,55605,frames,all_main,20251116,20261123,physical exposure ledger
+quality_nights,176,nights,all_main,20251116,20261123,physical exposure ledger
+quality_shutter_hours,490.52379972222224,hours,all_main,20251116,20261123,physical exposure ledger
+known_input_exposures,55572,frames,all_main,20251116,20261123,physical exposure ledger
+unknown_manifest_exposures,54097,frames,all_main,20251116,20261123,physical exposure ledger
+analysis_exposures,55572,frames,all_main,20251116,20261123,physical exposure ledger
+raw_exposures,54672,frames,MP,20251115,20261123,physical exposure ledger
+raw_nights,174,nights,MP,20251115,20261123,physical exposure ledger
+raw_timed_exposures,54661,frames,MP,20251115,20261123,physical exposure ledger
+raw_shutter_hours_timed,455.52437,hours,MP,20251115,20261123,physical exposure ledger
+quality_exposures,53407,frames,MP,20251116,20261123,physical exposure ledger
+quality_nights,168,nights,MP,20251116,20261123,physical exposure ledger
+quality_shutter_hours,445.0967769444444,hours,MP,20251116,20261123,physical exposure ledger
+known_input_exposures,53407,frames,MP,20251116,20261123,physical exposure ledger
+unknown_manifest_exposures,51932,frames,MP,20251116,20261123,physical exposure ledger
+analysis_exposures,53407,frames,MP,20251116,20261123,physical exposure ledger
+raw_exposures,726,frames,twilight,20251115,20261123,physical exposure ledger
+raw_nights,17,nights,twilight,20251115,20261123,physical exposure ledger
+raw_timed_exposures,726,frames,twilight,20251115,20261123,physical exposure ledger
+raw_shutter_hours_timed,5.639365,hours,twilight,20251115,20261123,physical exposure ledger
+quality_exposures,720,frames,twilight,20251116,20261123,physical exposure ledger
+quality_nights,17,nights,twilight,20251116,20261123,physical exposure ledger
+quality_shutter_hours,5.600473055555556,hours,twilight,20251116,20261123,physical exposure ledger
+known_input_exposures,720,frames,twilight,20251116,20261123,physical exposure ledger
+unknown_manifest_exposures,720,frames,twilight,20251116,20261123,physical exposure ledger
+analysis_exposures,720,frames,twilight,20251116,20261123,physical exposure ledger
+raw_exposures,1112,frames,TJN,20251115,20261123,physical exposure ledger
+raw_nights,8,nights,TJN,20251115,20261123,physical exposure ledger
+raw_timed_exposures,1112,frames,TJN,20251115,20261123,physical exposure ledger
+raw_shutter_hours_timed,36.776293611111115,hours,TJN,20251115,20261123,physical exposure ledger
+quality_exposures,1112,frames,TJN,20251116,20261123,physical exposure ledger
+quality_nights,8,nights,TJN,20251116,20261123,physical exposure ledger
+quality_shutter_hours,36.776293611111115,hours,TJN,20251116,20261123,physical exposure ledger
+known_input_exposures,1079,frames,TJN,20251116,20261123,physical exposure ledger
+unknown_manifest_exposures,1079,frames,TJN,20251116,20261123,physical exposure ledger
+analysis_exposures,1079,frames,TJN,20251116,20261123,physical exposure ledger
+raw_exposures,366,frames,followup,20251115,20261123,physical exposure ledger
+raw_nights,13,nights,followup,20251115,20261123,physical exposure ledger
+raw_timed_exposures,366,frames,followup,20251115,20261123,physical exposure ledger
+raw_shutter_hours_timed,3.050256111111111,hours,followup,20251115,20261123,physical exposure ledger
+quality_exposures,366,frames,followup,20251116,20261123,physical exposure ledger
+quality_nights,13,nights,followup,20251116,20261123,physical exposure ledger
+quality_shutter_hours,3.050256111111111,hours,followup,20251116,20261123,physical exposure ledger
+known_input_exposures,366,frames,followup,20251116,20261123,physical exposure ledger
+unknown_manifest_exposures,366,frames,followup,20251116,20261123,physical exposure ledger
+analysis_exposures,366,frames,followup,20251116,20261123,physical exposure ledger
+area_once_deg2,11198.770513341035,deg²,all_main,20251116,20261123,"ICRS TPV polygon, ring HEALPix NSIDE=1024"
+area_3_same_night_deg2,10751.449949879096,deg²,all_main,20251116,20261123,"ICRS TPV polygon, ring HEALPix NSIDE=1024"
+asteroids,81909,objects,all_main,20251116,20261123,"deduplicated 1-arcsec L4 associations, ASTORB, JPL SBDB"
+asteroid_measurements,826722,measurements,all_main,20251116,20261123,"deduplicated 1-arcsec L4 associations, ASTORB, JPL SBDB"
+asteroid_multinight,46665,objects,all_main,20251116,20261123,"deduplicated 1-arcsec L4 associations, ASTORB, JPL SBDB"
+known_comets,0,objects,all_main,20251116,20261123,"deduplicated 1-arcsec L4 associations, ASTORB, JPL SBDB"
+known_comet_measurements,0,measurements,all_main,20251116,20261123,"deduplicated 1-arcsec L4 associations, ASTORB, JPL SBDB"
+asteroid_catalog_neo,228,objects,all_main,20251116,20261123,"deduplicated 1-arcsec L4 associations, ASTORB, JPL SBDB"
+asteroid_catalog_trojan,706,objects,all_main,20251116,20261123,"deduplicated 1-arcsec L4 associations, ASTORB, JPL SBDB"
+archive_asteroids,82148,objects,all_main,20251116,20261123,"deduplicated 1-arcsec L4 associations, ASTORB, JPL SBDB"
+archive_asteroid_measurements,839991,measurements,all_main,20251116,20261123,"deduplicated 1-arcsec L4 associations, ASTORB, JPL SBDB"
+asteroids,29,objects,Distant (a ≥ 5.4 au),20251116,20261123,ASTORB orbital-element bins
+asteroid_measurements,318,measurements,Distant (a ≥ 5.4 au),20251116,20261123,ASTORB orbital-element bins
+asteroids,908,objects,Inner belt / Hungaria,20251116,20261123,ASTORB orbital-element bins
+asteroid_measurements,6154,measurements,Inner belt / Hungaria,20251116,20261123,ASTORB orbital-element bins
+asteroids,706,objects,Jupiter Trojan region,20251116,20261123,ASTORB orbital-element bins
+asteroid_measurements,7893,measurements,Jupiter Trojan region,20251116,20261123,ASTORB orbital-element bins
+asteroids,78489,objects,Main belt,20251116,20261123,ASTORB orbital-element bins
+asteroid_measurements,793403,measurements,Main belt,20251116,20261123,ASTORB orbital-element bins
+asteroids,778,objects,Mars-crosser,20251116,20261123,ASTORB orbital-element bins
+asteroid_measurements,7363,measurements,Mars-crosser,20251116,20261123,ASTORB orbital-element bins
+asteroids,228,objects,NEO (q < 1.3 au),20251116,20261123,ASTORB orbital-element bins
+asteroid_measurements,1603,measurements,NEO (q < 1.3 au),20251116,20261123,ASTORB orbital-element bins
+asteroids,771,objects,Outer belt / Hilda,20251116,20261123,ASTORB orbital-element bins
+asteroid_measurements,9988,measurements,Outer belt / Hilda,20251116,20261123,ASTORB orbital-element bins
+other_quality_exposures,6335,frames,supplementary,20251116,20261123,physical exposure ledger
+supplementary_known_measurements,664,measurements,supplementary,20251116,20261123,physical exposure ledger
+supplementary_known_identities,28,objects,supplementary,20251116,20261123,physical exposure ledger
+supplementary_known_unshared_identities,17,objects,supplementary,20251116,20261123,physical exposure ledger
+raw_archive_nights,181,nights,all_main,20251115,20261123,physical exposure ledger
+raw_noon_labels,181,nights,all_main,20251115,20261123,physical exposure ledger
+raw_verified_same_night_count,179,nights,all_main,20251115,20261123,physical exposure ledger
+duplicate_nov17_rows,315,frames,all_main,20251116,20261123,physical exposure ledger
+unique_invalid_nov17_rows,172,frames,all_main,20251116,20261123,physical exposure ledger
+raw_inventory_including_invalid,56976,frames,all_main,20251115,20261123,physical exposure ledger
+raw_invalid_nov17_main,100,frames,all_main,20251115,20261123,physical exposure ledger
