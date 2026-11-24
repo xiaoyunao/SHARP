@@ -1,0 +1,371 @@
+{
+  "analysis_generated_utc": "2026-11-24T03:55:02.304243+00:00",
+  "history_repository": "https://github.com/xiaoyunao/SHARP",
+  "history_archive_ref": "2dffff5e65081eeabd0dab0df2d1ac6ed2d2f757",
+  "history_commit_utc": "2026-09-04T02:24:23Z",
+  "snapshot_label": "20260803",
+  "historical_algorithm_commit": "d2f0057bd4cdd4c7a3c6c2431f6449a72c327284",
+  "paper_sample_archive_start": "2025-11-15",
+  "paper_sample_archive_end_inclusive": "2026-07-15",
+  "extension_inventory_cutoff_utc_exclusive": "2026-10-15T16:00:00Z",
+  "extension_inventory_cutoff_local_exclusive": "2026-10-16T00:00:00+08:00",
+  "science_time": "UTC exposure midpoint; local noon boundary (Asia/Shanghai)",
+  "checked_products": "Read-only headers and preexisting evidence; no processing of post-cutoff science",
+  "geometric_footprints": "40399 frozen L2 archive entries matched on file name and original size and modification time; qualified science subset used",
+  "kept_summary_definitions": "Original ledger, selected WCS/sample quality, historical candidate status, historical conditional recovery",
+  "dependencies": {
+    "frozen_ASTORB": {
+      "historic_path": "/pipeline/xiaoyunao/known_asteroid/astorb.dat",
+      "historic_sha256": "ea22c7062e7349d9add34fb64835916d66705ad60a717cc7c86a0c47f5aa3040",
+      "used_via": "byte-preserved frozen August orbit join; no dynamic identity query"
+    },
+    "IERS_A": {
+      "historic_path": "/pipeline/xiaoyunao/survey/runtime/iers_backups/20261027T081258847508Z/finals2000A_previous.all",
+      "archived_file_mtime_local": "2026-10-01",
+      "included_as": "inputs/paper_iers.all"
+    },
+    "recorded_server_environment": {
+      "astro-aleph": "1.0.0",
+      "astropy": "7.1.0",
+      "algorithm_provenance": "inputs/production_file_hashes.csv"
+    }
+  },
+  "software": {
+    "python": "3.12.2",
+    "astropy": "6.1.3",
+    "healpy": "1.18.1",
+    "matplotlib": "3.9.2",
+    "numpy": "1.26.4",
+    "pandas": "2.2.2",
+    "pyarrow": "16.1.0",
+    "scipy": "1.16.2",
+    "jplephem": "2.22",
+    "Pillow": "10.4.0",
+    "pypdf": "6.10.2"
+  },
+  "original_source_fingerprints": {
+    "snapshot_config.json": {
+      "original": "snapshot.json",
+      "original_sha256": "4f9d1c7a6688a46cdb6c38023b8c10249b215ef3551a697a54cfcecb7492a7ce"
+    },
+    "raw_manifest.csv.gz": {
+      "original": "raw_manifest.csv",
+      "original_sha256": "5d3a53d05a2a70f73335c9b70871bd7dd280f6795d7b6fb831f031d0a90895b9"
+    },
+    "l2_manifest.csv.gz": {
+      "original": "l2_manifest.csv",
+      "original_sha256": "a5a561c212745bee53a1870a27f83779a2558f3973d88378b8ef5d1cdad6b485"
+    },
+    "quality_mask.csv": {
+      "original": "quality_mask.csv",
+      "original_sha256": "a172d740d7ad46dd9e08987ca3eb1d24bb4c417c22ad3f46238b712bacbefce5"
+    },
+    "night_status.csv": {
+      "original": "night_status.csv",
+      "original_sha256": "fb4ce8be7ef326bde678ed8a8ffd1111a8401733cff21af36629fd242e24f052"
+    },
+    "coverage_summary.json": {
+      "original": "coverage_summary.json",
+      "original_sha256": "68b8b1b2477d62b9cbc8eb57a949e3bb283e91b2e21996f5e6f1f59252381647"
+    },
+    "nightly_products.csv.gz": {
+      "original": "nightly_products.csv",
+      "original_sha256": "e91dc04839ae047288a68c478a1dda5cdd2fa1bb3b83aa2b109d21ae53d4e5f7"
+    },
+    "survey_fov_footprints_with_visibility.fits": {
+      "original": "survey_fov_footprints_with_visibility.fits",
+      "original_sha256": "13f394877ce26e50e5cee5053a4ad845f412be4520421e46931b3e157d9e0225"
+    },
+    "production_file_hashes.csv": {
+      "original": "production_file_hashes.csv",
+      "original_sha256": "8b00c5b3c853fb2dc679e36a9e69ccecb8a677b86a5ce1d8671f666f1aef1e53"
+    },
+    "scheduler_mode_summary.json": {
+      "original": "scheduler_mode_summary.json",
+      "original_sha256": "fccdd4709f9f0fb3a638384c39a0ca34c8318ef026d9ad6daee59e8013566f8e"
+    },
+    "scheduler_plan_realization_by_night.csv": {
+      "original": "scheduler_plan_realization_by_night.csv",
+      "original_sha256": "01dfe80fba7e0ea3dd5f3d0810ca18091d214a469e3add4e002c73144f657bde"
+    },
+    "blinded_known_recovery_binned.csv": {
+      "original": "blinded_known_recovery_binned.csv",
+      "original_sha256": "c73c9bf590160ca1b917f938de1df8bee0af7bdf217be9c7f820e88812328abf"
+    },
+    "blinded_known_summary.json": {
+      "original": "blinded_known_summary.json",
+      "original_sha256": "d234d4f38bd6e45e0dcb4125ac4b8798e13f6e5ef0fa8e28350b8b5f6e09a2d1"
+    },
+    "jpl_second_pass_confirmations.csv": {
+      "original": "jpl_second_pass_confirmations.csv",
+      "original_sha256": "588272ae36e9ad045d47e1bb50207f1c3aa46be7ce7fbba71c4d321795fd9e6e"
+    },
+    "review_and_mpc_status.csv": {
+      "original": "review_and_mpc_status.csv",
+      "original_sha256": "c426e2e8cdaf0d246772594cc8ea8148863f0f9556810e1c26070a719c059e24"
+    },
+    "unknown_ades_midpoint_correction_179.csv": {
+      "original": "unknown_ades_midpoint_correction_179.csv",
+      "original_sha256": "f5f9f7710cdb54d5a80411c95cc20586fd85566fae4efb5c6116e91ee4dd381c"
+    },
+    "unknown_ades_midpoint_correction_summary.json": {
+      "original": "unknown_ades_midpoint_correction_summary.json",
+      "original_sha256": "6a59b6b03efe78af40b36239980c327ec5adf2ca6691b6890c2400b6c07c58e7"
+    },
+    "orbit_site_sensitivity_summary.json": {
+      "original": "orbit_site_sensitivity_summary.json",
+      "original_sha256": "57c102c1fb58fa6789bfe32ba550e2fa6a654e3535ffc98c6e98f24d7dde6a6d"
+    },
+    "known_random_shift_summary.json": {
+      "original": "known_random_shift_summary.json",
+      "original_sha256": "af53321682c33ebc76e29d3b0ad4dab31d2693e52990b8b6e0dfa3e85311478b"
+    },
+    "fig04_unique_object_orbits.csv.gz": {
+      "original": "fig04_unique_object_orbits.csv",
+      "original_sha256": "868f881dd0581c764757e5d2b78c79018353a6169b32b032b071285758ac4ed1"
+    },
+    "fig01_sources.csv": {
+      "original": "fig01_sources.csv",
+      "original_sha256": "2014aee2633465fe37f63c637636db8fade5e6f44c7e3b2468046b9ed2331b04"
+    },
+    "fig06_astrometry.csv": {
+      "original": "fig06_astrometry.csv",
+      "original_sha256": "03eafc8b41afb51fd86dbfd7df6e571d0963da8585b8228db21707ac93703fb8"
+    },
+    "image_source_manifest.csv": {
+      "original": "image_source_manifest.csv",
+      "original_sha256": "bd27840aed71afe80c90534e84c601e2535e792b1d62888a19f9611fa469d4e4"
+    },
+    "de432s.bsp": {
+      "original": "de432s.bsp",
+      "original_sha256": "363f32e14f5255359ac32c4d38080cf28ab55564a5e16696a75f63394b666e9b"
+    },
+    "known_matched.parquet": {
+      "original": "known_matched.parquet",
+      "original_sha256": "029989b675a3a4fbdecc672ea6e58aa293569de6189dbc84074cd7c7f81b6d1e",
+      "selected_columns": [
+        "night",
+        "source_file",
+        "asteroid_name",
+        "asteroid_number",
+        "epoch_mjd",
+        "pred_ra_deg",
+        "pred_dec_deg",
+        "pred_v_mag",
+        "obs_ra_win_deg",
+        "obs_dec_win_deg",
+        "x_win_px",
+        "y_win_px",
+        "obj_id",
+        "mag_aper4",
+        "magerr_aper4",
+        "flux_aper4",
+        "fluxerr_aper4",
+        "flag",
+        "pred_geocentric_distance_au"
+      ]
+    },
+    "known_mask15.parquet": {
+      "original": "known_mask15.parquet",
+      "original_sha256": "f5398587d8d06f038c29487836660b7c69cd1499abbca8de2ae810d61843573a",
+      "selected_columns": [
+        "night",
+        "source_file",
+        "obj_id",
+        "asteroid_number",
+        "asteroid_name",
+        "epoch_mjd",
+        "pred_ra_deg",
+        "pred_dec_deg",
+        "obs_ra_win_deg",
+        "obs_dec_win_deg",
+        "mag_aper4",
+        "pred_v_mag",
+        "x_win_px",
+        "y_win_px",
+        "flag"
+      ]
+    },
+    "orbit_links.parquet": {
+      "original": "orbit_links.parquet",
+      "original_sha256": "bb8a63052409472cc7ba09d24b29891dc70538a401987fa25cdccaa82da7834f",
+      "selected_columns": [
+        "night",
+        "linkage_id",
+        "fit_ok",
+        "is_good"
+      ]
+    },
+    "orbit_obs_residuals.parquet": {
+      "original": "orbit_obs_residuals.parquet",
+      "original_sha256": "aa4544204c7168fc716b6480709774142e0c2f978f9bd168d28dab3cc836ce69",
+      "selected_columns": [
+        "night",
+        "linkage_id",
+        "obs_key",
+        "used"
+      ]
+    },
+    "unknown_catalog.parquet": {
+      "original": "unknown_catalog.parquet",
+      "original_sha256": "7ea13969bd226de2df8048dc53b5eec8d8895e6389a14ff9451002c8239b0756",
+      "selected_columns": [
+        "night",
+        "trk_sub",
+        "linkage_id",
+        "n_obs",
+        "fit_ok",
+        "is_good",
+        "image_names",
+        "objids",
+        "mjds",
+        "rms_arcsec",
+        "max_arcsec",
+        "lin_rms_arcsec",
+        "lin_speed_arcsec_per_day"
+      ]
+    },
+    "blinded_known_recovery_by_object.parquet": {
+      "original": "blinded_known_recovery_by_object.csv",
+      "original_sha256": "75858ee18b9a9d67b9cbc8f2704936bdcab7f5a5e9acf9ef6ebbeaec1c081b56"
+    }
+  },
+  "files_sha256": {
+    "AUTHOR_TODO.md": "f21d31d02fd5ddfb1823f3bb3bd21b4e180dca07657e4a1141f9c4ebd0baec83",
+    "FIGURE_CHANGELOG.md": "7e0768f95461aaff8415c2f61e86765885e71e083ae31061367ada2eb991b777",
+    "MANUSCRIPT_FACTS.md": "86ce524488df97ace08bc0d0612562f24d07145d02fddaf07d38e26443c03a66",
+    "README.md": "7393a9a58989f7611444b5d1238496392b6da5fc832321480a65199ea126e1a3",
+    "figure_data/fig01_sources.csv": "2014aee2633465fe37f63c637636db8fade5e6f44c7e3b2468046b9ed2331b04",
+    "figure_data/fig02_workflow_edges.csv": "3332c50fff3681aa9689466ef78e4f13e5a8d135262bdcc190e8dfb9482aaf27",
+    "figure_data/fig02_workflow_nodes.csv": "c7418429a6ee663d4c4bc50e2db7a9e4651e95b1680c5d3105a9c91e88acc760",
+    "figure_data/fig03_known_ecliptic_nside128.csv": "efbb536bdb40d9d06764cd3a329e0ee35fe30517531b70bb5d925a483de0ead6",
+    "figure_data/fig03_wcs_visits_icrs_nside512.csv.gz": "16b06db3ab38256e9e9a4eb8212dbe5906cc5a720d56039db05251a92f64438b",
+    "figure_data/fig04_adjacent.csv": "36e236e27ca73055e3a43705c7c76a08604d92fe2692d5c799b1158dbc150de0",
+    "figure_data/fig04_field_night_counts.csv": "0d90eafa9d8e070ffefd56a373fa0a267907424af0714ad4e271da097a4e3806",
+    "figure_data/fig04_monthly_activity.csv": "54c1d3d38331ab7d4595fe6414d56b407f6cc05ec08d0887de934a1a2efbbae5",
+    "figure_data/fig04_nightly_activity.csv": "a2444ccae6b223c96b62ef0c79c6a874316c1daa0b6ceef683bebcac2238ef6c",
+    "figure_data/fig04_span_ge3.csv": "198172c4413a0c90b17652bcd8cfdb92dd48c9a77974a50a87c748a936e22aef",
+    "figure_data/fig05_astrometry_by_night.csv": "d7641ad55f5dfa4a19618d949ce246a4db8e649bc72ded68127e1a40d0d0e44d",
+    "figure_data/fig05_astrometry_vs_mag.csv": "93e3e9e192c3bc8e2ccc83ed6691e35bdc988eb257e323e06b88ecdc7ae37cc6",
+    "figure_data/fig05_limiting_magnitude.csv": "c4c0172abf459cae9a617fe0d6b0642fb5bc78d0866ab26c6d76c670cb0e6d59",
+    "figure_data/fig05_photometry_vs_mag.csv": "8c0b6dc20604c4a1afa0776663e0ce32588fd5d52bce7cd20b7ab51c7027e7ea",
+    "figure_data/fig06_astrometry.csv": "03eafc8b41afb51fd86dbfd7df6e571d0963da8585b8228db21707ac93703fb8",
+    "figure_data/fig06_retention_frozen_bins.csv": "e3babc05eb1afba97996653666aa7067cd47c2a75d1e32d20122e0cb1d222537",
+    "figure_data/fig06_retention_sampling.csv": "69c3802e6d20adf006c3a04ef6300fb6dbb768c8b67879978d71fa6927da6d3d",
+    "figure_data/fig07_objects_orbits_revisits.csv.gz": "e25cbbeb445555917fb6c9a11d08684a4c2f683dbe90a432f1bfcfc16ca86716",
+    "figure_data/figA1_elongation.csv": "1f6b486ef1f9da8e84e3c118ee0097136baac9fdeca29b807d3b3b8ba77f53f1",
+    "figure_data/figA1_measured_rate.csv": "f6926dc84888c78e9ec111445a8cfed5df7fc74c35313651c2d4b9df1df55e2e",
+    "figure_data/figA1_predicted_rate.csv": "0d1aa5440f301f76454a7356ff8cbf4524d81b5559746247ba87222ac68e7aab",
+    "figure_data/figA2_candidate_rms_arc.csv": "a36caa304eac09605da202b42f74c3b6e86bfba6d5987848de37a350db18f11c",
+    "figures/fig01_exposure.pdf": "671a13218a1d9986b238c1ac8345d127e46b5d95eb44045702d539c459cfca77",
+    "figures/fig01_exposure.png": "b8f0efb3b4c17295e212b9dc0e5b01a2ecf03ab5a4933cded2ccd6ba3d019c53",
+    "figures/fig02_workflow.pdf": "c2c19855340c5084dbd0ebb1ec8645b50fb54e37064f3594a4850943ca167641",
+    "figures/fig02_workflow.png": "8053b5272fb1bf3778a8711b80f815389e37a88f159363ad8eccb92a2d47fa68",
+    "figures/fig03_coverage_and_known_sky.pdf": "5eec45670dac180e15193b16597a672a2ad1be66b90cc30ee50e4a0f1f65ea49",
+    "figures/fig03_coverage_and_known_sky.png": "8a4f72d3fe1bebf3e8b434075d2ffc2f74ff3c12fec904a03586673081a7873c",
+    "figures/fig04_activity_and_cadence.pdf": "0c7b99f2b530612b27b88e3d4fe33cca276a0766d4fd39a8ad5fa7bbd1c11c29",
+    "figures/fig04_activity_and_cadence.png": "8e0b210753e8470176780b3369f695b5016715cd9f8fa97dc8b41a748deb16be",
+    "figures/fig05_measurement_quality.pdf": "85ede1ff698d3e88c1b58de699f0b6210a62c893939ab1b56d2acd36fd25611f",
+    "figures/fig05_measurement_quality.png": "999eb3b458a93cd720daec09a01aa1ffcdde05312ac2dfdf74766660c22535a9",
+    "figures/fig06_conditional_retention.pdf": "3f38833c0165e9c06612e1d9d3b99c5d2266d197d8cb6a21e3aa5f0d1b55c3ec",
+    "figures/fig06_conditional_retention.png": "cb232bb86265d809fb7bc76c1986dabe1a2019ddd78add0a38a950f844450dad",
+    "figures/fig07_orbits_and_revisits.pdf": "14a8732dbdead71d3c8b1ab615cc91c7849ee9ff9ff8d17966ffca741d85178a",
+    "figures/fig07_orbits_and_revisits.png": "fdb183baef9b398e9dbb94b704398efbe77e3174ba5029099e55e1b6cdf68458",
+    "figures/fig08_candidate.pdf": "d0834c90624c06da0e67f3750292fcc64ca26ed2ea76803b4d737e0816886d93",
+    "figures/fig08_candidate.png": "adb27aa9a80670b69ead4de8872ac8d0f0ac3061f532227c7a6fe1defe17cc52",
+    "figures/figA1_motion_and_solar_elongation.pdf": "6024e2c35b1ce9858d7512802d15d562547ca50ffd12abef21cba5e7651af84f",
+    "figures/figA1_motion_and_solar_elongation.png": "81e30629ab6f17d36c0986c8ee14ba63928f710b3f4cb8593f7ef80cd8663fd9",
+    "figures/figA2_candidate_short_arc_diagnostic.pdf": "893689c44125dc7269a0e0d55620d52e41d9c83c7b5bd656273c26eb903979bd",
+    "figures/figA2_candidate_short_arc_diagnostic.png": "4f9823de26205a847ed139da97749383843ef0a45c7f44897e47d4f899acacf0",
+    "inputs/20260210_00000P2_link0035.gif": "66c6275e59092cb4be29f36ca33772c1250e139412677bd97b91717b07392b02",
+    "inputs/aperture_configuration_evidence.txt": "753a0c471074ee2a722962747cdb7dc7fad3d65748f0c774aaef28a5e8d5ef92",
+    "inputs/blinded_known_recovery_binned.csv": "c73c9bf590160ca1b917f938de1df8bee0af7bdf217be9c7f820e88812328abf",
+    "inputs/blinded_known_recovery_by_object.parquet": "3706a3456f5f562e9ccd503d50d689f316e20a21f1d837d28009bcd7be2cbbb5",
+    "inputs/blinded_known_summary.json": "d234d4f38bd6e45e0dcb4125ac4b8798e13f6e5ef0fa8e28350b8b5f6e09a2d1",
+    "inputs/coordinate_and_calibration_source_evidence.txt": "0354f932dc2e5c66efb194261a229c336c9cb41c2acc2e3a752e84f1df02d956",
+    "inputs/coverage_summary.json": "68b8b1b2477d62b9cbc8eb57a949e3bb283e91b2e21996f5e6f1f59252381647",
+    "inputs/de432s.bsp": "363f32e14f5255359ac32c4d38080cf28ab55564a5e16696a75f63394b666e9b",
+    "inputs/duplicate_signature.json": "3eb039c4da1387ee9fd61d41b4ff86f3992211f4fbfa2cb94aaa36ae870262b1",
+    "inputs/fig01_sources.csv": "2014aee2633465fe37f63c637636db8fade5e6f44c7e3b2468046b9ed2331b04",
+    "inputs/fig04_unique_object_orbits.csv.gz": "cdb4365bb0fd939ab7224a5363bfbed487169f3a6acf36a005e36418745d65e6",
+    "inputs/fig06_astrometry.csv": "03eafc8b41afb51fd86dbfd7df6e571d0963da8585b8228db21707ac93703fb8",
+    "inputs/image_source_manifest.csv": "bd27840aed71afe80c90534e84c601e2535e792b1d62888a19f9611fa469d4e4",
+    "inputs/instrument_and_examples.txt": "c25d3e0256e6299b3d5cbaac1d7813016e9578849b946cc851e8c3ec6fd24e63",
+    "inputs/jpl_best_match_by_link.csv": "87dd958f829fa60add340d84901c5b7df304b8d9b7dafbd4b86354265b1e191c",
+    "inputs/jpl_second_pass_confirmations.csv": "588272ae36e9ad045d47e1bb50207f1c3aa46be7ce7fbba71c4d321795fd9e6e",
+    "inputs/known_l4_frames.csv.gz": "877ae33cd0a6a6a819beedebcb4fd28c6f3b533c9bba63272428e16326f6b300",
+    "inputs/known_mask15.parquet": "68d35d8201742eb000da04da5619bef8ba84ee8484d33aaa27af271dd6208f4c",
+    "inputs/known_matched.parquet": "a33ff8d7f6fd591538b770ee311c8f83f586b850ba28d1bd3660a9e4173054c7",
+    "inputs/known_random_shift_summary.json": "af53321682c33ebc76e29d3b0ad4dab31d2693e52990b8b6e0dfa3e85311478b",
+    "inputs/l2_manifest.csv.gz": "9cfb22ae9e4d6441a910895a6bffad3debfd2b118702850244daece4c8a1699c",
+    "inputs/mpc_reconciliation.csv": "a4cfa1bb5e770ef5691b25095c3189e8541d71abfb892bf0fa1768ba63c56251",
+    "inputs/night_status.csv": "fb4ce8be7ef326bde678ed8a8ffd1111a8401733cff21af36629fd242e24f052",
+    "inputs/nightly_products.csv.gz": "5aff83441e9b855c8c7f3220ea466a700cee0a02831d825c2a9dba3f7c7f716a",
+    "inputs/orbit_links.parquet": "9c59025e62e571b58b49fac986b8fb00d9436323688e2e674487f8afb0ef9fa2",
+    "inputs/orbit_obs_residuals.parquet": "06648867b53e294f9cca09396d81a04483f5b9e05d7d3e0ed793467bd0343c38",
+    "inputs/orbit_site_sensitivity_summary.json": "57c102c1fb58fa6789bfe32ba550e2fa6a654e3535ffc98c6e98f24d7dde6a6d",
+    "inputs/original_hashes.json": "d0314e12dd2ef9d1b6657097eb33197208e2047707c2b0c1371026d538fcc24c",
+    "inputs/paper_iers.all": "cc80680ec05c91b65e7d02c6068fe0d44dd0998dc880551975092d2d14aa8e18",
+    "inputs/photometry_source_evidence.txt": "5314a7dba3a8fa79b7dfaa04587640dccd772fc37832ea76bda1e938317d6ddc",
+    "inputs/production_file_hashes.csv": "8b00c5b3c853fb2dc679e36a9e69ccecb8a677b86a5ce1d8671f666f1aef1e53",
+    "inputs/quality_mask.csv": "a172d740d7ad46dd9e08987ca3eb1d24bb4c417c22ad3f46238b712bacbefce5",
+    "inputs/raw_manifest.csv.gz": "179dc56d4843277e4229c5cca91d3b37286330c930cc6f1f464eb022399480f7",
+    "inputs/review_and_mpc_status.csv": "c426e2e8cdaf0d246772594cc8ea8148863f0f9556810e1c26070a719c059e24",
+    "inputs/scheduler_mode_summary.json": "fccdd4709f9f0fb3a638384c39a0ca34c8318ef026d9ad6daee59e8013566f8e",
+    "inputs/scheduler_plan_realization_by_night.csv": "01dfe80fba7e0ea3dd5f3d0810ca18091d214a469e3add4e002c73144f657bde",
+    "inputs/server_code_evidence.txt": "ab8be1057f36ff184663aa1dd80dbfe6e48cd4b79861b36d199e43ad46262ba0",
+    "inputs/server_headers.csv.gz": "7c3e6459e5611abb47ec8f3a4281c34d72e81a16dea88bbd4cf5e05c0f228d47",
+    "inputs/snapshot_config.json": "4f9d1c7a6688a46cdb6c38023b8c10249b215ef3551a697a54cfcecb7492a7ce",
+    "inputs/stellar_sample.csv.gz": "3767403878b8ffb4fa20252f1745cebd297598cdda484357a853841fdadb82ee",
+    "inputs/stellar_sample_paths.csv": "4c1057873ff8237a74f106a9497828c535b0474492cb82ad05c53c1bd65fb00f",
+    "inputs/survey_fov_footprints_with_visibility.fits": "13f394877ce26e50e5cee5053a4ad845f412be4520421e46931b3e157d9e0225",
+    "inputs/unknown_ades_midpoint_correction_179.csv": "f5f9f7710cdb54d5a80411c95cc20586fd85566fae4efb5c6116e91ee4dd381c",
+    "inputs/unknown_ades_midpoint_correction_summary.json": "6a59b6b03efe78af40b36239980c327ec5adf2ca6691b6890c2400b6c07c58e7",
+    "inputs/unknown_catalog.parquet": "d4e6a22b6a67b5a23b5f7f8ded723246225417bb8a234e5d0330c39d4c8cfffc",
+    "requirements.txt": "c64a6edec1438d65068e80e63fdcae8fbfcd82adb8153670d38e44105bfcc8a9",
+    "scripts/collect_headers.py": "2c73c03b8b0e313ace62624bcee503f1f2fc43d823f699b56bab4034e8727b8b",
+    "scripts/collect_stellar_sample.py": "4791af670f62b84de4e5290e0477e696af9b9b60c393198fa158947c842e89c0",
+    "scripts/combine_headers.py": "562a30bc0dbd1b2c0ff7c913840c1001d5067480271174f5f0230b0d906a9c28",
+    "scripts/exposures.py": "ef8bbd286a4ee3e18978184656987e9b01afba483ca8ccfa21b4a9d9575e2f4a",
+    "scripts/freeze_delivery.py": "9f45b683c405c4b7942521e15463c20173161cf588f647c6a7f1b8a773e7c530",
+    "scripts/known_performance.py": "fefa858686e2ab62aceda1aab6c5d2d7b4c7b5afe3e91b5c61bd354dd460381a",
+    "scripts/make_figures.py": "9b60e1ee1f9a34768dcbb57e6f6067b65411653cab21c49ccc4e48ab79b41832",
+    "scripts/replay_frozen_recovery.py": "38d2ba33ebd749bee549cec79970f8eca4321c74c0f318b86a4d65c8bd38ebfe",
+    "scripts/stage_inputs.py": "cd3f941794c7f9003100a88e8acc6bdfb5d4dabd43ba898ed3916614d34532f4",
+    "scripts/stellar_repeatability.py": "78530181e24288066d6628b1ab17b5c84cc8c81e1c9c599663a3457133b759dc",
+    "scripts/verify_bundle.py": "9f28a1f6de0345757e6e68ea1069094fd8d6105fb6b6c4d4b934da09c967374f",
+    "tables/adjacent_visit_intervals.csv.gz": "39075128a9e93434dc9216d6e9f04136f9ca75d8f11edf32b9cdfb5606e40642",
+    "tables/astrometry_radius_tail_vs_mag.csv": "ab4c5265db2c74cacf3b46be819cc86ee8aa78948b1d02b884e75733dc3b07d7",
+    "tables/astrometry_summary.csv": "647ac582839d0761cc086cc518be75270f91196cf75a34e3d4b2da60f53d33f4",
+    "tables/baseline_astrometry_by_directory_night.csv": "d6768f6ec3900031bf6f933e4273655e1a56721c373936526a2beacc3c8be226",
+    "tables/baseline_reproduction.csv": "d778fd24610a99656a9e3c7b92f6f0a09a493d8ca8d44a7a2c9535272db41330",
+    "tables/cadence_pointing_tolerance.csv": "9bfbf1b738139383ed0769c92f0f9698247d6d134d743198cf728dc25491e2b4",
+    "tables/candidate_status_by_night.csv": "bd9863a004907b5be0c4daa6340a434438ac57f6bd724060991b2f3e1e30a226",
+    "tables/conditional_retention_bright_slow_edge.csv": "44ef4bb725dd00930460b7973cb3077631220ca747d2bd7a5014d9e166e4dac5",
+    "tables/conditional_retention_by_night.csv": "80f53a31fb1ca090df6c172968a639a201814a91264e9460363cfc8065938a2f",
+    "tables/exposure_ledger.csv.gz": "86cc24572afc109970ed3498ab7f844d83336333236fa9e4b6ff8aaf5ccd0238",
+    "tables/extension_by_night.csv": "ac46c02bb7b0c1a28eac47bb110c360d82e0ffc60799355325a2d40d40b6b33e",
+    "tables/extension_exposure_inventory.csv.gz": "56f820cc18ca53aa8498d5bbcd44eb7f7bb5f636a8de4aad8eba0b66af327611",
+    "tables/field_label_night_cadence.csv": "561806da9eec8da237b04cdbac3f9e52fccc0cff4b7a31835e00eb8e152a79e5",
+    "tables/field_night_cadence.csv": "1e372b96fa3c2e054765a1b5cff6d5ff1aac96bf1f1d69b3d13b70898135af5b",
+    "tables/geometric_coverage.csv": "75930e3dcf0e83112b126383394cbf36d240ca438465531a4bf425236bd56106",
+    "tables/main_results.csv": "54fb96353b4115e838e5a2b2b4a677897b9f520d4f48768973b037f4859d6978",
+    "tables/minimum_solar_elongations.csv": "af653b0fb71d582e588f03181c44ad6f6ef2e2af1def1cb064eff5a9e726cb80",
+    "tables/motion_repeated_epochs.csv.gz": "3958498ee1de8f634f285687505a289f60194fc22d5e4c7f573af40f402f9a84",
+    "tables/motion_tail_audit.csv": "4d6cc2c2ca8170982cecab94d7ba070010af196e2ae41babe3628c94155e6469",
+    "tables/observing_summary.json": "49dfa1fbca51cad3fe5508f6f3db4bb56e6e6c34723f8c2e37f73f4d8a8d670e",
+    "tables/orbital_classes.csv": "0c15957e3d654028fd3ce462da77daa8fd2e5c4564ba40cd95758a7d1f01b037",
+    "tables/performance_summary.json": "f650a86e26a1c1d571feef0f3702caf88e102c657e10aacab3d6c116cbafdd70",
+    "tables/pointing_and_perimeter_audit.csv": "7761bf4a64003f582dda28f3382eaad5f38d1689239b63950c800d24a8b9eaf0",
+    "tables/quality_by_directory_night.csv": "0ae91e0088158a274626f7ef02304212c3ec872d0e6851ce116659eeb04a7dbf",
+    "tables/quality_exclusions.csv": "d677a5979311d756716665d3dadf53f0ce968dfc8c5b04981646ea8acfb0586a",
+    "tables/rare_object_audit.csv": "225f335b8f07c6e06488bb18cc9e42a6266f6c8cb9b34952cd95b56a1e89baed",
+    "tables/rare_object_detections.csv": "3ef9adc67c92724a2b73feb5f514d7675cba1358c9f94f125ff714409c22372d",
+    "tables/retained_linkages.csv": "5d81cbfc9112df3f7e53c1cde0b709e472e12c926367841b505add826e7c67b7",
+    "tables/retained_measurements_midpoint.csv": "420170acf787d018ab78e56dad04326ad7f6d8590713357c6118a37ac9cd1699",
+    "tables/sample_photometric_header_and_depth_check.csv": "b69206285a860269796b2d1da1bd9decae9e67cc0653958ed61396bf0b0db020",
+    "tables/stellar_repeatability_vs_magnitude.csv": "120aa494dca19573bda3a860dca09aa6717eea7d844527b71c5f905939c5c6a6",
+    "tables/stellar_repeated_measurement_pairs.csv.gz": "ce5ea26ed221631f8cedffcac35e0c29268c188d6e35271e2b9e075ba5a69393",
+    "tables/validation.json": "eb136cd8333535ff2b190f241b61f103bee7374bc07b203ecc2f0a87fa3eec36"
+  }
+}
