@@ -1,0 +1,51 @@
+% First-year editorial revision, 2026-11-25.
+% Observing-night interval: 2025-11-15 <= night_id < 2026-11-15.
+% R2 methods and figure designs retained; annual values generated from annual_results.json.
+\documentclass[linenumbers]{aastex701}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{placeins}
+\usepackage{xcolor}
+\newcommand{\SHARP}{\textsc{sharp}}
+\newcommand{\gaper}{\ensuremath{g_{\rm aper}}}
+\newcommand{\asec}{\ensuremath{^{\prime\prime}}}
+\newcommand{\degsq}{\ensuremath{\mathrm{deg}^{2}}}
+\newcommand{\rateunit}{\ensuremath{\mathrm{arcsec}\,\mathrm{hr}^{-1}}}
+\newcommand{\pending}[1]{\textcolor{blue}{\mbox{\scriptsize[#1]}}}
+\input{annual_values}
+\newcommand{\annualplot}[2]{%
+  \IfFileExists{figures/annual/#1}{%
+    \includegraphics[width=#2]{figures/annual/#1}%
+  }{%
+    \fbox{\parbox[c][0.63in][c]{0.90\linewidth}{\centering\color{blue}
+    \small Annual measurements awaiting calculation.\\[3pt]
+    \footnotesize The approved R2 figure design is retained in the source package.}}%
+  }%
+}
+\graphicspath{{figures/}}
+\shorttitle{SHARP: Design and First-Year Observations}
+\shortauthors{Xiao, Zou, and Li}
+\begin{document}
+\input{frontmatter}
+\ifannualresultsready\else
+\begin{center}
+\footnotesize\color{blue} Author draft --- 2026 November 25.\\
+Blue fields and reserved figure panels await the first-year calculation.
+\end{center}
+\fi
+\input{sections/01_introduction}
+\input{sections/02_survey_and_data}
+\input{sections/03_moving_object_analysis}
+\input{sections/04_observing_performance}
+\input{sections/05_initial_samples}
+\FloatBarrier
+\input{sections/06_transient_sources}
+\input{sections/07_discussion_and_conclusions}
+\FloatBarrier
+\input{sections/appendices}
+\FloatBarrier
+\clearpage
+\bibliography{references}
+\bibliographystyle{aasjournalv7}
+\end{document}

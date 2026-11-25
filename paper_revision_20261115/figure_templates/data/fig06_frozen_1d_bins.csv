@@ -1,0 +1,19 @@
+metric,lower,upper,stage,eligible_object_n,survived_object_n,survival_fraction,ci95_low,ci95_high,denominator_definition
+measured_aperture_magnitude,10.0,13.0,strict_linked,830,341,0.4108433734939759,0.3778582456606277,0.4446499800525467,object-night with >=3 distinct 1.5-arcsec known detections and 3<=first-last rate<=63 arcsec/h
+measured_aperture_magnitude,13.0,14.0,strict_linked,1097,670,0.6107566089334548,0.5815650083003256,0.6391752245941733,object-night with >=3 distinct 1.5-arcsec known detections and 3<=first-last rate<=63 arcsec/h
+measured_aperture_magnitude,14.0,15.0,strict_linked,1903,1325,0.6962690488702049,0.67522919133096,0.7165181123289834,object-night with >=3 distinct 1.5-arcsec known detections and 3<=first-last rate<=63 arcsec/h
+measured_aperture_magnitude,15.0,16.0,strict_linked,4402,3185,0.7235347569286688,0.7101320435156057,0.736547669859004,object-night with >=3 distinct 1.5-arcsec known detections and 3<=first-last rate<=63 arcsec/h
+measured_aperture_magnitude,16.0,17.0,strict_linked,13414,10116,0.754137468316684,0.7467785308229958,0.7613508893169288,object-night with >=3 distinct 1.5-arcsec known detections and 3<=first-last rate<=63 arcsec/h
+measured_aperture_magnitude,17.0,18.0,strict_linked,40821,31644,0.7751892408319248,0.7711137931902898,0.7792128999987595,object-night with >=3 distinct 1.5-arcsec known detections and 3<=first-last rate<=63 arcsec/h
+measured_aperture_magnitude,18.0,19.0,strict_linked,73514,55804,0.7590935059988574,0.7559887630646749,0.7621711725930862,object-night with >=3 distinct 1.5-arcsec known detections and 3<=first-last rate<=63 arcsec/h
+measured_aperture_magnitude,19.0,20.0,strict_linked,15181,8940,0.5888940122521573,0.58104551701176,0.5966975307058823,object-night with >=3 distinct 1.5-arcsec known detections and 3<=first-last rate<=63 arcsec/h
+measured_aperture_magnitude,20.0,21.0,strict_linked,3,1,0.3333333333333333,0.0614919447203962,0.7923403991979522,object-night with >=3 distinct 1.5-arcsec known detections and 3<=first-last rate<=63 arcsec/h
+measured_aperture_magnitude,21.0,22.0,strict_linked,0,0,,,,object-night with >=3 distinct 1.5-arcsec known detections and 3<=first-last rate<=63 arcsec/h
+measured_aperture_magnitude,22.0,23.0,strict_linked,0,0,,,,object-night with >=3 distinct 1.5-arcsec known detections and 3<=first-last rate<=63 arcsec/h
+first_last_rate_arcsec_per_hour,3.0,5.0,strict_linked,2127,851,0.4000940291490362,0.379471835107147,0.421076442081333,object-night with >=3 distinct 1.5-arcsec known detections and 3<=first-last rate<=63 arcsec/h
+first_last_rate_arcsec_per_hour,5.0,10.0,strict_linked,8463,5947,0.7027058962542834,0.6928777897767724,0.7123500648709142,object-night with >=3 distinct 1.5-arcsec known detections and 3<=first-last rate<=63 arcsec/h
+first_last_rate_arcsec_per_hour,10.0,20.0,strict_linked,27685,20963,0.7571970381072783,0.7521108135005689,0.7622118973712259,object-night with >=3 distinct 1.5-arcsec known detections and 3<=first-last rate<=63 arcsec/h
+first_last_rate_arcsec_per_hour,20.0,30.0,strict_linked,52680,39505,0.7499050873196659,0.7461888371572752,0.753584893666441,object-night with >=3 distinct 1.5-arcsec known detections and 3<=first-last rate<=63 arcsec/h
+first_last_rate_arcsec_per_hour,30.0,40.0,strict_linked,52486,38953,0.7421598140456502,0.7383997851544352,0.7458843980992423,object-night with >=3 distinct 1.5-arcsec known detections and 3<=first-last rate<=63 arcsec/h
+first_last_rate_arcsec_per_hour,40.0,50.0,strict_linked,5826,4386,0.752832131822863,0.7415912926660652,0.7637397735060053,object-night with >=3 distinct 1.5-arcsec known detections and 3<=first-last rate<=63 arcsec/h
+first_last_rate_arcsec_per_hour,50.0,63.0,strict_linked,1955,1424,0.7283887468030691,0.7082385900963422,0.7476431230350635,object-night with >=3 distinct 1.5-arcsec known detections and 3<=first-last rate<=63 arcsec/h

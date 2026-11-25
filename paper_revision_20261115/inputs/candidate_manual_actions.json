@@ -1,0 +1,19 @@
+{
+  "source_file": "/pipeline/xiaoyunao/survey/runtime/followup/followup_state.json",
+  "sha256": "b2d174fa34245cd2b71584c6986c4703ee9ffcad019b76043a32ebbe1a21dde9",
+  "manual_actions": [
+    {
+      "action": "abandon_false_positive_sources",
+      "kept_source_id": "20260902:00001nF",
+      "plan_night": "20260904",
+      "source_ids": [
+        "20260902:00001nP",
+        "20260902:00001o2",
+        "20260902:00001oI",
+        "20260902:00001oj"
+      ],
+      "updated_utc": "2026-09-04T02:22:57+00:00"
+    }
+  ],
+  "identities": []
+}

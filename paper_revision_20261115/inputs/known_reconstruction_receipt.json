@@ -1,0 +1,24 @@
+[
+  {
+    "night": "20260605",
+    "source_file": "OBJ_MP_1526_0047_cat.fits.gz",
+    "l2_sha256": "c12e091113bd2c71529d4b598370718a13186adcdcdd21ca88e5894654f396d1",
+    "prediction_rows": 195,
+    "predictions_sha256": "a88de700d9d5ed1bede49b902ec30dd75a2926fbb93d8b1976ac505a3e0a5d26",
+    "primary_matches": 0,
+    "auxiliary_matches": 0,
+    "matching_status": "completed_zero_matches",
+    "method_commit": "d2f0057bd4cdd4c7a3c6c2431f6449a72c327284"
+  },
+  {
+    "night": "20260605",
+    "source_file": "OBJ_MP_1787_0048_cat.fits.gz",
+    "l2_sha256": "4247ad16a755593edc4d33a68a5e396b223df9e26e5a3feca93354316bace581",
+    "prediction_rows": 109,
+    "predictions_sha256": "2f150b8b9250cf31b3cef747a81ea0290715562dcf56d9cb5594379295c11eb8",
+    "primary_matches": 0,
+    "auxiliary_matches": 0,
+    "matching_status": "completed_zero_matches",
+    "method_commit": "d2f0057bd4cdd4c7a3c6c2431f6449a72c327284"
+  }
+]

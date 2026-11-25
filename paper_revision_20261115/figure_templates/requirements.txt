@@ -1,0 +1,5 @@
+numpy
+pandas
+matplotlib
+# Only needed for --prepare from the original frozen Parquet files:
+pyarrow

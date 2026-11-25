@@ -1,0 +1,66 @@
+{
+  "all_checks_pass": true,
+  "science_exposures": 53398,
+  "physical_nights": 168,
+  "primary_associations": 797887,
+  "eligible_object_nights": 151222,
+  "strict_linked": 112029,
+  "post_cutoff_archived_product_count": 0,
+  "manuscript_pages": 16,
+  "publication_figures": [
+    {
+      "file": "fig01_exposure.pdf",
+      "pdf_sha256": "02626dadae6dc463e80c8a1a87cb8190177fe85fdc0c51a633e44f4021b7aad8",
+      "png_sha256": "3b4c3ef5d57943d8a22856f6701d7ffd99ed1c44122471494ee383f9c6ffcf69"
+    },
+    {
+      "file": "fig02_workflow.pdf",
+      "pdf_sha256": "1a7dd6ce2b6599e53b497784d5bf7bd3be249c38e35638c0ad2ae66b448de76c",
+      "png_sha256": "72d02d683149215540fa2d7e2fb5e14b3fc7302d93a008ffb1ae7dfbb2068f7a"
+    },
+    {
+      "file": "fig03_coverage_and_known_sky.pdf",
+      "pdf_sha256": "9c4fc6d7b8bf16255e1b4c826ac7a61c93bbecee9bd8bc21840ae5285bd21496",
+      "png_sha256": "b2bdba591a4facf69475a40904f5d079b239225b930111412044b179007589a2"
+    },
+    {
+      "file": "fig04_activity_and_cadence.pdf",
+      "pdf_sha256": "ad8ffd266b28c22576590bf43d361183281e123d160e1a3242b9d57a4cb72fea",
+      "png_sha256": "b82b07133570808f443395b7646671cc790ab3a26370e47b62789f2db8bd76dd"
+    },
+    {
+      "file": "fig05_measurement_quality.pdf",
+      "pdf_sha256": "7afeead8a897ad301931cf7c807b849c12c5aba5fc10655e1707e37543e243c2",
+      "png_sha256": "c8be6741227f5105ec36231f28ed071cb4b058b1688965c648e08411bc4a2497"
+    },
+    {
+      "file": "fig06_conditional_retention.pdf",
+      "pdf_sha256": "7f02c19c6c46b3368d86e9a817555ee1136726f856124332234b65d5f0731f6b",
+      "png_sha256": "234223e8ac1da15e0c0610672be0685765f51d3b063f81491623d40afc987313"
+    },
+    {
+      "file": "fig07_orbits_and_revisits.pdf",
+      "pdf_sha256": "361d3037dcbd4a49a0420f298e05cb7372899b574885897f8e6b2bc2a6a476f5",
+      "png_sha256": "b41f6d04230dfcc350fcc8520166b703313e2e8b2bdcf97274e8a9e199106099"
+    },
+    {
+      "file": "fig08_candidate.pdf",
+      "pdf_sha256": "9ef8c5ac4403a72ea2bc68101c292566369454c6d1a4b47e02c2c5216a30fb64",
+      "png_sha256": "ea5b2a3162d56d48a95c89f037c89111877721c89933065970bf4596e2031ad9"
+    },
+    {
+      "file": "figA1_motion_and_solar_elongation.pdf",
+      "pdf_sha256": "347efc606581d2a7a022164842140cb32dbe6714fef4b18ac5eeefb4d4dc5113",
+      "png_sha256": "d16c2f45f784401db6b2ad7327284380bbde0bf48698f6ca4e365479aba58398"
+    },
+    {
+      "file": "figA2_candidate_short_arc_diagnostic.pdf",
+      "pdf_sha256": "78672530b976f195e8a6508afe30231e52d036ff995627c52c0eb918df5a09b9",
+      "png_sha256": "5ffad613cdfbc043c4ca00ae0f92d5080e3195e0d168177ed1f0cd95a801dc4e"
+    }
+  ],
+  "review_previews": 2286,
+  "review_contact_sheets": 48,
+  "transient_title_only": true,
+  "two_decimal_statistics": true
+}

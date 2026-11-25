@@ -2,6 +2,15 @@
 
 ## 2026-11-25
 
+- task: 完成 SHARP 第一年度数据扩展与 R3 全文回填，工作目录 `paper_revision_20261115/`；旧 10/15 交付保持原样。
+- scope: UTC 中点 [2025-11-15 04:00, 2026-11-15 04:00)，北京时间正午换夜；30 s 白光标准 MP 为同质主样本，其他波段/专项模式（含 11/11–13）单列。
+- files: 新年度曝光台账、13 月表、known/retention/candidate 表、单一数字源和宏、8+2 PDF/PNG、固定样式绘图数据/脚本、16 页 LaTeX/PDF、48 张候选复核联系表、`ANNUAL_HANDOFF.md`。
+- commands: SSH 只读收集新增原始/L2 头和既有阶段列；同 SHA 的冻结 ASTORB 查询。d2f0057 原样程序仅在服务器独立论文目录补 105 张四月曝光的 pre-subtraction links（48 links，44 个 eligible 对象夜恢复）及两张六月曝光 known 匹配（195/109 预测、0 匹配）。运行 annual ledger/statistics/candidate/figure/finalize/verify 脚本、py_compile、Tectonic、Poppler 目视。
+- results: 53,398 曝光/168 夜、445.02 h；一次/同夜≥3面积 11,025.29/10,566.82 deg²；重访中位31.98 min；模型深度20.35 mag（52,452有效头；946占位只从深度剔除）；797,887次关联/80,591身份；全部151,222 eligible对象夜已评估，112,029保留=74.08%，三种stage计数相同；19 ambiguous detection keys。保留复核子样本114条/354测量/57夜，含原58/179与新增56；已知假源manual决定覆盖旧positive标签。
+- validation: 13 月/365 物理夜活动表闭合、曝光唯一、图6网格/比例/分母一致、10图及论文副本一致、16页编译/目视、统计最多2位小数、空暂现源章节保留；已收集原产物均无11/15后的mtime。未修改生产流程/状态/参考星表。
+- remaining: 2,286条/25夜缺显式复核完成证据，已附精确队列与48张三时刻GIF联系表，全部源GIF可读；不能当作拒绝或已完成全年人工复核。作者/同事后续响应曲线、暂现源、邮箱/通讯与致谢材料照既有分工补充，无新增通用核验任务。
+- next: 直接推送既有 GitHub 论文分支，GPT Pro 按实际年度趋势细改解释并处理候选复核完成记录。
+
 - task: 按 GPT Pro 2026-11-24 R2 整合全文与 Fig.2/5/6，核读当前上游定标实现；作者要求不再追查更早备份。
 - files: `paper_revision_20261015/manuscript/`、`figure_revision/`、`inputs/calibration_*r2*`、`tables/calibration_*_r2.csv`、数字来源/图指纹表、事实表/待办/README、`REVISION_R2_HANDOFF.md`；更新绘图入口与独立只读核查/整合脚本。
 - commands: EasyTier SSH 只读运行 `check_calibration_chain_r2.py`；`redraw_figures.py --prepare --source paper_revision_20261015`；Python py_compile；`finalize_revision_r2.py`；`tectonic --keep-logs manuscript.tex`；Poppler 渲染目视。

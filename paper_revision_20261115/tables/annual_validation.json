@@ -1,0 +1,27 @@
+{
+  "exposure_keys_unique": true,
+  "qualified_exposures": 53398,
+  "physical_nights": 168,
+  "monthly_labels": [
+    202511,
+    202512,
+    202601,
+    202602,
+    202603,
+    202604,
+    202605,
+    202606,
+    202607,
+    202608,
+    202609,
+    202610,
+    202611
+  ],
+  "monthly_counts_close": true,
+  "retention_numerator": 112029,
+  "retention_denominator": 151222,
+  "retention_stage_counts_equal": true,
+  "unreviewed_or_completion_not_evidenced": 2286,
+  "prior_retained_preserved": 58,
+  "seven_annual_figures_present": true
+}

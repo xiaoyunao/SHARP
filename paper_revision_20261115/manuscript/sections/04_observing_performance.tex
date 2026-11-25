@@ -1,0 +1,247 @@
+\section{Survey Performance}
+\label{sec:performance}
+
+\subsection{Sky coverage and cadence}
+\label{sec:coverage}
+
+The first-year observations contain \yrNexp\ exposures on
+\yrNnight\ nights, with a total open-shutter time of \yrHours~hr.
+The latter is the sum of exposure durations and describes the time
+spent collecting light. Table~\ref{tab:results} summarizes the main
+measurements of the survey.
+
+We calculate each exposure's footprint from the image WCS, including
+its TPV distortion terms, and combine overlapping polygons on a
+HEALPix grid \citep{Gorski2005}. At $N_{\rm side}=1024$, the area
+observed at least once is $\yrArea~\degsq$. Counting exposures
+within each observing night and then combining sky pixels that
+receive at least three visits gives $\yrAreaThree~\degsq$.
+These areas describe the geometric footprint. Figure~\ref{fig:coverage}
+compares the exposure coverage with the sky distribution of the
+known-asteroid measurements. The exposure map traces the observing
+pattern, while the asteroid map also reflects the population,
+viewing geometry, and brightness selection.
+
+\begin{figure}[tbp]
+\centering
+\annualplot{fig03_coverage_and_known_sky.pdf}{\linewidth}
+\caption{First-year observations in J2000 ecliptic longitude and
+latitude. (a) Number of science exposures covering each HEALPix pixel,
+using image WCS footprints and $N_{\rm side}=512$.
+(b) Number of primary $1\asec$ known-asteroid associations per pixel
+at $N_{\rm side}=128$. The orange curve marks the celestial equator.
+Both color scales are logarithmic; their counts refer to the different
+quantities and pixel areas indicated. Geometric areas in the text
+use $N_{\rm side}=1024$.}
+\label{fig:coverage}
+\end{figure}
+
+Within a night, exposures are grouped by field identifier and actual
+pointing. Every pair of centers in a group must be separated by at
+most $0.30^\circ$, approximately one tenth of the camera width.
+This separates observations with substantially different pointings
+while preserving repeated visits to the same field.
+
+The \yrNGroups\ field--night groups comprise \yrNOne\ single visits,
+\yrNTwo\ pairs, and \yrNThree\ sequences with at least three visits.
+Thus \yrFracThree\% of observed field--night groups provide three
+or more measurements. The median interval between adjacent visits
+is \yrCadence~min, with a 16th--84th percentile range of
+\yrCadenceLow--\yrCadenceHigh~min. Sequences with at least three
+visits have a median first-to-last span of \yrSpan~min and a
+corresponding range of \yrSpanLow--\yrSpanHigh~min.
+
+Figure~\ref{fig:cadence} shows how the observations are distributed
+through the year and within individual nights. The fraction of
+complete field--night sequences and the area ever observed three
+times in a night describe complementary aspects of the sampling.
+The former measures how often an observed field supplies a sequence
+suitable for motion linking; the latter measures the accumulated
+sky area with at least one such opportunity.
+
+\begin{figure}[tbp]
+\centering
+\annualplot{fig04_activity_and_cadence.pdf}{0.96\linewidth}
+\caption{Observing activity and cadence during the first year.
+(a,b) Nightly and monthly numbers of standard survey exposures
+and those entering the science sample. All panels use the same
+local-noon observing-night definition. (c) Number of visits in
+each field--night pointing group. (d) Exposure-midpoint separation
+of adjacent visits within those groups. (e) First-to-last midpoint
+span for groups with at least three visits. The time axis covers
+the full first-year interval. The interval panels emphasize the
+main distributions.}
+\label{fig:cadence}
+\end{figure}
+
+\begin{table}[tbp]
+\centering
+\caption{First-Year Survey Measurements}
+\label{tab:results}
+\begin{tabular}{ll}
+\toprule
+Quantity & Measured value\\
+\midrule
+Science exposures / observing nights & \yrNexp\ / \yrNnight\\
+Open-shutter time & \yrHours~hr\\
+Geometric area observed at least once & $\yrArea~\degsq$\\
+Area with three visits in at least one night & $\yrAreaThree~\degsq$\\
+Groups with at least three visits & \yrNThree\ / \yrNGroups\ (\yrFracThree\%)\\
+Median adjacent-visit interval & \yrCadence~min\\
+Median span of sequences with at least three visits & \yrSpan~min\\
+Median catalog $5\sigma$ model depth & \yrDepth~mag\\
+Model-depth interquartile range & \yrDepthLow--\yrDepthHigh~mag\\
+\midrule
+Primary associations / catalog identities & \yrNAssoc\ / \yrNKnown\\
+Identities in the main-belt orbital region & \yrNMainBelt\ (\yrMainBeltFrac\%)\\
+Median radial O$-$C & $\yrOC\asec$\\
+Robust scatter in $\Delta\alpha\cos\delta$ / $\Delta\delta$ & $\yrRAScatter\asec$ / $\yrDecScatter\asec$\\
+\midrule
+Linked / eligible known-object nights & \yrNLinked\ / \yrNEligible\ (\yrRetention\%)\\
+Image-reviewed single-night candidates & \yrNCandidates\\
+Measurements / nights in retained candidates & \yrNCandidateMeasurements\ / \yrNCandidateNights\\
+\bottomrule
+\end{tabular}
+\tablecomments{Depth is defined by Equation~\ref{eq:depth}. Astrometric
+statistics refer to the $1\asec$ association sample; robust scatter
+is the Gaussian-equivalent interquartile spread. The linkage counts
+use the observations and eligibility criteria in
+Section~\ref{sec:retention_method}.}
+\end{table}
+
+\subsection{Photometric and astrometric precision}
+\label{sec:photometry}
+
+The images have a median FWHM of $\yrFWHM\asec$, with an
+interquartile range of $\yrFWHMLow$--$\yrFWHMHigh\asec$.
+We characterize the per-exposure sensitivity using the catalog's
+background-noise model,
+\begin{align}
+F_{5,\rm ADU} &=\frac{5}{g_{\rm e}}
+ \left[(s_{\rm ADU}g_{\rm e}+r_{\rm e}^{\,2})\,
+ \pi\left(\frac{w_{\rm pix}}{2}\right)^2\right]^{1/2},\\
+m_{5,\rm model} &= ZP-2.5\log_{10}F_{5,\rm ADU},
+\label{eq:depth}
+\end{align}
+where $s_{\rm ADU}$ is the sky level per pixel, $g_{\rm e}$ the gain
+in electrons per ADU, $r_{\rm e}$ the read noise in electrons,
+and $w_{\rm pix}$ the image FWHM in pixels. The noise area is a
+circle of radius FWHM/2, and $ZP$ is the zero point from the
+18-pixel-diameter calibration aperture. The calculation includes
+sky and read noise, with no additional correction for the
+encircled energy at FWHM/2. There are 52,452 valid model-depth estimates; 946 header placeholders are treated as unavailable for this statistic. Its median value is \yrDepth~mag,
+with an interquartile range of \yrDepthLow--\yrDepthHigh~mag
+(Figure~\ref{fig:quality}a). This model depth describes the image
+background sensitivity; the fixed eight-pixel measurement aperture
+has its own flux uncertainty.
+
+Figure~\ref{fig:quality}b shows the aperture-magnitude uncertainties
+for unflagged known-asteroid associations with positive measured
+fluxes and uncertainties. Selected stellar sequences provide a
+separate check on photometric repeatability. We use 18 images in
+six field--night sequences selected between 2026 February and May and compare isolated, unflagged stars
+between visits. The single-epoch scatter is estimated as
+\begin{equation}
+\sigma_{\rm epoch}=\frac{\mathrm{IQR}(\Delta g_{\rm aper})}
+ {2\Phi^{-1}(0.75)\sqrt{2}},
+\label{eq:repeatability}
+\end{equation}
+where $\Phi^{-1}$ is the standard-normal quantile function.
+This expresses the interquartile spread as a Gaussian-equivalent
+scatter and assigns comparable noise to the two epochs.
+
+For $15.5\leq\gaper<16$, the scatter is 11.77~mmag, compared
+with a median reported uncertainty of 11.53~mmag. At
+$17.5\leq\gaper<18$, the corresponding values are
+56.89 and 57.41~mmag. These selected sequences provide a
+within-night repeatability check under relatively clean imaging
+conditions. The first-year distribution of catalog uncertainties
+in Figure~\ref{fig:quality}b describes the wider range of
+observing conditions.
+
+\label{sec:astrometry}
+We compare source centroids with the predicted asteroid positions
+at each exposure midpoint. The right-ascension difference is
+wrapped to $[-180^\circ,180^\circ]$ and multiplied by the cosine
+of the predicted declination. The \yrNAssoc\ primary associations
+have a median radial O$-$C of $\yrOC\asec$. Their signed component
+medians are \yrRAOffset~mas in $\Delta\alpha\cos\delta$ and
+\yrDecOffset~mas in $\Delta\delta$, with Gaussian-equivalent
+interquartile scatters of $\yrRAScatter\asec$ and
+$\yrDecScatter\asec$, respectively.
+
+The magnitude dependence of the radial separation is shown in
+Figure~\ref{fig:quality}c. Panel~(d) shows the nightly medians of
+the signed components and the number of measurements in each
+night. These comparisons probe the combined effects of centroid
+measurement, the astrometric reference frame, observation time,
+and the predicted position. The quoted statistics describe
+associations selected within $1\asec$.
+
+\begin{figure}[tbp]
+\centering
+\annualplot{fig05_measurement_quality.pdf}{\linewidth}
+\caption{Photometric and astrometric measurements during the first
+year. (a) Catalog $5\sigma$ model depth in 0.2-mag bins; the orange
+line and band mark the median and interquartile range of 52,452 valid estimates. The 946 unavailable header values are excluded only from this metric.
+(b) Aperture-magnitude uncertainty for unflagged primary associations
+with positive magnitude uncertainty, flux, and flux uncertainty.
+The displayed sample contains
+749,572 measurements with usable magnitudes and uncertainties
+within the plotted ranges; the same selection defines the orange curves.
+Cells are 0.1~mag by 0.04~dex. Orange curves show the median and
+16th--84th percentiles in 0.5-mag bins with at least 30 measurements.
+Blue points show the stellar repeatability from the six selected
+sequences, selected between 2026 February and May, using bins with at least 50 stellar pairs.
+(c) Radial O$-$C in 0.1-mag by $0.02\asec$ cells, with the same
+trend conventions. The color bar gives the number of measurements
+per cell. These associations lie within $1\asec$ of the predictions.
+(d) Nightly medians of $\Delta\alpha\cos\delta$ and $\Delta\delta$;
+the gray bars show the number of associations per night.
+The radial panel contains 796,336 associations;
+1,551 magnitude values lie outside its displayed range.
+The nightly panel uses all \yrNAssoc\ associations.}
+\label{fig:quality}
+\end{figure}
+
+\subsection{Linkage of repeatedly detected asteroids}
+\label{sec:retention_results}
+
+The first-year assessment contains \yrNEligible\ eligible known-object
+nights, of which \yrNLinked\ are represented by motion-search links.
+The conditional retention is therefore $R_{\rm cond}=\yrRetention\%$.
+The 95\% Wilson interval is \yrRetentionLow--\yrRetentionHigh\%;
+it describes binomial counting uncertainty for the evaluated sample.
+The magnitude and angular-rate dependence is shown in
+Figure~\ref{fig:retention}.
+
+The two-dimensional count map shows where the detections constrain
+the measurement in median object--night \gaper\ and predicted
+angular rate. The adjacent map gives the linked fraction in the
+same cells. The lower panels summarize the dependence on each
+quantity and show the corresponding eligible counts. These
+distributions relate the observed linking behavior to the brightness,
+displacement, and temporal sampling available to the search.
+
+\begin{figure}[tbp]
+\centering
+\annualplot{fig06_conditional_retention.pdf}{\linewidth}
+\caption{Conditional linkage retention for first-year known-object
+nights. Eligibility requires detections in at least three distinct
+science exposures within $1.5\asec$ of one known identity, with
+predicted first-to-last angular rate $3$--$63$~\rateunit.
+(a) Eligible counts in 0.25-mag by 3~\rateunit\ cells, with a
+logarithmic color scale. (b) Linked fractions in the same cells;
+cells containing fewer than 30 eligible object--nights are gray.
+(c,d) One-dimensional linked fractions with 95\% Wilson intervals
+and horizontal bars indicating bin widths. The lower histograms
+show eligible counts per bin. The dashed line marks the overall
+fraction, \yrRetention\%. Objects with unusable magnitudes remain
+in the overall and angular-rate samples and are omitted only from
+panels requiring a magnitude. The magnitude-dependent panels contain
+151,165 eligible object--nights and
+112,026 linked cases. The
+57 excluded magnitudes include
+3 linked cases. Both maps use unsmoothed counts.}
+\label{fig:retention}
+\end{figure}

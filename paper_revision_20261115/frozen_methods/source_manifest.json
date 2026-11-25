@@ -1,0 +1,32 @@
+[
+  {
+    "source": "known_asteroid/match_single_night.py",
+    "commit": "d2f0057bd4cdd4c7a3c6c2431f6449a72c327284",
+    "sha256": "f6fdbe70910a3bb8b22495075137685c5c629086feba30621b20b6ded85e26a6"
+  },
+  {
+    "source": "heliolincrr/mask_gaia.py",
+    "commit": "d2f0057bd4cdd4c7a3c6c2431f6449a72c327284",
+    "sha256": "8b7f71bdd8432ab9e3e7676fc1f9995bb8ec7d7b5577c5cd30ebb6b0b115da4c"
+  },
+  {
+    "source": "heliolincrr/make_tracklet_linreproj.py",
+    "commit": "d2f0057bd4cdd4c7a3c6c2431f6449a72c327284",
+    "sha256": "9a38aed6794818fbc5f658eeda21cd364843d472d673e473ea9512755c365342"
+  },
+  {
+    "source": "heliolincrr/merge_tracklets_night.py",
+    "commit": "d2f0057bd4cdd4c7a3c6c2431f6449a72c327284",
+    "sha256": "3399a4ee2f0c8796a10986b890d3572063b0c0e94f9fc3adf3531cd530630734"
+  },
+  {
+    "source": "heliolincrr/run_linear_links_from_tracklets.py",
+    "commit": "d2f0057bd4cdd4c7a3c6c2431f6449a72c327284",
+    "sha256": "f55dfe6b06d29993312562b5e426b18122c2cd251ce89f3705442d6e8cdd16bd"
+  },
+  {
+    "source": "heliolincrr/orbit_confirm_links.py",
+    "commit": "d2f0057bd4cdd4c7a3c6c2431f6449a72c327284",
+    "sha256": "993186b4125370c8a38d35614715322ebb098769e42782c0a607ccea89793c2f"
+  }
+]

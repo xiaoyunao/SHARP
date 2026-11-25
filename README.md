@@ -101,3 +101,8 @@ PYTHON_BIN=/home/smtpipeline/Softwares/miniconda3/envs/heliolinc/bin/python bash
 ## 版本记录
 
 - 仓库级更新说明见 `CHANGELOG.md`
+
+
+## SHARP 第一年度论文
+
+[年度论文与支撑材料](paper_revision_20261115/README.md)覆盖 UTC 曝光中点 2025-11-15 04:00 至 2026-11-15 04:00，按北京时间正午划分观测夜。完整 LaTeX、PDF、统计图表及单一数字源位于该目录；[交接说明](paper_revision_20261115/ANNUAL_HANDOFF.md)记录科学范围及候选复核状态。此前截至七月的交付保留在 `paper_revision_20261015/`，用于历史复现。生产目录不因论文统计而改变。

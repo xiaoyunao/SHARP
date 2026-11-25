@@ -1,0 +1,14 @@
+{
+  "source_commit": "1e278897745dc9d879cb2b0e2da0a6687cb843f1",
+  "definition": "W_ref=G+delta_W+P_W(BP-RP-C0)",
+  "delta_W": 0.1136777774,
+  "C0": 0.340674898,
+  "P_W_cubic_to_constant": [
+    -0.03971196,
+    0.19464851,
+    -0.11042587,
+    -0.03542586
+  ],
+  "source": "inputs/calibration_method_note_20261124_r2.md",
+  "note": "Display rounding does not change the calibration."
+}

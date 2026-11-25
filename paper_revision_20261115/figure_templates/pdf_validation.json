@@ -1,0 +1,55 @@
+[
+  {
+    "file": "fig02_workflow.pdf",
+    "bytes": 23090,
+    "sha256": "1a7dd6ce2b6599e53b497784d5bf7bd3be249c38e35638c0ad2ae66b448de76c",
+    "fonts": [
+      {
+        "name": "/EVICAO+DejaVuSans-Bold",
+        "embedded": true
+      },
+      {
+        "name": "/BMQQDV+DejaVuSans",
+        "embedded": true
+      }
+    ]
+  },
+  {
+    "file": "fig05_measurement_quality.pdf",
+    "bytes": 353475,
+    "sha256": "7afeead8a897ad301931cf7c807b849c12c5aba5fc10655e1707e37543e243c2",
+    "fonts": [
+      {
+        "name": "/CNAJXZ+TimesNewRomanPSMT",
+        "embedded": true
+      },
+      {
+        "name": "/CZRBLR+STIXGeneral-Regular",
+        "embedded": true
+      },
+      {
+        "name": "/FTXWZA+STIXGeneral-Italic",
+        "embedded": true
+      }
+    ]
+  },
+  {
+    "file": "fig06_conditional_retention.pdf",
+    "bytes": 95312,
+    "sha256": "7f02c19c6c46b3368d86e9a817555ee1136726f856124332234b65d5f0731f6b",
+    "fonts": [
+      {
+        "name": "/CNAJXZ+TimesNewRomanPSMT",
+        "embedded": true
+      },
+      {
+        "name": "/CZRBLR+STIXGeneral-Regular",
+        "embedded": true
+      },
+      {
+        "name": "/FTXWZA+STIXGeneral-Italic",
+        "embedded": true
+      }
+    ]
+  }
+]

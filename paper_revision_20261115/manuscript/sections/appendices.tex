@@ -1,0 +1,78 @@
+\appendix
+\setcounter{figure}{0}
+\renewcommand{\thefigure}{A\arabic{figure}}
+\renewcommand{\theHfigure}{A.\arabic{figure}}
+\renewcommand{\theHequation}{A.\arabic{equation}}
+\section{Viewing Geometry and Single-Night Trajectories}
+\label{app:checks}
+
+\subsection{Solar elongation and angular rate}
+\label{app:geometry}
+
+Solar elongation is calculated from target and solar directions
+with the same observing origin. In J2000-equatorial coordinates,
+let $\boldsymbol r_{\rm o}(t)$ be the observer's heliocentric
+position and $\boldsymbol r_{\rm a}(t-\tau)$ the asteroid's
+light-time-corrected heliocentric position. The unit directions
+and elongation are
+\begin{align}
+\hat{\boldsymbol u}_{\rm a} &=
+\frac{\boldsymbol r_{\rm a}(t-\tau)-\boldsymbol r_{\rm o}(t)}
+ {|\boldsymbol r_{\rm a}(t-\tau)-\boldsymbol r_{\rm o}(t)|},\\
+\hat{\boldsymbol u}_{\odot} &=
+-\frac{\boldsymbol r_{\rm o}(t)}{|\boldsymbol r_{\rm o}(t)|},\\
+\epsilon &=\cos^{-1}\left(\hat{\boldsymbol u}_{\rm a}\cdot
+ \hat{\boldsymbol u}_{\odot}\right).
+\end{align}
+The elongation distribution in Figure~\ref{fig:geometry} counts
+each primary association once.
+
+Angular rates use adjacent associations of the same identity
+within one observing night, in different exposures and separated
+by a positive time interval. The rate is the great-circle
+separation divided by the elapsed time. There are \yrNRatePairs\
+such pairs; their median predicted and measured rates are
+\yrPredictedRate\ and \yrMeasuredRate~\rateunit, respectively.
+The two rates are calculated independently from the predicted
+and measured coordinates.
+
+\begin{figure}[htbp]
+\centering
+\annualplot{figA1_motion_and_solar_elongation.pdf}{\linewidth}
+\caption{First-year viewing geometry and apparent motion.
+(a) Predicted and measured angular rates from adjacent exposures
+of the same known identity within one night.
+(b) Solar elongation of the primary known-asteroid associations,
+using a common observing origin for the Sun and asteroid.
+The rate distributions count exposure pairs; the elongation
+distribution counts individual associations.}
+\label{fig:geometry}
+\end{figure}
+
+\subsection{Single-night trajectory fits}
+\label{app:shortarc}
+
+The short-arc calculation constructs Lambert endpoints from
+equal heliocentric-distance hypotheses with zero assumed radial
+derivatives. The provisional tracklet-subset search admits seeds
+with final-epoch heliocentric speeds below 140~km~s$^{-1}$.
+The subsequent refit uses the 35~km~s$^{-1}$ acceptance limit
+specified in Section~\ref{sec:motion_method}. Positions and
+trajectory spans are evaluated at the exposure midpoints.
+
+Figure~\ref{fig:shortarc} compares the observed spans with the
+angular fit RMS of the \yrNCandidates\ retained candidates.
+The C/2025~Y1 links are identified separately. The RMS measures
+agreement along the observed short arc. Longer baselines
+provide the additional constraints on distance and radial
+motion needed for orbit determination.
+
+\begin{figure}[htbp]
+\centering
+\annualplot{figA2_candidate_short_arc_diagnostic.pdf}{0.75\linewidth}
+\caption{Exposure-midpoint span and short-arc fit RMS for the
+retained first-year single-night candidates. Links associated
+with C/2025~Y1 are shown separately. The RMS describes the
+angular agreement of the trajectory over the measured arc.}
+\label{fig:shortarc}
+\end{figure}

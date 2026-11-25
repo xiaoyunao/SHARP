@@ -1,0 +1,12 @@
+source,target,meaning
+plan,observe,processing
+observe,l2,processing
+l2,ephemeris,exposure and catalog input
+l2,static,catalog input
+ephemeris,primary,processing
+primary,known,processing
+static,link,processing
+link,shortarc,processing
+shortarc,veto,processing
+veto,review,processing
+ephemeris,veto,auxiliary 1.5 arcsec known associations; identity classification after moving-source search

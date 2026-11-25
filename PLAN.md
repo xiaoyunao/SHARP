@@ -1,12 +1,13 @@
 # PLAN
 
-## SHARP 启动期论文（2026-11-25 R2）
+## SHARP 第一年度论文（2026-11-25）
 
-- 当前里程碑已完成：全文 R2、三幅密度/流程新图与当前服务器定标链路核读已接入 `codex/sharp-paper-revision-20261015`，科学输入仍为 2025-11-15 至 2026-07-15 归档及既有冻结表，截止 2026-10-15。
-- 交付入口：`paper_revision_20261015/manuscript/manuscript.pdf` 和同目录 LaTeX；GPT Pro 交接为 `REVISION_R2_HANDOFF.md`。新图复现见 `figure_revision/README.md`，当前验收为 `tables/revision_r2_validation.json`。
-- 关键方法：WCS 采用传播到曝光开始历元的 Gaia 坐标，W 光度匹配实际使用原始 ra/dec；保留 18 px 零点/8 px 测量及既有深度定义。原 74.16%、重选 74.14%、阶段完整子样本 74.21% 分别说明。
-- 验收标准已满足：三图从冻结输入重建，实际计数与分母/来源 SHA 核对；10 图副本一致、嵌入字体、全文 17 页编译及目视；Transient Sources 标题独立保留，无正文。
-- 后续仅按作者/同事提供的响应曲线、仪器资料、署名致谢/in-prep 信息和暂现源正文合并；不新增候选身份、光变或差分分析任务。更早备份不继续追查，当前无新的作者待答阻塞。
+- 年度扩展里程碑完成，位于 `paper_revision_20261115/`，旧 `paper_revision_20261015/` 保持可追溯。范围是 UTC 中点 [2025-11-15 04:00, 2026-11-15 04:00)，标准 30 s 白光主样本；其他模式单列。
+- 入口：`manuscript/manuscript.pdf`、`annual_results.json`、`ANNUAL_HANDOFF.md`。53,398曝/168夜；797,887关联/80,591身份；112,029/151,222=74.08%；全部eligible均已有评价依据。
+- 方法固定为论文既有定义，d2f0057 原代码/指纹入年度目录；仅独立论文目录增量补齐缺失产物，原生产镜像/参考表/调度/MPC状态无改动。R2 Gaia方法直接复用。
+- 验收：13月和365物理夜活动表、唯一曝光集合、网格比例/1D分母闭合、旧58/179完整保留、8+2图同步、16页全文编译/目视与2位显示精度完成，见 `tables/annual_delivery_validation.json`。
+- 实际未完成部分：2,286条候选缺显式复核完成证据；`tables/candidate_review_queue.csv.gz` 与 `review_packet/` 的48张联系表供核对已有记录或补看。114/354是已复核保留子集，不是全年已完成复核的总发现数。
+- 下一步由 GPT Pro 根据 `ANNUAL_HANDOFF.md` 细改覆盖增长有限/重复采样增加、31.98min cadence、20.35mag模型深度与近74%条件关联率的科学解释。响应曲线/暂现源/通讯邮箱与基金材料等后续合并；不另派泛泛核验或新科学模块。
 
 
 ## Current objective: verify first follow-up night (2026-09-04)

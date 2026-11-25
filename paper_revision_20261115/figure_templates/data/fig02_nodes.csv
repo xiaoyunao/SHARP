@@ -1,0 +1,24 @@
+node,x_in,y_in,width_in,height_in,label,color
+plan,0.74,2.36,1.1,0.46,"Field plan
+& cadence",#78858e
+observe,0.74,1.73,1.1,0.46,"Repeat imaging
+30 s white light",#78858e
+l2,0.74,0.98,1.1,0.56,"L1 calibration
+L2 catalogs",#78858e
+ephemeris,2.1,2.49,0.86,0.48,"ALEPH
+predictions",#24658a
+primary,3.7,2.49,1.2,0.48,"1″ primary
+association",#24658a
+known,5.45,2.49,1.82,0.48,"Known measurements
+& ADES records",#24658a
+static,2.1,0.98,0.86,0.66,"Gaia / static
+rejection",#287460
+link,3.1,0.98,0.86,0.66,"Tracklets
+& linkages",#287460
+shortarc,4.1,0.98,0.86,0.66,"Short-arc
+consistency",#287460
+veto,5.1,0.98,0.86,0.66,"1.5″ known
+object veto",#287460
+review,6.1,0.98,0.86,0.66,"Image review
+Single-night
+candidates",#287460

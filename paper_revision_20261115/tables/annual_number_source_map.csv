@@ -1,0 +1,65 @@
+macro,quantity,annual_value,display,source_field
+yrNexp,number of science exposures,53398.0,"53,398",tables/exposure_ledger.csv.gz:quality
+yrNnight,physical observing nights,168.0,168,tables/exposure_ledger.csv.gz:quality
+yrHours,open-shutter hours,445.0217680555555,445.02,tables/exposure_ledger.csv.gz:quality
+yrArea,geometric area observed at least once (deg2),11025.285894083248,11025.29,tables/geometric_coverage.csv:nside=1024
+yrAreaThree,area ever observed three times in one night (deg2),10566.815183405042,10566.82,tables/geometric_coverage.csv:nside=1024
+yrNGroups,field-night pointing groups,18162.0,"18,162",tables/field_night_cadence.csv; tables/adjacent_visit_intervals.csv.gz
+yrNOne,single-visit groups,2873.0,"2,873",tables/field_night_cadence.csv; tables/adjacent_visit_intervals.csv.gz
+yrNTwo,two-visit groups,2378.0,"2,378",tables/field_night_cadence.csv; tables/adjacent_visit_intervals.csv.gz
+yrNThree,groups with at least three visits,12911.0,"12,911",tables/field_night_cadence.csv; tables/adjacent_visit_intervals.csv.gz
+yrFracThree,fraction of groups with at least three visits (%),71.08798590463606,71.09,tables/field_night_cadence.csv; tables/adjacent_visit_intervals.csv.gz
+yrNAdjacent,adjacent exposure pairs,35236.0,"35,236",tables/field_night_cadence.csv; tables/adjacent_visit_intervals.csv.gz
+yrCadence,median adjacent interval (min),31.981350000000003,31.98,tables/field_night_cadence.csv; tables/adjacent_visit_intervals.csv.gz
+yrCadenceLow,16th percentile adjacent interval (min),28.967538333333334,28.97,tables/field_night_cadence.csv; tables/adjacent_visit_intervals.csv.gz
+yrCadenceHigh,84th percentile adjacent interval (min),41.280483333333336,41.28,tables/field_night_cadence.csv; tables/adjacent_visit_intervals.csv.gz
+yrSpan,median span for groups with >=3 visits (min),77.2882,77.29,tables/field_night_cadence.csv; tables/adjacent_visit_intervals.csv.gz
+yrSpanLow,16th percentile span (min),60.275483333333334,60.28,tables/field_night_cadence.csv; tables/adjacent_visit_intervals.csv.gz
+yrSpanHigh,84th percentile span (min),102.26997999999985,102.27,tables/field_night_cadence.csv; tables/adjacent_visit_intervals.csv.gz
+yrFWHM,median image FWHM (arcsec),3.4337,3.43,tables/performance_summary.json:l2_quality_header_metrics
+yrFWHMLow,25th percentile FWHM (arcsec),3.0007,3.00,tables/performance_summary.json:l2_quality_header_metrics
+yrFWHMHigh,75th percentile FWHM (arcsec),4.0693,4.07,tables/performance_summary.json:l2_quality_header_metrics
+yrDepth,median catalog model depth (mag),20.35,20.35,tables/performance_summary.json:l2_quality_header_metrics
+yrDepthLow,25th percentile model depth (mag),19.88,19.88,tables/performance_summary.json:l2_quality_header_metrics
+yrDepthHigh,75th percentile model depth (mag),20.67,20.67,tables/performance_summary.json:l2_quality_header_metrics
+yrNAssoc,primary 1 arcsec associations,797887.0,"797,887",tables/performance_summary.json:known; tables/orbital_classes.csv
+yrNKnown,catalog identities in primary sample,80591.0,"80,591",tables/performance_summary.json:known; tables/orbital_classes.csv
+yrNKnownNights,nights with primary associations,167.0,167,tables/performance_summary.json:known; tables/orbital_classes.csv
+yrNMainBelt,main-belt-region identities,77238.0,"77,238",tables/performance_summary.json:known; tables/orbital_classes.csv
+yrMainBeltFrac,main-belt-region fraction (%),95.83948579866238,95.84,tables/performance_summary.json:known; tables/orbital_classes.csv
+yrOC,median radial O-C (arcsec),0.24992640789790588,0.25,tables/performance_summary.json:astrometry
+yrRAOffset,median signed RA cosDec O-C (mas),4.159850014470489,4.16,tables/performance_summary.json:astrometry
+yrDecOffset,median signed Dec O-C (mas),19.94584552242884,19.95,tables/performance_summary.json:astrometry
+yrRAScatter,Gaussian-equivalent IQR RA scatter (arcsec),0.2107579231609424,0.21,tables/performance_summary.json:astrometry
+yrDecScatter,Gaussian-equivalent IQR Dec scatter (arcsec),0.2050870114659807,0.21,tables/performance_summary.json:astrometry
+yrNRetNights,nights with motion-search outputs used in the assessment,167.0,167,tables/performance_summary.json:retention; tables/annual_object_nights.parquet
+yrNRetExposures,science exposures covered by those outputs,53396.0,"53,396",tables/performance_summary.json:retention; tables/annual_object_nights.parquet
+yrNEligible,eligible known-object nights in the annual assessment,151222.0,"151,222",tables/performance_summary.json:retention; tables/annual_object_nights.parquet
+yrNLinked,eligible known-object nights represented by a link,112029.0,"112,029",tables/performance_summary.json:retention; tables/annual_object_nights.parquet
+yrRetention,conditional retention (%),74.08247477218923,74.08,tables/performance_summary.json:retention; tables/annual_object_nights.parquet
+yrRetentionLow,Wilson lower bound (%),73.86101615105373,73.86,tables/performance_summary.json:retention; tables/annual_object_nights.parquet
+yrRetentionHigh,Wilson upper bound (%),74.30270990090776,74.30,tables/performance_summary.json:retention; tables/annual_object_nights.parquet
+yrNDistant,identities in the distant orbital region,28.0,28,tables/performance_summary.json:known; tables/orbital_classes.csv
+yrNDistantMotion,distant identities with motion evidence,,not evaluated,not used in annual prose; prior local audit remains historical evidence
+yrNDistantStatic,distant identities classified as stationary-source coincidences,,not evaluated,not used in annual prose; prior local audit remains historical evidence
+yrNDistantUnresolved,distant identities with insufficient evidence,,not evaluated,not used in annual prose; prior local audit remains historical evidence
+yrMedAssoc,median associations per identity,4.0,4.00,tables/performance_summary.json
+yrMedNights,median observing nights per identity,2.0,2.00,tables/performance_summary.json
+yrMaxNights,maximum distinct nights per identity,33.0,33,tables/performance_summary.json
+yrMedBaseline,median baseline over all identities (days),4.996377141200355,5.00,tables/performance_summary.json
+yrElongation,median solar elongation (deg),151.14798439636226,151.15,tables/performance_summary.json
+yrElongationMin,minimum solar elongation (deg),59.718062780154156,59.72,tables/performance_summary.json
+yrNRatePairs,adjacent within-night association pairs,480919.0,"480,919",tables/performance_summary.json
+yrMeasuredRate,median measured angular rate (arcsec/hour),28.18149444580054,28.18,tables/performance_summary.json
+yrPredictedRate,median predicted angular rate (arcsec/hour),28.16519619368004,28.17,tables/performance_summary.json
+yrNAuto,automatic single-night links,8032.0,"8,032",tables/candidate_summary.json; tables/annual_candidate_states.parquet
+yrNSearchNights,nights with independent-search results,152.0,152,tables/candidate_summary.json; tables/annual_candidate_states.parquet
+yrNReviewed,links actually inspected in images,5746.0,"5,746",tables/candidate_summary.json; tables/annual_candidate_states.parquet
+yrNReviewNights,nights represented by inspected links,144.0,144,tables/candidate_summary.json; tables/annual_candidate_states.parquet
+yrNCandidates,retained image-reviewed single-night links,114.0,114,tables/candidate_summary.json; tables/annual_candidate_states.parquet
+yrNCandidateMeasurements,measurements in retained links,354.0,354,tables/candidate_summary.json; tables/annual_candidate_states.parquet
+yrNCandidateNights,nights in retained links,57.0,57,tables/candidate_summary.json; tables/annual_candidate_states.parquet
+yrNCometLinks,retained links associated with C/2025 Y1,6.0,6,tables/candidate_summary.json; tables/annual_candidate_states.parquet
+yrNUnidentified,retained links without an established identity,108.0,108,tables/candidate_summary.json; tables/annual_candidate_states.parquet
+yrNDepth,valid model-depth estimates,52452.0,"52,452",tables/performance_summary.json:l2_quality_header_metrics.limiting_mag.n
+yrNDepthUnavailable,unavailable model-depth headers,946.0,946,tables/performance_summary.json:depth_invalid_exposures
