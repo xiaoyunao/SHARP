@@ -322,10 +322,18 @@ def appendices():
 
 
 if __name__ == "__main__":
-    flow()
+    # Figures 2, 5 and 6 use the R2 density layouts and distributed compact data.
+    import subprocess
+    import sys
+    import shutil
+
+    revision = ROOT / "figure_revision"
+    subprocess.run([sys.executable, str(revision / "redraw_figures.py")], check=True)
+    for stem in ["fig02_workflow", "fig05_measurement_quality", "fig06_conditional_retention"]:
+        for ext in ["pdf", "png"]:
+            shutil.copy2(revision / f"{stem}.{ext}", ROOT / "figures" / f"{stem}.{ext}")
+        shutil.copy2(revision / f"{stem}.pdf", ROOT / "manuscript/figures" / f"{stem}.pdf")
     maps()
     activity()
-    quality()
-    retention()
     known()
     appendices()

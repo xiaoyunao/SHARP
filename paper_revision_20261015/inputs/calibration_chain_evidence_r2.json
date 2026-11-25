@@ -1,0 +1,703 @@
+{
+  "code": [
+    {
+      "path": "/home/admin/pipeline/smtpipeline/utils.py",
+      "sha256": "574901105fe5f79f74eac70b575eae570dc6cc4e2c8f3fa002a8a94ecba25076",
+      "bytes": 7327,
+      "mtime_utc": "2026-01-22T07:46:38.252149+00:00"
+    },
+    {
+      "path": "/home/admin/pipeline/smtpipeline/main.py",
+      "sha256": "a8e437eaf2cdfa6f04f3c540ecbdd7c679f56bfebd507605d1b2b4843b36f0de",
+      "bytes": 8811,
+      "mtime_utc": "2026-01-22T07:46:38.251773+00:00"
+    },
+    {
+      "path": "/home/admin/pipeline/smtpipeline/parameters.py",
+      "sha256": "60281072fa08fefaf2d4d18dd3b9c1c01686b34ec68b2ab7474be9fed418fef0",
+      "bytes": 11885,
+      "mtime_utc": "2026-01-22T07:46:38.252114+00:00"
+    },
+    {
+      "path": "/home/admin/pipeline/smtpipeline/astrometry/cal_pos.py",
+      "sha256": "2a2dec621e70fe611907a0087531e406b6238c7b31ea3c0b82dda2c1eb2369ab",
+      "bytes": 17719,
+      "mtime_utc": "2026-01-22T07:46:38.250738+00:00"
+    },
+    {
+      "path": "/home/admin/pipeline/smtpipeline/astrometry/config.scamp",
+      "sha256": "820ac4a1d4c9c8e96e91d41334aaf7b764913e844f86b641d0d8367021a0af1e",
+      "bytes": 10170,
+      "mtime_utc": "2026-01-22T07:46:38.250781+00:00"
+    },
+    {
+      "path": "/home/admin/pipeline/smtpipeline/calib_flux.py",
+      "sha256": "d1c728ccbc962aa0e16cbf25998cad168098d2893c831af12131c11ea6afb014",
+      "bytes": 17399,
+      "mtime_utc": "2026-01-22T07:46:38.251866+00:00"
+    },
+    {
+      "path": "/home/admin/pipeline/smtpipeline/photometry/phot.py",
+      "sha256": "955d3060de929a438e7705c779b80d1d916334379392ff1ef7ac1d88bf0b2824",
+      "bytes": 20415,
+      "mtime_utc": "2026-01-22T07:46:38.251352+00:00"
+    },
+    {
+      "path": "/home/admin/pipeline/smtpipeline/photometry/config1.sex",
+      "sha256": "4a63ac6544582fe0f0b299d48c27e0a5a691e097d548594286dc6a85b433c095",
+      "bytes": 7562,
+      "mtime_utc": "2026-01-22T07:46:38.251221+00:00"
+    },
+    {
+      "path": "/home/admin/pipeline/smtpipeline/ccd9k.py",
+      "sha256": "23ef8a2279bc5cea67a7949ab1f0b4d394b698eba92a7c1d50261ff5eac9bb0e",
+      "bytes": 8248,
+      "mtime_utc": "2026-01-22T07:46:38.251906+00:00"
+    }
+  ],
+  "function_source": "def propagate_gaiacat(tbl, t_target, ref_epoch=2000):\n    # t_target = Time(dateobs, format='isot', scale='utc')\n    # \u8f6c\u6362\u4e3a Julian year (decimal year) \u4fbf\u4e8e\u4e0e proper motion\uff08mas/yr\uff09\u914d\u5408\n    target_epoch = t_target.jyear  # e.g. 2025.303...\n    # \u63d0\u53d6\u5217\u5e76\u8d4b\u4e88\u5355\u4f4d\n    if 'ra_epoch2000' in tbl.colnames:\n        ra = tbl['ra_epoch2000'].astype(float) #* u.deg\n        dec = tbl['dec_epoch2000'].astype(float) #* u.deg\n        pmra = tbl['pmra'].astype(float) #* u.mas/u.yr\n        pmdec = tbl['pmdec'].astype(float) #* u.mas/u.yr\n    else:\n        ra = tbl['ra'].astype(float) * u.deg\n        dec = tbl['dec'].astype(float) * u.deg\n        pmra = tbl['pmra'].astype(float) * u.mas/u.yr\n        pmdec = tbl['pmdec'].astype(float) * u.mas/u.yr\n    if 'ref_epoch' not in tbl.colnames:\n        t_ref = Time(ref_epoch, format='jyear')\n    else:\n        t_ref = Time(tbl['ref_epoch'][0], format='jyear')\n\n    sc_kwargs = dict(frame='icrs', ra=ra, dec=dec)\n    sc_kwargs['pm_ra_cosdec'] = pmra\n    sc_kwargs['pm_dec'] = pmdec\n    sc = SkyCoord(**sc_kwargs, obstime=t_ref)\n    t_tgt = Time(target_epoch, format='jyear')\n    sc_moved = sc.apply_space_motion(new_obstime=t_tgt)\n    ra_tgt = sc_moved.ra.to(u.deg).value\n    dec_tgt = sc_moved.dec.to(u.deg).value\n\n    tbl['X_WORLD'] = ra_tgt\n    tbl['Y_WORLD'] = dec_tgt\n    bad = np.isnan(ra_tgt) |  np.isnan(dec_tgt)\n    tbl['X_WORLD'][bad] = ra[bad]\n    tbl['Y_WORLD'][bad] = dec[bad]",
+  "call_chain_sources": {
+    "calib_flux.py:gaia_mags": "def gaia_mags(cat, band, obs_region):\n    # get Gaia color-corrected magnitude for specific filter\n    # Change from VEGA MAG to AB MAG\n    cat['phot_g_mean_mag'] = cat['phot_g_mean_mag'] + 0.1136777774\n    cat['phot_bp_mean_mag'] = cat['phot_bp_mean_mag'] + 0.0154133401\n    cat['phot_rp_mean_mag'] = cat['phot_rp_mean_mag'] + 0.3560882381\n    # color transp. parameters\n    filterlist=['u', 'v', 'g', 'r', 'i', 'z', 'y', 'w']\n    ifilt=filterlist.index(band)\n    ffpar=np.array([[-0.12372707, 0.87415984, 2.68152378, 0.46688053],\\\n                    [ 0.0715824, 0.42018862, 1.58311364, 0.30184685],\\\n                    [-0.02193249, 0.22376644, 0.51403047,-0.04977904],\\\n                    [ 0.0850583, 0.0045054, -0.17416451, 0.02696644],\\\n                    [ 0.03638692, 0.0513301, -0.58839035, 0.02328468],\\\n                    [-0.14492398, 0.26053385, -0.82220974, -0.0115362],\\\n                    [-0.27416685, 0.36465315, -0.89341154, -0.02812699],\\\n                    [-0.03971196, 0.19464851, -0.11042587, -0.03542586]])\n    coeff = ffpar[ifilt,:]\n    color_br = cat['bp_rp'] - 0.340674898\n    colorterm = coeff[0] * color_br**3 + coeff[1] * color_br**2 + coeff[2] * color_br + coeff[3]\n    gaia_G = cat['phot_g_mean_mag']\n    mags = gaia_G + colorterm\n    magcut1 = 19.0\n    magcut2 = 12.0 \n\n    #select good phot_mag\n    goodid = (cat['phot_g_n_obs'] > 3) & (cat['phot_bp_n_obs'] > 1) & (cat['phot_rp_n_obs'] > 1)\\\n        & (color_br < 2.5) & (color_br > 0.5) \\\n        & (gaia_G < magcut1) & (gaia_G > magcut2)\\\n        & (cat['ra'] > obs_region[0]) & (cat['ra'] < obs_region[1])\\\n        & (cat['dec'] > obs_region[2]) & (cat['dec'] < obs_region[3]) \n    # print('starGAIA.sum()=', goodid.sum())\n    if goodid.sum() < 20: goodid = list(range(mags.size))\n    mags = mags[goodid]\n    magerr = mags * 0.01\n    ra = cat['ra'][goodid]\n    dec = cat['dec'][goodid]\n    gimedian = np.median(color_br[goodid])\n    refc = SkyCoord(ra, dec, unit=(u.deg, u.deg), frame='icrs')\n    return mags, magerr, gimedian, refc",
+    "calib_flux.py:read_gaiacat": "def read_gaiacat(ra, dec, refdir, obstime, silent=True):\n    # function: Read a piece of the GAIA calibration catalog containing ra,dec.\n    c = SkyCoord(ra,dec, unit=(u.deg, u.deg))\n    if isinstance(ra[0], str):\n        c = SkyCoord(ra, dec, unit=(u.hourangle, u.deg))\n    phi = c.ra.deg / (180. / np.pi)\n    theta = (90. - c.dec.deg) / (180 / np.pi)\n    ipring = ang2pix(32, theta, phi)\n    pix = np.unique(ipring)\n    npix = pix.size\n    if npix > 10: \n        print('too many healpix files:', npix, ' check image wcs!')\n        return\n    ps = []\n    for i in pix:\n        fname = refdir + '/healpix-' + '%5.5d'%i + '.fits'\n        if not os.path.isfile(fname):\n            continue\n        if not silent: print(('Reading ', fname))\n        if os.path.isfile(fname):\n            ps.append(table.Table.read(fname))\n    ps = table.vstack(ps)\n    utils.propagate_gaiacat(ps, obstime)\n    print('load gaia stars:', len(ps))\n    return ps",
+    "astrometry/cal_pos.py:get_gaiacat": "def get_gaiacat(fits_name, search_radius, path_gaia, output_dir, silent=True, pm_corr=True, pm_zp=2016.0):\n    print('############ gaia reference ############')\n    fits_name_img_new = fits_name.replace('.fits', '_img.new')\n    header1 = fits.getheader(fits_name_img_new, 0)\n    gaialacnm = output_dir + '/' + os.path.basename(fits_name).replace('.fits','_gaia.fits')\n\n    if pm_corr:\n        obstime = Time(header1['DATE-OBS'], format='isot', scale='utc')\n        deltatime = obstime.decimalyear - pm_zp\n        print('(Time - ZeroPoint) = deltatime (yr) = ', deltatime)\n\n    ### convert sky cor to healpy\n    ra = float(header1['CRVAL1'])\n    dec = float(header1['CRVAL2'])\n    c = SkyCoord(ra, dec, unit=(u.deg, u.deg))\n    ra = c.ra.deg\n    dec = c.dec.deg\n    c = SkyCoord(ra, dec, unit=(u.deg, u.deg))\n    phi = c.ra.deg / (180. / np.pi)\n    theta = (90. - c.dec.deg) / (180 / np.pi)\n    vec = hp.ang2vec(theta, phi)\n    list1 = hp.query_disc(nside=32, vec=vec, radius=np.radians(search_radius))\n    if -1 in list1:\n        list1.remove(-1)\n    ipring = np.array(list1)\n    pix = np.unique(ipring)\n    refcat = []\n    for i in pix:\n        fname = os.path.join(path_gaia, 'healpix-' + '%5.5d' % i + '.fits')\n        if not os.path.isfile(fname):\n            continue\n        if not silent:\n            print('i= %5.5d' % i, fname)\n        refcat.append(table.Table.read(fname))\n    refcat = table.vstack(refcat) \n    if len(refcat) == 0: return\n    if 'XK_healpix' in path_gaia: # Using calib catalog from XK\n        refcat.rename_column('g_xpsp', 'MAG')\n    else:\n        refcat.rename_column('phot_g_mean_mag', 'MAG')\n    utils.propagate_gaiacat(refcat, obstime) # add X_WORLD, Y_WORLD in obstime\n\n    mask=(~np.isnan(refcat['X_WORLD']) & (~np.isnan(refcat['Y_WORLD'])) & (refcat['MAG'] > 0))\n    refcat=refcat[mask]\n    print('total gaia sources:',len(refcat))\n    if pm_corr:\n        refcat['ra_error'] = refcat['ra_error'] / 1000.0 / 3600.0\n        refcat['dec_error'] = refcat['dec_error'] / 1000.0 / 3600.0\n        refcat.rename_column('ra_error', 'ERRA_WORLD')\n        refcat.rename_column('dec_error', 'ERRB_WORLD')\n        # refcat.rename_column('pmra','PMALPHA_J2000')\n        # refcat.rename_column('pmdec','PMDELTA_J2000')\n        # refcat.rename_column('pmra_error','PMALPHAERR_J2000')\n        # refcat.rename_column('pmdec_error','PMDELTAERR_J2000')\n\n    hdu = fits.BinTableHDU(refcat)\n    hdu1 = convert_hdu_to_ldac(hdu)\n    thdulist = fits.HDUList([fits.PrimaryHDU(), hdu1[0], hdu1[1]])\n    thdulist.writeto(gaialacnm, overwrite=True)\n    thdulist.close()",
+    "astrometry/cal_pos.py:run_scamp": "def run_scamp(fits_name, path_config, output_dir):\n    print('############ run scamp ############')\n    config_scamp = path_config + \"/config.scamp\"\n    fitsname = os.path.basename(fits_name)\n    fp_acat = output_dir + '/' + fitsname.replace(\".fits\",'_sex.fits') \n    fp_ref_cat = output_dir + '/' + fitsname.replace(\".fits\",'_gaia.fits') \n\n    scamp_comd = f'scamp {fp_acat} -ASTREFCAT_NAME {fp_ref_cat} -c {config_scamp}  -CHECKPLOT_TYPE NONE'\n    os.system(scamp_comd)"
+  },
+  "alias_target": "/home/admin/pipeline/smtpipeline",
+  "samples": [
+    {
+      "path": "/processed1/20251121/L2/OBJ_MP_0004_0135_cat.fits.gz",
+      "sha256": "a1ad73485c511a21bc76e8071864897c4665ed67f44606287a79d424e113db7e",
+      "bytes": 5610471,
+      "mtime_utc": "2026-01-27T06:32:44.924309+00:00",
+      "header": {
+        "DATE-OBS": "2025-11-21T10:52:30.116",
+        "MJD": 61000.453126342596,
+        "EXPOSURE": 30.003,
+        "EXPTIME": null,
+        "CALI_REF": "Gaia",
+        "CRVAL1": 15.18960751043,
+        "CRVAL2": -13.71304810627,
+        "CCDZP": 27.0144,
+        "APER08": -0.13578224,
+        "APER18": 0.0,
+        "MLIM": 20.41,
+        "NAXIS1": 578,
+        "NAXIS2": 11264
+      },
+      "l1_date_obs": "2025-11-21T10:52:30.116",
+      "date_obs_utc": "2025-11-21T10:52:30.116",
+      "night_configuration": {
+        "ASTROMETRY": {
+          "RUN MODULE": true,
+          "OUTPUT FILE PATH": "/processed1/20251121/L1",
+          "CONFIG FILE PATH": "/pipeline/smtpipeline/astrometry",
+          "GAIA FILE PATH": "/pipeline/ref/healpix",
+          "CORRECT PROPER MOTION": true,
+          "PROPER MOTION TIME REFERENCE": 2016.0,
+          "SEARCH RADIUS": 2.0,
+          "PLOT": false
+        },
+        "FLUX CALIBRATION": {
+          "RUN MODULE": true,
+          "WCS FOLDER PATH": "/processed1/20251121/L1",
+          "WORK FOLDER PATH": "/processed1/20251121/L1",
+          "GAIA FILE PATH": "/pipeline/ref/healpix",
+          "PLOT": false
+        }
+      },
+      "night_configuration_sha256": "c8f0fa3983b3c1ed282ca2a0b7db24b2252c9f1b8e367a85bdc4b0818b9a723b",
+      "tile_ref_epochs": [
+        2016.0
+      ],
+      "reference_examples": [
+        {
+          "source_id": 2372852131189161472,
+          "ra": 13.87280261969928,
+          "dec": -14.268585231940694,
+          "ref_epoch": 2016.0,
+          "pmra": 49.43344250328239,
+          "pmdec": -244.98081722813217,
+          "X_WORLD": 13.872942733230598,
+          "Y_WORLD": -14.269258179826334,
+          "night": "20251121",
+          "exposure": "OBJ_MP_0004_0135",
+          "date_obs_utc": "2025-11-21T10:52:30.116",
+          "target_jyear": 2025.8889887100413,
+          "reference_tile": "healpix-07493.fits",
+          "shift_arcsec": 2.471441410876852,
+          "l2_ra": 13.87294614635736,
+          "l2_dec": -14.269286877656093,
+          "l2_to_propagated_arcsec": 0.10399621405739348,
+          "l2_to_original_arcsec": 2.575082750889193,
+          "missing_pm_fallback": false
+        },
+        {
+          "source_id": 2469262327233402496,
+          "ra": 15.86570930544312,
+          "dec": -12.356977378302565,
+          "ref_epoch": 2016.0,
+          "pmra": -13.432537951807001,
+          "pmdec": -284.66081492654064,
+          "X_WORLD": 15.86567153184779,
+          "Y_WORLD": -12.3577593248513,
+          "night": "20251121",
+          "exposure": "OBJ_MP_0004_0135",
+          "date_obs_utc": "2025-11-21T10:52:30.116",
+          "target_jyear": 2025.8889887100413,
+          "reference_tile": "healpix-07365.fits",
+          "shift_arcsec": 2.818139924048497,
+          "l2_ra": 15.865731897018195,
+          "l2_dec": -12.357631382258406,
+          "l2_to_propagated_arcsec": 0.5071575984800301,
+          "l2_to_original_arcsec": 2.355754230422745,
+          "missing_pm_fallback": false
+        },
+        {
+          "source_id": 2372030005729361536,
+          "ra": 15.09096846775468,
+          "dec": -14.621385580263837,
+          "ref_epoch": 2016.0,
+          "pmra": 290.76723931743925,
+          "pmdec": 9.131423811088961,
+          "X_WORLD": 15.091793920475284,
+          "Y_WORLD": -14.621360495326195,
+          "night": "20251121",
+          "exposure": "OBJ_MP_0004_0135",
+          "date_obs_utc": "2025-11-21T10:52:30.116",
+          "target_jyear": 2025.8889887100413,
+          "reference_tile": "healpix-07621.fits",
+          "shift_arcsec": 2.8768115227247613,
+          "l2_ra": 15.091822138239142,
+          "l2_dec": -14.621512719510651,
+          "l2_to_propagated_arcsec": 0.5567526190099227,
+          "l2_to_original_arcsec": 3.0087047589463776,
+          "missing_pm_fallback": false
+        },
+        {
+          "source_id": 2372084053597739264,
+          "ra": 14.15854294527357,
+          "dec": -14.428425878513035,
+          "ref_epoch": 2016.0,
+          "pmra": 381.29030601382254,
+          "pmdec": -186.0977799474347,
+          "X_WORLD": 14.159624440496167,
+          "Y_WORLD": -14.428937075729012,
+          "night": "20251121",
+          "exposure": "OBJ_MP_0004_0135",
+          "date_obs_utc": "2025-11-21T10:52:30.116",
+          "target_jyear": 2025.8889887100413,
+          "reference_tile": "healpix-07621.fits",
+          "shift_arcsec": 4.195713679925309,
+          "l2_ra": 14.159618737377262,
+          "l2_dec": -14.428959059856025,
+          "l2_to_propagated_arcsec": 0.08160239076387638,
+          "l2_to_original_arcsec": 4.213314597294653,
+          "missing_pm_fallback": false
+        },
+        {
+          "source_id": 2469104409876971776,
+          "ra": 15.341282730577646,
+          "dec": -13.08585699897065,
+          "ref_epoch": 2016.0,
+          "pmra": null,
+          "pmdec": null,
+          "X_WORLD": 15.341282730577646,
+          "Y_WORLD": -13.08585699897065,
+          "night": "20251121",
+          "exposure": "OBJ_MP_0004_0135",
+          "date_obs_utc": "2025-11-21T10:52:30.116",
+          "target_jyear": 2025.8889887100413,
+          "reference_tile": "healpix-07365.fits",
+          "shift_arcsec": 0.0,
+          "l2_ra": 15.341336565725454,
+          "l2_dec": -13.085977796015435,
+          "l2_to_propagated_arcsec": 0.4740747508920739,
+          "l2_to_original_arcsec": 0.4740747508920739,
+          "missing_pm_fallback": true
+        },
+        {
+          "source_id": 2469110594630384896,
+          "ra": 15.694729381907422,
+          "dec": -12.971660441626609,
+          "ref_epoch": 2016.0,
+          "pmra": null,
+          "pmdec": null,
+          "X_WORLD": 15.694729381907422,
+          "Y_WORLD": -12.971660441626609,
+          "night": "20251121",
+          "exposure": "OBJ_MP_0004_0135",
+          "date_obs_utc": "2025-11-21T10:52:30.116",
+          "target_jyear": 2025.8889887100413,
+          "reference_tile": "healpix-07365.fits",
+          "shift_arcsec": 0.0,
+          "l2_ra": 15.6947440566167,
+          "l2_dec": -12.971661100658656,
+          "l2_to_propagated_arcsec": 0.05153546258574124,
+          "l2_to_original_arcsec": 0.05153546258574124,
+          "missing_pm_fallback": true
+        }
+      ],
+      "bright_reference_matches_within_1arcsec": 3054,
+      "median_l2_to_propagated_arcsec": 0.1150779578984591,
+      "median_l2_to_original_arcsec": 0.1902941287142148
+    },
+    {
+      "path": "/processed1/20260218/L2/OBJ_MP_1528_0435_cat.fits.gz",
+      "sha256": "c4d132be9d1d2728890817cfaf2a7bd54ca85ea1124426c32db369ef567e5bf5",
+      "bytes": 7900441,
+      "mtime_utc": "2026-02-18T20:15:04.490541+00:00",
+      "header": {
+        "DATE-OBS": "2026-02-18T20:10:11.009",
+        "MJD": 61089.84040519676,
+        "EXPOSURE": 30.002,
+        "EXPTIME": null,
+        "CALI_REF": "Gaia",
+        "CRVAL1": 180.3506052703,
+        "CRVAL2": 11.76780077588,
+        "CCDZP": 26.991,
+        "APER08": -0.15787125,
+        "APER18": 0.0,
+        "MLIM": 21.14,
+        "NAXIS1": 578,
+        "NAXIS2": 15834
+      },
+      "l1_date_obs": "2026-02-18T20:10:11.009",
+      "date_obs_utc": "2026-02-18T20:10:11.009",
+      "night_configuration": {
+        "ASTROMETRY": {
+          "RUN MODULE": true,
+          "OUTPUT FILE PATH": "/processed1/20260218/L1",
+          "CONFIG FILE PATH": "/pipeline/smtpipeline/astrometry",
+          "GAIA FILE PATH": "/pipeline/ref/healpix",
+          "CORRECT PROPER MOTION": true,
+          "PROPER MOTION TIME REFERENCE": 2016.0,
+          "SEARCH RADIUS": 2.0,
+          "PLOT": false
+        },
+        "FLUX CALIBRATION": {
+          "RUN MODULE": true,
+          "WCS FOLDER PATH": "/processed1/20260218/L1",
+          "WORK FOLDER PATH": "/processed1/20260218/L1",
+          "GAIA FILE PATH": "/pipeline/ref/healpix",
+          "PLOT": false
+        }
+      },
+      "night_configuration_sha256": "bb016de956189d43460fe7da7eca723ebd026c10e88b0b3d92f487fb01431884",
+      "tile_ref_epochs": [
+        2016.0
+      ],
+      "reference_examples": [
+        {
+          "source_id": 3919438621477131520,
+          "ra": 179.634690066966,
+          "dec": 11.876939531391887,
+          "ref_epoch": 2016.0,
+          "pmra": -178.01218598489803,
+          "pmdec": -62.09381076422019,
+          "X_WORLD": 179.63417801487824,
+          "Y_WORLD": 11.876764741722226,
+          "night": "20260218",
+          "exposure": "OBJ_MP_1528_0435",
+          "date_obs_utc": "2026-02-18T20:10:11.009",
+          "target_jyear": 2026.1337177418118,
+          "reference_tile": "healpix-04863.fits",
+          "shift_arcsec": 1.9105210611800894,
+          "l2_ra": 179.6341598051818,
+          "l2_dec": 11.876745277751176,
+          "l2_to_propagated_arcsec": 0.09500140535839233,
+          "l2_to_original_arcsec": 1.9946798548486266,
+          "missing_pm_fallback": false
+        },
+        {
+          "source_id": 3918390786895426944,
+          "ra": 181.00526645692597,
+          "dec": 11.14844441193553,
+          "ref_epoch": 2016.0,
+          "pmra": -172.37297057406272,
+          "pmdec": 77.76476896204558,
+          "X_WORLD": 181.00477190779026,
+          "Y_WORLD": 11.148663313258107,
+          "night": "20260218",
+          "exposure": "OBJ_MP_1528_0435",
+          "date_obs_utc": "2026-02-18T20:10:11.009",
+          "target_jyear": 2026.1337177418118,
+          "reference_tile": "healpix-04992.fits",
+          "shift_arcsec": 1.9163125589965493,
+          "l2_ra": 181.00477736334034,
+          "l2_dec": 11.148636707987357,
+          "l2_to_propagated_arcsec": 0.09769810583976259,
+          "l2_to_original_arcsec": 1.8610545758079955,
+          "missing_pm_fallback": false
+        },
+        {
+          "source_id": 3919126188375865344,
+          "ra": 181.62192988872155,
+          "dec": 12.227546983266055,
+          "ref_epoch": 2016.0,
+          "pmra": -191.98490549096584,
+          "pmdec": 32.058991952528984,
+          "X_WORLD": 181.62137692156702,
+          "Y_WORLD": 12.227637226262486,
+          "night": "20260218",
+          "exposure": "OBJ_MP_1528_0435",
+          "date_obs_utc": "2026-02-18T20:10:11.009",
+          "target_jyear": 2026.1337177418118,
+          "reference_tile": "healpix-04864.fits",
+          "shift_arcsec": 1.972459447025099,
+          "l2_ra": 181.62140571657233,
+          "l2_dec": 12.22760600170665,
+          "l2_to_propagated_arcsec": 0.15132558308226188,
+          "l2_to_original_arcsec": 1.8564094260429715,
+          "missing_pm_fallback": false
+        },
+        {
+          "source_id": 3918513794759081728,
+          "ra": 179.0524724368103,
+          "dec": 10.976325525665343,
+          "ref_epoch": 2016.0,
+          "pmra": -305.689342910721,
+          "pmdec": 17.595979217688747,
+          "X_WORLD": 179.05159590989874,
+          "Y_WORLD": 10.976375055713982,
+          "night": "20260218",
+          "exposure": "OBJ_MP_1528_0435",
+          "date_obs_utc": "2026-02-18T20:10:11.009",
+          "target_jyear": 2026.1337177418118,
+          "reference_tile": "healpix-04992.fits",
+          "shift_arcsec": 3.102897258670255,
+          "l2_ra": 179.05153406452072,
+          "l2_dec": 10.976307546946604,
+          "l2_to_propagated_arcsec": 0.326859780002753,
+          "l2_to_original_arcsec": 3.3169719751303224,
+          "missing_pm_fallback": false
+        },
+        {
+          "source_id": 3919875226376411264,
+          "ra": 180.1501468080128,
+          "dec": 12.593098797403135,
+          "ref_epoch": 2016.0,
+          "pmra": null,
+          "pmdec": null,
+          "X_WORLD": 180.1501468080128,
+          "Y_WORLD": 12.593098797403135,
+          "night": "20260218",
+          "exposure": "OBJ_MP_1528_0435",
+          "date_obs_utc": "2026-02-18T20:10:11.009",
+          "target_jyear": 2026.1337177418118,
+          "reference_tile": "healpix-04736.fits",
+          "shift_arcsec": 0.0,
+          "l2_ra": 180.15012477693242,
+          "l2_dec": 12.593067327440925,
+          "l2_to_propagated_arcsec": 0.13720936079500184,
+          "l2_to_original_arcsec": 0.13720936079500184,
+          "missing_pm_fallback": true
+        },
+        {
+          "source_id": 3919914052881188608,
+          "ra": 179.33577899950768,
+          "dec": 12.617475756601547,
+          "ref_epoch": 2016.0,
+          "pmra": null,
+          "pmdec": null,
+          "X_WORLD": 179.33577899950768,
+          "Y_WORLD": 12.617475756601547,
+          "night": "20260218",
+          "exposure": "OBJ_MP_1528_0435",
+          "date_obs_utc": "2026-02-18T20:10:11.009",
+          "target_jyear": 2026.1337177418118,
+          "reference_tile": "healpix-04736.fits",
+          "shift_arcsec": 0.0,
+          "l2_ra": 179.33575497581367,
+          "l2_dec": 12.617439879930439,
+          "l2_to_propagated_arcsec": 0.15428570719122414,
+          "l2_to_original_arcsec": 0.15428570719122414,
+          "missing_pm_fallback": true
+        }
+      ],
+      "bright_reference_matches_within_1arcsec": 3141,
+      "median_l2_to_propagated_arcsec": 0.07550874834594051,
+      "median_l2_to_original_arcsec": 0.17479933810541695
+    },
+    {
+      "path": "/processed1/20260508/L2/OBJ_MP_1528_0049_cat.fits.gz",
+      "sha256": "2d3512d2ffea633dd25c6c5cfe48f2364fe1bb06fbda8b378ec008cc0c3ef5c8",
+      "bytes": 6090978,
+      "mtime_utc": "2026-05-08T13:02:36.283202+00:00",
+      "header": {
+        "DATE-OBS": "2026-05-08T12:50:30.893",
+        "MJD": 61168.53507978009,
+        "EXPOSURE": 30.003,
+        "EXPTIME": null,
+        "CALI_REF": "Gaia",
+        "CRVAL1": 180.3576306202,
+        "CRVAL2": 11.75928469783,
+        "CCDZP": 26.6805,
+        "APER08": -0.11059189,
+        "APER18": 0.0,
+        "MLIM": 20.51,
+        "NAXIS1": 578,
+        "NAXIS2": 12239
+      },
+      "l1_date_obs": "2026-05-08T12:50:30.893",
+      "date_obs_utc": "2026-05-08T12:50:30.893",
+      "night_configuration": {
+        "ASTROMETRY": {
+          "RUN MODULE": true,
+          "OUTPUT FILE PATH": "/processed1/20260508/L1",
+          "CONFIG FILE PATH": "/pipeline/smtpipeline/astrometry",
+          "GAIA FILE PATH": "/pipeline/ref/healpix",
+          "CORRECT PROPER MOTION": true,
+          "PROPER MOTION TIME REFERENCE": 2016.0,
+          "SEARCH RADIUS": 2.0,
+          "PLOT": false
+        },
+        "FLUX CALIBRATION": {
+          "RUN MODULE": true,
+          "WCS FOLDER PATH": "/processed1/20260508/L1",
+          "WORK FOLDER PATH": "/processed1/20260508/L1",
+          "GAIA FILE PATH": "/pipeline/ref/healpix",
+          "PLOT": false
+        }
+      },
+      "night_configuration_sha256": "e66d17dd47f62514bca5800ac9cc06a9ee9cbfd02e7e30b3d6004c005eb53786",
+      "tile_ref_epochs": [
+        2016.0
+      ],
+      "reference_examples": [
+        {
+          "source_id": 3919438621477131520,
+          "ra": 179.634690066966,
+          "dec": 11.876939531391887,
+          "ref_epoch": 2016.0,
+          "pmra": -178.01218598489803,
+          "pmdec": -62.09381076422019,
+          "X_WORLD": 179.63416712808007,
+          "Y_WORLD": 11.876761025486564,
+          "night": "20260508",
+          "exposure": "OBJ_MP_1528_0049",
+          "date_obs_utc": "2026-05-08T12:50:30.893",
+          "target_jyear": 2026.349172018563,
+          "reference_tile": "healpix-04863.fits",
+          "shift_arcsec": 1.951140895248364,
+          "l2_ra": 179.63416347657997,
+          "l2_dec": 11.876748557549472,
+          "l2_to_propagated_arcsec": 0.04669161814959292,
+          "l2_to_original_arcsec": 1.9784379449505287,
+          "missing_pm_fallback": false
+        },
+        {
+          "source_id": 3918390786895426944,
+          "ra": 181.00526645692597,
+          "dec": 11.14844441193553,
+          "ref_epoch": 2016.0,
+          "pmra": -172.37297057406272,
+          "pmdec": 77.76476896204558,
+          "X_WORLD": 181.00476139310936,
+          "Y_WORLD": 11.148667967338497,
+          "night": "20260508",
+          "exposure": "OBJ_MP_1528_0049",
+          "date_obs_utc": "2026-05-08T12:50:30.893",
+          "target_jyear": 2026.349172018563,
+          "reference_tile": "healpix-04992.fits",
+          "shift_arcsec": 1.9570555268909122,
+          "l2_ra": 181.00477899213905,
+          "l2_dec": 11.148654894271203,
+          "l2_to_propagated_arcsec": 0.07796734343458452,
+          "l2_to_original_arcsec": 1.8811200856215446,
+          "missing_pm_fallback": false
+        },
+        {
+          "source_id": 3919126188375865344,
+          "ra": 181.62192988872155,
+          "dec": 12.227546983266055,
+          "ref_epoch": 2016.0,
+          "pmra": -191.98490549096584,
+          "pmdec": 32.058991952528984,
+          "X_WORLD": 181.62136516485708,
+          "Y_WORLD": 12.227639144918447,
+          "night": "20260508",
+          "exposure": "OBJ_MP_1528_0049",
+          "date_obs_utc": "2026-05-08T12:50:30.893",
+          "target_jyear": 2026.349172018563,
+          "reference_tile": "healpix-04864.fits",
+          "shift_arcsec": 2.0143961611818613,
+          "l2_ra": 181.62143277394503,
+          "l2_dec": 12.227636522299921,
+          "l2_to_propagated_arcsec": 0.2380583691797389,
+          "l2_to_original_arcsec": 1.7784694482031405,
+          "missing_pm_fallback": false
+        },
+        {
+          "source_id": 3918513794759081728,
+          "ra": 179.0524724368103,
+          "dec": 10.976325525665343,
+          "ref_epoch": 2016.0,
+          "pmra": -305.689342910721,
+          "pmdec": 17.595979217688747,
+          "X_WORLD": 179.0515772739441,
+          "Y_WORLD": 10.976376108751507,
+          "night": "20260508",
+          "exposure": "OBJ_MP_1528_0049",
+          "date_obs_utc": "2026-05-08T12:50:30.893",
+          "target_jyear": 2026.349172018563,
+          "reference_tile": "healpix-04992.fits",
+          "shift_arcsec": 3.168868356507285,
+          "l2_ra": 179.05153818761988,
+          "l2_dec": 10.976311441296305,
+          "l2_to_propagated_arcsec": 0.27070071770454773,
+          "l2_to_original_arcsec": 3.3021581042247754,
+          "missing_pm_fallback": false
+        },
+        {
+          "source_id": 3919875226376411264,
+          "ra": 180.1501468080128,
+          "dec": 12.593098797403135,
+          "ref_epoch": 2016.0,
+          "pmra": null,
+          "pmdec": null,
+          "X_WORLD": 180.1501468080128,
+          "Y_WORLD": 12.593098797403135,
+          "night": "20260508",
+          "exposure": "OBJ_MP_1528_0049",
+          "date_obs_utc": "2026-05-08T12:50:30.893",
+          "target_jyear": 2026.349172018563,
+          "reference_tile": "healpix-04736.fits",
+          "shift_arcsec": 0.0,
+          "l2_ra": 180.15014775101983,
+          "l2_dec": 12.593071032343866,
+          "l2_to_propagated_arcsec": 0.10000910845379123,
+          "l2_to_original_arcsec": 0.10000910845379123,
+          "missing_pm_fallback": true
+        },
+        {
+          "source_id": 3919914052881188608,
+          "ra": 179.33577899950768,
+          "dec": 12.617475756601547,
+          "ref_epoch": 2016.0,
+          "pmra": null,
+          "pmdec": null,
+          "X_WORLD": 179.33577899950768,
+          "Y_WORLD": 12.617475756601547,
+          "night": "20260508",
+          "exposure": "OBJ_MP_1528_0049",
+          "date_obs_utc": "2026-05-08T12:50:30.893",
+          "target_jyear": 2026.349172018563,
+          "reference_tile": "healpix-04736.fits",
+          "shift_arcsec": 0.0,
+          "l2_ra": 179.33575450076953,
+          "l2_dec": 12.617448241471227,
+          "l2_to_propagated_arcsec": 0.13122144668801292,
+          "l2_to_original_arcsec": 0.13122144668801292,
+          "missing_pm_fallback": true
+        }
+      ],
+      "bright_reference_matches_within_1arcsec": 3187,
+      "median_l2_to_propagated_arcsec": 0.07408085969599582,
+      "median_l2_to_original_arcsec": 0.18228465099061786
+    }
+  ],
+  "reference_tiles": {
+    "healpix-07364.fits": {
+      "path": "/pipeline/ref/healpix/healpix-07364.fits",
+      "sha256": "c8cd57974ba658353ca345737f5bd6cecac85f85c000e73baec6725408c8b600",
+      "bytes": 2652480,
+      "mtime_utc": "2025-10-29T16:59:58.100928+00:00"
+    },
+    "healpix-07365.fits": {
+      "path": "/pipeline/ref/healpix/healpix-07365.fits",
+      "sha256": "a47394349e53ec18190d734b167485605d556d96533555a2fd845223b085f8b4",
+      "bytes": 2681280,
+      "mtime_utc": "2025-10-29T16:35:03.248779+00:00"
+    },
+    "healpix-07493.fits": {
+      "path": "/pipeline/ref/healpix/healpix-07493.fits",
+      "sha256": "e96459ce34489d32d25cf937b9540d5f747990eff7acceab11b35b4c5861789d",
+      "bytes": 2609280,
+      "mtime_utc": "2025-10-29T16:38:23.170814+00:00"
+    },
+    "healpix-07494.fits": {
+      "path": "/pipeline/ref/healpix/healpix-07494.fits",
+      "sha256": "5ccf4b509fe616fcb6b3401c6a7892ca7c513456a120eaefcfb09450c0a1f0e3",
+      "bytes": 2643840,
+      "mtime_utc": "2025-10-29T16:17:03.629775+00:00"
+    },
+    "healpix-07620.fits": {
+      "path": "/pipeline/ref/healpix/healpix-07620.fits",
+      "sha256": "198c8a97a459720fb88fdffe0023714ef0860be0de047a8e51b2c10f2132be8b",
+      "bytes": 2672640,
+      "mtime_utc": "2025-10-29T17:02:11.800570+00:00"
+    },
+    "healpix-07621.fits": {
+      "path": "/pipeline/ref/healpix/healpix-07621.fits",
+      "sha256": "1463d761075c2c64ce46d32e1f2b67f7f87bb1cd1c68eb1acc3c1a75f8fbd924",
+      "bytes": 2692800,
+      "mtime_utc": "2025-10-29T16:37:44.764790+00:00"
+    },
+    "healpix-07749.fits": {
+      "path": "/pipeline/ref/healpix/healpix-07749.fits",
+      "sha256": "00167fd42ac048e40f188b0243a787f6ea95a1c072f226ebeeafdf4d9d675bd3",
+      "bytes": 2612160,
+      "mtime_utc": "2025-10-29T16:49:11.407670+00:00"
+    },
+    "healpix-07750.fits": {
+      "path": "/pipeline/ref/healpix/healpix-07750.fits",
+      "sha256": "e7b156c2048b419a311709e5f578d604f77fd5fd121791bc68e8ef71533c3b58",
+      "bytes": 2580480,
+      "mtime_utc": "2025-10-29T16:58:58.829109+00:00"
+    },
+    "healpix-04608.fits": {
+      "path": "/pipeline/ref/healpix/healpix-04608.fits",
+      "sha256": "63ad33be806231e5d4618517cfa35953700d357e0b63f99909336ffe0c05bc8a",
+      "bytes": 2635200,
+      "mtime_utc": "2025-10-29T16:12:32.395591+00:00"
+    },
+    "healpix-04736.fits": {
+      "path": "/pipeline/ref/healpix/healpix-04736.fits",
+      "sha256": "22c4903d45abab1c2e6483036b4b45d9b975c35d1439c9869e662a6ce0d1e8ed",
+      "bytes": 2643840,
+      "mtime_utc": "2025-10-29T16:28:51.620577+00:00"
+    },
+    "healpix-04737.fits": {
+      "path": "/pipeline/ref/healpix/healpix-04737.fits",
+      "sha256": "d05105a84bbc0eaebd0533bd7c2792c6edc7b34bf18cf10f0171b2e279725ddb",
+      "bytes": 2704320,
+      "mtime_utc": "2025-10-29T16:03:19.130423+00:00"
+    },
+    "healpix-04863.fits": {
+      "path": "/pipeline/ref/healpix/healpix-04863.fits",
+      "sha256": "314b2ab98b6eca462206639c50c8799d0bbcf325666484f5641239492cd86722",
+      "bytes": 2574720,
+      "mtime_utc": "2025-10-29T16:41:30.521024+00:00"
+    },
+    "healpix-04864.fits": {
+      "path": "/pipeline/ref/healpix/healpix-04864.fits",
+      "sha256": "a52fa3672c9242ea3af70383adcdf4d841cda386e4b2c42349e178c461f27583",
+      "bytes": 2718720,
+      "mtime_utc": "2025-10-29T16:13:29.844017+00:00"
+    },
+    "healpix-04992.fits": {
+      "path": "/pipeline/ref/healpix/healpix-04992.fits",
+      "sha256": "8a6ad2bff7e6dd675cd1e47d358e9d452c7c17623f5a292750f0b97df5d4857c",
+      "bytes": 2733120,
+      "mtime_utc": "2025-10-29T16:21:14.639650+00:00"
+    },
+    "healpix-04993.fits": {
+      "path": "/pipeline/ref/healpix/healpix-04993.fits",
+      "sha256": "926bddd215e9b317538fef1b5ca00d8b83a80ff62d34bc14d5aceb7424045fbe",
+      "bytes": 2692800,
+      "mtime_utc": "2025-10-29T16:12:28.865760+00:00"
+    },
+    "healpix-05119.fits": {
+      "path": "/pipeline/ref/healpix/healpix-05119.fits",
+      "sha256": "e5405df6f8e945372463ddd66e8355e922d7ccb39479024e937f4902b15254df",
+      "bytes": 2649600,
+      "mtime_utc": "2025-10-29T16:51:28.745341+00:00"
+    },
+    "healpix-05120.fits": {
+      "path": "/pipeline/ref/healpix/healpix-05120.fits",
+      "sha256": "3a599aed52abeabb5a4acbd8288ea2c52d6f1214a564a39f089408b981bf0658",
+      "bytes": 2727360,
+      "mtime_utc": "2025-10-29T16:39:03.408847+00:00"
+    }
+  }
+}

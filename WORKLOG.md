@@ -1,5 +1,15 @@
 # WORKLOG
 
+## 2026-11-25
+
+- task: 按 GPT Pro 2026-11-24 R2 整合全文与 Fig.2/5/6，核读当前上游定标实现；作者要求不再追查更早备份。
+- files: `paper_revision_20261015/manuscript/`、`figure_revision/`、`inputs/calibration_*r2*`、`tables/calibration_*_r2.csv`、数字来源/图指纹表、事实表/待办/README、`REVISION_R2_HANDOFF.md`；更新绘图入口与独立只读核查/整合脚本。
+- commands: EasyTier SSH 只读运行 `check_calibration_chain_r2.py`；`redraw_figures.py --prepare --source paper_revision_20261015`；Python py_compile；`finalize_revision_r2.py`；`tectonic --keep-logs manuscript.tex`；Poppler 渲染目视。
+- findings: WCS 的 Gaia 2016.0 位置按 UTC 曝光开始时刻的 Julian year 用自行传播，X_WORLD/Y_WORLD 确实进入 SCAMP；W 测光分支 gaia_mags 虽读了传播表却以原始 ra/dec 匹配，已据实写入方法。3 张冻结曝光、17 个瓦片、18 个参考星明细；L2 尺寸/mtime 与冻结台账一致。EDR3/CCD/in-prep 作者信息已落实。
+- validation: 三图由原冻结输入重建通过，图计数/分母及输入 SHA 一致；10 图副本一致；8 主图+2 附图；2/3/2 小节与空暂现源章节验证；全文本地编译 17 页并渲染检查。旧五项科学核验不重复。
+- remaining: 响应曲线、进一步仪器资料、署名致谢/完整 in-prep 信息与暂现源正文按作者后续材料合并；本轮无新增作者问题。
+- next: 将全文 PDF/LaTeX、图表、紧凑绘图数据和交接说明直接推送既有 GitHub 论文分支，供 GPT Pro 接续文字整合。
+
 ## 2026-11-24
 
 - 根据 GPT Pro 2026-11-24 英文稿及第二轮任务书完成论文支撑核验。历史 75,899/102,347 保留；按 39,590 张曝光质量台账重选后为 75,467/101,784，阶段归档完整子样本为 73,787/99,426。58 条候选、179 次测量全部保留。18 帧确认 18 px 零点和 MLIM 未作额外包围能量补偿。17 远距目录身份的 119 个关联局部核验为 79 运动支持、9 静止源重合、31 证据不足。核对 187 个 L2（含 18 个定标）、9 幅 L1 切片，固定十幅稿图 SHA 回读一致。输出及复现见 `paper_revision_20261015/REVISION_CHECK_SUMMARY_20261124.md`。

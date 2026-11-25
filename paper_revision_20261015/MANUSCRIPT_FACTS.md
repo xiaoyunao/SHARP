@@ -34,14 +34,14 @@
 | 参数 | 可以引用的表述 |
 |---|---|
 | 设施 | 兴隆 60/90 cm Schmidt，0.60 m 有效口径，f/3，MPC 站码 327。 |
-| 探测器 | 9K CCD，原始读出 10,000 × 9,400 像素，含 prescan 和 overscan。处理有效图像为 9,216 × 9,232 像素。 |
+| 探测器 | 相机由国家天文台实验室研制；CCD 9,216 × 9,232 个 10 μm 像元，16 通道同时读出（作者 2026-11-24 确认）。原始 10,000 × 9,400 读出含 prescan/overscan。 |
 | 像尺度和视场 | 典型约 1.15″/pixel，名义约 2.94° × 2.95°。WCS 单曝足迹随指向和解变化。 |
 | 执行策略 | 旧场库 1,855 场，名义 30 s 曝光、15 s 计划读出开销、常规三次重访，计划起始间隔约 30 min。使用实际采样量描述实施效果。 |
 | 光度系统 | 冻结 L2 头均标 `W` 或 `w`，旧现场记录称白光／unfiltered，`CALI_REF=Gaia`。沿用已定标的 $g_{\rm aper}$ 记号，表示 L2 的 `Mag_Aper4`，对应 CCD9k SExtractor 第四个固定孔径，直径 8 像素、半径 4 像素，约 4.6″。 |
 | 零点和颜色 | 上游源代码把 Gaia G 加 0.1136777774，再对 $x=(BP-RP)-0.340674898$ 加上 W 颜色多项式 $-0.03971196x^3+0.19464851x^2-0.11042587x-0.03542586$。参考孔径是直径 18 像素。最终输出应用逐帧光度校准及孔径修正。 |
 | 深度 | `MLIM=ZP-2.5 log10(F5_ADU)`，其中 `F5_ADU=5 sqrt[(sky_ADU × gain + RON²) π(FWHM_px/2)²]/gain`，gain 为 e⁻/ADU，RON 为 e⁻。18 份冻结 L2 样本的重算值与头值差小于 0.006 mag。 |
 
-W 是实拍通带标记和上游颜色变换选择，实际系统响应曲线待仪器方提供。已知目标的星历 V、Gaia 源目录 G 和 ADES 的 Gaia3E/G 输出约定各有定义。原 FITS 的 GMG 站址字段使用了外站模板，几何计算采用冻结 known matcher 的观测站坐标。使用旧调度器 15 s 读出参数时写明它是排程开销。参考星目录发行版待确认。[上游定标及 Aleph 来源](inputs/calibration_provenance.md) · [MLIM 复算表](tables/sample_photometric_header_and_depth_check.csv) · [SExtractor 固定孔径定义](https://sextractor.readthedocs.io/en/stable/Photom.html#fixed-aperture-flux-flux-aper)
+W 是实拍通带标记和上游颜色变换选择，实际系统响应曲线待仪器方提供。已知目标的星历 V、Gaia 源目录 G 和 ADES 的 Gaia3E/G 输出约定各有定义。原 FITS 的 GMG 站址字段使用了外站模板，几何计算采用冻结 known matcher 的观测站坐标。使用旧调度器 15 s 读出参数时写明它是排程开销。Gaia EDR3 已由作者确认，当前读取目录、2016.0 参考历元及 WCS 传播调用已核实。WCS 使用传播坐标；W 测光匹配使用原始 ra/dec，详见 [R2 方法核查](inputs/calibration_method_note_20261124_r2.md)。N. Li et al. (2026) 与 Y.-A. Xiao et al. (2026) 按作者确认列为 in preparation。[上游定标及 Aleph 来源](inputs/calibration_provenance.md) · [MLIM 复算表](tables/sample_photometric_header_and_depth_check.csv) · [SExtractor 固定孔径定义](https://sextractor.readthedocs.io/en/stable/Photom.html#fixed-aperture-flux-flux-aper)
 
 ## 观测设计与移动源处理
 
@@ -72,3 +72,14 @@ W 是实拍通带标记和上游颜色变换选择，实际系统响应曲线待
 8. **实拍候选。** 2026-02-10 单夜关联 35，`00000P2`，UTC 中点 11:09:05.959、11:48:42.908、12:28:20.720。绿色标记定位该帧检出，三帧由左向右按时间排列，线性拟合视运动约 61.34″/h。
 9. **附图 A1。** 速度对使用相邻有效检出，日距角按合格关联逐次加权。太阳与目标的方向以同一站点为原点。
 10. **附图 A2。** 58 条后审关联的曝光中点跨度与短弧拟合 RMS，单列与彗星存在冻结数值匹配的六条。
+
+
+## 2026-11-24 R2 整合（2026-11-25 核验）
+
+- 新版全文已接入 [manuscript/](manuscript/)，8 幅主图、2 幅附图；Survey/Performance/Initial Results 分别保留 2/3/2 个小节。Transient Sources 只有标题和 label。
+- 39,590 张曝光重建的对象夜队列沿用历史状态政策：75,467/101,784=74.14%；进一步限于无隔离且阶段归档可读的子样本：73,787/99,426=74.21%。历史 75,899/102,347=74.16% 继续作为 Fig.6 主样本。来源为既有 retention_reconciliation_summary.json；摘要引用 74.14%。
+- Fig.5 的光度密度为 500,092 条无标记且有效流量/误差记录。径向 O−C 星等区间为 9.5≤g_aper<22，显示 531,416/531,612 条；196 条范围外（195 个 99，另一个 23.17874）。按夜 signed 中位数和计数仍用全部 531,612 条、128 夜。
+- Fig.6 的星等相关网格/分箱为 102,315 对象夜、75,897 保留；32 个星等无效/范围外对象夜（其中 2 个保留）仍包含在全局和速度分母中。0.25 mag×3 arcsec/h 网格，比例 N<30 遮罩，95% Wilson 区间。来源：[新图紧凑数据和筛选摘要](figure_revision/summary.json)。
+- 58 条候选的 179 次测量全部通过合格曝光核对；4,762 条自动 links 仍为历史处理产物，不重定义为合格曝光搜索产出。
+- 远距局部分类：119 条关联为 79 运动支持/9 静止重合/31 未决；17 个身份为 7/7/3，这些身份组的全部历史关联数分别为 107/9/3。31 未决关联中的 28 条属于已有其他运动证据的身份，不能混用分类层级。
+- 模型深度仍为 20.25 mag，采用 18 px 参考零点、FWHM/2 噪声面积、无额外包围能量补偿。新版 Fig.5c 为径向 O−C 密度，Fig.5d 才是逐夜 signed 偏移。

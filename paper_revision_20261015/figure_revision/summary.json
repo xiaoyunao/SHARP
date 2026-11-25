@@ -1,0 +1,90 @@
+{
+  "source_commit": "2f5f71d5a074c4cfd712b0e3fbef240c40745e2a",
+  "scientific_cutoff": "2026-10-15",
+  "source_files": {
+    "inputs/known_matched.parquet": {
+      "sha256": "a33ff8d7f6fd591538b770ee311c8f83f586b850ba28d1bd3660a9e4173054c7",
+      "bytes": 41880137
+    },
+    "inputs/blinded_known_recovery_by_object.parquet": {
+      "sha256": "3706a3456f5f562e9ccd503d50d689f316e20a21f1d837d28009bcd7be2cbbb5",
+      "bytes": 22373222
+    },
+    "tables/exposure_ledger.csv.gz": {
+      "sha256": "86cc24572afc109970ed3498ab7f844d83336333236fa9e4b6ff8aaf5ccd0238",
+      "bytes": 17742789
+    },
+    "tables/stellar_repeatability_vs_magnitude.csv": {
+      "sha256": "120aa494dca19573bda3a860dca09aa6717eea7d844527b71c5f905939c5c6a6",
+      "bytes": 1253
+    },
+    "figure_data/fig05_photometry_vs_mag.csv": {
+      "sha256": "8c0b6dc20604c4a1afa0776663e0ce32588fd5d52bce7cd20b7ab51c7027e7ea",
+      "bytes": 10990
+    },
+    "figure_data/fig05_astrometry_vs_mag.csv": {
+      "sha256": "93e3e9e192c3bc8e2ccc83ed6691e35bdc988eb257e323e06b88ecdc7ae37cc6",
+      "bytes": 35556
+    },
+    "figure_data/fig05_astrometry_by_night.csv": {
+      "sha256": "d7641ad55f5dfa4a19618d949ce246a4db8e649bc72ded68127e1a40d0d0e44d",
+      "bytes": 103401
+    },
+    "figure_data/fig05_limiting_magnitude.csv": {
+      "sha256": "c4c0172abf459cae9a617fe0d6b0642fb5bc78d0866ab26c6d76c670cb0e6d59",
+      "bytes": 1999
+    },
+    "figure_data/fig06_retention_frozen_bins.csv": {
+      "sha256": "e3babc05eb1afba97996653666aa7067cd47c2a75d1e32d20122e0cb1d222537",
+      "bytes": 40827
+    }
+  },
+  "fig05": {
+    "depth_exposures": 39590,
+    "depth_median": 20.25,
+    "depth_p25": 19.76,
+    "depth_p75": 20.58,
+    "photometry_selected_n": 500092,
+    "photometry_displayed_n": 500092,
+    "astrometry_selected_n": 531612,
+    "astrometry_displayed_n": 531416,
+    "astrometry_magnitude_outside_n": 196,
+    "magnitude_99_n": 195,
+    "other_outside_magnitudes": [
+      23.178741455078125
+    ],
+    "radial_median_arcsec": 0.26317578645104744,
+    "night_n": 128,
+    "night_association_count_min": 128,
+    "night_association_count_max": 12749,
+    "density_mag_width": 0.1,
+    "density_log10_error_width": 0.04,
+    "density_radial_width_arcsec": 0.02,
+    "trend_mag_width": 0.5,
+    "trend_min_n": 30,
+    "stellar_min_pairs": 50,
+    "night_definition": "local-noon observing night from frozen exposure ledger",
+    "night_counts_definition": "all primary 1 arcsec associations in validated exposures, including records outside magnitude panel"
+  },
+  "fig06": {
+    "eligible_all_n": 102347,
+    "retained_all_n": 75899,
+    "overall_fraction": 0.7415850000488534,
+    "magnitude_eligible_n": 102315,
+    "magnitude_retained_n": 75897,
+    "magnitude_excluded_n": 32,
+    "magnitude_excluded_retained_n": 2,
+    "excluded_mag_min": 54.95514106750488,
+    "excluded_mag_max": 99.0,
+    "grid_mag_width": 0.25,
+    "grid_rate_width_arcsec_h": 3.0,
+    "retention_min_n_per_cell": 30,
+    "retention_visible_cells": 290,
+    "retention_masked_nonempty_cells": 351,
+    "retention_visible_objects": 99353,
+    "denominator_definition": "historical archive-night/object identity with >=3 distinct 1.5 arcsec detections and inclusive 3--63 arcsec/h first-to-last predicted rate",
+    "numerator_definition": "at least one frozen strict link whose >=3 members all map unambiguously to the same known identity",
+    "one_dimensional_intervals": "frozen 95 percent Wilson intervals; descriptive binomial intervals",
+    "not_measured": "image-level/L2 detection completeness or independently resolved losses at intermediate pipeline stages"
+  }
+}

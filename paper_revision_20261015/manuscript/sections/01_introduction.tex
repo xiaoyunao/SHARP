@@ -1,0 +1,66 @@
+\section{Introduction}
+\label{sec:introduction}
+
+Repeated observations of small Solar System bodies provide positions for
+orbit determination and photometric measurements of rotational variability.
+These uses place different demands on an observing program: an angular
+trajectory must be sampled sufficiently to recognize a moving source,
+whereas physical characterization benefits from measurements repeated over
+longer intervals \citep{WarnerHarrisPravec2009,Denneau2013}. For a wide-field telescope,
+the combination of sky coverage, exposure time, and revisit interval
+therefore determines which objects can be measured and how the observations
+can be used.
+
+Modern surveys illustrate several ways of making these choices. Pan-STARRS
+couples wide-field imaging to attribution and linking across multiple
+nights; ATLAS emphasizes rapid sky coverage for nearby-object searches;
+and the Zwicky Transient Facility (ZTF) combines a large field of view with
+repeated imaging for moving-object and time-domain science
+\citep{Denneau2013,Tonry2018,Bellm2019,Masci2019}. Dedicated moving-object
+processing can also exploit the cadence of a broader time-domain survey,
+as demonstrated by the Heliocentric-orbiting Objects Processing System for
+the Wide Field Survey Telescope \citep{Wang2025HOPS}. These programs make
+clear that sky area, sensitivity, and processing must be considered
+together with the temporal sampling actually delivered.
+
+A Schmidt telescope with a moderate aperture and a large field can build a
+substantial sample of asteroid measurements through repeated ecliptic
+imaging. Its scientific scope is established by the observed footprint,
+cadence, and measurement quality, together with the populations represented
+on real images. Characterizing these quantities is necessary for selecting
+observations suitable for asteroid astrometry, photometric time series,
+and moving-source identification.
+
+We developed \SHARP\ for the Xinglong 60/90~cm Schmidt telescope. Its
+approximately $2.94^\circ\times2.95^\circ$ field of view is used for repeated
+30~s imaging of a predefined ecliptic field library. The observing strategy
+aims for three visits to a field during a night, allowing angular motion to
+be sampled over roughly an hour. Calibrated source catalogs support two
+complementary analyses: association with the predicted positions of known
+asteroids and a search for coherent motion among catalog detections. The
+initial associated population is dominated by main-belt asteroids, making
+their repeated astrometry and photometry the principal initial data product.
+
+Known objects provide a direct way to examine the measurements and
+processing. Their predicted positions can be compared with observed
+centroids, repeated associations reveal the available time sampling, and
+their identities allow stored moving-source linkages to be evaluated on
+real detections. The GOTTA Prototype analysis provides a related
+application of known-asteroid measurements to survey characterization
+\citep[in preparation]{Xiao2026InPrep}. We combine these tests with exposure-level depth
+estimates and repeated stellar photometry. The independent motion search
+adds an image-reviewed sample of single-night linkages. Linking methods
+based on angular trajectories or heliocentric transformations connect such
+short arcs to the longer astrometric sequences needed for identification
+and orbit determination \citep{Kubica2007,Holman2018,Moeyens2021}.
+
+This paper describes the survey design and its 2025 November--2026 July
+initial observing campaign. Section~\ref{sec:survey} introduces the instrument,
+photometric convention, observing strategy, and analysis samples.
+Section~\ref{sec:processing} describes the moving-object analysis.
+Section~\ref{sec:performance} measures the realized footprint, cadence,
+photometric and astrometric behavior, and conditional linkage retention.
+Section~\ref{sec:samples} presents the associated known-object population
+and historical single-night candidates. We discuss the scientific scope
+and subsequent use of these measurements in Section~\ref{sec:discussion}
+and conclude in Section~\ref{sec:conclusions}.

@@ -82,7 +82,7 @@ def main():
         assert len(PdfReader(pdf).pages) == 1
         with Image.open(png) as image:
             dpi = tuple(round(k) for k in image.info["dpi"])
-            assert dpi == (300, 300)
+            assert dpi == ((320, 320) if pdf.stem in {"fig02_workflow", "fig05_measurement_quality", "fig06_conditional_retention"} else (300, 300))
             figures.append({"stem": pdf.stem, "png_size": image.size, "png_dpi": dpi,
                             "pdf_sha256": sha(pdf), "png_sha256": sha(png)})
     assert len(figures) == 10

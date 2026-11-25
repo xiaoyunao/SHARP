@@ -12,3 +12,6 @@ Aleph 1.0.0 中的 `query_mixed_cat` 先从小行星延迟历元的日心赤道�
 | `photometry/config1.sex` | `4a63ac6544582fe0f0b299d48c27e0a5a691e097d548594286dc6a85b433c095` |
 | `aleph/Query.py` | `137ae6e8572f9f33c07d777b17e21d372a6e9e091db764ffc1a8dda47fb331d7` |
 | `aleph/aleph_utils.py` | `80523e7464ee6478f1676728d05c580df3eaf896656dc185ba21da51f9d2eb6e` |
+
+
+2026-11-24 R2 更新：作者已确认 Gaia EDR3、10 μm 和 16 通道读出。当前代码/三张冻结曝光的详细调用链、坐标传播验证及 W 测光匹配使用原始坐标的区别见 [方法核查](calibration_method_note_20261124_r2.md)。22.5 是目录通量归一化，不能单独用于宣称 W 的绝对 AB 标尺。

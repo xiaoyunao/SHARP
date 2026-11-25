@@ -1,0 +1,36 @@
+% Working manuscript, revised 2026-11-24.
+% Scientific archive: 2025-11-15 through 2026-07-15.
+% No observations or production changes after 2026-10-15 are included.
+% Figures and quantitative evidence: SHARP commit
+% 2f5f71d5a074c4cfd712b0e3fbef240c40745e2a/paper_revision_20261015.
+\documentclass[linenumbers]{aastex701}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{placeins}
+\newcommand{\SHARP}{\textsc{sharp}}
+\newcommand{\gaper}{\ensuremath{g_{\rm aper}}}
+\newcommand{\asec}{\ensuremath{^{\prime\prime}}}
+\newcommand{\degsq}{\ensuremath{\mathrm{deg}^{2}}}
+\newcommand{\rateunit}{\ensuremath{\mathrm{arcsec}\,\mathrm{hr}^{-1}}}
+\graphicspath{{figures/}}
+\shorttitle{The SHARP Ecliptic Small-Body Survey}
+\shortauthors{SHARP}
+\begin{document}
+\input{frontmatter}
+\input{sections/01_introduction}
+\input{sections/02_survey_and_data}
+\input{sections/03_moving_object_analysis}
+\input{sections/04_observing_performance}
+\input{sections/05_initial_samples}
+\FloatBarrier
+\input{sections/06_transient_sources}
+\input{sections/06_discussion}
+\input{sections/07_conclusions}
+\input{sections/08_data_availability}
+\FloatBarrier
+\input{sections/appendices}
+\FloatBarrier
+\bibliography{references}
+\bibliographystyle{aasjournalv7}
+\end{document}

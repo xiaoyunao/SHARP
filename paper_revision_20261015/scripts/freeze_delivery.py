@@ -107,6 +107,8 @@ def main():
                          if path.is_file() and "__pycache__" not in path.parts
                          and path.name not in {"freeze_manifest.json", ".gitignore"}
                          and not (path.parent == INPUT and path.name in local_input_names)
+                         and not (path.parent == ROOT / "manuscript" and path.suffix in
+                                  {".log", ".blg", ".aux", ".out", ".toc", ".fls", ".fdb_latexmk"})
                          and not any(p.startswith(".") for p in path.relative_to(ROOT).parts)},
     }
     (ROOT / "freeze_manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")

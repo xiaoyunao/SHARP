@@ -1,0 +1,138 @@
+\begin{thebibliography}{}
+\expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
+\providecommand{\url}[1]{\href{#1}{#1}}
+\providecommand{\dodoi}[1]{doi:~\href{http://doi.org/#1}{\nolinkurl{#1}}}
+\providecommand{\doeprint}[1]{\href{http://ascl.net/#1}{\nolinkurl{http://ascl.net/#1}}}
+\providecommand{\doarXiv}[1]{\href{https://arxiv.org/abs/#1}{\nolinkurl{https://arxiv.org/abs/#1}}}
+
+% type= article
+\bibitem[{E.~C. Bellm {et~al.}(2019)Bellm, Kulkarni, Graham,
+  {et~al.}}]{Bellm2019}
+Bellm, E.~C., Kulkarni, S.~R., Graham, M.~J., {et~al.} 2019,
+  \bibinfo{title}{The Zwicky Transient Facility: System Overview, Performance,
+  and First Results,} Publications of the Astronomical Society of the Pacific,
+  131, 018002, \dodoi{10.1088/1538-3873/aaecbe}
+
+% type= article
+\bibitem[{E. Bertin \& S. Arnouts(1996)Bertin \& Arnouts}]{BertinArnouts1996}
+Bertin, E., \& Arnouts, S. 1996, \bibinfo{title}{{SExtractor}: Software for
+  source extraction,} Astronomy and Astrophysics Supplement Series, 117, 393,
+  \dodoi{10.1051/aas:1996164}
+
+% type= article
+\bibitem[{L. Denneau {et~al.}(2013)Denneau, Jedicke, Grav,
+  {et~al.}}]{Denneau2013}
+Denneau, L., Jedicke, R., Grav, T., {et~al.} 2013, \bibinfo{title}{The
+  {Pan-STARRS} Moving Object Processing System,} Publications of the
+  Astronomical Society of the Pacific, 125, 357, \dodoi{10.1086/670337}
+
+% type= article
+\bibitem[{ {Gaia Collaboration} {et~al.}(2021){Gaia Collaboration}, Brown,
+  Vallenari, {et~al.}}]{GaiaEDR32021}
+{Gaia Collaboration}, Brown, A. G.~A., Vallenari, A., {et~al.} 2021,
+  \bibinfo{title}{{Gaia Early Data Release 3. Summary of the contents and
+  survey properties},} Astronomy \& Astrophysics, 649, A1,
+  \dodoi{10.1051/0004-6361/202039657}
+
+% type= article
+\bibitem[{K.~M. G{\'o}rski {et~al.}(2005)G{\'o}rski, Hivon, Banday, Wandelt,
+  Hansen, Reinecke, \& Bartelmann}]{Gorski2005}
+G{\'o}rski, K.~M., Hivon, E., Banday, A.~J., {et~al.} 2005,
+  \bibinfo{title}{{HEALPix}: A Framework for High-resolution Discretization and
+  Fast Analysis of Data Distributed on the Sphere,} The Astrophysical Journal,
+  622, 759, \dodoi{10.1086/427976}
+
+% type= article
+\bibitem[{M.~J. Holman {et~al.}(2018)Holman, Payne, Blankley, Janssen, \&
+  Kuindersma}]{Holman2018}
+Holman, M.~J., Payne, M.~J., Blankley, P., Janssen, R., \& Kuindersma, S. 2018,
+  \bibinfo{title}{{HelioLinC}: A Novel Approach to the Minor Planet Linking
+  Problem,} The Astronomical Journal, 156, 135,
+  \dodoi{10.3847/1538-3881/aad69a}
+
+% type= article
+\bibitem[{D. Izzo(2015)Izzo}]{Izzo2015}
+Izzo, D. 2015, \bibinfo{title}{Revisiting {Lambert}'s problem,} Celestial
+  Mechanics and Dynamical Astronomy, 121, 1, \dodoi{10.1007/s10569-014-9587-y}
+
+% type= article
+\bibitem[{J. Kubica {et~al.}(2007)Kubica, Denneau, Grav, {et~al.}}]{Kubica2007}
+Kubica, J., Denneau, L., Grav, T., {et~al.} 2007, \bibinfo{title}{Efficient
+  Intra- and Inter-night Linking of Asteroid Detections Using {k-d} Trees,}
+  Icarus, 189, 151, \dodoi{10.1016/j.icarus.2007.01.008}
+
+% type= misc
+\bibitem[{N. Li {et~al.}(2026)Li {et~al.}}]{Li2026InPrep}
+Li, N., {et~al.} 2026, in preparation
+
+% type= article
+\bibitem[{L. Lindegren {et~al.}(2021)Lindegren, Klioner, Hern{\'a}ndez,
+  {et~al.}}]{Lindegren2021EDR3}
+Lindegren, L., Klioner, S.~A., Hern{\'a}ndez, J., {et~al.} 2021,
+  \bibinfo{title}{{Gaia Early Data Release 3. The astrometric solution},}
+  Astronomy \& Astrophysics, 649, A2, \dodoi{10.1051/0004-6361/202039709}
+
+% type= article
+\bibitem[{F.~J. Masci {et~al.}(2019)Masci, Laher, Rusholme,
+  {et~al.}}]{Masci2019}
+Masci, F.~J., Laher, R.~R., Rusholme, B., {et~al.} 2019, \bibinfo{title}{The
+  Zwicky Transient Facility: Data Processing, Products, and Archive,}
+  Publications of the Astronomical Society of the Pacific, 131, 018003,
+  \dodoi{10.1088/1538-3873/aae8ac}
+
+% type= article
+\bibitem[{J. Moeyens {et~al.}(2021)Moeyens, Juri{\'c}, Ford,
+  Bekte{\v{s}}evi{\'c}, Connolly, Eggl, Ivezi{\'c}, Jones, Kalmbach, \&
+  Smotherman}]{Moeyens2021}
+Moeyens, J., Juri{\'c}, M., Ford, J., {et~al.} 2021, \bibinfo{title}{{THOR}: An
+  Algorithm for Cadence-independent Asteroid Discovery,} The Astronomical
+  Journal, 162, 143, \dodoi{10.3847/1538-3881/ac042b}
+
+% type= article
+\bibitem[{N.~A. Moskovitz {et~al.}(2022)Moskovitz, Wasserman, Burt, Schottland,
+  Bowell, Bailen, \& Granvik}]{Moskovitz2022Astorb}
+Moskovitz, N.~A., Wasserman, L., Burt, B., {et~al.} 2022, \bibinfo{title}{{The
+  astorb database at Lowell Observatory},} Astronomy and Computing, 41, 100661,
+  \dodoi{10.1016/j.ascom.2022.100661}
+
+% type= misc
+\bibitem[{J. Pe{\~n}a~Zamudio \& C. Fuentes(2021)Pe{\~n}a~Zamudio \&
+  Fuentes}]{PenaZamudioFuentes2021ALEPH}
+Pe{\~n}a~Zamudio, J., \& Fuentes, C. 2021, {ALEPH}: Fast Accurate Ephemeris of
+  Asteroids,, Bulletin of the American Astronomical Society, 53(7), DPS53
+  abstract 306.03 \url{https://baas.aas.org/pub/2021n7i306p03/release/1}
+
+% type= article
+\bibitem[{M. Riello {et~al.}(2021)Riello, De~Angeli, Evans,
+  {et~al.}}]{Riello2021EDR3}
+Riello, M., De~Angeli, F., Evans, D.~W., {et~al.} 2021, \bibinfo{title}{{Gaia
+  Early Data Release 3. Photometric content and validation},} Astronomy \&
+  Astrophysics, 649, A3, \dodoi{10.1051/0004-6361/202039587}
+
+% type= article
+\bibitem[{J.~L. Tonry {et~al.}(2018)Tonry, Denneau, Heinze,
+  {et~al.}}]{Tonry2018}
+Tonry, J.~L., Denneau, L., Heinze, A.~N., {et~al.} 2018,
+  \bibinfo{title}{{ATLAS}: A High-Cadence All-Sky Survey System,} Publications
+  of the Astronomical Society of the Pacific, 130, 064505,
+  \dodoi{10.1088/1538-3873/aabadf}
+
+% type= article
+\bibitem[{S.-H. Wang {et~al.}(2025)Wang, Fu, Lu, {et~al.}}]{Wang2025HOPS}
+Wang, S.-H., Fu, B.-X., Lu, J.-Q., {et~al.} 2025, \bibinfo{title}{{A
+  Heliocentric-orbiting Objects Processing System (HOPS) for the Wide Field
+  Survey Telescope: Architecture, Processing Workflow, and Preliminary
+  Results},} The Astronomical Journal, 169, 272,
+  \dodoi{10.3847/1538-3881/adc56a}
+
+% type= article
+\bibitem[{B.~D. Warner {et~al.}(2009)Warner, Harris, \&
+  Pravec}]{WarnerHarrisPravec2009}
+Warner, B.~D., Harris, A.~W., \& Pravec, P. 2009, \bibinfo{title}{The asteroid
+  lightcurve database,} Icarus, 202, 134, \dodoi{10.1016/j.icarus.2009.02.003}
+
+% type= misc
+\bibitem[{Y.-A. Xiao {et~al.}(2026)Xiao {et~al.}}]{Xiao2026InPrep}
+Xiao, Y.-A., {et~al.} 2026, in preparation
+
+\end{thebibliography}

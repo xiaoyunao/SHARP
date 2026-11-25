@@ -6,6 +6,20 @@
 
 重建了 **39,590 张合格曝光和 129 夜**。实拍 WCS 覆盖约 **10,928 deg²**，曾达到同夜三访的面积约 **10,471 deg²**。实拍相邻重访中位 37.65 分钟，目录模型深度中位 20.25 mag，原冻结条件关联保留率 74.16%。
 
+## 2026-11-24 R2 稿件整合（2026-11-25 完成）
+
+完整 [LaTeX 源码与编译 PDF](manuscript/)、[三幅新版图及紧凑复现数据](figure_revision/)、[定标方法核查](inputs/calibration_method_note_20261124_r2.md) 和 [给 GPT Pro 的交接](REVISION_R2_HANDOFF.md) 已直接纳入本分支。保持 8 主图+2 附图。Gaia WCS 使用传播坐标；W 测光匹配实际读取原始坐标，这一区别已写入正文。
+
+```bash
+python figure_revision/redraw_figures.py --prepare --source .
+python scripts/finalize_revision_r2.py --source .
+cd manuscript
+tectonic --keep-logs manuscript.tex
+# 或 latexmk -pdf -interaction=nonstopmode -halt-on-error manuscript.tex
+```
+
+`--prepare` 只重建三图的数据/绘图，不运行生产程序；省略它可直接用紧凑图数据重绘。当前图指纹与数字来源使用 `scripts/finalize_revision_r2.py` 更新。旧 `build_manuscript_source_map.py` 及 `verify_revision_geometry.py` 对应前一稿的历史 SHA，仅用于旧版本核对。
+
 ## 2026-11-24 二次核验
 
 [核验摘要](REVISION_CHECK_SUMMARY_20261124.md) 包含合格曝光条件连接率、58 条候选的逐成员对照、模型深度及远距目标复核。[稿件数字来源](tables/manuscript_number_source_map.csv) 记录正文与图注的样本定义。[L1 局部切片](audit_figures/distant_l1_local_evidence.pdf) 为远距目标核验材料。
@@ -18,11 +32,11 @@ python scripts/review_distant_associations.py
 python scripts/render_distant_stamps.py
 ```
 
-将 GPT Pro 的英文稿源工程解压后，可在论文目录中运行 `python scripts/build_manuscript_source_map.py <源工程根路径>` 和 `python scripts/verify_revision_geometry.py <源工程根路径>`。两项校验使用源工程中的 LaTeX、PDF 和图指纹。
+仅对上一轮历史稿，可在论文目录中运行 `python scripts/build_manuscript_source_map.py <源工程根路径>` 和 `python scripts/verify_revision_geometry.py <源工程根路径>`。两项校验使用源工程中的 LaTeX、PDF 和图指纹。
 
 ## 给正文的文件
 
-- [figures/](figures/) 提供可直接使用的正文图和附图，每幅含 PDF 和 300 dpi PNG。[figure_data/](figure_data/) 提供绘图数据。
+- [figures/](figures/) 提供可直接使用的正文图和附图，每幅含 PDF 和 300 dpi PNG（R2 新绘三图 320 dpi）。[figure_data/](figure_data/) 提供绘图数据。
 - [tables/main_results.csv](tables/main_results.csv) 为正文主结果表。
 - [MANUSCRIPT_FACTS.md](MANUSCRIPT_FACTS.md) 提供可引用的数字、方法事实、图注要点和来源。
 - [FIGURE_CHANGELOG.md](FIGURE_CHANGELOG.md) 对应旧稿十二图与新版八幅主图、两幅附图。
@@ -48,6 +62,7 @@ python scripts/exposures.py
 python scripts/known_performance.py
 python scripts/stellar_repeatability.py
 python scripts/make_figures.py
+python scripts/finalize_revision_r2.py
 python scripts/verify_bundle.py
 python scripts/freeze_delivery.py
 ```

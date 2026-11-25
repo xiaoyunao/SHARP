@@ -1,0 +1,106 @@
+{
+  "input_commit": "2f5f71d5a074c4cfd712b0e3fbef240c40745e2a",
+  "source_file_hashes_verified": true,
+  "three_figures_prepared_from_frozen_inputs": true,
+  "fig05": {
+    "depth_exposures": 39590,
+    "depth_median": 20.25,
+    "depth_p25": 19.76,
+    "depth_p75": 20.58,
+    "photometry_selected_n": 500092,
+    "photometry_displayed_n": 500092,
+    "astrometry_selected_n": 531612,
+    "astrometry_displayed_n": 531416,
+    "astrometry_magnitude_outside_n": 196,
+    "magnitude_99_n": 195,
+    "other_outside_magnitudes": [
+      23.178741455078125
+    ],
+    "radial_median_arcsec": 0.26317578645104744,
+    "night_n": 128,
+    "night_association_count_min": 128,
+    "night_association_count_max": 12749,
+    "density_mag_width": 0.1,
+    "density_log10_error_width": 0.04,
+    "density_radial_width_arcsec": 0.02,
+    "trend_mag_width": 0.5,
+    "trend_min_n": 30,
+    "stellar_min_pairs": 50,
+    "night_definition": "local-noon observing night from frozen exposure ledger",
+    "night_counts_definition": "all primary 1 arcsec associations in validated exposures, including records outside magnitude panel"
+  },
+  "fig06": {
+    "eligible_all_n": 102347,
+    "retained_all_n": 75899,
+    "overall_fraction": 0.7415850000488534,
+    "magnitude_eligible_n": 102315,
+    "magnitude_retained_n": 75897,
+    "magnitude_excluded_n": 32,
+    "magnitude_excluded_retained_n": 2,
+    "excluded_mag_min": 54.95514106750488,
+    "excluded_mag_max": 99.0,
+    "grid_mag_width": 0.25,
+    "grid_rate_width_arcsec_h": 3.0,
+    "retention_min_n_per_cell": 30,
+    "retention_visible_cells": 290,
+    "retention_masked_nonempty_cells": 351,
+    "retention_visible_objects": 99353,
+    "denominator_definition": "historical archive-night/object identity with >=3 distinct 1.5 arcsec detections and inclusive 3--63 arcsec/h first-to-last predicted rate",
+    "numerator_definition": "at least one frozen strict link whose >=3 members all map unambiguously to the same known identity",
+    "one_dimensional_intervals": "frozen 95 percent Wilson intervals; descriptive binomial intervals",
+    "not_measured": "image-level/L2 detection completeness or independently resolved losses at intermediate pipeline stages"
+  },
+  "figure_pairs": [
+    {
+      "file": "fig01_exposure.pdf",
+      "sha256": "671a13218a1d9986b238c1ac8345d127e46b5d95eb44045702d539c459cfca77"
+    },
+    {
+      "file": "fig02_workflow.pdf",
+      "sha256": "1a7dd6ce2b6599e53b497784d5bf7bd3be249c38e35638c0ad2ae66b448de76c"
+    },
+    {
+      "file": "fig03_coverage_and_known_sky.pdf",
+      "sha256": "5eec45670dac180e15193b16597a672a2ad1be66b90cc30ee50e4a0f1f65ea49"
+    },
+    {
+      "file": "fig04_activity_and_cadence.pdf",
+      "sha256": "0c7b99f2b530612b27b88e3d4fe33cca276a0766d4fd39a8ad5fa7bbd1c11c29"
+    },
+    {
+      "file": "fig05_measurement_quality.pdf",
+      "sha256": "0e0aee861c666595d5fa95d1c7e09fd6e78a4ffd1d0046004a4eca36ba3e2208"
+    },
+    {
+      "file": "fig06_conditional_retention.pdf",
+      "sha256": "fa8c6e3581301a3dbf792c433062aca3315c56e64fb733023e6dfcd7d4f124c3"
+    },
+    {
+      "file": "fig07_orbits_and_revisits.pdf",
+      "sha256": "14a8732dbdead71d3c8b1ab615cc91c7849ee9ff9ff8d17966ffca741d85178a"
+    },
+    {
+      "file": "fig08_candidate.pdf",
+      "sha256": "d0834c90624c06da0e67f3750292fcc64ca26ed2ea76803b4d737e0816886d93"
+    },
+    {
+      "file": "figA1_motion_and_solar_elongation.pdf",
+      "sha256": "6024e2c35b1ce9858d7512802d15d562547ca50ffd12abef21cba5e7651af84f"
+    },
+    {
+      "file": "figA2_candidate_short_arc_diagnostic.pdf",
+      "sha256": "893689c44125dc7269a0e0d55620d52e41d9c83c7b5bd656273c26eb903979bd"
+    }
+  ],
+  "subsection_counts": {
+    "02_survey_and_data.tex": 2,
+    "03_moving_object_analysis.tex": 0,
+    "04_observing_performance.tex": 3,
+    "05_initial_samples.tex": 2,
+    "06_discussion.tex": 0
+  },
+  "transient_title_only": true,
+  "calibration_exposures": 3,
+  "reference_examples": 18,
+  "publication_pdf_pages": 17
+}

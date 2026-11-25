@@ -1,0 +1,4 @@
+# Preserve the supplied upstream TeX class/style and generated SVG verbatim.
+manuscript/aastex701.cls -whitespace
+manuscript/aasjournalv7.bst -whitespace
+figure_revision/*.svg -whitespace

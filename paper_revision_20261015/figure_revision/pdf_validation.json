@@ -1,0 +1,81 @@
+[
+  {
+    "file": "fig02_workflow.pdf",
+    "bytes": 23090,
+    "page_size_pt": [
+      475.2,
+      207.36
+    ],
+    "pages": 1,
+    "fonts": [
+      {
+        "name": "/EVICAO+DejaVuSans-Bold",
+        "type": "/Type0",
+        "embedded": true
+      },
+      {
+        "name": "/BMQQDV+DejaVuSans",
+        "type": "/Type0",
+        "embedded": true
+      }
+    ],
+    "embedded_raster_image_count": 0,
+    "rendered_preview": "../figures/fig02_workflow.png"
+  },
+  {
+    "file": "fig05_measurement_quality.pdf",
+    "bytes": 345409,
+    "page_size_pt": [
+      475.2,
+      421.2
+    ],
+    "pages": 1,
+    "fonts": [
+      {
+        "name": "/CNAJXZ+TimesNewRomanPSMT",
+        "type": "/Type0",
+        "embedded": true
+      },
+      {
+        "name": "/CZRBLR+STIXGeneral-Regular",
+        "type": "/Type0",
+        "embedded": true
+      },
+      {
+        "name": "/FTXWZA+STIXGeneral-Italic",
+        "type": "/Type0",
+        "embedded": true
+      }
+    ],
+    "embedded_raster_image_count": 0,
+    "rendered_preview": "../figures/fig05_measurement_quality.png"
+  },
+  {
+    "file": "fig06_conditional_retention.pdf",
+    "bytes": 92083,
+    "page_size_pt": [
+      475.2,
+      442.8
+    ],
+    "pages": 1,
+    "fonts": [
+      {
+        "name": "/CNAJXZ+TimesNewRomanPSMT",
+        "type": "/Type0",
+        "embedded": true
+      },
+      {
+        "name": "/CZRBLR+STIXGeneral-Regular",
+        "type": "/Type0",
+        "embedded": true
+      },
+      {
+        "name": "/FTXWZA+STIXGeneral-Italic",
+        "type": "/Type0",
+        "embedded": true
+      }
+    ],
+    "embedded_raster_image_count": 0,
+    "rendered_preview": "../figures/fig06_conditional_retention.png"
+  }
+]
