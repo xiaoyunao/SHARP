@@ -1,0 +1,14 @@
+{
+  "limit": 10,
+  "ranking": "most points in time-selected <=30d window; no reference periods",
+  "min_period_h": 1,
+  "max_period_h": 120,
+  "grid_samples_per_peak": 8,
+  "fourier_order": 2,
+  "error_floor_mag": 0.03,
+  "clipping": false,
+  "night_intercepts": true,
+  "cv": "top6 basins; train-only local frequency fit; held-night mean fitted conditionally",
+  "doubled_period_test": "order4 vs even harmonics2,4 at 2P on identical points; scaled errors",
+  "interpretation": "all periods are search hypotheses, not confirmed spin or new periods"
+}

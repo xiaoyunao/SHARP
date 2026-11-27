@@ -1,0 +1,11 @@
+{
+  "screened": 520,
+  "sbdb_period_present": 179,
+  "sbdb_period_absent": 341,
+  "lookup_failed": 0,
+  "heuristic_review_gate": 48,
+  "missing_sbdb_review_queue": 16,
+  "gate": "deltaBIC vs night constant>25; next basin deltaBIC>=10; amplitude/RMS>=3; phase gap<0.15; 1.1<=P<=100h; no refinement edge",
+  "warning": "Heuristic triage without a global false-positive calibration; ISO flags/geometry/images/LCDB still required",
+  "confirmed_new_periods": 0
+}

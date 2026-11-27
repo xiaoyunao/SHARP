@@ -1,0 +1,8 @@
+first_rejection,rows
+invalid_or_low_snr,381973
+accepted_exploratory,346645
+flag_nonzero,47346
+not_annual_quality,27544
+invalid_or_large_frame_zp_scatter,18318
+unnumbered_identity_deferred,3603
+ambiguous_detection_identity,2

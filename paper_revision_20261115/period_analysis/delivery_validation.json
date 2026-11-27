@@ -1,0 +1,12 @@
+{
+  "screened_objects": 520,
+  "screening_hypotheses": 48288,
+  "screening_points": 30160,
+  "duplicate_object_exposure_rows": 0,
+  "review_targets": 16,
+  "review_with_nonzero_cv_nights": 16,
+  "cv_ratio_below_0p8": 14,
+  "cv_ratio_above_1": 1,
+  "pdf_png_pairs": 16,
+  "all_points_explicitly_missing_iso_flags": true
+}

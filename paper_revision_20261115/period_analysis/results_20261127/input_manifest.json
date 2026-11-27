@@ -1,0 +1,29 @@
+{
+  "input_rows": 825431,
+  "accepted_rows": 346645,
+  "numbered_objects": 34822,
+  "pilot_eligible_objects": 520,
+  "eligible_window_points": 30160,
+  "inputs": {
+    "inputs/known_matched.parquet": "e2969d6b1782783aa9facfb03e08e88be1f7e9e4cffbc4285f96e2ba2ad2c745",
+    "tables/exposure_ledger.csv.gz": "7ec4bd17bee74e30dabc850fbe742d8abda0a1c6db1b25e0da9679d552893372"
+  },
+  "selection": "40+ points, 4+ nights (each 3+ points), n >= nights+12; densest <=30d window",
+  "search_window_selection": "timestamps only, before looking at magnitudes or periods",
+  "error_floor_mag": 0.03,
+  "min_snr": 10,
+  "max_magerr": 0.15,
+  "max_match_arcsec": 1.0,
+  "max_frame_zp_scatter": 0.1,
+  "time_basis": "UTC exposure midpoint MJD from annual ledger",
+  "missing": [
+    "Flag_ISO",
+    "Flag_ISO_Num",
+    "distance and phase corrections",
+    "light-time correction",
+    "differential comparison-star photometry",
+    "image inspection",
+    "external period novelty check"
+  ],
+  "status": "exploratory_only_not_new_period_measurements"
+}

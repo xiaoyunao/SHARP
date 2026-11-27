@@ -1,0 +1,62 @@
+{
+  "synthetic_seed": 27,
+  "injected_frequency_cpd": 3.712,
+  "recovered_frequency_cpd": 3.7120931518497544,
+  "relative_period_error": 2.509415737794729e-05,
+  "half_frequency_and_daily_alias_retained": true,
+  "unconstrained_night_model_rejected": true,
+  "doubled_period_capacity_test": {
+    "half_cycle_delta_bic": -20.59311269703451,
+    "half_cycle_status": "half_double_ambiguous"
+  },
+  "delivery_files_sha256": [
+    {
+      "path": "run_sitian_period_analysis.py",
+      "sha256": "deb004f07ee3ef1da09c541c1b9faf0512b80beebcf8f8368fa2526bfd0088d0"
+    },
+    {
+      "path": "sitian_wide_period.py",
+      "sha256": "4c08ca9bd40a589347585085b55a11a3520b1feeac1d860e33ae832d2453a663"
+    },
+    {
+      "path": "prepare_sitian_verification.py",
+      "sha256": "c3381ff78a11b48beb5a6d2621f393d23c197289184319094d7e6afdb5b2feb9"
+    },
+    {
+      "path": "audit_sitian_physical_periods.py",
+      "sha256": "8a1c5d9b5c36de73f61a4cf36b7f4dc1e257ac9e87b3a748ed546bf301daca27"
+    },
+    {
+      "path": "export_sitian_final.py",
+      "sha256": "9b3ca7dd75fe2e595695f370fcaebb572fa85beebbb7309e790f9e65a2bb2a91"
+    },
+    {
+      "path": "export_sitian_verified_delivery.py",
+      "sha256": "2088e22ec46fcb3da286f16e8a4be28881c240d3da7ea413673d6aba1460373b"
+    },
+    {
+      "path": "publish_sitian_1h.py",
+      "sha256": "fcc7b58f98eae3a297e59a63ca7c1e9184bf7169c8434d0ba0643a0aa08c9df6"
+    },
+    {
+      "path": "ui/sitian_verification_page.py",
+      "sha256": "f77b2aee214cb2068312974c76a9bd1cb288e597cf8702bc386c34e217a87b28"
+    },
+    {
+      "path": "upstream/peroid_ana_update.py",
+      "sha256": "2d7ce81e7d00d8e0a64a7bc98fb2dcd82d65eb3c2cf3b424890f60b57c751423"
+    },
+    {
+      "path": "upstream/plot_all_candidates_summary.py",
+      "sha256": "4b29dd4e8f0a3b590947d7ad28245e6205a437fe10dd521de6c87cb084d34251"
+    },
+    {
+      "path": "upstream/search_for_peroid_by_MPC.py",
+      "sha256": "8f0b7368381a8fa25681cc25328f5f2562fcdeb1f879c5bad2d8c49d3ead81d9"
+    }
+  ],
+  "delivery_fixed_sample_targets": 97,
+  "delivery_fixed_sample_points": 44111,
+  "max_coefficient_difference": 4.629630012686903e-14,
+  "equivalence_scope": "weighted fixed-period Fourier solver only; search/clipping intentionally changed"
+}

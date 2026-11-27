@@ -1,5 +1,15 @@
 # WORKLOG
 
+## 2026-11-28
+
+- task: 按用户要求寻找 period_delivery_20261127，研究并离线移植光变拟合，评估 SHARP 年度新周期候选；与既有论文数字/生产处理隔离。
+- source: Downloads 未找到同名 ZIP，macOS 拒绝终端读 .Trash；找到 gotta_asteroid_1/lightcurve_revision_20261127/handoff/input/period_delivery_20261127 已解压副本。原交付只读，11源文件SHA通过。
+- files: 新增 paper_revision_20261115/period_analysis/ 独立核心、年度适配、盲搜/事后参考对照/排序脚本、README与结果报告、原始指纹、采样/剔除台账、520目标候选、16目标PDF/PNG/频谱/点表；不修改生产三目录和论文主统计。
+- commands: 11/27 EasyTier BatchMode SSH ConnectTimeout=8 试一次，连接超时后停止；py_compile；prepare_annual.py；validate_port.py --delivery ...；run_pilot.py --limit 10，再 --limit 520 --plots-limit 0 --cv-targets 0；check_references.py 盲搜后顺序查询SBDB并缓存JSON；prioritize.py；16目标指定 --objects 补图/留一夜；Python逐点唯一性/对象集合/16组图件断言；关键PNG目视。
+- findings: 原固定周期加权傅里叶函数97目标/44,111点与新实现最大系数差4.63e-14；合成信号频率误差2.51e-5相对值，保留日混叠/半频、拒绝不满秩夜零点模型。年度346,645点/34,822编号目标通过探索性预筛；520个≤30d窗口合格、30,160点、48,288周期假设。事后SBDB179有周期/341无周期；启发式复核门槛48个，其中16个SBDB无记录。
+- validation: 520对象/点/候选身份集合闭合，逐对象曝光无重复；16组PDF/PNG/频谱齐全。条件留一夜14个RMS比常数模型低至少20%，1个改善小，247639恶化已降级；全部仍P/2P不确定。缓存缺ISO两个标记及几何/光行时修正，确认新周期0；SBDB缺项不当作首次测量，保留所有候选及不确定性。
+- next: 推送既有GitHub论文分支。等用户明确通知服务器恢复后，先补全质量标记、原图与比较星差分测光，再作几何修正/多解验证和LCDB/文献检查；不重复尝试SSH或自动部署。
+
 ## 2026-11-25
 
 - task: 完成 SHARP 第一年度数据扩展与 R3 全文回填，工作目录 `paper_revision_20261115/`；旧 10/15 交付保持原样。
